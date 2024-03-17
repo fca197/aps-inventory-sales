@@ -52,7 +52,7 @@ export default {
       return getReportList({data: {isOver: false}}).then(t => this.reportList = t.data.dataList)
     },
     async successFun(text) {
-      this.form.propertyCode = text;
+      this.form.propertyCode = text.text;
       return insertCheckList(this.form);
     }
 

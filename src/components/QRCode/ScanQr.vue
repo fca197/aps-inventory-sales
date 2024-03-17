@@ -2,31 +2,31 @@
   <div class="page-scan">
 
     <!-- 扫码区域 -->
-    <video  style="width: 400px; height: 400px"  ref="video" id="video" class="scan-video" autoplay></video>
+    <video style="width: 400px; height: 400px" ref="video" id="video" class="scan-video" autoplay></video>
     <!-- 提示语 -->
     <div v-show="tipShow" class="scan-tip">{{ tipMsg }}</div>
-    <el-button style="text-align: -webkit-center;margin-bottom: 50px"  type="primary" @click="openScan">重新扫描</el-button>
+    <el-button style="text-align: -webkit-center;margin-bottom: 50px" type="primary" @click="openScan"> {{ scanBtnTitle }}</el-button>
   </div>
 </template>
 
 <script>
-import { BrowserMultiFormatReader } from "@zxing/library";
+import {BrowserMultiFormatReader} from "@zxing/library";
+
 export default {
 
-  props:{
-    successFun:{
-      type:Function,
-      default:(text)=>{
-        this.tipMsg="扫码结果: "+text;
+  props: {
+    successFun: {
+      type: Function,
+      default: (text) => {
+        this.tipMsg = "扫码结果: " + text;
       }
     }
   },
-  components:{
-
-  },
+  components: {},
   name: "scanCodePage",
   data() {
     return {
+      scanBtnTitle: "开始扫描",
       loadingShow: false,
       codeReader: null,
       scanText: "",
@@ -38,16 +38,15 @@ export default {
   created() {
     this.codeReader = new BrowserMultiFormatReader();
     this.codeReader.reset();
-    this.tipMsg="请扫描资产二维码";
+    this.tipMsg = "请扫描资产二维码";
   },
   beforeDestroy() {
     document.getElementById("video").srcObject.getTracks()[0].stop();
   },
-  watch: {
-
-  },
+  watch: {},
   methods: {
     async openScan() {
+      this.scanBtnTitle = "重新扫描"
       this.codeReader
       .getVideoInputDevices()
       .then((videoInputDevices) => {
@@ -113,8 +112,8 @@ export default {
             this.scanText = "";
             if (result) {
               //这里是扫码后的结果，具体怎么用要看项目需求
-              this.tipMsg="扫码成功"
-              if (this.successFun!==undefined){
+              this.tipMsg = "扫码成功"
+              if (this.successFun !== undefined) {
                 this.successFun(result)
               }
             }
@@ -133,25 +132,29 @@ export default {
 };
 </script>
 
-<style   scoped>
-/deep/.van-nav-bar__title {
+<style scoped>
+/deep/ .van-nav-bar__title {
   font-size: 18px;
   font-weight: 800;
 }
+
 /deep/ .van-nav-bar .van-icon {
   color: #333;
   font-size: 24px;
 }
+
 .scan-video {
   height: 80vh;
   width: 100%;
 }
+
 .scan-tip {
   text-align: center;
   margin-bottom: 10vh;
   color: white;
   font-size: 2vw;
 }
+
 .page-scan {
   text-align: -webkit-center;
   overflow-y: hidden;
