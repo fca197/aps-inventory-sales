@@ -19,7 +19,7 @@
       </tr>
       </tbody>
     </table>
-    <scan-qr :success-fun="successFun"></scan-qr>
+    <scan-qr :check-id="this.form.checkId" :success-fun="successFun"></scan-qr>
   </div>
 
 </template>

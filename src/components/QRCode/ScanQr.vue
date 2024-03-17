@@ -15,6 +15,10 @@ import {BrowserMultiFormatReader} from "@zxing/library";
 export default {
 
   props: {
+    checkId: {
+      type: String,
+      default: ""
+    },
     successFun: {
       type: Function,
       default: (text) => {
@@ -46,6 +50,13 @@ export default {
   watch: {},
   methods: {
     async openScan() {
+      if(this.checkId===''){
+        this.$message.error({
+          message: '请先选择盘点版本',
+          type: 'warning'
+        });
+        return;
+      }
       this.scanBtnTitle = "重新扫描"
       this.codeReader
       .getVideoInputDevices()
