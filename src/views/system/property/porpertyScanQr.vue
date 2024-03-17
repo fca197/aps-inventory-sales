@@ -52,6 +52,10 @@ export default {
       return getReportList({data: {isOver: false}}).then(t => this.reportList = t.data.dataList)
     },
     async successFun(text) {
+      if (this.form.checkId === undefined || this.form.checkId === '') {
+        this.$message.error("请先选择盘点版本");
+        return;
+      }
       this.form.propertyCode = text.text;
       return insertCheckList(this.form);
     }
