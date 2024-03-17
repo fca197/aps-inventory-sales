@@ -1,97 +1,82 @@
-
 # 功能点
 
 ## 用户管理
-
-|                                  | 功能点  | 说明 | 备注 |
-|----------------------------------|------|----|----|
-| <input type="checkbox"  checked> | 用户注册 |    |    |
-| <input type="checkbox"  checked> | 用户列表 |    |    |
-| <input type="checkbox"  checked> | 登录   |    |    | 
-| <input type="checkbox" checked > | 登出   |    |    | 
-| <input type="checkbox" checked > | 重置密码 |    |    |
-
+- [X] 用户注册
+- [X] 用户列表
+- [X] 登录
+- [X] 登出
+- [X] 重置密码
+ 
 ## 租户管理
 
-|                                  | 功能点  | 说明 | 备注 |
-|----------------------------------|------|----|----|
-| <input type="checkbox"  checked> | 租户注册 |    |    |
-| <input type="checkbox"  checked> | 租户列表 |    |    |
-| <input type="checkbox"  checked> | 租户详情 |    |    |
-| <input type="checkbox" checked > | 租户创建 |    |    |
-| <input type="checkbox" checked > | 租户更新 |    |    |
-| <input type="checkbox" checked > | 租户删除 |    |    |
+- [X] 租户列表
+- [X] 租户详情
+- [X] 租户创建
+- [X] 租户更新
+- [X] 租户删除
+- [X] 租户详情
+
 
 ## 工厂管理
-
-|                                  | 功能点  | 说明 | 备注 |
-|----------------------------------|------|----|----|
-| <input type="checkbox"  checked> | 工厂列表 |    |    |
-| <input type="checkbox" checked > | 工厂创建 |    |    |
-| <input type="checkbox" checked > | 工厂更新 |    |    |
-| <input type="checkbox" checked > | 工厂删除 |    |    |
-| <input type="checkbox" checked > | 工厂详情 |    |    |
+- [X] 工厂列表
+- [X] 工厂创建
+- [X] 工厂更新
+- [X] 工厂删除
+- [X] 工厂详情
 
 ## 楼层管理
 
-|                                  | 功能点  | 说明 | 备注 |
-|----------------------------------|------|----|----|
-| <input type="checkbox"  checked> | 楼层列表 |    |    |
-| <input type="checkbox" checked > | 楼层创建 |    |    |
-| <input type="checkbox" checked > | 楼层更新 |    |    |
-| <input type="checkbox" checked > | 楼层删除 |    |    |
-| <input type="checkbox" checked > | 楼层详情 |    |    |
+- [X] 楼层列表
+- [X] 楼层创建
+- [X] 楼层更新
+- [X] 楼层删除
+- [X] 楼层详情 
 
 ## 楼层管理
 
-|                                  | 功能点    | 说明 | 备注 |
-|----------------------------------|--------|----|----|
-| <input type="checkbox"  checked> | 楼层列表   |    |    |
-| <input type="checkbox" checked > | 楼层创建   |    |    |
-| <input type="checkbox" checked > | 楼层批量创建 |    |    |
-| <input type="checkbox" checked > | 楼层更新   |    |    |
-| <input type="checkbox" checked > | 楼层删除   |    |    |
-| <input type="checkbox" checked > | 楼层详情   |    |    | 
+- [X] 楼层列表
+- [X] 楼层创建
+- [X] 楼层更新
+- [X] 楼层删除
+- [X] 楼层详情
+- [X] 楼层批量创建
 
 ## 房间管理
-
-|                                  | 功能点    | 说明 | 备注 |
-|----------------------------------|--------|----|----|
-| <input type="checkbox"  checked> | 房间列表   |    |    |
-| <input type="checkbox" checked > | 房间创建   |    |    |
-| <input type="checkbox" checked > | 房间批量创建 |    |    |
-| <input type="checkbox" checked > | 房间更新   |    |    |
-| <input type="checkbox" checked > | 房间详情   |    |    |
-| <input type="checkbox" checked > | 房间删除   |    |    |
+- [X] 房间列表
+- [X] 房间创建
+- [X] 房间更新
+- [X] 房间删除
+- [X] 房间详情
+- [X] 房间批量创建
 
 ## 资产管理
-
-|                                  | 功能点    | 说明 | 备注 |
-|----------------------------------|--------|----|----|
-| <input type="checkbox"  checked> | 资产列表   |    |    |
-| <input type="checkbox" checked > | 资产创建   |    |    |
-| <input type="checkbox" checked > | 资产批量创建 |    |    |
-| <input type="checkbox" checked > | 资产更新   |    |    |
-| <input type="checkbox" checked > | 资产详情   |    |    |
-| <input type="checkbox" checked > | 资产删除   |    |    |
-| <input type="checkbox" checked > | 资产禁用   |    |    |
+- [X] 资产列表
+- [X] 资产创建
+- [X] 资产批量创建
+- [X] 资产更新
+- [X] 资产详情
+- [X] 资产删除
+- [X] 资产禁用
+- [ ] 资产使用人
+- 
 
 ## 盘点管理
-
-|                                  | 功能点  | 说明                    | 备注     |
-|----------------------------------|------|-----------------------|--------|
-| <input type="checkbox"  checked> | 盘点列表 |                       |        |
-| <input type="checkbox" checked > | 盘点创建 |                       |        |
-| <input type="checkbox" checked > | 盘点更新 |                       |        |
-| <input type="checkbox" checked > | 盘点详情 | 支持房间全局统计, 房间资产统计,设备禁用 |        |
-| <input type="checkbox" checked > | 盘点删除 |                       |        | 
-| <input type="checkbox" checked > | 扫码盘点 | 禁用资产不可盘点,N秒内重扫资产改为启用  | N秒内可配置 |
-
+- [x] 盘点列表
+- [X] 盘点创建
+- [X] 盘点更新
+- [X] 盘点详情
+  - [X] 支持房间全局统计, 房间资产统计,设备禁用
+- [X] 盘点删除
+- [X] 扫码盘点
+  - [x] 禁用资产不可盘点,N秒内重扫资产改为启用
+- [ ] 盘点快照
+  - [ ]生成快照后,该盘点失效
+- [ ] 盘点信息下载
+  - [ ] 支持下载总计与详情
+  
 ## Uber-H3管理
-
-|                                  | 功能点  | 说明 | 备注        |
-|----------------------------------|------|----|-----------|
-| <input type="checkbox"  checked> | H3接口 |    | 后期接入地图可使用 |
+- [X] H3接口
+  - [X] api 接口以全部接入
 
 # 技术栈
 
@@ -110,30 +95,7 @@
 | org.kie           | 7.14.0.Final | 规则引擎               |
 | fastjson2         | 2.0.46       | fastjson2版本        |
 
-### mybatis-plus
-
-| 组件名称                             | 描述     | 使用点                      |
-|----------------------------------|--------|--------------------------|
-| TenantLineInnerInterceptor       | 租户插件   | 按租户进行数据隔离                |
-| OptimisticLockerInnerInterceptor | 乐观锁插件  | 避免全表操作                   |
-| PaginationInnerInterceptor       | 分页操作   | 使用 page操作                |
-| MyMetaObjectHandler              | 数据自动填充 | 对象集成 BaseEntity, 给指定字段赋值 |
-
-### 后端参数(peanut:)
-
-| 参数名称 | 参数类型 | 参数说明 | 备注 |
-|------|------|------|----|
-
-### 初始化类
-
-| 初始化类                  | 说明       | 备注                                   |
-|-----------------------|----------|--------------------------------------|
-| MockResourceLoad      | mock数据配置 | 返回接口的mock值                           |
-| DbInitConfig          | 数据库初始化操作 | 指定包名下查找类的BelongDb 注解,进行数据库表字段的初始化与修改 |
-| ResultResponseWrapper | 接口返回值修改  | 根据请求头判断返回值是否进行二次包装                   |
-| ServiceNotice         | 通知类接口    | 可以接入钉钉机器人等                           |
-| WebBeanConfig         | web配置    | 字段序列化等配置,字段指定时MaskValue进行数据脱敏        |
-
+ 
 # 数据库
 
 | 组建名称        | 依赖版本     | 说明         |
@@ -160,6 +122,11 @@
 - [ ] 销售报表
 - [ ] 产品购买
 - [ ] 利润管理
+- [ ] 页面校验
+- [ ] 工作流接入
+- [ ] 第三方接入
+- [ ] 消息中心
+- [ ] 
 
 # 页面展示
 
@@ -194,7 +161,9 @@
 ## 资产管理
 
 ![资产管理](doc/img/property.jpg)
+
 ## 资产二维码
+
 ![资产二维码](doc/img/property-qr-code2.jpg)
 
 ## 资产批量添加
@@ -213,6 +182,7 @@
 
 ![房间内盘点详情](doc/img/report-room-data.jpg)
 
-##  扫码盘点
+## 扫码盘点
+
 ![扫码盘点](doc/img/scan-qr-code.jpg)
 
