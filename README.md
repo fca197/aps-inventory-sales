@@ -194,6 +194,8 @@
 ## 资产管理
 
 ![资产管理](doc/img/property.jpg)
+## 资产二维码
+![资产二维码](doc/img/property-qr-code2.jpg)
 
 ## 资产批量添加
 
