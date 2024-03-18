@@ -84,6 +84,7 @@
     - [X] api 接口已全部接入
 
 ## 文件管理
+
 - [ ] 文件上传
 - [ ] 文件下载
 - [ ] 文件删除
@@ -259,8 +260,15 @@
 ![修改](doc/img/brand-update.jpg)
 ![删除](doc/img/brand-delete.jpg)
 
-
 ## 文件管理
-![文件管理](doc/img/file-list.jpg)
-![文件上传](doc/img/file-add.jpg)
-![文件删除](doc/img/file-delete.jpg)
+
+|                                                                  |   |                                      |
+|------------------------------------------------------------------|---|--------------------------------------|
+| <img src="doc/img/file-list.jpg" width="100px" height="100px" /> | <img src="doc/img/file-add.jpg" /> | <img src="doc/img/file-delete.jpg" > |
+
+<style>
+img{
+width: "100px" ;
+height: "100px" 
+}
+</style>
