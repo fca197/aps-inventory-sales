@@ -84,6 +84,7 @@
     - [X] api 接口已全部接入
 
 ## 品牌管理
+
 - [x] 品牌列表
 - [x] 品牌创建
 - [x] 品牌更新
@@ -244,3 +245,10 @@
 ![盘点下载](doc/img/chec-report-facory.jpg)
 
 ![盘点下载](doc/img/chec-report-room.jpg)
+
+## 品牌管理
+
+![品牌管理](doc/img/brand-list.jpg)
+![品牌新增](doc/img/brand-add.jpg)
+![品牌修改](doc/img/brand-update.jpg)
+![品牌删除](doc/img/brand-delete.jpg)
