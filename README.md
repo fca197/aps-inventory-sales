@@ -187,4 +187,5 @@
 
 ## 盘点下载
 ![盘点下载](doc/img/chec-report-facory.jpg)
+
 ![盘点下载](doc/img/chec-report-room.jpg)
