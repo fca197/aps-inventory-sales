@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="品牌" prop="brandCode">
+      <el-form-item label="文件" prop="brandCode">
         <el-select  filterable v-model="queryParams.brandCode" >
           <el-option v-for="(item) in brandList" :value="item.brandCode" :key="item.brandCode" :label="item.brandName"> </el-option>
         </el-select>
@@ -51,7 +51,7 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="品牌" prop="brandCode">
+        <el-form-item label="文件" prop="brandCode">
           <el-select  filterable v-model="form.brandCode" >
             <el-option v-for="(item) in brandList" :key="item.brandCode" :value="item.brandCode" :label="item.brandName"> </el-option>
           </el-select>
@@ -135,10 +135,10 @@ export default {
       // 表单校验
       rules: {
         brandName: [
-          {required: true, message: "品牌名称", trigger: "blur"}
+          {required: true, message: "文件名称", trigger: "blur"}
         ],
         brandCode: [
-          {required: true, message: "品牌编码不能为空", trigger: "blur"},
+          {required: true, message: "文件编码不能为空", trigger: "blur"},
           {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"}
         ]
       },
@@ -242,7 +242,7 @@ export default {
       this.reset();
       this.open = true;
       this.form.brandCode=this.brandList[0].brandCode;
-      this.title = "添加品牌";
+      this.title = "添加文件";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -252,7 +252,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改品牌";
+        this.title = "修改文件";
       });
 
     },

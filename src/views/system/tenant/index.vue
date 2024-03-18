@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="品牌名称" prop="brandName">
-        <el-input v-model="queryParams.brandName" placeholder="请输入品牌名称" clearable @keyup.enter.native="handleQuery"/>
+      <el-form-item label="文件名称" prop="brandName">
+        <el-input v-model="queryParams.brandName" placeholder="请输入文件名称" clearable @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>

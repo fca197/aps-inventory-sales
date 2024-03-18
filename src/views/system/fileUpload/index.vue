@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="文件名称" prop="brandName">
-        <el-input v-model="queryParams.brandName" placeholder="请输入文件名称" clearable
+      <el-form-item label="文件名称" prop="fileUploadName">
+        <el-input v-model="queryParams.fileUploadName" placeholder="请输入文件名称" clearable
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
@@ -15,10 +15,6 @@
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
       </el-col>
-      <el-col :span="1.5" hidden="hidden">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改
-        </el-button>
-      </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
           删除
@@ -27,21 +23,16 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="brandNameList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="fileUploadNameList" @selection-change="handleSelectionChange">
 
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.columnName"
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.columnName" :width="item.width"
                        :label="item.showName"/>
-      <el-table-column label="在用"  align="center" prop="isUsed" width="50">
-        <template slot-scope="scope">
-           <span v-if="scope.row.isUsed===true">是</span>
-           <span v-else>否</span>
-        </template>
-      </el-table-column>
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
+          <el-button size="mini" type="text" icon="el-icon-download" @click="handleDownLoad(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -58,35 +49,22 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-
-        <el-form-item label="文件编码" prop="brandCode">
-          <el-input v-model="form.brandCode" placeholder="请输入文件编码"/>
-        </el-form-item>
-        <el-form-item label="文件名称" prop="brandName">
-          <el-input v-model="form.brandName" placeholder="请输入登陆名"/>
-        </el-form-item>
-        <el-form-item label="状态" prop="inUsed">
-          <el-select filterable v-model="form.isUsed">
-            <el-option  label="否"  :value="false"></el-option>
-            <el-option  label="是" :value="true"></el-option>
-          </el-select>
+        <el-form-item label="文件" prop="file">
+          <FileUpload :model="form.file" :limit="1" :file-size="1"></FileUpload>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
+
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {urlPrefix} from '@/api/brand'
 
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import {downloadForm} from "@/utils/request";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
-  name: "brandName",
+  name: "fileUploadName",
   data() {
 
     return {
@@ -103,7 +81,7 @@ export default {
       // 总条数
       total: 0,
 
-      brandNameList: [],
+      fileUploadNameList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -112,15 +90,15 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        brandName: undefined,
+        fileUploadName: undefined,
         createBy: undefined,
         status: undefined
       },
       // 表单参数
       form: {
         remark: "",
-        brandName: "",
-        brandCode: "",
+        fileUploadName: "",
+        fileUploadCode: "",
         pwd: "",
         id: undefined,
         isUsed: true
@@ -128,28 +106,31 @@ export default {
       // 表单校验
       rules: {
 
-        brandName: [
-          {required: true, message: "文件名称", trigger: "blur"}
-        ],
-        brandCode: [
-          {required: true, message: "文件编码不能为空", trigger: "blur"},
-          {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"}
+        fileType: [
+          {required: true, message: "文件类型", trigger: "blur"}
         ]
       },
       tableHeaderList: [{
         columnName: "id",
-        showName: "编号"
-      },   {
-        columnName: "brandCode",
-        showName: "文件编码"
+        showName: "编号",
+        width: 200
       }, {
-        columnName: "brandName",
-        showName: "文件名称"
+        columnName: "fileType",
+        showName: "文件类别",
+        width: 220
+      }, {
+        columnName: "fileName",
+        showName: "文件名称",
+        width: 300
+      }, {
+        columnName: "expireTime",
+        showName: "过期时间",
+        width: 310
       }]
     };
   },
   created() {
-    document["pagePath"] = "/brand";
+    document["pagePath"] = "/fileUpload";
     this.getList();
   },
   methods: {
@@ -159,7 +140,7 @@ export default {
       queryPageList(this.queryParams).then(response => {
         response = response.data
         // this.tableHeaderList = response.dynamicsFieldList
-        this.brandNameList = response.dataList;
+        this.fileUploadNameList = response.dataList;
         this.total = parseInt(response.total);
         this.loading = false;
       });
@@ -173,9 +154,9 @@ export default {
     reset() {
       this.form = {
         remark: "",
-        brandCode: "",
+        fileUploadCode: "",
         id: undefined,
-        brandName: undefined,
+        fileUploadName: undefined,
         isUsed: true
       };
       this.resetForm("form");
@@ -246,6 +227,9 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    }
+    , handleDownLoad(row) {
+      downloadForm("/fileUpload/downLoad", {id: row.id}, row.fileName, {})
     }
   }
 };

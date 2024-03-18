@@ -89,13 +89,13 @@
 - [ ] 文件删除
 - [ ] 文件列表
 
-## 品牌管理
+## 文件管理
 
-- [x] 品牌列表
-- [x] 品牌创建
-- [x] 品牌更新
-- [x] 品牌删除
-- [x] 品牌详情
+- [x] 文件列表
+- [x] 文件创建
+- [x] 文件更新
+- [x] 文件删除
+- [x] 文件详情
 
 ## 商品管理
 
@@ -254,8 +254,13 @@
 
 ## 品牌管理
 
-![品牌管理](doc/img/brand-list.jpg)
-![品牌新增](doc/img/brand-add.jpg)
-![品牌修改](doc/img/brand-update.jpg)
-![品牌删除](doc/img/brand-delete.jpg)
+![管理](doc/img/brand-list.jpg)
+![新增](doc/img/brand-add.jpg)
+![修改](doc/img/brand-update.jpg)
+![删除](doc/img/brand-delete.jpg)
 
+
+## 文件管理
+![文件管理](doc/img/file-list.jpg)
+![文件上传](doc/img/file-add.jpg)
+![文件删除](doc/img/file-delete.jpg)

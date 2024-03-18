@@ -41,7 +41,6 @@
 
 <script>
 import { getToken } from "@/utils/auth";
-
 export default {
   name: "FileUpload",
   props: {
@@ -60,7 +59,7 @@ export default {
     // 文件类型, 例如['png', 'jpg', 'jpeg']
     fileType: {
       type: Array,
-      default: () => ["doc", "xls", "ppt", "txt", "pdf"],
+      default: () => ["docx", "xlsx", "pptx", "txt", "pdf"],
     },
     // 是否显示提示
     isShowTip: {
@@ -73,10 +72,8 @@ export default {
       number: 0,
       uploadList: [],
       baseUrl: process.env.VUE_APP_BASE_API,
-      uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传文件服务器地址
-      headers: {
-        Authorization: "Bearer " + getToken(),
-      },
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/fileUpload/insert", // 上传文件服务器地址
+      headers: {'j-token':getToken()},
       fileList: [],
     };
   },
@@ -187,7 +184,7 @@ export default {
       for (let i in list) {
         strs += list[i].url + separator;
       }
-      return strs != '' ? strs.substr(0, strs.length - 1) : '';
+      return strs !== '' ? strs.substr(0, strs.length - 1) : '';
     }
   }
 };

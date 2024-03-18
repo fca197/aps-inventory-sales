@@ -91,7 +91,7 @@ export const constantRoutes = [
     path: '/tenant/brand',
     component: Layout,
     redirect: 'index',
-    meta: {title: '租户品牌', icon: 'peoples', affix: false},
+    meta: {title: '租户文件', icon: 'peoples', affix: false},
     children: [
       {
         path: '/views/tenant/index',
@@ -246,6 +246,19 @@ export const constantRoutes = [
         component: () => import('@/views/system/checkList'),
         name: "盘点管理",
         meta: {title: '盘点管理', icon: 'check-list', affix: false}
+      },
+    ]
+  },{
+    path: '/base-data/',
+    component: Layout,
+    redirect: 'index',
+    meta: {title: '基础信息', icon: 'international', affix: false},
+    children: [
+      {
+        path: '/file/upload/index',
+        name: "文件管理",
+        component: () => import('@/views/system/fileUpload/index'),
+        meta: {title: '文件管理', icon: 'calendar', affix: false}
       },
     ]
   }

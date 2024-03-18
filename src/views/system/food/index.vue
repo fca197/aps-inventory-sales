@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
 
       <el-form-item v-for="(item,index) in  queryTableHeaderList" :prop="queryTableHeaderList[index].columnName"
-                    :label="item.showName">
+                    :label="item.showName" :key="index">
         <el-input v-model="queryParams[item.columnName]" :prop="queryParams+'.'+item.columnName"
                   :placeholder="'请输入'+item.showName"/>
       </el-form-item>
@@ -133,7 +133,7 @@ export default {
       // 表单校验
       rules: {
         foodCode: [
-          {required: true, message: "品牌名称", trigger: "blur"},
+          {required: true, message: "文件名称", trigger: "blur"},
           {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"}
         ],
         foodName: [

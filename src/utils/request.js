@@ -157,6 +157,7 @@ export function downloadForm(url, params, filename, config) {
     responseType: 'blob',
     ...config
   }).then(async (data) => {
+
     const isBlob = blobValidate(data);
     if (isBlob) {
       const blob = new Blob([data])
