@@ -30,8 +30,14 @@
     <el-table v-loading="loading" :data="brandNameList" @selection-change="handleSelectionChange">
 
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList"  :key="index" align="center" :prop="item.columnName"
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.columnName"
                        :label="item.showName"/>
+      <el-table-column label="在用"  align="center" prop="isUsed" width="50">
+        <template slot-scope="scope">
+           <span v-if="scope.row.isUsed===true">是</span>
+           <span v-else>否</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
@@ -52,11 +58,6 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="工厂" prop="factoryId">
-          <el-select  filterable v-model="form.factoryId" placeholder="请选择工厂">
-            <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
-          </el-select>
-        </el-form-item>
 
         <el-form-item label="品牌编码" prop="brandCode">
           <el-input v-model="form.brandCode" placeholder="请输入品牌编码"/>
@@ -64,10 +65,11 @@
         <el-form-item label="品牌名称" prop="brandName">
           <el-input v-model="form.brandName" placeholder="请输入登陆名"/>
         </el-form-item>
-        <el-form-item label="状态" prop="brandStatus">
-           <el-select  filterable v-model="form.brandStatus">
-
-           </el-select>
+        <el-form-item label="状态" prop="inUsed">
+          <el-select filterable v-model="form.isUsed">
+            <el-option  label="否"  :value="false"></el-option>
+            <el-option  label="是" :value="true"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -79,7 +81,6 @@
 </template>
 
 <script>
-import {getFactoryList} from '@/api/factory'
 import {urlPrefix} from '@/api/brand'
 
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
@@ -89,7 +90,6 @@ export default {
   data() {
 
     return {
-      factoryList: [],
       // 遮罩层
       loading: true,
       // 选中数组
@@ -120,15 +120,14 @@ export default {
       form: {
         remark: "",
         brandName: "",
+        brandCode: "",
         pwd: "",
         id: undefined,
-        confirmPwd: undefined
+        isUsed: true
       },
       // 表单校验
       rules: {
-        factoryId: [
-          {required: true, message: "工厂", trigger: "blur"}
-        ],
+
         brandName: [
           {required: true, message: "品牌名称", trigger: "blur"}
         ],
@@ -140,33 +139,20 @@ export default {
       tableHeaderList: [{
         columnName: "id",
         showName: "编号"
-      }, {
-        columnName: "factoryName",
-        showName: "工厂名称"
-      },{
+      },   {
         columnName: "brandCode",
         showName: "品牌编码"
       }, {
         columnName: "brandName",
         showName: "品牌名称"
-      }, {
-        columnName: "brandStatus",
-        showName: "状态"
       }]
     };
   },
   created() {
     document["pagePath"] = "/brand";
-        this.getFactoryList().then(()=>{
-      this.getList();
-    });
+    this.getList();
   },
   methods: {
-    getFactoryList() {
-            return getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
-        this.factoryList = data.data.records;
-      });
-    },
     /** 查询公告列表 */
     getList() {
       // this.loading = true;
@@ -176,9 +162,6 @@ export default {
         this.brandNameList = response.dataList;
         this.total = parseInt(response.total);
         this.loading = false;
-        let  fm={}
-        this.factoryList.forEach(t=> fm[t.id]=t.factoryName);
-        this.brandNameList.forEach(t=>t.factoryName=fm[t.factoryId])
       });
     },
     // 取消按钮
@@ -192,7 +175,8 @@ export default {
         remark: "",
         brandCode: "",
         id: undefined,
-        brandName: undefined
+        brandName: undefined,
+        isUsed: true
       };
       this.resetForm("form");
     },
@@ -221,8 +205,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-
-      let req = {idList:[row.id], pageSize: 1, pageNum: 1};
+      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
