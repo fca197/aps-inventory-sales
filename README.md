@@ -255,15 +255,9 @@
 
 ## 品牌管理
 
-![管理](doc/img/brand-list.jpg)
-![新增](doc/img/brand-add.jpg)
-![修改](doc/img/brand-update.jpg)
-![删除](doc/img/brand-delete.jpg)
-
-## 文件管理
-
-| 列表                                                           | 新增                                 | 删除                                   |
-|--------------------------------------------------------------|------------------------------------|--------------------------------------|
-| <img src="doc/img/file-list.jpg" width="50%" height="50%" /> | <img src="doc/img/file-add.jpg" /> | <img src="doc/img/file-delete.jpg" > |
+| 功能点 | 列表                                                            | 新增                                  | 修改                                                             | 删除                                                              | 
+|-----|---------------------------------------------------------------|-------------------------------------|----------------------------------------------------------------|-----------------------------------------------------------------|
+| 品牌  | <img src="doc/img/brand-list.jpg" width="50%" height="50%" /> | <img src="doc/img/brand-add.jpg" /> | <img src="doc/img/brand-update.jpg" width="50%" height="50%" > | <img src="doc/img/brand-delete.jpg" width="50%" height="50%"  > |
+| 文件  | <img src="doc/img/file-list.jpg" width="50%" height="50%" />  | <img src="doc/img/file-add.jpg" />  | <img src="doc/img/file-delete.jpg" >                           |                                                                 |
 
 
