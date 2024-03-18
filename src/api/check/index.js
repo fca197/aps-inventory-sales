@@ -1,4 +1,4 @@
-import request from "@/utils/request";
+import request, {downloadForm} from "@/utils/request";
 
 export  function  checkReportListFactory(data){
   return request({
@@ -21,4 +21,8 @@ export function getReportList(data) {
     method: 'post',
     data
   });
+}
+
+export  function  downloadReportList(data){
+  return downloadForm('/checkReport/downLoad',data,"报表下载.xlsx",{})
 }

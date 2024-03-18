@@ -45,7 +45,7 @@
           <el-button size="mini" type="text" icon="el-icon-delete" title="删除" @click="handleDelete(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-circle-close" title="关闭盘点" @click="handleOverReport(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-refresh-right" title="打开盘点" @click="handleOpenReport(scope.row)"></el-button>
-          <el-button size="mini" type="text"   title="生成快照"  @click="handleOpenReport(scope.row)">
+          <el-button size="mini" type="text"   title="生成快照"  @click="handleCreateSnapshot(scope.row)">
             <svg-icon icon-class="snapshot"></svg-icon>
           </el-button>
         </template>
@@ -99,12 +99,12 @@
         </el-table-column>
         <el-table-column label="操作" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleQueryInfoRoomData(scope.row)"></el-button>
+            <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleQueryInfoRoomData()"></el-button>
           </template>
         </el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" plain icon="el-icon-download" @click="handleAdd">下载</el-button>
+        <el-button type="primary" plain icon="el-icon-download" @click="handleDownLoad()">下载</el-button>
         <el-button plain icon="el-icon-close" @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -134,7 +134,7 @@
 </template>
 <script>
 import {handleOpenReport, handleOverReport, updateInUse} from '@/api/property'
-import {checkReportListFactory, checkReportListRoom} from '@/api/check'
+import {checkReportListFactory, checkReportListRoom,downloadReportList} from '@/api/check'
 import {getFactoryList} from '@/api/factory'
 import {add, checkCompare, checkCompareDesc, deleteByIdList, queryPageList, updateById} from '@/api/common'
 
@@ -161,6 +161,7 @@ export default {
         pageNum: 1,
       },
       open: false,
+      checkId:undefined,
       handleQueryDataOpen: false,
       checkReportListRoomOpen: false,
       checkReportListRoomData: [{isCheck: false}],
@@ -249,6 +250,7 @@ export default {
     },
     handleQueryData(row) {
       this.handleQueryDataOpen = true;
+      this.checkId=row.id;
       checkReportListFactory({checkId: row.id}).then(t => {
         this.handleQueryDataList = t.data.dataList;
         this.handleQueryDataList.forEach(t => t.unCheckCount = t.allCount - t.checkCount)
@@ -302,6 +304,12 @@ export default {
         )
       ])
 
+    },
+    handleDownLoad(){
+      downloadReportList({id: this.checkId})
+    },
+    handleCreateSnapshot(row){
+      this.$message.warning("功能开发中");
     }
   }
 }
