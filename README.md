@@ -83,6 +83,12 @@
 - [X] H3接口
     - [X] api 接口已全部接入
 
+## 文件管理
+- [ ] 文件上传
+- [ ] 文件下载
+- [ ] 文件删除
+- [ ] 文件列表
+
 ## 品牌管理
 
 - [x] 品牌列表
@@ -252,3 +258,4 @@
 ![品牌新增](doc/img/brand-add.jpg)
 ![品牌修改](doc/img/brand-update.jpg)
 ![品牌删除](doc/img/brand-delete.jpg)
+
