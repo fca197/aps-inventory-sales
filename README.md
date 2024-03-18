@@ -264,11 +264,11 @@
 
 |                                                                  |   |                                      |
 |------------------------------------------------------------------|---|--------------------------------------|
-| <img src="doc/img/file-list.jpg" width="100px" height="100px" /> | <img src="doc/img/file-add.jpg" /> | <img src="doc/img/file-delete.jpg" > |
+| <img src="doc/img/file-list.jpg" width="50%" height="50%" /> | <img src="doc/img/file-add.jpg" /> | <img src="doc/img/file-delete.jpg" > |
 
 <style>
 img{
-width: "100px" ;
-height: "100px" 
+width: "50%" ;
+height: "50%" 
 }
 </style>
