@@ -261,6 +261,19 @@ export const constantRoutes = [
         meta: {title: '文件管理', icon: 'calendar', affix: false}
       },
     ]
+  },{
+    path: '/jxc/',
+    component: Layout,
+    redirect: 'index',
+    meta: {title: '进存销', icon: 'international', affix: false},
+    children: [
+      {
+        path: '/goods/index',
+        name: "商品管理",
+        component: () => import('@/views/system/goods/index'),
+        meta: {title: '商品管理', icon: 'calendar', affix: false}
+      },
+    ]
   }
 ]
 

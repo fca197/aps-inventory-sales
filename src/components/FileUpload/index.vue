@@ -8,7 +8,7 @@
       :limit="limit"
       :on-error="handleUploadError"
       :on-exceed="handleExceed"
-      :on-success="handleUploadSuccess"
+      :on-success="handleSuccess"
       :show-file-list="false"
       :headers="headers"
       class="upload-file-uploader"
@@ -185,6 +185,12 @@ export default {
         strs += list[i].url + separator;
       }
       return strs !== '' ? strs.substr(0, strs.length - 1) : '';
+    },
+    handleSuccess(res) {
+      console.log(res)
+      this.value=[res.data.id];
+      this.fileList=[];
+      this.$modal.closeLoading();
     }
   }
 };
