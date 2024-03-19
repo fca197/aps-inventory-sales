@@ -8,7 +8,7 @@ excludes weekends
 %% （excludes 参数接受 YYYY-MM-DD 格式的具体日期、星期几（例如“sunday”）
 section 商品管理
 商品管理: done, goods_list, 2024-03-19,1d
-商品添加: active,  after goods_list ,0.5d
+商品添加: active, after goods_list ,3h
 商品删除: goods_delete, after goods_add ,1d
 section 订单管理
 订单录入:  done, order_add, 2024-03-19, 1d
