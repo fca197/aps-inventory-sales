@@ -73,11 +73,12 @@ C-->>C: 盘点报表查看(可下载)
     <tr><td>盘点管理</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>扫码盘点,下载</td><td><!-- 备注--></td><td><!-- 需求-->盘点快照</td><td><!-- BUG--></td><td><!--优化--></td></tr>
     <tr><td>H3接口</td><td></td><td></td><td></td><td></td><td></td><td><!--其他--></td><td><!-- 备注-->H3 API接口已接入</td><td><!-- 需求--></td><td><!-- BUG--></td><td><!--优化--></td></tr>
     <tr><td>文件管理</td><td>✅</td><td>✅</td><td>✅</td><td> </td><td>✅</td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求--></td><td><!-- BUG--></td><td><!--优化--></td></tr>
-    <tr><td>商品管理</td><td></td><td></td><td></td><td></td><td> </td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求-->,每日盘点,销售数据,库存数据,库存预警</td><td><!-- BUG--></td><td><!--优化--></td></tr>
+    <tr><td>商品管理</td><td></td><td></td><td></td><td></td><td> </td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求-->每日盘点,销售数据,库存数据,库存预警</td><td><!-- BUG--></td><td><!--优化--></td></tr>
     <tr><td>订单管理</td><td></td><td></td><td></td><td></td><td> </td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求--></td><td><!-- BUG--></td><td><!--优化--></td></tr>
     <tr><td>财务管理</td><td></td><td></td><td></td><td></td><td> </td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求-->收支统计,财务分析,财务报告</td><td><!-- BUG--></td><td><!--优化--></td></tr>
     <tr><td>供应商管理</td><td></td><td></td><td></td><td></td><td> </td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求--></td><td><!-- BUG--></td><td><!--优化--></td></tr>
     <tr><td>采购管理</td><td></td><td></td><td></td><td></td><td> </td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求--></td><td><!-- BUG--></td><td><!--优化--></td></tr>
+    <tr><td>消息中心</td><td></td><td></td><td></td><td></td><td> </td><td><!--其他--></td><td><!-- 备注--></td><td><!-- 需求--></td><td><!-- BUG--></td><td><!--优化--></td></tr>
 </table>
 
 # 技术栈
