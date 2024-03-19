@@ -1,3 +1,14 @@
+# 开发进度图
+
+```mermaid
+gantt
+title 甘特图示例
+dateFormat YYYY-MM-DD
+excludes Sunday,Friday,Saturday
+section 项目1
+任务1 :a1,2020-03-07,5d
+其他任务 :after a1,7d
+```
 # 功能流程图
 
 ## 盘点
@@ -24,6 +35,7 @@ P-->>C: 盘点信息录入
 C-->>C: 盘点完成
 C-->>C: 盘点报表查看(可下载)
 ```
+
 
 # 功能点
 
