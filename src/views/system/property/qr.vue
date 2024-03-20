@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div class="pDiv">
     <img :src="dataURL" :alt="propertyName" v-show="!isFakeData" >
     <div class="qrCodeDiv" :id="id"  v-show="isFakeData">
       <div :ref="id" class="qrCodeDivItem">
@@ -74,5 +74,9 @@ export default {
   display: inline-block;
   text-align: -webkit-center;
   padding: 10px;
+}
+.pDiv{
+  border-right: #eee 1px solid;
+  border-bottom : #eee 1px solid;
 }
 </style>

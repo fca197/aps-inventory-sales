@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
       <el-form-item label="商品名称" prop="goodsName">
-        <el-input v-model="queryParams.goodsName" placeholder="请输入商品名称" clearable
+        <el-input v-model="queryParams.data.goodsName" placeholder="请输入商品名称" clearable
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
@@ -13,11 +13,14 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
-          删除
+        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"/>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="success" plain   size="mini" :disabled="multiple" @click="handleCreateLineCode">
+          <svg-icon icon-class="line-code"/>
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -30,6 +33,7 @@
                        :label="item.showName">
         <template slot-scope="scope">
           <image-show  width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg'" />
+
           <span v-else>{{ scope.row[item.fieldName] }}</span>
         </template>
       </el-table-column>
@@ -51,6 +55,9 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
+    <el-dialog :title="title" :visible.sync="goodsLineCodeListOpen"  fullscreen append-to-body>
+        <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
+    </el-dialog>
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
 
@@ -92,11 +99,18 @@
 <script>
 import ImageShow  from "@/components/ImageShow/index.vue";
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import linCode from "@/views/system/goods/linCode.vue";
+import item from "@/layout/components/Sidebar/Item.vue";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "goodsName",
+  computed: {
+    item() {
+      return item
+    }
+  },
   components: {
-    ImageShow
+    ImageShow,linCode
   },
   data() {
 
@@ -115,17 +129,17 @@ export default {
       total: 0,
 
       goodsNameList: [],
+      goodsLineCodeList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      goodsLineCodeListOpen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        goodsName: undefined,
-        createBy: undefined,
-        status: undefined
+        data:{}
       },
       // 表单参数
       form: {
@@ -252,6 +266,17 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    },
+    handleCreateLineCode(){
+      if (this.ids.length === 0){
+        this.$modal.msgError("请选择商品")
+        return;
+      }
+      this.goodsLineCodeList=[]
+      this.goodsNameList.filter(t=>this.ids.includes(t.id)).forEach(t=>{
+         this.goodsLineCodeList.push(t);
+         this.goodsLineCodeListOpen=true
+      })
     }
   }
 }
