@@ -28,22 +28,15 @@
       的文件
     </div>
 
-    <el-dialog
-        :visible.sync="dialogVisible"
-        title="预览"
-        width="800"
-        append-to-body
-    >
-      <img
-          :src="dialogImageUrl"
-          style="display: block; max-width: 100%; margin: 0 auto"
-      />
+    <el-dialog :visible.sync="dialogVisible" append-to-body>
+      <img  :src="dialogImageUrl" style="display: block; max-width: 100%; margin: 0 auto"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import {getToken} from "@/utils/auth";
+import {getImageBase64} from "@/api/fileUpload";
 
 export default {
   props: {
@@ -159,7 +152,6 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        debugger
         let data = res.data.data;
         this.uploadList.push({id: data.id, name: data.fileName, url: data.fileName});
         this.uploadedSuccessfully();
@@ -186,7 +178,6 @@ export default {
     },
     // 上传结束处理
     uploadedSuccessfully() {
-
       if (this.number > 0 && this.uploadList.length === this.number) {
         this.fileList = this.fileList.concat(this.uploadList);
         this.uploadList = [];
@@ -197,8 +188,11 @@ export default {
     },
     // 预览
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+     return  getImageBase64(file.id).then(t=>{
+        this.dialogImageUrl=t
+        this.dialogVisible = true
+      });
+
     },
     // 对象转成指定字符串分隔
     listToString(list, separator) {

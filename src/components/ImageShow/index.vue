@@ -1,7 +1,7 @@
 <template>
   <div>
     <img :src="data" :width="width" :height="height" @click="showImg"/>
-    <image-zoom :src="data" :is-show="zoomIsShow"/>
+    <image-zoom  :is-show=" this.zoomIsShow" :img-data-props="data" :id="id"/>
   </div>
 </template>
 
@@ -26,7 +26,10 @@ export default {
   },
   data() {
     return {
-      zoomIsShow: false,
+
+      zoomIsShow:{
+        enabled:false
+      } ,
       data: undefined
     };
   },
@@ -43,7 +46,7 @@ export default {
       }
     },
     showImg() {
-      this.zoomIsShow = true
+      this.zoomIsShow.enabled = true
     }
   }
 };

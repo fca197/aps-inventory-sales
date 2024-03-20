@@ -1,31 +1,40 @@
 <template>
-  <div class="imageZoomDiv" v-show="isShow">
-    <img :src="data"/>
-  </div>
+
+
+  <el-dialog
+      :visible.sync="isShow.enabled"
+      fullscreen
+      append-to-body
+  >
+    <div class="imageZoomDiv">
+      <img :src="imgDataProps"/>
+    </div>
+
+  </el-dialog>
 </template>
 
 <script>
 
-import {getImageBase64} from "@/api/fileUpload";
-
 export default {
-  name: "ImageShow",
+  name: "ImageZoom",
   props: {
-    isShow: {},
+    isShow: {
+      enabled:undefined
+    },
     id: {},
-    data: {}
+    imgDataProps: {}
   },
   data() {
-    return {}
+    return {
+      imgData: undefined
+    }
   },
   created() {
-    this.getFile()
+    // this.getFile()
   },
   methods: {
-    getFile() {
-      getImageBase64(this.id).then(t => {
-        this.data = t
-      })
+    closeOthersTags() {
+      this.isShow.enabled = false;
     }
   }
 };
@@ -33,13 +42,27 @@ export default {
 
 <style scoped>
 .imageZoomDiv {
-  position: absolute;
   width: 100%;
-  height: 100%
+  background: #aaa;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 }
 
-.imageZoomDiv image {
-  display: table-cell;
-  vertical-align: middle;
-}
+.imageZoomDiv > img {
+
+  max-width: 40%;
+  max-height: 60%;
+    position: absolute;
+    background: #55a9ff;
+    top: 25%;
+    left: 25%;
+    right: 25%;
+    bottom: 25%;
+    margin: auto;
+
+  }
+
 </style>

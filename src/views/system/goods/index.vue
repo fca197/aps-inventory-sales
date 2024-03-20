@@ -55,7 +55,7 @@
       <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="商图片" prop="file">
-          <image-upload  v-model="form.goodsImg" :limit="1" :file-size="1" :file-type="['jpg','png']"></image-upload>
+          <image-upload  v-model="form.goodsImg" :limit="1" :file-size="5" :file-type="['jpg','png']"></image-upload>
         </el-form-item>
         <el-form-item label="商品名称" prop="file">
           <el-input v-model="form.goodsName" placeholder="请输入商品名称" aria-required="true"/>

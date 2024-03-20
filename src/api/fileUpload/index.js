@@ -1,8 +1,14 @@
 import request from "@/utils/request";
 
 export function getImageBase64(id) {
-  if (id === undefined){
-    return Promise.reject({ message: "id不能为空"})
+  return getFileBase64(id).then(res => {
+    return "data:image/png;base64," + res;
+  })
+}
+
+export function getFileBase64(id) {
+  if (id === undefined) {
+    return Promise.all({data: {base64: ""}})
   }
   return request({
     url: "fileUpload/getFileBase64",
@@ -10,6 +16,6 @@ export function getImageBase64(id) {
       id: id
     }
   }).then(res => {
-    return  "data:image/png;base64,"+res.data.base64;
+    return res.data.base64;
   })
 }
