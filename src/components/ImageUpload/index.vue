@@ -39,6 +39,7 @@ import {getToken} from "@/utils/auth";
 import {getImageBase64} from "@/api/fileUpload";
 
 export default {
+  name:"ImageUpload",
   props: {
     value: [String, Object, Array],
     // 图片数量限制
@@ -69,7 +70,7 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       hideUpload: false,
-      baseUrl: process.env.VUE_APP_BASE_API,
+      baseUrl: process.env.VUE_APP_BASE_API+"/fileUpload/getFileByte/",
       uploadImgUrl: process.env.VUE_APP_BASE_API + "/fileUpload/insert", // 上传文件服务器地址
       headers: {
         'j-token': getToken(),
@@ -184,6 +185,7 @@ export default {
         this.number = 0;
         this.$emit("input", this.listToString(this.fileList));
         this.$modal.closeLoading();
+        // this.handlePictureCardPreview(this.fileList[0])
       }
     },
     // 预览
