@@ -109,19 +109,16 @@ export default {
     changeGoods(val, index) {
       getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
       .then(response => {
-        console.log("changeGoods 2 ", index, this.toSelectGoods)
         this.toSelectGoods[index] = []
         response.dataList.forEach(item => {
           this.toSelectGoods[index].push(item)
         })
-        console.log("changeGoods", this.toSelectGoods)
         this.$forceUpdate()
       })
     }
     , addGoods() {
       this.form.goodsList.push({goodsCount: 1})
       this.toSelectGoods[this.form.goodsList.length-1] = []
-      console.log("add", this.toSelectGoods, this.form.goodsList)
     }, deleteGoods(index) {
       if (this.form.goodsList.length !== 1) {
         this.form.goodsList.splice(index, 1)
