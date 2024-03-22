@@ -13,7 +13,7 @@
       <el-form-item label="商品">
         <div class="goods-item" v-for="(item,index) in form.goodsList" v-if="toSelectGoods[index]">
           <el-col :span="10">
-            {{ index }}=>
+            {{ index+1}}=>
             <el-select v-model="item.goodsId" placeholder="请选择商品" width="100%" filterable :filter-method="value=>{changeGoods(value,index)}">
               <el-option v-for="(value,index) in toSelectGoods[index]" :key="index" :label="value.goodsName" :value="value.id"/>
             </el-select>
