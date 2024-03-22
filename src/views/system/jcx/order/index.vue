@@ -72,7 +72,7 @@
     <el-dialog :title="title" :visible.sync="goodsLineCodeListOpen" fullscreen append-to-body>
       <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
     </el-dialog>
-    <el-dialog :title="title" v-if="open" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-if="open" :visible.sync="open" width="800px" append-to-body>
       <create-order :order-status-options-map="orderStatusOptionsMap" :open="open" @cancel="cancel" :success-fun="submitFormSuccess"></create-order>
     </el-dialog>
   </div>
@@ -83,6 +83,7 @@ import ImageShow from "@/components/ImageShow/index.vue";
 import {deleteByIdList, getById, queryPageList} from '@/api/common'
 import linCode from "@/views/system/jcx/goods/linCode.vue";
 import CreateOrder from "@/views/system/jcx/order/CreateOrder.vue";
+import {getOrderStatus} from "@/api/jcx/order";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "goodsName",
@@ -95,14 +96,7 @@ export default {
     return {
 
       orderStatusOptionsMap: {
-        "10": "待付款",
-        "20": "待发货",
-        "30": "待收货",
-        "40": "待评价",
-        "50": "已完成",
-        "60": "已取消",
-        "70": "已退款",
-        "80": "已作废"
+
       },
       // 遮罩层
       loading: true,
@@ -161,7 +155,10 @@ export default {
   },
   created() {
     document["pagePath"] = "/jcx/order";
-    this.getList();
+    getOrderStatus().then((res)=>{
+      this.orderStatusOptionsMap=res;
+      this.getList();
+    })
   },
   methods: {
     /** 查询公告列表 */

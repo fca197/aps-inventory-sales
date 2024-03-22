@@ -10,12 +10,23 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="订单号">
-        <div v-for="(item,index) in form.goodsList">
-          <el-select v-model="item.goodsId" placeholder="请选择商品" @change="changeGoods">
-            <el-option v-for="(value,key,index) in toSelectGoods" :key="index" :label="value.goodsName" :value="value.id"/>
-          </el-select>
-          <el-input v-model="item.goodsCount" placeholder="商品数量" clearable></el-input>
+      <el-form-item label="商品">
+        <div class="goods-item" v-for="(item,index) in form.goodsList" v-if="toSelectGoods[index]">
+          <el-col :span="10">
+            {{ index }}=>
+            <el-select v-model="item.goodsId" placeholder="请选择商品" width="100%" filterable :filter-method="value=>{changeGoods(value,index)}">
+              <el-option v-for="(value,index) in toSelectGoods[index]" :key="index" :label="value.goodsName" :value="value.id"/>
+            </el-select>
+          </el-col>
+          <el-col :span="6">
+            <el-input v-model="item.goodsCount" placeholder="商品数量" clearable></el-input>
+          </el-col>
+          <el-col :span="2" align="center"><span>-</span>
+          </el-col>
+          <el-col :span="6">
+            <el-button type="primary" @click="addGoods">添加</el-button>
+            <el-button type="danger" @click="deleteGoods(index)">删除</el-button>
+          </el-col>
         </div>
       </el-form-item>
       <el-form-item label="" prop="" align="right">
@@ -28,10 +39,12 @@
 
 <script>
 import {add, updateById} from '@/api/common'
+import {getFoodsList} from "@/api/jcx/goods";
 
 export default {
   name: "createOrder",
   props: {
+    id: undefined,
     open: {},
     successFun: {},
     orderStatusOptionsMap: {}
@@ -40,35 +53,32 @@ export default {
   components: {},
   data() {
     return {
-      toSelectGoods: [{
-        id: "11111",
-        goodsName: "商品11"
-      }],
+      toSelectGoods: {},
       // 表单参数
       form: {
-        goodsList: [{}, {}],
+        orderRemark: undefined,
+        goodsList: [],
         orderStatus: "10",
         goodsName: undefined,
         goodsId: undefined,
-        goodsCount: 1
       },
       // 表单校验
       rules: {}
-    };
+    }
+        ;
   },
   created() {
     document["pagePath"] = "/jcx/order";
   },
   mounted() {
-    this.$nextTick(()=>{
-      console.log("xxxx")
+    this.$nextTick(() => {
       this.form = {
-        goodsList: [{}, {}],
+        goodsList: [],
         orderStatus: "10",
         goodsName: undefined,
         goodsId: undefined,
-        goodsCount: 1
       }
+      this.addGoods();
     })
   },
   methods: {
@@ -96,9 +106,35 @@ export default {
         this.$modal.msgSuccess("新增成功");
       }
     },
-    changeGoods(val) {
-
+    changeGoods(val, index) {
+      getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
+      .then(response => {
+        console.log("changeGoods 2 ", index, this.toSelectGoods)
+        this.toSelectGoods[index] = []
+        response.dataList.forEach(item => {
+          this.toSelectGoods[index].push(item)
+        })
+        console.log("changeGoods", this.toSelectGoods)
+        this.$forceUpdate()
+      })
+    }
+    , addGoods() {
+      this.form.goodsList.push({goodsCount: 1})
+      this.toSelectGoods[this.form.goodsList.length-1] = []
+      console.log("add", this.toSelectGoods, this.form.goodsList)
+    }, deleteGoods(index) {
+      if (this.form.goodsList.length !== 1) {
+        this.form.goodsList.splice(index, 1)
+      } else {
+        this.$modal.msgError("至少保留一条数据")
+      }
     }
   }
 }
 </script>
+<style>
+.goods-item {
+  margin-bottom: 10px;
+  display: flex;
+}
+</style>
