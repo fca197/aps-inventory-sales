@@ -16,6 +16,10 @@ export function getFileBase64(id) {
       id: id
     }
   }).then(res => {
-    return res.data.base64;
+    try{
+      return res.data.base64;
+    }catch (e){
+     return "";
+    }
   })
 }

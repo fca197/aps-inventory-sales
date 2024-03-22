@@ -32,7 +32,7 @@ module.exports = {
     host: '0.0.0.0',
     port: port,
     open: true,
-    https: true,
+    // https: true,
     proxy:{
       '/api':{
         target: 'http://localhost',//代理地址，这里设置的地址会代替axios中设置的baseURL

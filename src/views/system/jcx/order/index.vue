@@ -1,9 +1,23 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="商品名称" prop="goodsName">
-        <el-input v-model="queryParams.data.goodsName" placeholder="请输入商品名称" clearable
+
+      <el-form-item label="订单编号" prop="orderNo">
+        <el-input v-model="queryParams.data.orderNo" placeholder="请输入订单编号" clearable
                   @keyup.enter.native="handleQuery"/>
+      </el-form-item>
+      <el-form-item label="订单日期" prop="orderTime">
+        <el-date-picker clearable size="small" v-model="queryParams.data.orderTime"
+                        type="daterange" value-format="yyyy-MM-dd" range-separator="-"
+                        start-placeholder="开始日期" end-placeholder="结束日期"
+                        @change="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="订单状态" prop="orderStatus">
+        <el-select v-model="queryParams.data.orderStatus" placeholder="请选择订单状态" clearable @change="handleQuery">
+          <el-option v-for="( value,key,index) in orderStatusOptionsMap" :key="index" :label="value" :value="key">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -19,7 +33,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"/>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain   size="mini" :disabled="multiple" @click="handleCreateLineCode">
+        <el-button type="success" plain size="mini" :disabled="multiple" @click="handleCreateLineCode">
           <svg-icon icon-class="line-code"/>
         </el-button>
       </el-col>
@@ -32,7 +46,7 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName" :width="item.width"
                        :label="item.showName">
         <template slot-scope="scope">
-          <image-show  width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg'" />
+          <image-show width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg'"/>
 
           <span v-else>{{ scope.row[item.fieldName] }}</span>
         </template>
@@ -55,66 +69,41 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="goodsLineCodeListOpen"  fullscreen append-to-body>
-        <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
+    <el-dialog :title="title" :visible.sync="goodsLineCodeListOpen" fullscreen append-to-body>
+      <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
-
-        <el-form-item label="商图片" prop="file">
-          <image-upload  v-model="form.goodsImg" :limit="1" :file-size="5" ></image-upload>
-        </el-form-item>
-        <el-form-item label="商品名称" prop="file">
-          <el-input v-model="form.goodsName" placeholder="请输入商品名称" aria-required="true"/>
-        </el-form-item>
-        <el-form-item label="条形码" prop="goodsCode">
-          <el-input v-model="form.goodsBarCode" placeholder="请输入商品编码"/>
-        </el-form-item>
-        <el-form-item label="二维码" prop="goodsQrCode">
-          <el-input v-model="form.goodsQrCode" placeholder="请输入二维码"/>
-        </el-form-item>
-        <el-form-item label="成本价(分):" prop="goodsMinPrice">
-          <el-input v-model="form.costPrice" placeholder="请输入商品成本价"/>
-        </el-form-item>
-        <el-form-item label="售卖价(分):" prop="goodsMaxPrice">
-          <el-input v-model="form.salesPrice" placeholder="请输入商品最高价"/>
-        </el-form-item>
-        <el-form-item label="单位" prop="goodsUnit">
-          <el-input v-model="form.goodsUnit" placeholder="请输入商品单位 (个/瓶/箱/件...)"/>
-        </el-form-item>
-        <el-form-item label="剩余预警数" prop="warningCount">
-          <el-input v-model="form.warningCount" placeholder="10"/>
-        </el-form-item>
-
-      </el-form>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
+    <el-dialog :title="title" v-if="open" :visible.sync="open" width="500px" append-to-body>
+      <create-order :order-status-options-map="orderStatusOptionsMap" :open="open" @cancel="cancel" :success-fun="submitFormSuccess"></create-order>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import ImageShow  from "@/components/ImageShow/index.vue";
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
-import linCode from "@/views/system/goods/linCode.vue";
-import item from "@/layout/components/Sidebar/Item.vue";
+import ImageShow from "@/components/ImageShow/index.vue";
+import {deleteByIdList, getById, queryPageList} from '@/api/common'
+import linCode from "@/views/system/jcx/goods/linCode.vue";
+import CreateOrder from "@/views/system/jcx/order/CreateOrder.vue";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "goodsName",
-  computed: {
-    item() {
-      return item
-    }
-  },
+  computed: {},
   components: {
-    ImageShow,linCode
+    ImageShow, linCode, CreateOrder
   },
   data() {
 
     return {
+
+      orderStatusOptionsMap: {
+        "10": "待付款",
+        "20": "待发货",
+        "30": "待收货",
+        "40": "待评价",
+        "50": "已完成",
+        "60": "已取消",
+        "70": "已退款",
+        "80": "已作废"
+      },
       // 遮罩层
       loading: true,
       // 选中数组
@@ -139,7 +128,11 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        data:{}
+        data: {
+          orderStatus: undefined,
+          orderNo: undefined,
+          orderTime: []
+        }
       },
       // 表单参数
       form: {
@@ -167,7 +160,7 @@ export default {
     };
   },
   created() {
-    document["pagePath"] = "/goods";
+    document["pagePath"] = "/jcx/order";
     this.getList();
   },
   methods: {
@@ -190,15 +183,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        goodsCode: "",
-        id: undefined,
-        goodsName: undefined,
-        isUsed: true,
-        costPrice: 99.99,
-        salesPrice: 99.99,
-        goodsUnit: "",
-        warningCount: 10
+        data: {}
       };
       this.resetForm("form");
     },
@@ -236,22 +221,9 @@ export default {
 
     },
     /** 提交按钮 */
-    submitForm: function () {
-
-      if (this.form.id !== undefined) {
-        updateById(this.form).then(response => {
-          this.$modal.msgSuccess("修改成功");
-          this.open = false;
-          this.getList();
-        });
-      } else {
-        add(this.form).then(response => {
-          this.$modal.msgSuccess("新增成功");
-          this.open = false;
-          this.getList();
-        });
-      }
-
+    submitFormSuccess: function () {
+      this.open = false;
+      this.getList();
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -267,15 +239,15 @@ export default {
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
     },
-    handleCreateLineCode(){
-      if (this.ids.length === 0){
+    handleCreateLineCode() {
+      if (this.ids.length === 0) {
         this.$modal.msgError("请选择商品")
         return;
       }
-      this.goodsLineCodeList=[]
-      this.goodsNameList.filter(t=>this.ids.includes(t.id)).forEach(t=>{
-         this.goodsLineCodeList.push(t);
-         this.goodsLineCodeListOpen=true
+      this.goodsLineCodeList = []
+      this.goodsNameList.filter(t => this.ids.includes(t.id)).forEach(t => {
+        this.goodsLineCodeList.push(t);
+        this.goodsLineCodeListOpen = true
       })
     }
   }

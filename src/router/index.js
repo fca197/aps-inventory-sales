@@ -148,21 +148,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/order/index',
-    component: Layout,
-    hidden: true,
-    redirect: 'index',
-    meta: {title: '订单管理', icon: 'user', affix: false},
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/system/order/index'),
-        name: '订单管理',
-        meta: {title: '订单管理', icon: 'serverless', affix: false}
-      }
-    ]
-  },
-  {
     path: '/spu/index',
     component: Layout,
     redirect: 'index',
@@ -268,10 +253,16 @@ export const constantRoutes = [
     meta: {title: '进存销', icon: 'international', affix: false},
     children: [
       {
-        path: '/goods/index',
+        path: '/jcx/goods/index',
         name: "商品管理",
-        component: () => import('@/views/system/goods/index'),
+        component: () => import('@/views/system/jcx/goods/index'),
         meta: {title: '商品管理', icon: 'calendar', affix: false}
+      },
+      {
+        path: '/order/index',
+        name: "订单管理",
+        component: () => import('@/views/system/jcx/order/index'),
+        meta: {title: '订单管理', icon: 'calendar', affix: false}
       },
     ]
   }

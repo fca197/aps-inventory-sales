@@ -44,7 +44,7 @@ export default {
 <style scoped lang="scss">
 .line-code-div {
   width: 250px;
-  display: table-cell;
+  display: inline-block;
   border-right: #eee 1px solid;
   border-bottom : #eee 1px solid;
   margin: 0 10px 15px 0;
