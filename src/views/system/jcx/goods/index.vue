@@ -32,8 +32,7 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName" :width="item.width"
                        :label="item.showName">
         <template slot-scope="scope">
-          <image-show  width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg'" />
-
+          <image-show  width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg' && tableHeaderIndex" />
           <span v-else>{{ scope.row[item.fieldName] }}</span>
         </template>
       </el-table-column>
@@ -58,11 +57,10 @@
     <el-dialog :title="title" v-if="goodsLineCodeListOpen" :visible.sync="goodsLineCodeListOpen"  fullscreen append-to-body>
         <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
-
         <el-form-item label="商图片" prop="file">
-          <image-upload  v-model="form.goodsImg" :limit="1" :file-size="5" ></image-upload>
+          <image-upload  v-model="form.goodsImg" :limit="1" :file-size="5"   :is-show-tip="false"></image-upload>
         </el-form-item>
         <el-form-item label="商品名称" prop="file">
           <el-input v-model="form.goodsName" placeholder="请输入商品名称" aria-required="true"/>
@@ -84,6 +82,15 @@
         </el-form-item>
         <el-form-item label="剩余预警数" prop="warningCount">
           <el-input v-model="form.warningCount" placeholder="10"/>
+        </el-form-item>
+        <el-form-item label="库存" prop="goodsInventoryCount">
+          <el-input v-model="form.goodsInventoryCount" placeholder=""/>
+        </el-form-item>
+        <el-form-item label="毛利" prop="goodsGrossProfit">
+          <el-input v-model="form.goodsGrossProfit" placeholder="10"/>
+        </el-form-item>
+        <el-form-item label="净利润" prop="goodsNetProfit">
+          <el-input v-model="form.goodsNetProfit" placeholder="10"/>
         </el-form-item>
 
       </el-form>
@@ -127,7 +134,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-
+      tableHeaderIndex: 1,
       goodsNameList: [],
       goodsLineCodeList: [],
       // 弹出层标题
@@ -143,6 +150,9 @@ export default {
       },
       // 表单参数
       form: {
+        goodsInventoryCount:0,
+        goodsGrossProfit:0,
+        goodsNetProfit:0,
         goodsBarCode: "",
         goodsImg: "",
         goodsQrCode: "",
@@ -173,7 +183,7 @@ export default {
   methods: {
     /** 查询公告列表 */
     getList() {
-      // this.loading = true;
+
       return queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
@@ -243,12 +253,15 @@ export default {
           this.$modal.msgSuccess("修改成功");
           this.open = false;
           this.getList();
+          this.$forceUpdate()
         });
       } else {
         add(this.form).then(response => {
           this.$modal.msgSuccess("新增成功");
           this.open = false;
+          this.tableHeaderIndex++;
           this.getList();
+          this.$forceUpdate()
         });
       }
 

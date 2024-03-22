@@ -24,7 +24,6 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"></el-button>
@@ -32,30 +31,22 @@
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"/>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" plain size="mini" :disabled="multiple" @click="handleCreateLineCode">
-          <svg-icon icon-class="line-code"/>
-        </el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-
     <el-table v-loading="loading" :data="goodsNameList" @selection-change="handleSelectionChange">
-
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName" :width="item.width"
                        :label="item.showName">
         <template slot-scope="scope">
           <image-show width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg'"/>
-
           <span v-else>{{ scope.row[item.fieldName] }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
+          <!--          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>-->
+          <!--          <el-button size="mini" type="text" icon="el-icon-setting" hidden="hidden" @click="handleUpdate(scope.row)"></el-button>-->
+          <el-button size="mini" type="text" icon="el-icon-refresh-left" @click="handleUpdate(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -69,35 +60,37 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="goodsLineCodeListOpen" fullscreen append-to-body>
-      <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
+    <el-dialog :title="title" v-if="open" :visible.sync="open" width="800px" append-to-body>
+      <create-order :order-status-options-map="orderStatusOptionsMap" :open="open" @cancel="cancel" :success-fun="submitFormSuccess"></create-order>
     </el-dialog>
     <el-dialog :title="title" v-if="open" :visible.sync="open" width="800px" append-to-body>
       <create-order :order-status-options-map="orderStatusOptionsMap" :open="open" @cancel="cancel" :success-fun="submitFormSuccess"></create-order>
+    </el-dialog>
+    <el-dialog :title="title"  v-if="settingOpenIdElement"  :visible.sync="settingOpen" width="800px" append-to-body>
+      <setting-order ref="settingOrderChild" :setting-open-id="settingOpenId" :setting-open-info="settingOpenInfo" @close="settingOpen=false"></setting-order>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import ImageShow from "@/components/ImageShow/index.vue";
-import {deleteByIdList, getById, queryPageList} from '@/api/common'
+import {deleteByIdList, queryPageList} from '@/api/common'
 import linCode from "@/views/system/jcx/goods/linCode.vue";
 import CreateOrder from "@/views/system/jcx/order/CreateOrder.vue";
 import {getOrderStatus} from "@/api/jcx/order";
-// console.info("xxx: ",uc.urlPrefix)
+import SettingOrder from "@/views/system/jcx/order/SettingOrder.vue";
+
 export default {
   name: "goodsName",
   computed: {},
   components: {
-    ImageShow, linCode, CreateOrder
+    ImageShow, linCode, CreateOrder, SettingOrder
   },
   data() {
 
     return {
 
-      orderStatusOptionsMap: {
-
-      },
+      orderStatusOptionsMap: {},
       // 遮罩层
       loading: true,
       // 选中数组
@@ -117,7 +110,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      goodsLineCodeListOpen: false,
+      settingOpen: false,
+      settingOpenInfo: {},
+      settingOpenId: undefined,
+      settingOpenIdElement: undefined,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -155,8 +151,8 @@ export default {
   },
   created() {
     document["pagePath"] = "/jcx/order";
-    getOrderStatus().then((res)=>{
-      this.orderStatusOptionsMap=res;
+    getOrderStatus().then((res) => {
+      this.orderStatusOptionsMap = res;
       this.getList();
     })
   },
@@ -208,14 +204,16 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
-      getById(req).then(response => {
-        this.form = response.data.dataList[0]
-        this.open = true;
-        this.title = "修改商品";
-      });
-
+      // debugger
+      this.title = "修改订单";
+      this.settingOpen = true;
+      this.settingOpenInfo=null
+      this.settingOpenInfo = {id:1,orderNo:"002"};
+      this.settingOpenInfo = row;
+      this.settingOpenId=row.id
+      this.settingOpenIdElement=new Date().getTime()+"";
+      // this.$forceUpdate();
+      // this.$refs.settingOrderChild.loadOrderInfo(this.settingOpenId)
     },
     /** 提交按钮 */
     submitFormSuccess: function () {
@@ -235,17 +233,6 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
-    },
-    handleCreateLineCode() {
-      if (this.ids.length === 0) {
-        this.$modal.msgError("请选择商品")
-        return;
-      }
-      this.goodsLineCodeList = []
-      this.goodsNameList.filter(t => this.ids.includes(t.id)).forEach(t => {
-        this.goodsLineCodeList.push(t);
-        this.goodsLineCodeListOpen = true
-      })
     }
   }
 }

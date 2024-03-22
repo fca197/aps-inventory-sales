@@ -2,7 +2,11 @@ import request from "@/utils/request";
 
 export function getImageBase64(id) {
   return getFileBase64(id).then(res => {
-    return "data:image/png;base64," + res;
+    try {
+      return res.length > 0 ? "data:image/png;base64," + res : "";
+    } catch (e) {
+      return "";
+    }
   })
 }
 
@@ -16,10 +20,10 @@ export function getFileBase64(id) {
       id: id
     }
   }).then(res => {
-    try{
+    try {
       return res.data.base64;
-    }catch (e){
-     return "";
+    } catch (e) {
+      return "";
     }
   })
 }

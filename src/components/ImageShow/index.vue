@@ -1,7 +1,8 @@
 <template>
   <div>
-    <img :src="data" :width="width" :height="height" @click="showImg"/>
-    <image-zoom  :is-show=" this.zoomIsShow" :img-data-props="data" :id="id"/>
+    <img class="errorImgDiv" :src="data" v-if="data&&data.length>0" :width="width" :height="height" @click="showImg"/>
+    <div  style="border: #ccc 1px  solid" class="errorImgDiv" v-else></div>
+    <image-zoom :is-show=" this.zoomIsShow" :img-data-props="data" :id="id"/>
   </div>
 </template>
 
@@ -27,13 +28,16 @@ export default {
   data() {
     return {
 
-      zoomIsShow:{
-        enabled:false
-      } ,
+      zoomIsShow: {
+        enabled: false
+      },
       data: undefined
     };
   },
-
+  mounted() {
+    this.$el.style.setProperty("--main-height", this.height+"px")
+    this.$el.style.setProperty("--main-width", this.width+"px")
+  },
   created() {
     this.getFileBase64();
   },
@@ -51,3 +55,16 @@ export default {
   }
 };
 </script>
+
+<style ref="style">
+:root {
+  --main-height: 100px;
+  --main-width: 100px;
+}
+
+.errorImgDiv {
+  height: var(--main-height);
+  width: var(--main-width);
+  border-radius: 1px
+}
+</style>
