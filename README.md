@@ -1,4 +1,3 @@
-
 # 功能流程图
 
 ## 盘点
@@ -27,6 +26,29 @@ loop 扫码盘点
 end
 C-->>C: 盘点完成
 C-->>C: 盘点报表查看(可下载)
+```
+
+## 进存销
+
+```mermaid
+sequenceDiagram
+title: 进存销盘点流程
+participant U as 用户
+participant BU as 用户购买
+participant G as 商品
+participant O as  订单
+participant M as  消息
+
+
+U->>G: 用户录入商品
+BU->>G: 用户购买商品
+G-->>U: 用户获取商品信息
+U->>O: 用户下单
+O->>O: 订单入库
+O-->>BU: 用户买单
+G-->>G: 订单盘点
+G->>M: 发送盘点结果
+
 ```
 
 # 功能点一览
