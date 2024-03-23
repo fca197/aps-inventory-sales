@@ -1,27 +1,36 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar"/>
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
     <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'" hidden="hidden">
-        <search id="header-search" class="right-menu-item" />
 
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <el-button class="right-menu-item hover-effect" type="text" @click="goodsInventory">
+          <i class="el-icon-data-analysis" title="消息中心"/>
+        </el-button>
 
+
+        <el-button class="right-menu-item hover-effect" type="text">
+          <span @click="showMsgDrawer">
+            <i class="el-icon-bell" title="消息中心"/>
+            <span class=" msg-count-tips" v-if="messageCount>0">{{ messageCount }}</span>
+          </span>
+        </el-button>
+        <search id="header-search" class="right-menu-item"/>
+        <screenfull id="screenfull" class="right-menu-item hover-effect"/>
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
+          <size-select id="size-select" class="right-menu-item hover-effect"/>
         </el-tooltip>
-
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar" :title="userName">
-          <i class="el-icon-caret-bottom" />
+          <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
           <router-link to="/user/profile">
@@ -36,18 +45,60 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <el-drawer title="消息中心" :key="messageList" :visible.sync="showDrawerMsg" direction="rtl">
+      <el-collapse accordion>
+        <el-collapse-item v-for="(item,index) in messageList" width="100%" :title="item.messageTitle" :id="'md_'+item.id" :name="index" :key="index">
+          <div class="header-div"><span class="header-title ">创建时间: </span> <span class="header-value">{{ item.createTime }}</span></div>
+          <div class="header-div"><span class="header-title ">消息内容: </span> <span class="header-value">{{ item.messageContext }}</span></div>
+          <div style="height: 10px"></div>
+          <table v-if="item.hasJsonData" width="100%" class="default-table" cellpadding="0" cellspacing="0">
+            <tbody>¬
+            <tr>
+              <td class="thead" v-if="item.messageJsonDataObject.header" v-for="(ht,index) in item.messageJsonDataObject.header">{{ ht }}</td>
+            </tr>
+            <tr v-for="(itemTr,index) in item.messageJsonDataObject.data" v-if="item.messageJsonDataObject.data.length>0">
+              <td class="tbody" v-for="(itemTd,index) in itemTr">{{ itemTd }}</td>
+            </tr>
+            <tr v-if="item.messageJsonDataObject.data.length===0">
+              <td class="tbody" colspan="100%">暂无数据</td>
+            </tr>
+            </tbody>
+          </table>
+          <div v-if="item.hasJsonData" class="footer">
+            共计 <span class="count">{{ item.messageJsonDataObject.data.length }}</span> 条
+          </div>
+        </el-collapse-item>
+      </el-collapse>
+      <pagination v-show="messageList.length>0" :total="messageListTotal" :page.sync="messageListPageNum" :limit.sync="messageListPageSize"/>
+    </el-drawer>
+
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
+import request from "@/utils/request";
+import {getTenantId} from "@/utils/auth";
+import {msgMessageReadQueryPageList, queryUnReadCount} from "@/api/message";
+
 export default {
+  data() {
+    return {
+      visible: false,
+      messageList: [],
+      messageListTotal: 0,
+      messageListPageNum: 0,
+      messageListPageSize: 10,
+      showDrawerMsg: false,
+      messageCount: 10
+    }
+  },
   components: {
     Breadcrumb,
     TopNav,
@@ -80,6 +131,11 @@ export default {
       }
     }
   },
+  created() {
+    queryUnReadCount().then(res => {
+      this.messageCount = res
+    })
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -93,7 +149,36 @@ export default {
         this.$store.dispatch('LogOut').then(() => {
           location.href = '/index';
         })
-      }).catch(() => {});
+      }).catch(() => {
+      });
+    },
+    async goodsInventory() {
+      request({
+        url: '/jcx/goods/inventory/' + getTenantId(),
+        method: 'get'
+      }).then(res => {
+        console.info(res)
+      });
+    },
+    showMsgDrawer() {
+      this.showDrawerMsg = true
+      msgMessageReadQueryPageList({pageNum: this.messageListPageNum, pageSize: this.messageListPageSize})
+      .then(r => {
+        this.messageList = r.dataList
+        this.messageList.forEach(item => {
+          item.hasJsonData = true;
+          item.messageJsonDataObject = JSON.parse(item.messageJsonData)
+        })
+        this.messageListTotal = parseInt(r.total)
+        // console.info(this.messageList)
+      }).then(() => {
+        this.messageList.forEach(ttt => {
+          var children = document.getElementById('md_' + ttt.id).children[0].children[0];
+
+          children.innerHTML = '<span style="width:15px"> </span>' + children.innerText
+          .replaceAll("*", "").trimEnd() + (!ttt.isRead ? "&nbsp;&nbsp;<span style='color:red'>*</span>" : "");
+        });
+      })
     }
   }
 }
@@ -105,7 +190,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -113,7 +198,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)
@@ -185,5 +270,26 @@ export default {
       }
     }
   }
+}
+
+.msg-count-tips {
+  margin: -20px 0 0 0;
+  display: table-caption;
+  background-color: red;
+  color: red;
+  border-radius: 50%;
+  font-size: 5px;
+  width: 7px;
+  height: 7px;
+}
+
+.footer {
+  margin: 20px 30px 0 0;
+  text-align: right;
+}
+
+.footer .count {
+  color: #f4516c;
+  font-size: 14px;
 }
 </style>

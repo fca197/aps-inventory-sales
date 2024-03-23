@@ -1,12 +1,12 @@
 <template>
   <div>
-    <span class="order-header-title"> 订单序号:</span> <span class="order-header-value"> {{ settingOpenInfo.id }} </span>
+    <span class="header-title"> 订单序号:</span> <span class="header-value"> {{ settingOpenInfo.id }} </span>
     <br/>
-    <span class="order-header-title"> 订单编号:</span> <span class="order-header-value">  {{ settingOpenInfo.orderNo }} </span>
+    <span class="header-title"> 订单编号:</span> <span class="header-value">  {{ settingOpenInfo.orderNo }} </span>
     <br/>
-    <span class="order-header-title"> 下单时间:</span> <span class="order-header-value">  {{ settingOpenInfo.createTime }} </span>
+    <span class="header-title"> 下单时间:</span> <span class="header-value">  {{ settingOpenInfo.createTime }} </span>
     <br/>
-    <span class="order-header-title"> 商品列表:</span>
+    <span class="header-title"> 商品列表:</span>
     <el-table :data="orderItems" style="width: 100%">
       <el-table-column label="商品名称" align="center" prop="goodsName"/>
       <el-table-column label="商品数量" align="center" prop="goodsCount"/>
@@ -25,7 +25,7 @@
       </el-table-column>
     </el-table>
     <el-drawer/>
-    <div class="setting-order-footer" align="right">
+    <div class="setting-footer" align="right">
       <el-button @click="cancel">取消</el-button>
     </div>
   </div>
@@ -111,17 +111,4 @@ export default {
 
 
 <style scoped lang="scss">
-.order-header-title {
-  font-size: 15px;
-  color: #409EFF;
-}
-
-.order-header-value {
-  font-size: 15px;
-  color: #000;
-}
-
-.setting-order-footer {
-  margin-top: 15px;
-}
 </style>

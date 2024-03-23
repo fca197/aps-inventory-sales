@@ -98,7 +98,7 @@
         <el-form-item label="净利润" prop="goodsNetProfit">
           <el-input v-model="form.goodsNetProfit" placeholder="10"/>
         </el-form-item>
-        <el-form-item label="净利润" prop="isInventory">
+        <el-form-item label="盘点" prop="isInventory">
           <el-select v-model="form.isInventory" placeholder="请选择">
             <el-option label="是" :value="true"></el-option>
             <el-option label="否" :value="false"></el-option>
@@ -178,8 +178,9 @@ export default {
         salesPrice: 99.99,
         goodsUnit: "",
         warningCount: 10,
-        isUsed: true
+        isUsed: true,
       },
+      initForm: {},
       // 表单校验
       rules: {},
       tableHeaderList: [{
@@ -192,6 +193,7 @@ export default {
   created() {
     document["pagePath"] = "/jcx/goods";
     this.getList();
+    Object.assign(this.initForm, this.form);
   },
   methods: {
     /** 查询公告列表 */
@@ -212,17 +214,7 @@ export default {
     },
     // 表单重置
     reset() {
-      this.form = {
-        remark: "",
-        goodsCode: "",
-        id: undefined,
-        goodsName: undefined,
-        isUsed: true,
-        costPrice: 99.99,
-        salesPrice: 99.99,
-        goodsUnit: "",
-        warningCount: 10
-      };
+      this.form =this.initForm;
       this.resetForm("form");
     },
     /** 搜索按钮操作 */

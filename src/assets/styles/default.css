@@ -1,0 +1,41 @@
+
+.header-div {
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+
+.header-title {
+  font-size: 15px;
+  color: #409EFF;
+  margin: 2px 0;
+}
+
+.header-value {
+  font-size: 15px;
+  color: #000;
+  margin: 2px 0;
+}
+
+.setting-footer {
+  margin-top: 15px;
+}
+
+table.default-table {
+  padding: 0;
+  text-align: center;
+}
+
+
+table.default-table .thead {
+  word-break: break-word;
+  background-color: #f8f8f9;
+  color: #515a6e;
+  height: 40px;
+  font-size: 13px;
+  font-weight: bold;
+  border-bottom: 1px solid #dfe6ec;
+}
+
+table.default-table .tbody {
+  border-bottom: 1px solid #dfe6ec;
+}

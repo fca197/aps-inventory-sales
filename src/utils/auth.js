@@ -13,3 +13,10 @@ export function setToken(token) {
 export function removeToken() {
   return Cookies.remove(TokenKey)
 }
+
+export function getTenantId() {
+  return Cookies.get('tenantId')
+}
+export  function setTenantId(tenantId) {
+  return Cookies.set('tenantId', tenantId)
+}
