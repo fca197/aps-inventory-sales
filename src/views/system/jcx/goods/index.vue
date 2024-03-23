@@ -19,7 +19,7 @@
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"/>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain   size="mini" :disabled="multiple" @click="handleCreateLineCode">
+        <el-button type="success" plain size="mini" :disabled="multiple" @click="handleCreateLineCode">
           <svg-icon icon-class="line-code"/>
         </el-button>
       </el-col>
@@ -32,11 +32,17 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName" :width="item.width"
                        :label="item.showName">
         <template slot-scope="scope">
-          <image-show  width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg' && tableHeaderIndex" />
+          <image-show width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg' && tableHeaderIndex"/>
           <span v-else>{{ scope.row[item.fieldName] }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="盘点">
+        <template slot-scope="scope">
+          <span v-if="scope.row.isInventory">是</span>
+          <span v-else>否</span>
+        </template>
 
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
@@ -54,13 +60,13 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" v-if="goodsLineCodeListOpen" :visible.sync="goodsLineCodeListOpen"  fullscreen append-to-body>
-        <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
+    <el-dialog :title="title" v-if="goodsLineCodeListOpen" :visible.sync="goodsLineCodeListOpen" fullscreen append-to-body>
+      <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="商图片" prop="file">
-          <image-upload  v-model="form.goodsImg" :limit="1" :file-size="5"   :is-show-tip="false"></image-upload>
+          <image-upload v-model="form.goodsImg" :limit="1" :file-size="5" :is-show-tip="false"></image-upload>
         </el-form-item>
         <el-form-item label="商品名称" prop="file">
           <el-input v-model="form.goodsName" placeholder="请输入商品名称" aria-required="true"/>
@@ -92,6 +98,12 @@
         <el-form-item label="净利润" prop="goodsNetProfit">
           <el-input v-model="form.goodsNetProfit" placeholder="10"/>
         </el-form-item>
+        <el-form-item label="净利润" prop="isInventory">
+          <el-select v-model="form.isInventory" placeholder="请选择">
+            <el-option label="是" :value="true"></el-option>
+            <el-option label="否" :value="false"></el-option>
+          </el-select>
+        </el-form-item>
 
       </el-form>
 
@@ -104,7 +116,7 @@
 </template>
 
 <script>
-import ImageShow  from "@/components/ImageShow/index.vue";
+import ImageShow from "@/components/ImageShow/index.vue";
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import linCode from "@/views/system/jcx/goods/linCode.vue";
 import item from "@/layout/components/Sidebar/Item.vue";
@@ -117,7 +129,7 @@ export default {
     }
   },
   components: {
-    ImageShow,linCode
+    ImageShow, linCode
   },
   data() {
 
@@ -146,13 +158,14 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        data:{}
+        data: {}
       },
       // 表单参数
       form: {
-        goodsInventoryCount:0,
-        goodsGrossProfit:0,
-        goodsNetProfit:0,
+        isInventory: true,
+        goodsInventoryCount: 0,
+        goodsGrossProfit: 0,
+        goodsNetProfit: 0,
         goodsBarCode: "",
         goodsImg: "",
         goodsQrCode: "",
@@ -280,15 +293,15 @@ export default {
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
     },
-    handleCreateLineCode(){
-      if (this.ids.length === 0){
+    handleCreateLineCode() {
+      if (this.ids.length === 0) {
         this.$modal.msgError("请选择商品")
         return;
       }
-      this.goodsLineCodeList=[]
-      this.goodsNameList.filter(t=>this.ids.includes(t.id)).forEach(t=>{
-         this.goodsLineCodeList.push(t);
-         this.goodsLineCodeListOpen=true
+      this.goodsLineCodeList = []
+      this.goodsNameList.filter(t => this.ids.includes(t.id)).forEach(t => {
+        this.goodsLineCodeList.push(t);
+        this.goodsLineCodeListOpen = true
       })
     }
   }

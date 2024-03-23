@@ -44,9 +44,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!--          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>-->
-          <!--          <el-button size="mini" type="text" icon="el-icon-setting" hidden="hidden" @click="handleUpdate(scope.row)"></el-button>-->
-          <el-button size="mini" type="text" icon="el-icon-refresh-left" @click="handleUpdate(scope.row)"></el-button>
+          <el-button size="mini" type="text" icon="el-icon-setting" @click="handleUpdate(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -207,9 +205,8 @@ export default {
       // debugger
       this.title = "修改订单";
       this.settingOpen = true;
-      this.settingOpenInfo=null
-      this.settingOpenInfo = {id:1,orderNo:"002"};
       this.settingOpenInfo = row;
+      this.settingOpenId=''
       this.settingOpenId=row.id
       this.settingOpenIdElement=new Date().getTime()+"";
       // this.$forceUpdate();

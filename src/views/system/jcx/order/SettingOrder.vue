@@ -17,9 +17,9 @@
       <el-table-column label="商品总销售价" align="center" prop="goodsTotalSalePrice"/>
       <el-table-column label="操作" align="center" prop="id">
         <template slot-scope="scope">
-          <el-select @change="value=>{updateOrderItem(scope.row.id, value)}">
-            <el-option label="退款/退货" value="1"/>
-            <el-option label="退款/不退货" value="1"/>
+          <el-select v-model="scope.row.goodsStatus" @change="value=>{updateOrderItem(value,scope.row.id)}" >
+            <el-option label="退款/退货" :value="1"/>
+            <el-option label="退款/不退货"  :value="2"/>
           </el-select>
         </template>
       </el-table-column>
