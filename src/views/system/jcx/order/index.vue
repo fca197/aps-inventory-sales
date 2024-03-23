@@ -66,7 +66,7 @@
     <el-dialog :title="title" v-if="open" :visible.sync="open" width="800px" append-to-body>
       <create-order :order-status-options-map="orderStatusOptionsMap" :open="open" @cancel="cancel" :success-fun="submitFormSuccess"></create-order>
     </el-dialog>
-    <el-dialog :title="title"  v-if="settingOpenIdElement"  :visible.sync="settingOpen" width="800px" append-to-body>
+    <el-dialog :title="title"  v-if="settingOpenIdElement"  :visible.sync="settingOpen" width="1500px" append-to-body>
       <setting-order ref="settingOrderChild" :setting-open-id="settingOpenId" :setting-open-info="settingOpenInfo" @close="settingOpen=false"></setting-order>
     </el-dialog>
   </div>
