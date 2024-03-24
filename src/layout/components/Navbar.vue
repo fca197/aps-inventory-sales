@@ -15,7 +15,7 @@
 
 
         <el-button class="right-menu-item hover-effect" type="text">
-          <span @click="showMsgDrawer">
+          <span @click="showMsgDrawerShow">
             <i class="el-icon-bell" title="消息中心"/>
             <span class=" msg-count-tips" v-if="messageCount>0">{{ messageCount }}</span>
           </span>
@@ -45,31 +45,16 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-drawer title="消息中心" :key="messageList" :visible.sync="showDrawerMsg" direction="rtl">
+    <el-drawer title="消息中心" :key="showDrawerMsgIndex" :visible.sync="showDrawerMsg" direction="rtl">
       <el-collapse accordion>
-        <el-collapse-item v-for="(item,index) in messageList" width="100%" :title="item.messageTitle" :id="'md_'+item.id" :name="index" :key="index">
+        <el-collapse-item v-for="(item,index) in messageList" width="100%" :title="item.messageTitle" :id="'md_'+item.id" :name="'name_'+index" :key="'a'+index">
           <div class="header-div"><span class="header-title ">创建时间: </span> <span class="header-value">{{ item.createTime }}</span></div>
           <div class="header-div"><span class="header-title ">消息内容: </span> <span class="header-value">{{ item.messageContext }}</span></div>
           <div style="height: 10px"></div>
-          <table v-if="item.hasJsonData" width="100%" class="default-table" cellpadding="0" cellspacing="0">
-            <tbody>¬
-            <tr>
-              <td class="thead" v-if="item.messageJsonDataObject.header" v-for="(ht,index) in item.messageJsonDataObject.header">{{ ht }}</td>
-            </tr>
-            <tr v-for="(itemTr,index) in item.messageJsonDataObject.data" v-if="item.messageJsonDataObject.data.length>0">
-              <td class="tbody" v-for="(itemTd,index) in itemTr">{{ itemTd }}</td>
-            </tr>
-            <tr v-if="item.messageJsonDataObject.data.length===0">
-              <td class="tbody" colspan="100%">暂无数据</td>
-            </tr>
-            </tbody>
-          </table>
-          <div v-if="item.hasJsonData" class="footer">
-            共计 <span class="count">{{ item.messageJsonDataObject.data.length }}</span> 条
-          </div>
+          <dynamic-table :table-data="item.messageJsonDataObject"/>
         </el-collapse-item>
       </el-collapse>
-      <pagination v-show="messageList.length>0" :total="messageListTotal" :page.sync="messageListPageNum" :limit.sync="messageListPageSize"/>
+      <pagination @pagination="showMsgDrawer" v-show="messageList.length>0" :total="messageListTotal" :page.sync="messageListPageNum" :limit.sync="messageListPageSize"/>
     </el-drawer>
 
   </div>
@@ -86,6 +71,7 @@ import Search from '@/components/HeaderSearch'
 import request from "@/utils/request";
 import {getTenantId} from "@/utils/auth";
 import {msgMessageReadQueryPageList, queryUnReadCount} from "@/api/message";
+import DynamicTable from "@/components/DynamicTable/index.vue";
 
 export default {
   data() {
@@ -96,6 +82,7 @@ export default {
       messageListPageNum: 0,
       messageListPageSize: 10,
       showDrawerMsg: false,
+      showDrawerMsgIndex: '',
       messageCount: 10
     }
   },
@@ -105,7 +92,8 @@ export default {
     Hamburger,
     Screenfull,
     SizeSelect,
-    Search
+    Search,
+    DynamicTable
   },
   computed: {
     ...mapGetters([
@@ -160,8 +148,13 @@ export default {
         console.info(res)
       });
     },
-    showMsgDrawer() {
+
+    showMsgDrawerShow() {
+      this.showDrawerMsgIndex = new Date().getTime() + 'a';
       this.showDrawerMsg = true
+      this.showMsgDrawer();
+    },
+    showMsgDrawer() {
       msgMessageReadQueryPageList({pageNum: this.messageListPageNum, pageSize: this.messageListPageSize})
       .then(r => {
         this.messageList = r.dataList

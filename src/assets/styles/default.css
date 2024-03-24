@@ -39,3 +39,13 @@ table.default-table .thead {
 table.default-table .tbody {
   border-bottom: 1px solid #dfe6ec;
 }
+.right{
+  float: right;
+
+  margin: 10px 10px 20px 0 ;
+}
+.right .count {
+  margin: 5px  0px 50px;
+  color: red;
+  font-size: 14px;
+}

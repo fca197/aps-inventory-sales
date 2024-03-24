@@ -263,6 +263,11 @@ export const constantRoutes = [
         name: "订单管理",
         component: () => import('@/views/system/jcx/order/index'),
         meta: {title: '订单管理', icon: 'calendar', affix: false}
+      },    {
+        path: '/goods/waring/index',
+        name: "预警管理",
+        component: () => import('@/views/system/jcx/orderWaring/index'),
+        meta: {title: '预警管理', icon: 'warning', affix: false}
       },
     ]
   }

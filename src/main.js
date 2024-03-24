@@ -41,10 +41,12 @@ import VueMeta from 'vue-meta'
 import DictData from '@/components/DictData'
 
 import JsBarcode from "@/components/JsBarcode/index.vue";
+import {formatDates} from "@/utils/formatDate";
 
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
+Vue.prototype.formatDates = formatDates
 Vue.prototype.getConfigKey = getConfigKey
 Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm
