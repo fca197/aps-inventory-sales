@@ -90,10 +90,8 @@
         <el-table-column label="商品名称" align="center" prop="goodsName"/>
         <el-table-column label="成本价" align="center" prop="costPrice"/>
         <el-table-column label="销售价" align="center" prop="salesPrice"/>
-        <el-table-column label="销售价" align="center" prop="salesPrice"/>
         <el-table-column label="剩余库存" align="center" prop="goodsInventoryCount"/>
         <el-table-column label="毛利" align="center" prop="goodsGrossProfit"/>
-        <el-table-column label="净利" align="center" prop="goodsNetProfit"/>
         <el-table-column label="净利" align="center" prop="goodsNetProfit"/>
         <el-table-column label="购买数" align="center" width="100px">
           <template slot-scope="scope">
@@ -101,9 +99,21 @@
           </template>
         </el-table-column>
       </el-table>
-      <div :offset="10" class="right">
-        采购总计(成本*数量): <span class="count">{{ buyPlanVisibleForm.totalPrice/100.0 }}</span> 元
-      </div>
+      <el-divider/>
+      <table class="default-table" cellspacing="0" cellpadding="0">
+        <tr class="thead">
+          <td>采购总计(成本*数量):</td>
+          <td>出售价格(成本*数量):</td>
+          <td>毛利(成本*数量):</td>
+          <td>净利(成本*数量):</td>
+        </tr>
+        <tr class="tbody">
+          <td>{{ buyPlanVisibleForm.totalPrice / 100.0 }}</td>
+          <td>{{ buyPlanVisibleForm.salesPriceTotal / 100.0 }}</td>
+          <td>{{ buyPlanVisibleForm.goodsGrossProfitTotal / 100.0 }}</td>
+          <td>{{ buyPlanVisibleForm.goodsNetProfitTotal / 100.0 }}</td>
+        </tr>
+      </table>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitBuyPlanForm">确 定</el-button>
         <el-button @click="buyPlanVisible=false">取 消</el-button>
@@ -286,22 +296,31 @@ export default {
       this.$modal.msgSuccess("提交成功")
     },
     batchUpdateBuyCount() {
-      let totalPrice = 0
       this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => {
         this.$set(t, "goodsBuyCount", this.buyPlanVisibleForm.batchCount)
-        totalPrice += this.getInt(t.goodsBuyCount) * t.costPrice
       })
-      this.buyPlanVisibleForm.totalPrice = totalPrice;
-      this.$forceUpdate()
+      this.totalPrice();
     },
     updateBuyCount(row, val) {
       console.info("row: ", row, "val", val)
       row.goodsBuyCount = val;
+      this.totalPrice();
+    },
+    totalPrice() {
       let totalPrice = 0
+      let salesPriceTotal = 0
+      let goodsGrossProfitTotal = 0
+      let goodsNetProfitTotal = 0
       this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => {
         totalPrice += this.getInt(t.goodsBuyCount) * t.costPrice
+        salesPriceTotal += this.getInt(t.goodsBuyCount) * t.salesPrice
+        goodsNetProfitTotal += this.getInt(t.goodsBuyCount) * this.getInt(t.goodsNetProfit)
+        goodsGrossProfitTotal += this.getInt(t.goodsBuyCount) * this.getInt(t.goodsGrossProfit)
       })
       this.buyPlanVisibleForm.totalPrice = totalPrice;
+      this.buyPlanVisibleForm.salesPriceTotal = salesPriceTotal;
+      this.buyPlanVisibleForm.goodsGrossProfitTotal = goodsGrossProfitTotal;
+      this.buyPlanVisibleForm.goodsNetProfitTotal = goodsNetProfitTotal;
       this.$forceUpdate()
     },
     getInt(s) {
