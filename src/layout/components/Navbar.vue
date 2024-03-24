@@ -9,10 +9,6 @@
       <template v-if="device!=='mobile'" hidden="hidden">
 
 
-        <el-button class="right-menu-item hover-effect" type="text" @click="goodsInventory">
-          <i class="el-icon-data-analysis" title="消息中心"/>
-        </el-button>
-
 
         <el-button class="right-menu-item hover-effect" type="text">
           <span @click="showMsgDrawerShow">
@@ -140,14 +136,7 @@ export default {
       }).catch(() => {
       });
     },
-    async goodsInventory() {
-      request({
-        url: '/jcx/goods/inventory/' + getTenantId(),
-        method: 'get'
-      }).then(res => {
-        console.info(res)
-      });
-    },
+
 
     showMsgDrawerShow() {
       this.showDrawerMsgIndex = new Date().getTime() + 'a';

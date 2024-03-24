@@ -13,11 +13,7 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5" hidden="hidden">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改
-        </el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="goodsInventory">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain size="mini" :disabled="multiple" @click="createBuyPlan">
@@ -49,29 +45,6 @@
         @pagination="getList"
     />
 
-    <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-
-
-        <el-form-item label="文件编码" prop="jcxGoodsWaringCode">
-          <el-input v-model="form.jcxGoodsWaringCode" placeholder="请输入文件编码"/>
-        </el-form-item>
-        <el-form-item label="文件名称" prop="jcxGoodsWaringName">
-          <el-input v-model="form.jcxGoodsWaringName" placeholder="请输入登陆名"/>
-        </el-form-item>
-        <el-form-item label="状态" prop="inUsed">
-          <el-select filterable v-model="form.isUsed">
-            <el-option label="否" :value="false"></el-option>
-            <el-option label="是" :value="true"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
     <el-dialog title="采购计划" :visible.sync="buyPlanVisible" width="900px" append-to-body>
       <el-form ref="form" :model="buyPlanVisibleForm" :rules="rules" label-width="100px">
         <el-form-item label="计划名称" prop="planName">
@@ -100,18 +73,21 @@
         </el-table-column>
       </el-table>
       <el-divider/>
+      <div class="header-title">
+        <el-col :span="9">款项预览<span style="color: #aaa ;font-size: 13px">(成本*数量)</span></el-col>
+      </div>
       <table class="default-table" cellspacing="0" cellpadding="0">
         <tr class="thead">
-          <td>采购总计(成本*数量):</td>
-          <td>出售价格(成本*数量):</td>
-          <td>毛利(成本*数量):</td>
-          <td>净利(成本*数量):</td>
+          <td>采购总计</td>
+          <td>出售价格</td>
+          <td>毛利</td>
+          <td>净利</td>
         </tr>
         <tr class="tbody">
-          <td>{{ buyPlanVisibleForm.totalPrice / 100.0 }}</td>
-          <td>{{ buyPlanVisibleForm.salesPriceTotal / 100.0 }}</td>
-          <td>{{ buyPlanVisibleForm.goodsGrossProfitTotal / 100.0 }}</td>
-          <td>{{ buyPlanVisibleForm.goodsNetProfitTotal / 100.0 }}</td>
+          <td><span style="color: red">{{ buyPlanVisibleForm.totalPrice / 100.0 }}</span> 元</td>
+          <td><span style="color: red">{{ buyPlanVisibleForm.salesPriceTotal / 100.0 }}</span> 元</td>
+          <td><span style="color: red">{{ buyPlanVisibleForm.goodsGrossProfitTotal / 100.0 }}</span> 元</td>
+          <td><span style="color: red">{{ buyPlanVisibleForm.goodsNetProfitTotal / 100.0 }}</span> 元</td>
         </tr>
       </table>
       <div slot="footer" class="dialog-footer">
@@ -125,6 +101,9 @@
 <script>
 
 import {add, getById, queryPageList, updateById} from '@/api/common'
+import request from "@/utils/request";
+import {getTenantId} from "@/utils/auth";
+import {saveBuyPlan} from "@/api/buyPlan";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "jcxGoodsWaringName",
@@ -281,19 +260,20 @@ export default {
       this.buyPlanVisibleForm.buyGoodsPlanList = this.jcxGoodsWaringNameList.filter(t => idList.includes(t.id));
       // this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => t.goodsBuyCount = 19)
       this.buyPlanVisible = true
+      this.totalPrice();
     }
     ,
     submitBuyPlanForm() {
       // this.buyPlanVisible = false
       console.info("buyGoodsPlanList: ", JSON.stringify(this.buyPlanVisibleForm))
       var errorMsg = this.buyPlanVisibleForm.buyGoodsPlanList.filter(
-          t => !t.hasOwnProperty("goodsBuyCount") || t.goodsBuyCount.trim() === '').map(
+          t => !t.hasOwnProperty("goodsBuyCount") || t.goodsBuyCount === '').map(
           t => t.goodsName).join(",");
       if (errorMsg.trim() !== "") {
         this.$modal.msgError("请填写购买数量：" + errorMsg)
         return
       }
-      this.$modal.msgSuccess("提交成功")
+      return saveBuyPlan(this.buyPlanVisibleForm);
     },
     batchUpdateBuyCount() {
       this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => {
@@ -330,7 +310,15 @@ export default {
       } catch (e) {
         return 0
       }
-    }
+    },
+    async goodsInventory() {
+      request({
+        url: '/jcx/goods/inventory/1/' + getTenantId(),
+        method: 'get'
+      }).then(res => {
+        this.$message.success('库存盘点成功,已生成预警信息');
+      }).then(() => this.getList());
+    },
   }
 };
 </script>
