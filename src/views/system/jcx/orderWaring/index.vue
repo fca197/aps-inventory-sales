@@ -230,26 +230,7 @@ export default {
       });
 
     },
-    /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
+
     /** 删除按钮操作 */
     createBuyPlan(row) {
       const idList = row.id ? [row.id] : this.ids
@@ -273,7 +254,7 @@ export default {
         this.$modal.msgError("请填写购买数量：" + errorMsg)
         return
       }
-      return saveBuyPlan(this.buyPlanVisibleForm);
+      return saveBuyPlan(this.buyPlanVisibleForm).then(()=>this.buyPlanVisible=false);
     },
     batchUpdateBuyCount() {
       this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => {
