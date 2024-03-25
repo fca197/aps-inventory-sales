@@ -31,10 +31,11 @@
 
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName"
+                       :width="item.width+'px'"
                        :label="item.showName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
+<!--          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>-->
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
@@ -154,6 +155,12 @@ export default {
         response = response.data
         this.tableHeaderList = response.headerList
         this.jcxBuyPlanList = response.dataList;
+        this.jcxBuyPlanList.forEach(t=>{
+          t.costPriceTotal=t.costPriceTotal/100.0;
+          t.goodsGrossProfitTotal=t.goodsGrossProfitTotal/100.0;
+          t.goodsNetProfitTotal=t.goodsNetProfitTotal/100.0;
+          t.salesPriceTotal=t.salesPriceTotal/100.0;
+        })
         this.total = parseInt(response.total);
         this.loading = false;
       });
