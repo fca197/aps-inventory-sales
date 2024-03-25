@@ -40,22 +40,9 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-drawer title="消息中心" :key="showDrawerMsgIndex" :visible.sync="showDrawerMsg" direction="rtl">
-      <el-col :offset="19" :span="5">
-        <div style="height: 10px"></div>
-        <el-button  @click="messageMaskRead" :size="'mini'">全部已读</el-button>
-      </el-col>
-      <el-collapse accordion>
-        <el-collapse-item v-for="(item,index) in messageList" width="100%" :title="item.messageTitle" :id="'md_'+item.id" :name="'name_'+index" :key="'a'+index">
-          <div class="header-div"><span class="header-title ">创建时间: </span> <span class="header-value">{{ item.createTime }}</span></div>
-          <div class="header-div"><span class="header-title ">消息内容: </span> <span class="header-value">{{ item.messageContext }}</span></div>
-          <div style="height: 10px"></div>
-          <dynamic-table v-if="item.hasJsonData" :table-data="item.messageJsonDataObject"/>
-        </el-collapse-item>
-      </el-collapse>
-      <pagination @pagination="showMsgDrawer" v-show="messageList.length>0" :total="messageListTotal" :page.sync="messageListPageNum" :limit.sync="messageListPageSize"/>
+    <el-drawer title="消息中心" :key="toStr(messageList)" :visible.sync="showDrawerMsg" direction="rtl">
+      <user-message :now-time="nowTime"  :query-un-read-count-fun="queryUnReadCountFun"></user-message>
     </el-drawer>
-
   </div>
 </template>
 
@@ -69,10 +56,13 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import {messageMaskRead, msgMessageReadQueryPageList, queryUnReadCount} from "@/api/message";
 import DynamicTable from "@/components/DynamicTable/index.vue";
+import {toString} from "@/api/common";
+import UserMessage from "@/layout/components/UserMessage.vue";
 
 export default {
   data() {
     return {
+      nowTime:"123",
       visible: false,
       messageList: [],
       messageListTotal: 0,
@@ -80,7 +70,7 @@ export default {
       messageListPageSize: 10,
       showDrawerMsg: false,
       showDrawerMsgIndex: '',
-      messageCount: 10
+      messageCount: 0
     }
   },
   components: {
@@ -90,9 +80,11 @@ export default {
     Screenfull,
     SizeSelect,
     Search,
-    DynamicTable
+    DynamicTable,
+    UserMessage
   },
   computed: {
+
     ...mapGetters([
       'sidebar',
       'avatar',
@@ -117,11 +109,24 @@ export default {
     }
   },
   created() {
-    queryUnReadCount().then(res => {
-      this.messageCount = res
-    })
+    this.queryUnReadCountFun()
+  },
+  updated() {
   },
   methods: {
+    showMsgDrawerShow(){
+      this.showDrawerMsg=true
+      this.nowTime='a--'+new Date().getTime()
+    },
+    toStr() {
+      return toString(this.messageList)
+    },
+    queryUnReadCountFun() {
+      return queryUnReadCount().then(res => {
+        this.messageCount = res
+        this.showDrawerMsgIndex = "a_" + new Date().getTime()
+      });
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -136,36 +141,6 @@ export default {
         })
       }).catch(() => {
       });
-    },
-
-    showMsgDrawerShow() {
-      this.showDrawerMsgIndex = new Date().getTime() + 'a';
-      this.showDrawerMsg = true
-      this.showMsgDrawer();
-    },
-    messageMaskRead(){
-     return  messageMaskRead().then(r => {this.showMsgDrawer()});
-    },
-    showMsgDrawer() {
-      msgMessageReadQueryPageList({pageNum: this.messageListPageNum, pageSize: this.messageListPageSize})
-      .then(r => {
-        this.messageList = r.dataList
-        this.messageList.forEach(item => {
-          if (item.messageJsonData) {
-            item.hasJsonData = true;
-            item.messageJsonDataObject = JSON.parse(item.messageJsonData)
-          }
-        })
-        this.messageListTotal = parseInt(r.total)
-        // console.info(this.messageList)
-      }).then(() => {
-        this.messageList.forEach(ttt => {
-          var children = document.getElementById('md_' + ttt.id).children[0].children[0];
-
-          children.innerHTML = '<span style="width:15px"> </span>' + children.innerText
-          .replaceAll("*", "").trimEnd() + (!ttt.isRead ? "&nbsp;&nbsp;<span style='color:red'>*</span>" : "");
-        });
-      })
     }
   }
 }

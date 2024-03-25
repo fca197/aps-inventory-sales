@@ -81,3 +81,7 @@ export function showMsg(res, successMsg) {
     type: 'success'
   });
 }
+
+export  function toString(obj) {
+  return JSON.stringify(obj)
+}

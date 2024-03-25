@@ -15,10 +15,6 @@
       <el-col :span="1.5">
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
       </el-col>
-      <el-col :span="1.5" hidden="hidden">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改
-        </el-button>
-      </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
           删除
@@ -35,7 +31,7 @@
                        :label="item.showName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-<!--          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>-->
+          <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleUpdate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
@@ -51,22 +47,8 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
 
-        <el-form-item label="文件编码" prop="brandCode">
-          <el-input v-model="form.brandCode" placeholder="请输入文件编码"/>
-        </el-form-item>
-        <el-form-item label="文件名称" prop="jcxBuyPlan">
-          <el-input v-model="form.jcxBuyPlan" placeholder="请输入登陆名"/>
-        </el-form-item>
-        <el-form-item label="状态" prop="inUsed">
-          <el-select filterable v-model="form.isUsed">
-            <el-option  label="否"  :value="false"></el-option>
-            <el-option  label="是" :value="true"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
