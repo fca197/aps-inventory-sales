@@ -107,7 +107,7 @@ export default {
       }
     },
     changeGoods(val, index) {
-      getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
+   return   getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
       .then(response => {
         this.toSelectGoods[index] = []
         response.dataList.forEach(item => {

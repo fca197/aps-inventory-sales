@@ -48,14 +48,16 @@
     <el-dialog title="采购计划" :visible.sync="buyPlanVisible" width="900px" append-to-body>
       <el-form ref="form" :model="buyPlanVisibleForm" :rules="rules" label-width="100px">
         <el-form-item label="计划名称" prop="planName">
-          <el-col :span="9">
+          <el-col :span="7">
             <el-input v-model="buyPlanVisibleForm.planName" width="100px" placeholder="请输入计划名称"/>
           </el-col>
-          <el-col :span="3" :offset="7">
-            <el-input v-model="buyPlanVisibleForm.batchCount" width="100px" placeholder="请输入计划名称"/>
+          <el-col :span="3" :offset="8">
+            <el-input v-model="buyPlanVisibleForm.batchCount" width="100px" placeholder=""/>
           </el-col>
-          <el-col :span="3" :offset="1">
-            <el-button type="primary" @click="batchUpdateBuyCount">批量修改数量</el-button>
+          <el-col :span="6">
+            <el-button type="warning" size="medium" @click="batchUpdateBuyCount">
+              <svg-icon icon-class="brush"/>
+            </el-button>
           </el-col>
         </el-form-item>
       </el-form>
@@ -77,6 +79,13 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-divider><i class="el-icon-plus"></i></el-divider>
+      <div style="text-align: right;margin-right: 30px">
+        <el-select filterable placeholder="请选择商品" @change="selectGoods" width="100%" :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
+          <el-option v-for="(it,index) in jcxGoodsWaringToSelectList" :label="it.goodsName" :value="it.id" :key="index"></el-option>
+        </el-select>
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="addGoods">添加</el-button>
+      </div>
       <el-divider/>
       <div class="header-title">
         <el-col :span="9">款项预览<span style="color: #aaa ;font-size: 13px">(成本*数量)</span></el-col>
@@ -105,10 +114,11 @@
 
 <script>
 
-import {add, getById, queryPageList, updateById} from '@/api/common'
+import {getById, queryPageList} from '@/api/common'
 import request from "@/utils/request";
 import {getTenantId} from "@/utils/auth";
 import {saveBuyPlan} from "@/api/buyPlan";
+import {getFoodsList} from "@/api/jcx/goods";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "jcxGoodsWaringName",
@@ -126,6 +136,7 @@ export default {
       // 显示搜索条件
       showSearch: false,
       buyPlanVisible: false,
+
       // 总条数
       total: 0,
       buyPlanVisibleForm: {
@@ -134,7 +145,9 @@ export default {
         buyGoodsPlanList: []
       },
       jcxGoodsWaringNameList: [],
-
+      jcxGoodsWaringToSelectList: [],
+      buyPlanVisibleFormGoodsId: undefined,
+      buyPlanVisibleFormGoodsInfo: undefined,
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -167,14 +180,27 @@ export default {
       }, {
         columnName: "jcxGoodsWaringName",
         showName: "文件名称"
-      }]
-    };
+      }],
+
+    }
   },
   created() {
     document["pagePath"] = "/jcxGoodsWarning";
     this.getList();
   },
   methods: {
+    selectGoods(val) {
+      this.buyPlanVisibleFormGoodsInfo = this.jcxGoodsWaringToSelectList.filter(it => it.id == val)[0]
+      this.buyPlanVisibleFormGoodsInfo.goodsId=   this.buyPlanVisibleFormGoodsInfo.id
+
+    },
+    changeGoods(val) {
+      return getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
+      .then(response => {
+        this.jcxGoodsWaringToSelectList = response.dataList
+      })
+
+    },
     /** 查询公告列表 */
     getList() {
       // this.loading = true;
@@ -258,7 +284,7 @@ export default {
         this.$modal.msgError("请填写购买数量：" + errorMsg)
         return
       }
-      return saveBuyPlan(this.buyPlanVisibleForm).then(()=>this.buyPlanVisible=false);
+      return saveBuyPlan(this.buyPlanVisibleForm).then(() => this.buyPlanVisible = false);
     },
     batchUpdateBuyCount() {
       this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => {
@@ -304,9 +330,15 @@ export default {
         this.$message.success('库存盘点成功,已生成预警信息');
       }).then(() => this.getList());
     },
-    deleteGoods(index,row){
-      this.buyPlanVisibleForm.buyGoodsPlanList.splice(index,1);
+    deleteGoods(index, row) {
+      this.buyPlanVisibleForm.buyGoodsPlanList.splice(index, 1);
       this.totalPrice()
+    },
+    addGoods() {
+
+      let da = {}
+      Object.assign(da, this.buyPlanVisibleFormGoodsInfo);
+      this.buyPlanVisibleForm.buyGoodsPlanList.push(da)
     }
   }
 };
