@@ -2,7 +2,7 @@
   <div>
     <span class="header-title"> 订单序号:</span> <span class="header-value"> {{ settingOpenInfo.id }} </span>
     <br/>
-    <span class="header-title"> 订单编号:</span> <span class="header-value">  {{ settingOpenInfo.orderNo }} </span>
+    <span class="header-title"> 订单序号:</span> <span class="header-value">  {{ settingOpenInfo.orderNo }} </span>
     <br/>
     <span class="header-title"> 下单时间:</span> <span class="header-value">  {{ settingOpenInfo.createTime }} </span>
     <br/>

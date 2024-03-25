@@ -28,12 +28,12 @@
       :data="list.slice((pageNum-1)*pageSize,pageNum*pageSize)"
       style="width: 100%;"
     >
-      <el-table-column label="编号" type="index" align="center">
+      <el-table-column label="序号" type="index" align="center">
         <template slot-scope="scope">
           <span>{{(pageNum - 1) * pageSize + scope.$index + 1}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="会话编号" align="center" prop="tokenId" :show-overflow-tooltip="true" />
+      <el-table-column label="会话序号" align="center" prop="tokenId" :show-overflow-tooltip="true" />
       <el-table-column label="登录名称" align="center" prop="userName" :show-overflow-tooltip="true" />
       <el-table-column label="部门名称" align="center" prop="deptName" />
       <el-table-column label="主机" align="center" prop="ipaddr" :show-overflow-tooltip="true" />

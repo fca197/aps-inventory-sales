@@ -71,6 +71,11 @@
             <el-input v-model="scope.row.goodsBuyCount" :min="1" @change="value => updateBuyCount(scope.row,value)" type="number"/>
           </template>
         </el-table-column>
+        <el-table-column label="操作" align="center" width="100px">
+          <template slot-scope="scope">
+            <el-button type="danger" plain icon="el-icon-delete" size="mini" @click="deleteGoods(scope.$index,scope.row)"></el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <el-divider/>
       <div class="header-title">
@@ -155,7 +160,7 @@ export default {
       rules: {},
       tableHeaderList: [{
         columnName: "id",
-        showName: "编号"
+        showName: "序号"
       }, {
         columnName: "jcxGoodsWaringCode",
         showName: "文件编码"
@@ -299,6 +304,10 @@ export default {
         this.$message.success('库存盘点成功,已生成预警信息');
       }).then(() => this.getList());
     },
+    deleteGoods(index,row){
+      this.buyPlanVisibleForm.buyGoodsPlanList.splice(index,1);
+      this.totalPrice()
+    }
   }
 };
 </script>

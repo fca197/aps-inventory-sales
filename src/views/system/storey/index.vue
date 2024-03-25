@@ -196,7 +196,7 @@ export default {
       },
       tableHeaderList: [{
         columnName: "id",
-        showName: "编号"
+        showName: "序号"
       }, {
         columnName: "factoryName",
         showName: "工厂"
@@ -313,7 +313,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删编号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
         let req = {
           idList: idList
         }

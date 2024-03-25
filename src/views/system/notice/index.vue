@@ -71,7 +71,7 @@
 
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" align="center" prop="noticeId" width="100" />
+      <el-table-column label="序号" align="center" prop="noticeId" width="100" />
       <el-table-column
         label="公告标题"
         align="center"
@@ -300,7 +300,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const noticeIds = row.noticeId || this.ids
-      this.$modal.confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除公告序号为"' + noticeIds + '"的数据项？').then(function() {
         return delNotice(noticeIds);
       }).then(() => {
         this.getList();

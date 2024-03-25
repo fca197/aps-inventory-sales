@@ -61,7 +61,7 @@ import { unallocatedUserList, authUserSelectAll } from "@/api/system/role";
 export default {
   dicts: ['sys_normal_disable'],
   props: {
-    // 角色编号
+    // 角色序号
     roleId: {
       type: [Number, String]
     }

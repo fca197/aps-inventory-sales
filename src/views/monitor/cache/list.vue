@@ -21,7 +21,7 @@
             style="width: 100%"
           >
             <el-table-column
-              label="编号"
+              label="序号"
               width="60"
               type="index"
             ></el-table-column>
@@ -79,7 +79,7 @@
             style="width: 100%"
           >
             <el-table-column
-              label="编号"
+              label="序号"
               width="60"
               type="index"
             ></el-table-column>

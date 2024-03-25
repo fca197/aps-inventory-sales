@@ -56,8 +56,8 @@
 
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="食品编号" prop="foodCode">
-          <el-input v-model="form.foodCode" placeholder="请输入食品编号" maxlength="20"/>
+        <el-form-item label="食品序号" prop="foodCode">
+          <el-input v-model="form.foodCode" placeholder="请输入食品序号" maxlength="20"/>
         </el-form-item>
         <el-form-item label="食品名称" prop="storeName">
           <el-input v-model="form.foodName" placeholder="请输入食品名称" maxlength="20"/>
@@ -296,7 +296,7 @@ export default {
   /** 删除按钮操作 */
   handleDelete(row) {
     const idList = row.id ? [row.id] : this.ids
-    this.$modal.confirm('是否确认删编号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+    this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
       let req = {
         idList: idList
       }

@@ -127,7 +127,7 @@ export default {
         ]
       },
       tableHeaderList: [{
-        showName: "编号",
+        showName: "序号",
         columnName: "id"
       }, {
         showName: "姓名",
@@ -238,7 +238,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删除登陆账户编号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删除登陆账户序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
         let req = {
           idList: idList
         }
@@ -251,7 +251,7 @@ export default {
     },
     handleResetPwd(row) {
       let _this = this;
-      this.$modal.confirm('是否确认重置登陆账户编号为 <span style="color:red">' + row.loginPhone + '</span> 的密码？', "重置密码").then(function () {
+      this.$modal.confirm('是否确认重置登陆账户序号为 <span style="color:red">' + row.loginPhone + '</span> 的密码？', "重置密码").then(function () {
         resetPwd({id: row.id}).then(res => {
           _this.$modal.alert("您的密码为：<span style=\"color:red\">" + res.data.newPwd + "</span> 仅提示一次，请妥善保存", "密码提示")
         });

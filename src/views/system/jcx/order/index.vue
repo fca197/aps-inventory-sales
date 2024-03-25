@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
 
-      <el-form-item label="订单编号" prop="orderNo">
-        <el-input v-model="queryParams.data.orderNo" placeholder="请输入订单编号" clearable
+      <el-form-item label="订单序号" prop="orderNo">
+        <el-input v-model="queryParams.data.orderNo" placeholder="请输入订单序号" clearable
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="订单日期" prop="orderTime">
@@ -142,7 +142,7 @@ export default {
       rules: {},
       tableHeaderList: [{
         fieldName: "id",
-        showName: "编号",
+        showName: "序号",
         width: 200
       }]
     };
@@ -220,7 +220,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删编号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
         let req = {
           idList: idList
         }

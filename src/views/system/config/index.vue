@@ -319,7 +319,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const configIds = row.configId || this.ids;
-      this.$modal.confirm('是否确认删除参数编号为"' + configIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除参数序号为"' + configIds + '"的数据项？').then(function() {
           return delConfig(configIds);
         }).then(() => {
           this.getList();
