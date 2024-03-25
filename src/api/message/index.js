@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import {Message, MessageBox} from "element-ui";
 
 export function queryUnReadCount() {
   return request({
@@ -14,4 +15,12 @@ export function msgMessageReadQueryPageList(data) {
     method: "post",
     data: data
   }).then((res) => res.data);
+}
+
+export function messageMaskRead() {
+  return request({
+    url: "/msgMessageRead/maskRead",
+    method: "post",
+    data: {}
+  }).then((res) => Message.success("标记成功"));
 }

@@ -13,10 +13,10 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="goodsInventory">新增</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="goodsInventory">新增预警</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain size="mini" :disabled="multiple" @click="createBuyPlan">
+        <el-button type="primary" plain size="mini" :disabled="multiple" @click="createBuyPlan">
           <svg-icon icon-class="buy-car"></svg-icon>
           采购计划
         </el-button>
@@ -235,9 +235,8 @@ export default {
     createBuyPlan(row) {
       const idList = row.id ? [row.id] : this.ids
       let formatDates = this.formatDates(new Date());
-      this.buyPlanVisibleForm.planName = "新建采购(" +
+      this.buyPlanVisibleForm.planName = "新建采购-" +
           formatDates.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "")
-          + ")"
       this.buyPlanVisibleForm.buyGoodsPlanList = this.jcxGoodsWaringNameList.filter(t => idList.includes(t.id));
       // this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => t.goodsBuyCount = 19)
       this.buyPlanVisible = true
