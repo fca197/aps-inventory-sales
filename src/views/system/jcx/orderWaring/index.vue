@@ -61,7 +61,7 @@
           </el-col>
         </el-form-item>
       </el-form>
-      <el-table :data="buyPlanVisibleForm.buyGoodsPlanList">
+      <el-table :data="buyPlanVisibleForm.jcxBuyPlanItemDtoList">
         <el-table-column label="商品名称" align="center" prop="goodsName"/>
         <el-table-column label="成本价" align="center" prop="costPrice"/>
         <el-table-column label="销售价" align="center" prop="salesPrice"/>
@@ -142,7 +142,7 @@ export default {
       buyPlanVisibleForm: {
         batchCount: 1,
         totalPrice: 1,
-        buyGoodsPlanList: []
+        jcxBuyPlanItemDtoList: []
       },
       jcxGoodsWaringNameList: [],
       jcxGoodsWaringToSelectList: [],
@@ -268,8 +268,8 @@ export default {
       let formatDates = this.formatDates(new Date());
       this.buyPlanVisibleForm.planName = "新建采购-" +
           formatDates.replaceAll(" ", "").replaceAll("-", "").replaceAll(":", "")
-      this.buyPlanVisibleForm.buyGoodsPlanList = this.jcxGoodsWaringNameList.filter(t => idList.includes(t.id));
-      // this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => t.goodsBuyCount = 19)
+      this.buyPlanVisibleForm.jcxBuyPlanItemDtoList = this.jcxGoodsWaringNameList.filter(t => idList.includes(t.id));
+      // this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.forEach(t => t.goodsBuyCount = 19)
       this.buyPlanVisible = true
       this.totalPrice();
       this.changeGoods('');
@@ -277,12 +277,12 @@ export default {
     ,
     submitBuyPlanForm() {
       // this.buyPlanVisible = false
-      console.info("buyGoodsPlanList: ", JSON.stringify(this.buyPlanVisibleForm))
-      if (this.buyPlanVisibleForm.buyGoodsPlanList.length === 0) {
+      console.info("jcxBuyPlanItemDtoList: ", JSON.stringify(this.buyPlanVisibleForm))
+      if (this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.length === 0) {
         this.$modal.msgError("请选择商品")
         return
       }
-      var errorMsg = this.buyPlanVisibleForm.buyGoodsPlanList.filter(
+      var errorMsg = this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.filter(
           t => !t.hasOwnProperty("goodsBuyCount") || t.goodsBuyCount === '').map(
           t => t.goodsName).join(",");
       if (errorMsg.trim() !== "") {
@@ -292,7 +292,7 @@ export default {
       return saveBuyPlan(this.buyPlanVisibleForm).then(() => this.buyPlanVisible = false);
     },
     batchUpdateBuyCount() {
-      this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => {
+      this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.forEach(t => {
         this.$set(t, "goodsBuyCount", this.buyPlanVisibleForm.batchCount)
       })
       this.totalPrice();
@@ -307,7 +307,7 @@ export default {
       let salesPriceTotal = 0
       let goodsGrossProfitTotal = 0
       let goodsNetProfitTotal = 0
-      this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => {
+      this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.forEach(t => {
         totalPrice += this.getInt(t.goodsBuyCount) * t.costPrice
         salesPriceTotal += this.getInt(t.goodsBuyCount) * t.salesPrice
         goodsNetProfitTotal += this.getInt(t.goodsBuyCount) * this.getInt(t.goodsNetProfit)
@@ -336,13 +336,13 @@ export default {
       }).then(() => this.getList());
     },
     deleteGoods(index, row) {
-      this.buyPlanVisibleForm.buyGoodsPlanList.splice(index, 1);
+      this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.splice(index, 1);
       this.totalPrice()
     },
     addGoods() {
       let da = {}
       Object.assign(da, this.buyPlanVisibleFormGoodsInfo);
-      this.buyPlanVisibleForm.buyGoodsPlanList.push(da)
+      this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.push(da)
     }
   }
 };

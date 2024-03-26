@@ -29,15 +29,25 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="warning" size="mini" @click="handleDelete(scope.$index)">删除</el-button>
+            <el-button v-if="scope.row.isTmp!=='1'" type="warning" size="mini" @click="handleDelete(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-divider><i class="el-icon-plus"></i></el-divider>
+      <div>
+        <el-col :offset="14" :span="10"> 选择添加的商品:
+          <el-select filterable placeholder="请选择商品" @change="selectGoods" width="100%" :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
+            <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"/>
+          </el-select>
+        </el-col>
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
+import {getFoodsList} from "@/api/jcx/goods";
+
 export default {
   name: "UpdateBuyPlan",
   props: {
@@ -55,12 +65,15 @@ export default {
   },
   data() {
     return {
+      buyPlanVisibleFormGoodsId: "",
+      goodsList: [],
       batchCount: 1,
     }
   }
   ,
   created() {
     this.totalPrice();
+    this.changeGoods('')
   }
   ,
   methods: {
@@ -90,6 +103,7 @@ export default {
       }
       this.buyPlanInfo.jcxBuyPlanItemDtoList = this.buyPlanInfo.jcxBuyPlanItemDtoList.filter(t => t.isTmp !== '1')
       this.buyPlanInfo.jcxBuyPlanItemDtoList.push(t)
+      this.$forceUpdate();
     },
 
     totalTmp(key) {
@@ -104,8 +118,22 @@ export default {
         return arr[0] + this.sum(arr.slice(1));
       }
     },
-    handleDelete(index){
+    handleDelete(index) {
       this.buyPlanInfo.jcxBuyPlanItemDtoList.splice(index, 1)
+    },
+    changeGoods(val) {
+      return getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
+      .then(response => {
+        this.goodsList = response.dataList
+      })
+    },
+    selectGoods(val) {
+      let d = this.goodsList.filter(t => t.id === val)[0]
+      d.goodsId = d.id
+      d.goodsBuyCount = 1
+      let d2 = {...d}
+      this.buyPlanInfo.jcxBuyPlanItemDtoList.push(d2)
+      this.totalPrice();
     }
   }
 }

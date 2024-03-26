@@ -62,10 +62,9 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-
-      <update-buy-plan :buy-plan-info="toUpdateUpdateBuyPlan"/>
+      <update-buy-plan :buy-plan-info="buyPlanFormData"/>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="upById">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -84,7 +83,7 @@ export default {
   name: "jcxBuyPlan",
   data() {
     return {
-      toUpdateUpdateBuyPlan: {},
+      buyPlanFormData: {},
       // 遮罩层
       loading: true,
       // 选中数组
@@ -157,10 +156,10 @@ export default {
         this.tableHeaderList.splice(2, 0, {fieldName: "goodsName", showName: "商品名称", width: 150})
         this.jcxBuyPlanList = response.dataList;
         this.jcxBuyPlanList.forEach(t => {
-          t.costPriceTotal = t.costPriceTotal / 100.0;
-          t.goodsGrossProfitTotal = t.goodsGrossProfitTotal / 100.0;
-          t.goodsNetProfitTotal = t.goodsNetProfitTotal / 100.0;
-          t.salesPriceTotal = t.salesPriceTotal / 100.0;
+          // t.costPriceTotal = t.costPriceTotal/100.0 ;
+          // t.goodsGrossProfitTotal = t.goodsGrossProfitTotal / 100.0;
+          // t.goodsNetProfitTotal = t.goodsNetProfitTotal / 100.0;
+          // t.salesPriceTotal = t.salesPriceTotal / 100.0;
           t.goodsName = t.jcxBuyPlanItemDtoList.map(t => t.goodsName).join(",")
         })
         this.total = parseInt(response.total);
@@ -203,39 +202,41 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加文件";
+      this.title = "添加采购计划";
+     let d= this.formatDates(new Date()).replaceAll("-","").replaceAll(" ","").replaceAll(":","");
+      this.buyPlanFormData = {
+        planName:'新建采购-'+d,
+        jcxBuyPlanItemDtoList: []
+      }
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       // this.reset();
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
-        console.info("response: ", response)
-        this.toUpdateUpdateBuyPlan = response.data.dataList[0]
+        // console.info("response: ", response)
+        this.buyPlanFormData = response.data.dataList[0]
         this.open = true;
         this.title = "修改采购计划";
       });
 
     },
-    /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
+    upById() {
+      let d={...this.buyPlanFormData}
+      d.jcxBuyPlanItemDtoList = d.jcxBuyPlanItemDtoList.filter(t => t.isTmp !== '1')
+      if (this.buyPlanFormData.id === undefined) {
+        return add(d).then(response => {
+          this.$modal.msgSuccess("新增成功");
+          this.open = false;
+          this.getList();
+        });
+      } else {
+          return updateById(d).then(response => {
+          this.$modal.msgSuccess("修改成功");
+          this.open = false;
+          this.getList();
+        });
+      }
     },
     /** 删除按钮操作 */
     handleDelete(row) {
