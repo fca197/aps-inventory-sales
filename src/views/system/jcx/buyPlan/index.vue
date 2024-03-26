@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="文件名称" prop="jcxBuyPlan">
-        <el-input v-model="queryParams.jcxBuyPlan" placeholder="请输入文件名称" clearable
+      <el-form-item label="计划名称" prop="jcxBuyPlan">
+        <el-input v-model="queryParams.data.planName" placeholder="请输入文件名称" clearable
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
@@ -28,7 +28,22 @@
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName"
                        :width="item.width+'px'"
-                       :label="item.showName"/>
+                       :label="item.showName">
+        <template slot-scope="scope">
+          <div v-if="Number(scope.row[item.fieldName])">{{ scope.row[item.fieldName] }}</div>
+          <div v-else-if="scope.row[item.fieldName].length>=30">
+            <el-popover
+                placement="top-start"
+                width="200"
+                trigger="hover"
+                :content="''+scope.row[item.fieldName]">
+              <div slot="reference">{{ scope.row[item.fieldName].substring(0, 30) + '...' }}</div>
+            </el-popover>
+          </div>
+          <div v-else>{{ scope.row[item.fieldName] }}</div>
+        </template>
+
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleUpdate(scope.row)"></el-button>
@@ -46,9 +61,9 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
 
-
+      <update-buy-plan :buy-plan-info="toUpdateUpdateBuyPlan"/>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -59,14 +74,17 @@
 
 <script>
 import {urlPrefix} from '@/api/brand'
-
+import UpdateBuyPlan from "@/views/system/jcx/buyPlan/UpdateBuyPlan.vue";
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
+  components: {
+    UpdateBuyPlan
+  },
   name: "jcxBuyPlan",
   data() {
-
     return {
+      toUpdateUpdateBuyPlan: {},
       // 遮罩层
       loading: true,
       // 选中数组
@@ -89,9 +107,9 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        jcxBuyPlan: undefined,
-        createBy: undefined,
-        status: undefined
+        data: {
+          planName: undefined
+        }
       },
       // 表单参数
       form: {
@@ -116,7 +134,7 @@ export default {
       tableHeaderList: [{
         columnName: "id",
         showName: "序号"
-      },   {
+      }, {
         columnName: "brandCode",
         showName: "文件编码"
       }, {
@@ -136,12 +154,14 @@ export default {
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
+        this.tableHeaderList.splice(2, 0, {fieldName: "goodsName", showName: "商品名称", width: 150})
         this.jcxBuyPlanList = response.dataList;
-        this.jcxBuyPlanList.forEach(t=>{
-          t.costPriceTotal=t.costPriceTotal/100.0;
-          t.goodsGrossProfitTotal=t.goodsGrossProfitTotal/100.0;
-          t.goodsNetProfitTotal=t.goodsNetProfitTotal/100.0;
-          t.salesPriceTotal=t.salesPriceTotal/100.0;
+        this.jcxBuyPlanList.forEach(t => {
+          t.costPriceTotal = t.costPriceTotal / 100.0;
+          t.goodsGrossProfitTotal = t.goodsGrossProfitTotal / 100.0;
+          t.goodsNetProfitTotal = t.goodsNetProfitTotal / 100.0;
+          t.salesPriceTotal = t.salesPriceTotal / 100.0;
+          t.goodsName = t.jcxBuyPlanItemDtoList.map(t => t.goodsName).join(",")
         })
         this.total = parseInt(response.total);
         this.loading = false;
@@ -187,12 +207,13 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      // this.reset();
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
-        this.form = response.data.dataList[0]
+        console.info("response: ", response)
+        this.toUpdateUpdateBuyPlan = response.data.dataList[0]
         this.open = true;
-        this.title = "修改文件";
+        this.title = "修改采购计划";
       });
 
     },

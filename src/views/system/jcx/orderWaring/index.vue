@@ -16,7 +16,7 @@
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="goodsInventory">新增预警</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain size="mini" :disabled="multiple" @click="createBuyPlan">
+        <el-button type="primary" plain size="mini"   @click="createBuyPlan">
           <svg-icon icon-class="buy-car"></svg-icon>
           采购计划
         </el-button>
@@ -81,7 +81,7 @@
       </el-table>
       <el-divider><i class="el-icon-plus"></i></el-divider>
       <div style="text-align: right;margin-right: 30px">
-        <el-select filterable placeholder="请选择商品" @change="selectGoods" width="100%" :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
+        <el-select filterable placeholder="请选择商品" @change="selectGoods" width="100%"  :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
           <el-option v-for="(it,index) in jcxGoodsWaringToSelectList" :label="it.goodsName" :value="it.id" :key="index"></el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="addGoods">添加</el-button>
@@ -272,11 +272,16 @@ export default {
       // this.buyPlanVisibleForm.buyGoodsPlanList.forEach(t => t.goodsBuyCount = 19)
       this.buyPlanVisible = true
       this.totalPrice();
+      this.changeGoods('');
     }
     ,
     submitBuyPlanForm() {
       // this.buyPlanVisible = false
       console.info("buyGoodsPlanList: ", JSON.stringify(this.buyPlanVisibleForm))
+      if (this.buyPlanVisibleForm.buyGoodsPlanList.length === 0) {
+        this.$modal.msgError("请选择商品")
+        return
+      }
       var errorMsg = this.buyPlanVisibleForm.buyGoodsPlanList.filter(
           t => !t.hasOwnProperty("goodsBuyCount") || t.goodsBuyCount === '').map(
           t => t.goodsName).join(",");
@@ -335,7 +340,6 @@ export default {
       this.totalPrice()
     },
     addGoods() {
-
       let da = {}
       Object.assign(da, this.buyPlanVisibleFormGoodsInfo);
       this.buyPlanVisibleForm.buyGoodsPlanList.push(da)
