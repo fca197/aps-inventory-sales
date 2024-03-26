@@ -34,13 +34,14 @@
         </el-table-column>
       </el-table>
       <el-divider><i class="el-icon-plus"></i></el-divider>
-      <div>
-        <el-col :offset="14" :span="10"> 选择添加的商品:
+      <div >
+        <el-col :offset="14" :span="10" style="padding-top: 10px"> 选择添加的商品:
           <el-select filterable placeholder="请选择商品" @change="selectGoods" width="100%" :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
             <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"/>
           </el-select>
         </el-col>
       </div>
+      <el-divider/>
     </el-form>
   </div>
 </template>

@@ -16,7 +16,7 @@
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="goodsInventory">新增预警</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain size="mini"   @click="createBuyPlan">
+        <el-button type="primary" plain size="mini" @click="createBuyPlan">
           <svg-icon icon-class="buy-car"></svg-icon>
           采购计划
         </el-button>
@@ -52,7 +52,7 @@
             <el-input v-model="buyPlanVisibleForm.planName" width="100px" placeholder="请输入计划名称"/>
           </el-col>
           <el-col :span="3" :offset="8">
-            <el-input v-model="buyPlanVisibleForm.batchCount" width="100px" placeholder=""/>
+            <el-input v-model="buyPlanVisibleForm.batchCount" width="100px" placeholder=""  type="number"/>
           </el-col>
           <el-col :span="6">
             <el-button type="warning" size="medium" @click="batchUpdateBuyCount">
@@ -80,13 +80,14 @@
         </el-table-column>
       </el-table>
       <el-divider><i class="el-icon-plus"></i></el-divider>
-      <div style="text-align: right;margin-right: 30px">
-        <el-select filterable placeholder="请选择商品" @change="selectGoods" width="100%"  :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
-          <el-option v-for="(it,index) in jcxGoodsWaringToSelectList" :label="it.goodsName" :value="it.id" :key="index"></el-option>
-        </el-select>
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="addGoods">添加</el-button>
+      <div style="text-align: right;margin-top: 20px">
+        <el-col :offset="14" :span="10"> 选择添加的商品:
+
+          <el-select filterable placeholder="请选择商品" @change="addGoods" width="100%" :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
+            <el-option v-for="(it,index) in jcxGoodsWaringToSelectList" :label="it.goodsName" :value="it.id" :key="index"></el-option>
+          </el-select>
+        </el-col>
       </div>
-      <el-divider/>
       <div class="header-title">
         <el-col :span="9">款项预览<span style="color: #aaa ;font-size: 13px">(成本*数量)</span></el-col>
       </div>
@@ -189,11 +190,7 @@ export default {
     this.getList();
   },
   methods: {
-    selectGoods(val) {
-      this.buyPlanVisibleFormGoodsInfo = this.jcxGoodsWaringToSelectList.filter(it => it.id == val)[0]
-      this.buyPlanVisibleFormGoodsInfo.goodsId=   this.buyPlanVisibleFormGoodsInfo.id
 
-    },
     changeGoods(val) {
       return getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
       .then(response => {
@@ -340,7 +337,11 @@ export default {
       this.totalPrice()
     },
     addGoods() {
-      let da = {}
+      this.buyPlanVisibleFormGoodsInfo = this.jcxGoodsWaringToSelectList.filter(it => it.id == this.buyPlanVisibleFormGoodsId)[0]
+      this.buyPlanVisibleFormGoodsInfo.goodsId = this.buyPlanVisibleFormGoodsInfo.id
+      let da = {
+        goodsBuyCount: 1,
+      }
       Object.assign(da, this.buyPlanVisibleFormGoodsInfo);
       this.buyPlanVisibleForm.jcxBuyPlanItemDtoList.push(da)
     }
