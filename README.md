@@ -215,3 +215,38 @@ title: 购买计划状态管理
 ![文件管理](doc/img/file-list.jpg)
 ![文件上传](doc/img/file-add.jpg)
 ![文件删除](doc/img/file-delete.jpg)
+
+## 商品管理
+
+![商品管理](doc/img/goods-list.jpg)
+![商品添加](doc/img/goods-add.jpg)
+![商品修改](doc/img/goods-update.jpg)
+![商品删除](doc/img/goods-delete.jpg)
+
+## 订单管理(商品)
+
+![订单管理](doc/img/jcx-order-list.jpg)
+![订单添加](doc/img/jcx-order-add.jpg)
+![订单修改](doc/img/jcx-order-update.jpg)
+![订单删除](doc/img/jcx-order-delete.jpg)
+
+## 预警管理
+
+![预警管理](doc/img/jcx-goods-warning-list.jpg)
+![预警添加](doc/img/jcx-goods-warning-add.jpg)
+
+## 采购计划
+
+![采购计划](doc/img/jcx-buy-plan-list.jpg)
+![采购计划添加](doc/img/jcx-buy-plan-add.jpg)
+![采购计划修改](doc/img/jcx-buy-plan-update.jpg)
+![采购计划删除](doc/img/jcx-buy-plan-delete.jpg)
+![采购计划审批](doc/img/jcx-buy-plan-oper.jpg)
+
+## 采购订单
+![采购订单](doc/img/jcx-buy-order-list.jpg)
+![采购订单添加](doc/img/jcx-buy-order-add.jpg)
+![采购订单修改](doc/img/jcx-buy-order-update.jpg)
+![采购订单删除](doc/img/jcx-buy-order-delete.jpg)  
+
+
