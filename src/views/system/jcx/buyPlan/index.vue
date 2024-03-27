@@ -7,10 +7,17 @@
       </el-form-item>
       <el-form-item label="状态" prop="planStatus">
         <el-select v-model="queryParams.data.planStatus" placeholder="请选择状态" clearable>
-          <el-option   label="全部"></el-option>
+          <el-option label="全部" :value="undefined"></el-option>
           <el-option :value="10" label="草稿"></el-option>
           <el-option :value="50" label="通过"></el-option>
           <el-option :value="99" label="驳回"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="生成订单" prop="isCreateOrder">
+        <el-select v-model="queryParams.data.isCreateOrder" placeholder="请选择" clearable>
+          <el-option :value="undefined" label="全部"></el-option>
+          <el-option :value="0" label="未生成"></el-option>
+          <el-option :value="1" label="已生成"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -24,7 +31,7 @@
         <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增采购计划</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">生成采购单</el-button>
+        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAddOrder">生成采购单</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
@@ -62,6 +69,12 @@
           <el-tag v-else-if="scope.row.planStatus==='99'" size="mini" type="danger">驳回</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="生成订单">
+        <template slot-scope="scope">
+          <span v-if="scope.row.buyOrderId&&scope.row.buyOrderId.length>0">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
@@ -94,22 +107,41 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="title" :visible.sync="planOrderOpen" width="800px" append-to-body>
+      <create-buy-order :buy-order="planOrder"/>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="savePlanOrder">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {urlPrefix} from '@/api/brand'
 import UpdateBuyPlan from "@/views/system/jcx/buyPlan/UpdateBuyPlan.vue";
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import {updateStatus} from "@/api/jcxPlan";
-// console.info("xxx: ",uc.urlPrefix)
+import {savePlanOrder} from "@/api/jcx/buyOrder";
+import CreateBuyOrder from "@/views/system/jcx/buyPlan/CreateBuyOrder.vue";
+import createBuyOrder from "@/views/system/jcx/buyPlan/CreateBuyOrder.vue";
+
 export default {
+  computed: {
+    createBuyOrder() {
+      return createBuyOrder
+    }
+  },
   components: {
-    UpdateBuyPlan
+    UpdateBuyPlan,
+    CreateBuyOrder
   },
   name: "jcxBuyPlan",
   data() {
     return {
+      planOrder: {
+        id: "1",
+        orderNo: "xx"
+      },
       buyPlanFormData: {},
       // 遮罩层
       loading: true,
@@ -117,6 +149,7 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      planOrderOpen: false,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -134,7 +167,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {
-          planName: undefined
+          planName: undefined,
+          isCreateOrder: undefined
         }
       },
       // 表单参数
@@ -196,6 +230,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.planOrderOpen = false;
       this.reset();
     },
     // 表单重置
@@ -226,6 +261,53 @@ export default {
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
+    handleAddOrder() {
+      if (this.ids.length == 0) {
+        this.$message.error("请选择采购计划")
+        return;
+      }
+      let filter = this.jcxBuyPlanList.filter(t => this.ids.includes(t.id));
+      var s = filter.filter(t => t.planStatus !== "50").map(t => t.planName).join(",");
+      if (s.length > 0) {
+        this.$message.error("采购计划状态为未审核的采购计划不能添加采购订单，请先审核采购计划，采购计划名称：" + s);
+        return;
+      }
+      this.title = "添加采购订单"
+      this.planOrderOpen = true;
+      this.planOrder.id = "aa-" + new Date().getTime();
+      this.planOrder.orderNo = "采购订单-" + this.formatDates(new Date()).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
+
+      let orderGoodsList = [];
+      let orderGoodsListTmp = [];
+      filter.forEach(t => orderGoodsListTmp.push(...t.jcxBuyPlanItemDtoList.filter(t => t.isTmp !== '1')));
+      console.info("orderGoodsListTmp: ", orderGoodsListTmp)
+      orderGoodsListTmp.forEach(t => {
+        let at = orderGoodsList.filter(t2 => t2.goodsId === t.goodsId);
+        if (at.length === 0) {
+          orderGoodsList.push({...t});
+        } else {
+          at[0].goodsBuyCount = parseInt(at[0].goodsBuyCount) + parseInt(t.goodsBuyCount);
+        }
+      });
+      this.planOrder.buyPlanIdList = this.ids
+      let su = {
+        goodsName: "总计",
+        goodsBuyCount: 0,
+        costPriceTotal: 0
+      }
+      orderGoodsList.forEach(t => {
+        t.costPriceTotal = parseInt(t.costPrice) * parseInt(t.goodsBuyCount);
+      });
+
+      orderGoodsList.forEach(t => {
+        su.costPriceTotal += parseInt(t.costPriceTotal);
+        su.goodsBuyCount += parseInt(t.goodsBuyCount);
+      });
+      orderGoodsList.push(su)
+
+      this.planOrder.orderGoodsList = orderGoodsList;
+
+    },
     handleAdd() {
       this.reset();
       this.open = true;
@@ -282,7 +364,15 @@ export default {
     updatePlanStatus(row, status) {
       // console.info("updatePlanStatus: ",,status)
       return updateStatus({versionNum: row.versionNum, id: row.id, planStatus: status}).then(() => this.getList());
+    }, savePlanOrder() {
+      console.info("savePlanOrder", this.planOrder)
+      let d = {}
+      d.buyPlanIdList = this.planOrder.buyPlanIdList
+      d.orderNo = this.planOrder.orderNo
+      d.orderRemark = this.planOrder.orderRemark
+      savePlanOrder(d).then(t => this.cancel())
     }
+
   }
 };
 </script>

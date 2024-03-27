@@ -262,7 +262,7 @@ export const constantRoutes = [
         path: '/order/index',
         name: "订单管理",
         component: () => import('@/views/system/jcx/order/index'),
-        meta: {title: '订单管理', icon: 'calendar', affix: false}
+        meta: {title: '订单管理', icon: 'order-1', affix: false}
       },    {
         path: '/goods/waring/index',
         name: "预警管理",
@@ -273,6 +273,11 @@ export const constantRoutes = [
         name: "购买计划",
         component: () => import('@/views/system/jcx/buyPlan/index'),
         meta: {title: '购买计划', icon: 'buy-car', affix: false}
+      },  {
+        path: '/buy/order/index',
+        name: "采购订单",
+        component: () => import('@/views/system/jcx/buyOrder/index'),
+        meta: {title: '采购订单', icon: 'order-2', affix: false}
       },
     ]
   }
