@@ -46,7 +46,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleUpdate(scope.row)"></el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
@@ -203,9 +203,9 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加采购计划";
-     let d= this.formatDates(new Date()).replaceAll("-","").replaceAll(" ","").replaceAll(":","");
+      let d = this.formatDates(new Date()).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
       this.buyPlanFormData = {
-        planName:'新建采购-'+d,
+        planName: '新建采购-' + d,
         jcxBuyPlanItemDtoList: []
       }
     },
@@ -222,7 +222,7 @@ export default {
 
     },
     upById() {
-      let d={...this.buyPlanFormData}
+      let d = {...this.buyPlanFormData}
       d.jcxBuyPlanItemDtoList = d.jcxBuyPlanItemDtoList.filter(t => t.isTmp !== '1')
       if (this.buyPlanFormData.id === undefined) {
         return add(d).then(response => {
@@ -231,7 +231,7 @@ export default {
           this.getList();
         });
       } else {
-          return updateById(d).then(response => {
+        return updateById(d).then(response => {
           this.$modal.msgSuccess("修改成功");
           this.open = false;
           this.getList();
