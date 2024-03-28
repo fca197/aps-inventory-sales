@@ -84,6 +84,7 @@ title: 购买计划状态管理
 审核通过--> 购买单草稿: 根据采购i计划提交采购单 
 note right of 购买单草稿: 根据商品进行汇总 N-->1
 ```
+--- 
 
 ```mermaid
 stateDiagram-v2
