@@ -43,6 +43,7 @@ participant O as  订单
 participant M as  消息
 participant BB as  采购计划
 participant BO as  采购订单
+participant S as   供应商
 
 
 U->>G: 用户录入商品
@@ -67,7 +68,8 @@ BO-->>BO: 采购单审批
 rect rgb(11, 112, 12)
     note over BO: 根据采购单购买 
 end
-BO-->>G: 采购计划入库
+BO-->>S : 发送采购清单
+S->>G: 采购清单入库 
 
 ```
 
