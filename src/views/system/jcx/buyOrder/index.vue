@@ -1,13 +1,15 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
-      <el-form-item label="计划名称" prop="jcxBuyPlan">
-        <el-input v-model="queryParams.data.planName" placeholder="请输入文件名称" clearable
-                  @keyup.enter.native="handleQuery"/>
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
+      <el-form-item label="采购订单序号" prop="jcxBuyOrder">
+        <el-input v-model="queryParams.data.id" placeholder="请输入订单序号" clearable @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="状态" prop="planStatus">
-        <el-select v-model="queryParams.data.planStatus" placeholder="请选择状态" clearable>
-          <el-option   label="全部"></el-option>
+      <el-form-item label="订单编号" prop="jcxBuyOrder">
+        <el-input v-model="queryParams.data.orderNo" placeholder="请输入订单编号" clearable @keyup.enter.native="handleQuery"/>
+      </el-form-item>
+      <el-form-item label="状态" prop="orderStatus">
+        <el-select v-model="queryParams.data.orderStatus" placeholder="请选择状态" clearable>
+          <el-option :value="undefined" label="全部"></el-option>
           <el-option :value="10" label="草稿"></el-option>
           <el-option :value="50" label="通过"></el-option>
           <el-option :value="99" label="驳回"></el-option>
@@ -34,45 +36,41 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="jcxBuyPlanList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="jcxBuyOrderList" @selection-change="handleSelectionChange">
 
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName"
                        :width="item.width+'px'"
                        :label="item.showName">
-        <template slot-scope="scope">
-          <div v-if="Number(scope.row[item.fieldName])">{{ scope.row[item.fieldName] }}</div>
-          <div v-else-if="scope.row[item.fieldName].length>=30">
-            <el-popover
-                placement="top-start"
-                width="200"
-                trigger="hover"
-                :content="''+scope.row[item.fieldName]">
-              <div slot="reference">{{ scope.row[item.fieldName].substring(0, 30) + '...' }}</div>
-            </el-popover>
-          </div>
-          <div v-else>{{ scope.row[item.fieldName] }}</div>
-        </template>
-
       </el-table-column>
       <el-table-column label="状态" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.planStatus==='10'" size="mini" type="info">草稿</el-tag>
-          <el-tag v-else-if="scope.row.planStatus==='50'" size="mini" type="success">通过</el-tag>
-          <el-tag v-else-if="scope.row.planStatus==='99'" size="mini" type="danger">驳回</el-tag>
+          <el-tag v-if="scope.row.orderStatus===10" size="mini" type="info">草稿</el-tag>
+          <el-tag v-else-if="scope.row.orderStatus===50" size="mini" type="success">通过</el-tag>
+          <el-tag v-else-if="scope.row.orderStatus===99" size="mini" type="danger">驳回</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-          <el-popover placement="top" v-if="scope.row.planStatus==='10'" width="140">
-            <p>修改计划状态？</p>
+          <el-popover placement="top" v-if="scope.row.orderStatus===50" width="140">
+            <p>通知供应商</p>
+            <div style="text-align: right; margin: 0">
+              <el-button size="mini" type="warning" @click="updatePlanStatus(scope.row,'50')">邮件</el-button>
+              <el-button type="warning" size="mini" icon="" @click="updatePlanStatus(scope.row,'99')">短信</el-button>
+            </div>
+            <el-button  style="padding-left: 15px"  slot="reference" size="mini"  type="text" >
+              <svg-icon icon-class="send" ></svg-icon>
+            </el-button>
+          </el-popover>
+          <el-popover placement="top" v-if="scope.row.orderStatus===10" width="140">
+            <p>修改订单状态？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">通过</el-button>
               <el-button type="danger" size="mini" icon="" @click="updatePlanStatus(scope.row,'99')">驳回</el-button>
             </div>
-            <el-button size="mini" style="padding-left: 10px" slot="reference" type="text" icon="el-icon-more"></el-button>
+            <el-button size="mini"  style="padding-left: 15px" slot="reference" type="text" icon="el-icon-more"></el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -100,14 +98,13 @@
 <script>
 import {urlPrefix} from '@/api/brand'
 import UpdateBuyPlan from "@/views/system/jcx/buyPlan/UpdateBuyPlan.vue";
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
-import {updateStatus} from "@/api/jcxPlan";
+import {add, deleteByIdList, getById, queryPageList, updateById, updateStatus} from '@/api/common'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   components: {
     UpdateBuyPlan
   },
-  name: "jcxBuyPlan",
+  name: "jcxBuyOrder",
   data() {
     return {
       buyPlanFormData: {},
@@ -124,7 +121,7 @@ export default {
       // 总条数
       total: 0,
 
-      jcxBuyPlanList: [],
+      jcxBuyOrderList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -134,13 +131,14 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {
+          orderStatus: undefined,
           planName: undefined
         }
       },
       // 表单参数
       form: {
         remark: "",
-        jcxBuyPlan: "",
+        jcxBuyOrder: "",
         brandCode: "",
         pwd: "",
         id: undefined,
@@ -149,7 +147,7 @@ export default {
       // 表单校验
       rules: {
 
-        jcxBuyPlan: [
+        jcxBuyOrder: [
           {required: true, message: "文件名称", trigger: "blur"}
         ],
         brandCode: [
@@ -157,20 +155,11 @@ export default {
           {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"}
         ]
       },
-      tableHeaderList: [{
-        columnName: "id",
-        showName: "序号"
-      }, {
-        columnName: "brandCode",
-        showName: "文件编码"
-      }, {
-        columnName: "jcxBuyPlan",
-        showName: "文件名称"
-      }]
+      tableHeaderList: [ ]
     };
   },
   created() {
-    document["pagePath"] = "/jcxBuyPlan";
+    document["pagePath"] = "/jcxBuyOrder";
     this.getList();
   },
   methods: {
@@ -180,15 +169,7 @@ export default {
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
-        this.tableHeaderList.splice(2, 0, {fieldName: "goodsName", showName: "商品名称", width: 150})
-        this.jcxBuyPlanList = response.dataList;
-        this.jcxBuyPlanList.forEach(t => {
-          // t.costPriceTotal = t.costPriceTotal/100.0 ;
-          // t.goodsGrossProfitTotal = t.goodsGrossProfitTotal / 100.0;
-          // t.goodsNetProfitTotal = t.goodsNetProfitTotal / 100.0;
-          // t.salesPriceTotal = t.salesPriceTotal / 100.0;
-          t.goodsName = t.jcxBuyPlanItemDtoList.map(t => t.goodsName).join(",")
-        })
+        this.jcxBuyOrderList = response.dataList;
         this.total = parseInt(response.total);
         this.loading = false;
       });
@@ -201,11 +182,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        brandCode: "",
-        id: undefined,
-        jcxBuyPlan: undefined,
-        isUsed: true
+        data: {
+          orderStatus: undefined,
+          planName: undefined
+        }
       };
       this.resetForm("form");
     },
@@ -233,7 +213,7 @@ export default {
       let d = this.formatDates(new Date()).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
       this.buyPlanFormData = {
         planName: '新建采购-' + d,
-        jcxBuyPlanItemDtoList: []
+        jcxBuyOrderItemDtoList: []
       }
     },
     /** 修改按钮操作 */
@@ -250,7 +230,7 @@ export default {
     },
     upById() {
       let d = {...this.buyPlanFormData}
-      d.jcxBuyPlanItemDtoList = d.jcxBuyPlanItemDtoList.filter(t => t.isTmp !== '1')
+      d.jcxBuyOrderItemDtoList = d.jcxBuyOrderItemDtoList.filter(t => t.isTmp !== '1')
       if (this.buyPlanFormData.id === undefined) {
         return add(d).then(response => {
           this.$modal.msgSuccess("新增成功");
@@ -281,7 +261,7 @@ export default {
     },
     updatePlanStatus(row, status) {
       // console.info("updatePlanStatus: ",,status)
-      return updateStatus({versionNum: row.versionNum, id: row.id, planStatus: status}).then(() => this.getList());
+      return updateStatus({versionNum: row.versionNum, id: row.id, orderStatus: status}).then(() => this.getList());
     }
   }
 };

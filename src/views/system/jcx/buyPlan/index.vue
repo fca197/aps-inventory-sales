@@ -71,7 +71,13 @@
       </el-table-column>
       <el-table-column label="生成订单">
         <template slot-scope="scope">
-          <span v-if="scope.row.buyOrderId&&scope.row.buyOrderId.length>0">是</span>
+          <span v-if="scope.row.buyOrderId&&scope.row.buyOrderId.length>0">是
+          <el-popover placement="top" width="190">
+             <p>采购订单序号</p>
+             <p>{{ scope.row.buyOrderId }}</p>
+            <el-button type="text" size="mini" slot="reference" icon="el-icon-info"></el-button>
+          </el-popover>
+          </span>
           <span v-else>否</span>
         </template>
       </el-table-column>
@@ -370,7 +376,7 @@ export default {
       d.buyPlanIdList = this.planOrder.buyPlanIdList
       d.orderNo = this.planOrder.orderNo
       d.orderRemark = this.planOrder.orderRemark
-      savePlanOrder(d).then(t => this.cancel())
+      savePlanOrder(d).then(t => this.cancel()).then(() => this.getList())
     }
 
   }
