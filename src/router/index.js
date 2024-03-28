@@ -74,16 +74,21 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/loginAccount',
+    path: '/base/index',
     component: Layout,
     redirect: 'index',
     meta: {title: '账户管理', icon: 'user', affix: false},
     children: [
       {
-        path: 'index',
+        path: '/login/account/index',
         component: () => import('@/views/loginAccount/index'),
         name: '账户管理',
-        meta: {title: '账户管理', icon: '', affix: false}
+        meta: {title: '账户管理', icon: 'peoples', affix: false}
+      } , {
+        path: '/supplier/index',
+        name: "供应管理",
+        component: () => import('@/views/system/supplier/index'),
+        meta: {title: '供应管理', icon: 'pastebin', affix: false}
       }
     ]
   },
@@ -144,20 +149,6 @@ export const constantRoutes = [
         path: '1index',
         component: () => import('@/views/system/food/index'),
         meta: {title: '售卖趋势', icon: 'redis', affix: false}
-      }
-    ]
-  },
-  {
-    path: '/spu/index',
-    component: Layout,
-    redirect: 'index',
-    meta: {title: '供应管理', icon: 'user', affix: false},
-    children: [
-      {
-        path: 'index',
-        name: "供应管理",
-        component: () => import('@/views/loginAccount/index'),
-        meta: {title: '供应管理', icon: 'pastebin', affix: false}
       }
     ]
   },

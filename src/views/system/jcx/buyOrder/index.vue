@@ -53,15 +53,26 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
+          <!--          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>-->
           <el-popover placement="top" v-if="scope.row.orderStatus===50" width="140">
             <p>通知供应商发货</p>
             <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="warning" @click="updatePlanStatus(scope.row,'50')">邮件</el-button>
-              <el-button type="warning" size="mini" icon="" @click="updatePlanStatus(scope.row,'99')">短信</el-button>
+              <el-popover placement="top" trigger="hover"  width="90px" align="center">
+                <div style="text-align: right; margin: 0">
+                 点击 <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">邮件预览</el-button>
+                </div>
+                <el-button size="mini" type="warning" slot="reference" @click="updatePlanStatus(scope.row,'50')">邮件</el-button>
+              </el-popover>
+              <span style="padding-left: 10px"></span>
+              <el-popover placement="top" trigger="hover">
+                <div style="text-align: right; margin: 0">
+                  点击   <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">短信预览</el-button>
+                </div>
+                <el-button size="mini" type="warning" slot="reference" @click="updatePlanStatus(scope.row,'50')">短信</el-button>
+              </el-popover>
             </div>
-            <el-button  style="padding-left: 15px"  slot="reference" size="mini"  type="text" >
-              <svg-icon icon-class="send" ></svg-icon>
+            <el-button style="padding-left: 15px" slot="reference" size="mini" type="text">
+              <svg-icon icon-class="send"></svg-icon>
             </el-button>
           </el-popover>
           <el-popover placement="top" v-if="scope.row.orderStatus===10" width="140">
@@ -70,7 +81,7 @@
               <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">通过</el-button>
               <el-button type="danger" size="mini" icon="" @click="updatePlanStatus(scope.row,'99')">驳回</el-button>
             </div>
-            <el-button size="mini"  style="padding-left: 15px" slot="reference" type="text" icon="el-icon-more"></el-button>
+            <el-button size="mini" style="padding-left: 15px" slot="reference" type="text" icon="el-icon-more"></el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -155,7 +166,7 @@ export default {
           {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"}
         ]
       },
-      tableHeaderList: [ ]
+      tableHeaderList: []
     };
   },
   created() {
