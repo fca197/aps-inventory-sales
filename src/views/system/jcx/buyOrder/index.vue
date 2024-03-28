@@ -55,7 +55,7 @@
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
           <el-popover placement="top" v-if="scope.row.orderStatus===50" width="140">
-            <p>通知供应商</p>
+            <p>通知供应商发货</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="warning" @click="updatePlanStatus(scope.row,'50')">邮件</el-button>
               <el-button type="warning" size="mini" icon="" @click="updatePlanStatus(scope.row,'99')">短信</el-button>
