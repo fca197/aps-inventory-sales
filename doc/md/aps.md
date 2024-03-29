@@ -29,21 +29,6 @@ P-->>U: 排产结果显示
 P-->>PART: 零件生成
 PART-->>PART: 零件统计
 PART-->>U: 零件统计结果显示
-```
-
-```mermaid
-sequenceDiagram
-autonumber
-title: 预测
-participant U as 用户
-participant F as 预测
-
-U->>F: 预测模板
-F->>U: 下载模板
-U->>U: 预测数据填写
-U->>F: 预测数据上传
-F->>F: 预测开始
-F->>U: 预测计算(ortools)
-```
+``` 
 
 [返回](../../README.md)
