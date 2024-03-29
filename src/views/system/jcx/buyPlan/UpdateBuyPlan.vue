@@ -90,6 +90,7 @@ export default {
     },
 
     totalPrice() {
+      this.buyPlanInfo.jcxBuyPlanItemDtoList= this.buyPlanInfo.jcxBuyPlanItemDtoList||[]
       this.totalTmp("costPrice")
       this.totalTmp("salesPrice")
       this.totalTmp("goodsGrossProfit")

@@ -23,12 +23,6 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增采购计划</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">生成采购单</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
           删除
         </el-button>
@@ -59,16 +53,16 @@
             <div style="text-align: right; margin: 0">
               <el-popover placement="top" trigger="hover"  width="90px" align="center">
                 <div style="text-align: right; margin: 0">
-                 点击 <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">邮件预览</el-button>
+                 点击 <el-button size="mini" type="success" @click="noIml(scope.row,'50')">邮件预览</el-button>
                 </div>
-                <el-button size="mini" type="warning" slot="reference" @click="updatePlanStatus(scope.row,'50')">邮件</el-button>
+                <el-button size="mini" type="warning" slot="reference" @click="noIml(scope.row,'50')">邮件</el-button>
               </el-popover>
               <span style="padding-left: 10px"></span>
               <el-popover placement="top" trigger="hover">
                 <div style="text-align: right; margin: 0">
-                  点击   <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">短信预览</el-button>
+                  点击   <el-button size="mini" type="success" @click="noIml(scope.row,'50')">短信预览</el-button>
                 </div>
-                <el-button size="mini" type="warning" slot="reference" @click="updatePlanStatus(scope.row,'50')">短信</el-button>
+                <el-button size="mini" type="warning" slot="reference" @click="noIml(scope.row,'50')">短信</el-button>
               </el-popover>
             </div>
             <el-button style="padding-left: 15px" slot="reference" size="mini" type="text">
@@ -273,6 +267,9 @@ export default {
     updatePlanStatus(row, status) {
       // console.info("updatePlanStatus: ",,status)
       return updateStatus({versionNum: row.versionNum, id: row.id, orderStatus: status}).then(() => this.getList());
+    },
+    noIml(){
+      this.$modal.msgError("暂未实现")
     }
   }
 };
