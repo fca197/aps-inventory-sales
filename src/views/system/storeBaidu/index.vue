@@ -3,7 +3,7 @@
     <el-amap ref="map" :center="center"
              :zoom="zoom" :plugin="plugin" :events="events" class="amap-demo"
              style="height: 800px;width: 100%">
-      <el-amap-marker v-for="(u,i) in markers" :events="markerEvents" :position="u.position"   :label="u.showName"
+      <el-amap-marker v-for="(u,i) in markers" :events="markerEvents" :key="i" :position="u.position"   :label="u.showName"
                       :extData="u"/>
     </el-amap>
   </div>
