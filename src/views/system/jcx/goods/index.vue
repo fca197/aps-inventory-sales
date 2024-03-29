@@ -65,45 +65,62 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="商图片" prop="file">
-          <image-upload v-model="form.goodsImg" :limit="1" :file-size="5" :is-show-tip="false"></image-upload>
-        </el-form-item>
-        <el-form-item label="商品名称" prop="file">
-          <el-input v-model="form.goodsName" placeholder="请输入商品名称" aria-required="true"/>
-        </el-form-item>
-        <el-form-item label="条形码" prop="goodsCode">
-          <el-input v-model="form.goodsBarCode" placeholder="请输入商品编码"/>
-        </el-form-item>
-        <el-form-item label="二维码" prop="goodsQrCode">
-          <el-input v-model="form.goodsQrCode" placeholder="请输入二维码"/>
-        </el-form-item>
-        <el-form-item label="成本价(分):" prop="goodsMinPrice">
-          <el-input v-model="form.costPrice" placeholder="请输入商品成本价"/>
-        </el-form-item>
-        <el-form-item label="售卖价(分):" prop="goodsMaxPrice">
-          <el-input v-model="form.salesPrice" placeholder="请输入商品最高价"/>
-        </el-form-item>
-        <el-form-item label="单位" prop="goodsUnit">
-          <el-input v-model="form.goodsUnit" placeholder="请输入商品单位 (个/瓶/箱/件...)"/>
-        </el-form-item>
-        <el-form-item label="剩余预警数" prop="warningCount">
-          <el-input v-model="form.warningCount" placeholder="10"/>
-        </el-form-item>
-        <el-form-item label="库存" prop="goodsInventoryCount">
-          <el-input v-model="form.goodsInventoryCount" placeholder=""/>
-        </el-form-item>
-        <el-form-item label="毛利" prop="goodsGrossProfit">
-          <el-input v-model="form.goodsGrossProfit" placeholder="10"/>
-        </el-form-item>
-        <el-form-item label="净利润" prop="goodsNetProfit">
-          <el-input v-model="form.goodsNetProfit" placeholder="10"/>
-        </el-form-item>
-        <el-form-item label="盘点" prop="isInventory">
-          <el-select v-model="form.isInventory" placeholder="请选择">
-            <el-option label="是" :value="true"></el-option>
-            <el-option label="否" :value="false"></el-option>
-          </el-select>
-        </el-form-item>
+        <el-tabs tab-position="left" style="height: 400px;">
+          <el-tab-pane label="基本信息">
+            <el-form-item label="商图片" prop="file">
+              <image-upload v-model="form.goodsImg" :limit="1" :file-size="5" :is-show-tip="false"></image-upload>
+            </el-form-item>
+            <el-form-item label="商品名称" prop="file">
+              <el-input v-model="form.goodsName" placeholder="请输入商品名称" aria-required="true"/>
+            </el-form-item>
+            <el-form-item label="条形码" prop="goodsCode">
+              <el-input v-model="form.goodsBarCode" placeholder="请输入商品编码"/>
+            </el-form-item>
+            <el-form-item label="二维码" prop="goodsQrCode">
+              <el-input v-model="form.goodsQrCode" placeholder="请输入二维码"/>
+            </el-form-item>
+
+            <el-form-item label="库存" prop="goodsInventoryCount">
+              <el-input v-model="form.goodsInventoryCount" placeholder=""/>
+            </el-form-item>
+
+          </el-tab-pane>
+          <el-tab-pane label="价格信息">
+            <el-form-item label="成本价(分):" prop="goodsMinPrice">
+              <el-input v-model="form.costPrice" placeholder="请输入商品成本价"/>
+            </el-form-item>
+            <el-form-item label="售卖价(分):" prop="goodsMaxPrice">
+              <el-input v-model="form.salesPrice" placeholder="请输入商品最高价"/>
+            </el-form-item>
+            <el-form-item label="单位" prop="goodsUnit">
+              <el-input v-model="form.goodsUnit" placeholder="请输入商品单位 (个/瓶/箱/件...)"/>
+            </el-form-item>
+            <el-form-item label="毛利" prop="goodsGrossProfit">
+              <el-input v-model="form.goodsGrossProfit" placeholder="10"/>
+            </el-form-item>
+            <el-form-item label="净利润" prop="goodsNetProfit">
+              <el-input v-model="form.goodsNetProfit" placeholder="10"/>
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="供应商">
+            <el-form-item label="供应商" prop="supplierId">
+              <el-select v-model="form.supplierId" placeholder="请选择" :filter-method="selectSupplier" filterable>
+                <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="剩余预警数" prop="warningCount">
+              <el-input v-model="form.warningCount" placeholder="10"/>
+            </el-form-item>
+            <el-form-item label="盘点" prop="isInventory">
+              <el-select v-model="form.isInventory" placeholder="请选择">
+                <el-option label="是" :value="true"></el-option>
+                <el-option label="否" :value="false"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-tab-pane>
+        </el-tabs>
+
 
       </el-form>
 
@@ -120,6 +137,7 @@ import ImageShow from "@/components/ImageShow/index.vue";
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import linCode from "@/views/system/jcx/goods/linCode.vue";
 import item from "@/layout/components/Sidebar/Item.vue";
+import {querySupplierPageList} from "@/api/baseSupplier";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "goodsName",
@@ -162,6 +180,7 @@ export default {
       },
       // 表单参数
       form: {
+        supplierId: "",
         isInventory: true,
         goodsInventoryCount: 0,
         goodsGrossProfit: 0,
@@ -180,9 +199,12 @@ export default {
         warningCount: 10,
         isUsed: true,
       },
-      initForm: {},
+      initForm: {
+        supplierId: ""
+      },
       // 表单校验
       rules: {},
+      supplierList: [],
       tableHeaderList: [{
         fieldName: "id",
         showName: "序号",
@@ -198,7 +220,6 @@ export default {
   methods: {
     /** 查询公告列表 */
     getList() {
-
       return queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
@@ -214,7 +235,7 @@ export default {
     },
     // 表单重置
     reset() {
-      this.form =this.initForm;
+      this.form = this.initForm;
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -235,16 +256,19 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.selectSupplier('');
       this.reset();
       this.open = true;
       this.title = "添加商品";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+
       this.reset();
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
         this.form = response.data.dataList[0]
+        this.selectSupplier('', this.form.supplierId);
         this.open = true;
         this.title = "修改商品";
       });
@@ -295,7 +319,12 @@ export default {
         this.goodsLineCodeList.push(t);
         this.goodsLineCodeListOpen = true
       })
+    },
+    selectSupplier(v, id) {
+      const params = {pageNum: 1, pageSize: 10, data: {supplierName: v, id: id}};
+      return querySupplierPageList(params).then(t => this.supplierList = t.data.dataList)
     }
+
   }
 }
 </script>
