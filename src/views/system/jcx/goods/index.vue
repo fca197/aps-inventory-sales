@@ -65,7 +65,7 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
-        <el-tabs tab-position="left" style="height: 400px;">
+        <el-tabs tab-position="left" style="height: 450px;">
           <el-tab-pane label="基本信息">
             <el-form-item label="商图片" prop="file">
               <image-upload v-model="form.goodsImg" :limit="1" :file-size="5" :is-show-tip="false"></image-upload>
@@ -79,11 +79,12 @@
             <el-form-item label="二维码" prop="goodsQrCode">
               <el-input v-model="form.goodsQrCode" placeholder="请输入二维码"/>
             </el-form-item>
-
             <el-form-item label="库存" prop="goodsInventoryCount">
               <el-input v-model="form.goodsInventoryCount" placeholder=""/>
             </el-form-item>
-
+            <el-form-item label="剩余预警数" prop="warningCount">
+              <el-input v-model="form.warningCount" placeholder="10"/>
+            </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="价格信息">
             <el-form-item label="成本价(分):" prop="goodsMinPrice">
@@ -107,10 +108,6 @@
               <el-select v-model="form.supplierId" placeholder="请选择" :filter-method="selectSupplier" filterable>
                 <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
               </el-select>
-            </el-form-item>
-
-            <el-form-item label="剩余预警数" prop="warningCount">
-              <el-input v-model="form.warningCount" placeholder="10"/>
             </el-form-item>
             <el-form-item label="盘点" prop="isInventory">
               <el-select v-model="form.isInventory" placeholder="请选择">
