@@ -46,21 +46,25 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
+          <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleData(scope.row)"></el-button>
+
+          <el-button size="mini" v-if="scope.row.orderStatus!==50" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
           <!--          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>-->
           <el-popover placement="top" v-if="scope.row.orderStatus===50" width="140">
             <p>通知供应商发货</p>
             <div style="text-align: right; margin: 0">
-              <el-popover placement="top" trigger="hover"  width="90px" align="center">
+              <el-popover placement="top" trigger="hover" width="90px" align="center">
                 <div style="text-align: right; margin: 0">
-                 点击 <el-button size="mini" type="success" @click="noIml(scope.row,'50')">邮件预览</el-button>
+                  点击
+                  <el-button size="mini" type="success" @click="noIml(scope.row,'50')">邮件预览</el-button>
                 </div>
                 <el-button size="mini" type="warning" slot="reference" @click="noIml(scope.row,'50')">邮件</el-button>
               </el-popover>
               <span style="padding-left: 10px"></span>
               <el-popover placement="top" trigger="hover">
                 <div style="text-align: right; margin: 0">
-                  点击   <el-button size="mini" type="success" @click="noIml(scope.row,'50')">短信预览</el-button>
+                  点击
+                  <el-button size="mini" type="success" @click="noIml(scope.row,'50')">短信预览</el-button>
                 </div>
                 <el-button size="mini" type="warning" slot="reference" @click="noIml(scope.row,'50')">短信</el-button>
               </el-popover>
@@ -81,13 +85,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getList"
-    />
+    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
@@ -95,6 +93,20 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="upById">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :title="title" :visible.sync="buyOrderItemDtoListOpen" width="1000px" append-to-body>
+      <el-table :data="buyOrderItemDtoList">
+        <el-table-column label="序号" type="index" align="center"/>
+        <el-table-column label="产品名称" prop="goodsName"/>
+        <el-table-column label="价格" prop="goodsCostPrice"/>
+        <el-table-column label="购买数量" prop="goodsBuyCount"/>
+        <el-table-column label="总价" prop="goodsCostPriceTotal"/>
+        <el-table-column label="单位" prop="goodsUnit"/>
+        <el-table-column label="供应商" prop="supplierName"/>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="buyOrderItemDtoListOpen=false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -112,6 +124,7 @@ export default {
   name: "jcxBuyOrder",
   data() {
     return {
+      buyOrderItemDtoList: [],
       buyPlanFormData: {},
       // 遮罩层
       loading: true,
@@ -123,6 +136,7 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: false,
+      buyOrderItemDtoListOpen: false,
       // 总条数
       total: 0,
 
@@ -210,17 +224,6 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加采购计划";
-      let d = this.formatDates(new Date()).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
-      this.buyPlanFormData = {
-        planName: '新建采购-' + d,
-        jcxBuyOrderItemDtoList: []
-      }
-    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       // this.reset();
@@ -235,6 +238,7 @@ export default {
     },
     upById() {
       let d = {...this.buyPlanFormData}
+      d.jcxBuyOrderItemDtoList = d.jcxBuyOrderItemDtoList || []
       d.jcxBuyOrderItemDtoList = d.jcxBuyOrderItemDtoList.filter(t => t.isTmp !== '1')
       if (this.buyPlanFormData.id === undefined) {
         return add(d).then(response => {
@@ -268,8 +272,12 @@ export default {
       // console.info("updatePlanStatus: ",,status)
       return updateStatus({versionNum: row.versionNum, id: row.id, orderStatus: status}).then(() => this.getList());
     },
-    noIml(){
+    noIml() {
       this.$modal.msgError("暂未实现")
+    },
+    handleData(row) {
+      this.buyOrderItemDtoList = row.buyOrderItemDtoList;
+      this.buyOrderItemDtoListOpen = true;
     }
   }
 };

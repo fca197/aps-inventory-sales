@@ -369,7 +369,7 @@ export default {
     },
     updatePlanStatus(row, status) {
       // console.info("updatePlanStatus: ",,status)
-      return updateStatus({versionNum: row.versionNum, id: row.id, planStatus: status}).then(() => this.getList());
+      return updateStatus({versionNum: row.versionNum, id: row.id, planStatus: status}).then(t=>this.$message.success("操作成功")).then(() => this.getList());
     }, savePlanOrder() {
       console.info("savePlanOrder", this.planOrder)
       let d = {}
