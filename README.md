@@ -32,7 +32,6 @@ C-->>C: 盘点报表查看(可下载)
 ## 进存销
 
 ```mermaid
-
 sequenceDiagram
 autonumber
 title: 进存销盘点流程
@@ -66,8 +65,7 @@ U->>BB: 用户审批采购计划
 BB-->>BO: 合并购买计划生成采购订单
 BO-->>BO: 采购单审批
 BO-->>S : 发送采购清单
-S->>G: 采购清单入库 
-
+S->>G: 采购清单入库
 ```
 
 ## 购买流程
@@ -85,7 +83,7 @@ title: 购买计划状态管理
 note right of 购买单草稿: 根据商品进行汇总 N-->1
 ```
 
---- 
+---
 
 ```mermaid
 stateDiagram-v2
@@ -95,10 +93,26 @@ title: 购买单状态管理
 审核通过 --> 供应商: 采购单发送供应商
 ```
 
+## aps 功能
+
+```mermaid
+sequenceDiagram
+autonumber
+title: 预测
+participant U as 用户
+participant F as 预测
+
+U->>F: 预测模板
+F->>U: 下载模板
+
+
+
+```
+
 # 功能点一览
 
-❌: 不实现  
-⌛️: 后期实现  
+❌: 不实现
+⌛️: 后期实现
 ✅: 已实现
 
 | 系统    |   模块    | 列表 | 增加 | 删除 | 修改 | 详情 | 其他              | 需求             |
@@ -122,6 +136,7 @@ title: 购买单状态管理
 | 进存销   |  采购计划   | ✅  | ✅  | ✅  | ✅  | ✅  |                 |                |
 | 进存销   |  采购订单   | ✅  | ✅  | ✅  | ❌  | ✅️ | 驳回,预览           |                |
 | 进存销   |  入库管理   | ⌛️ | ⌛️ | ⌛️ | ⌛️ | ⌛️ |                 |                |
+| aps   |  商品管理   |    |    |    |    |    |                 |                |
 | aps   | 销售特征管理  |    |    |    |    |    |                 |                |
 | aps   | 工程特征组管理 |    |    |    |    |    |                 |                |
 | aps   | 销售转特征管理 |    |    |    |    |    |                 |                |
@@ -274,6 +289,5 @@ title: 购买单状态管理
 ![采购订单](doc/img/jcx-buy-order-list.jpg)
 ![采购订单添加](doc/img/jcx-buy-order-add.jpg)
 ![采购订单修改](doc/img/jcx-buy-order-update.jpg)
-![采购订单删除](doc/img/jcx-buy-order-delete.jpg)  
-
+![采购订单删除](doc/img/jcx-buy-order-delete.jpg)
 
