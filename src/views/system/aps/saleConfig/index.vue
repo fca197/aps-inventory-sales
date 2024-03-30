@@ -11,7 +11,7 @@
     </el-row>
 
     <el-table :default-expand-all="true" :data="saleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-      <el-table-column label="id" prop="id"/>
+      <el-table-column label="序号" prop="id"/>
       <el-table-column label="组编码" prop="saleCode">
         <template slot-scope="scope">
           <span v-if="scope.row.isValue !== 1">{{ scope.row.saleCode }}</span>
@@ -98,17 +98,7 @@ export default {
     getList() {
       return queryPageList({pageNum: 1, pageSize: 999})
       .then(t => {
-        let dL = t.data.dataList;
-        let dL2 = dL.sort((a, b) => {
-          return a.saleCode.localeCompare(b.saleCode)
-        })
-        let ret = [];
-        ret = dL.filter(t => t.parentId === "0");
-        ret.forEach(t => {
-          let c = dL.filter(t1 => t1.parentId === t.id);
-          t.children = c;
-        })
-        this.saleConfigList = ret
+        this.saleConfigList =  t.data.dataList;
       })
     },
     renderContent(h, {node, data, store}) {

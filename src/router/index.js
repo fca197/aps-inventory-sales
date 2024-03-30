@@ -89,6 +89,11 @@ export const constantRoutes = [
         name: "销售配置管理",
         component: () => import('@/views/system/aps/saleConfig/index'),
         meta: {title: '销售配置管理', icon: 'group', affix: false}
+      }, {
+        path: '/aps/goods/sale/index',
+        name: "商品销售特征绑定",
+        component: () => import('@/views/system/aps/goodsSaleConfig/index'),
+        meta: {title: '商品销售特征绑定', icon: 'setting', affix: false}
       },
     ]
   },
