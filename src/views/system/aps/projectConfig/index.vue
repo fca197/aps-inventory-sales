@@ -91,7 +91,7 @@ export default {
     }
   },
   created() {
-    document["pagePath"] = "/apsSaleConfig";
+    document["pagePath"] = "/apsProjectConfig";
     this.getList()
   }
   ,
@@ -102,17 +102,25 @@ export default {
         this.saleConfigList =  t.data.dataList;
       })
     },
-
+    renderContent(h, {node, data, store}) {
+      return (
+          <span class="custom-tree-node">
+            <span>{node.saleCode}/ {node.saleName} {data}</span>
+            <span>
+              <el-button size="mini" type="text" on-click={() => this.append(data)}>Append</el-button>
+              <el-button size="mini" type="text" on-click={() => this.remove(node, data)}>Delete</el-button>
+            </span>
+          </span>);
+    },
     handleAdd(row) {
       this.resetForm();
       this.open = true;
       if (row) {
-        this.title = "添加销售值"
-        this.form.id=undefined;
+        this.title = "添加工程特征值"
         this.form.isValue = 1
         this.form.parentId = row.id
       } else {
-        this.title = "添加销售组"
+        this.title = "添加工程特征组"
         this.form.isValue = 0
         this.form.parentId = "0"
       }
