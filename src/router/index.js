@@ -94,6 +94,11 @@ export const constantRoutes = [
         name: "商品销售特征绑定",
         component: () => import('@/views/system/aps/goodsSaleConfig/index'),
         meta: {title: '商品销售特征绑定', icon: 'setting', affix: false}
+      }, {
+        path: '/aps/goods/forecast/index',
+        name: "预测管理",
+        component: () => import('@/views/system/aps/forecast/index'),
+        meta: {title: '预测管理', icon: 'setting', affix: false}
       },
     ]
   },

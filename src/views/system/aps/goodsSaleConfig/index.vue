@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        请选择商品:
+
+
+    <el-form  ref="queryForm" size="small" :inline="true"  label-width="100px">
+      <el-form-item label="请选择商品" prop="goodsId" >
         <el-select v-model="form.goodsId">
           <el-option v-for="item in goodsList" :label="item.goodsName" :value="item.id" :key="item.id"></el-option>
         </el-select>
-      </el-col>
-      <el-col :span="1.5" hidden="hidden">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"></el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+      </el-form-item>
+
+    </el-form>
+
+
 
     <el-table :default-expand-all="true" :data="apsSaleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <!--      <el-table-column label="全选" type="selection" prop="id"/>-->
