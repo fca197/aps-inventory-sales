@@ -1,26 +1,25 @@
 <template>
   <div class="upload-file">
     <el-upload
-      multiple
-      :action="uploadFileUrl"
-      :before-upload="handleBeforeUpload"
-      :file-list="fileList"
-      :limit="limit"
-      :on-error="handleUploadError"
-      :on-exceed="handleExceed"
-      :on-success="handleSuccess"
-      :show-file-list="false"
-      :headers="headers"
-      class="upload-file-uploader"
-      ref="fileUpload"
+        :action="uploadUrl!==undefined?(baseUrl+uploadUrl): uploadFileUrl"
+        :before-upload="handleBeforeUpload"
+        :file-list="fileList"
+        :limit="limit"
+        :on-error="handleUploadError"
+        :on-exceed="handleExceed"
+        :on-success="handleSuccess"
+        :show-file-list="false"
+        :headers="headers"
+        class="upload-file-uploader"
+        ref="fileUpload"
     >
       <!-- 上传按钮 -->
       <el-button size="mini" type="primary">选取文件</el-button>
       <!-- 上传提示 -->
       <div class="el-upload__tip" slot="tip" v-if="showTip">
         请上传
-        <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b> </template>
-        <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b> </template>
+        <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b></template>
+        <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b></template>
         的文件
       </div>
     </el-upload>
@@ -40,10 +39,12 @@
 </template>
 
 <script>
-import { getToken } from "@/utils/auth";
+import {getToken} from "@/utils/auth";
+
 export default {
   name: "FileUpload",
   props: {
+    fileUploadSuccess:{},
     // 值
     value: [String, Object, Array],
     // 数量限制
@@ -65,7 +66,8 @@ export default {
     isShowTip: {
       type: Boolean,
       default: true
-    }
+    },
+    uploadUrl: {}
   },
   data() {
     return {
@@ -73,7 +75,7 @@ export default {
       uploadList: [],
       baseUrl: process.env.VUE_APP_BASE_API,
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/fileUpload/insert", // 上传文件服务器地址
-      headers: {'j-token':getToken()},
+      headers: {'j-token': getToken()},
       fileList: [],
     };
   },
@@ -87,7 +89,7 @@ export default {
           // 然后将数组转为对象数组
           this.fileList = list.map(item => {
             if (typeof item === "string") {
-              item = { name: item, url: item };
+              item = {name: item, url: item};
             }
             item.uid = item.uid || new Date().getTime() + temp++;
             return item;
@@ -144,7 +146,7 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadList.push({name: res.fileName, url: res.fileName});
         this.uploadedSuccessfully();
       } else {
         this.number--;
@@ -187,9 +189,10 @@ export default {
       return strs !== '' ? strs.substr(0, strs.length - 1) : '';
     },
     handleSuccess(res) {
-      console.log(res)
-      this.value=[res.data.id];
-      this.fileList=[];
+      console.log("xxx",res)
+      this.fileUploadSuccess()
+      // this.value = [res.data.id];
+      this.fileList = [];
       this.$modal.closeLoading();
     }
   }
@@ -200,18 +203,21 @@ export default {
 .upload-file-uploader {
   margin-bottom: 5px;
 }
+
 .upload-file-list .el-upload-list__item {
   border: 1px solid #e4e7ed;
   line-height: 2;
   margin-bottom: 10px;
   position: relative;
 }
+
 .upload-file-list .ele-upload-list__item-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: inherit;
 }
+
 .ele-upload-list__item-content-action .el-link {
   margin-right: 10px;
 }

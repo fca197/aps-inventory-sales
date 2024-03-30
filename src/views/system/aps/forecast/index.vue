@@ -30,10 +30,11 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" width="180px" :prop="item.fieldName" :label="item.showName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleData(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-download" @click="downloadTemplate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-upload"></el-button>
+          <el-button size="mini" type="text" icon="el-icon-upload" @click="uploadTemplate(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,6 +67,13 @@
         <el-button @click="cancel">取消</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="uploadOpen" :title="title" width="500px" @close="cancel">
+      <el-form :model="form" ref="form" label-width="100px">
+        <el-form-item label="预测版本文件" prop="forecastName">
+          <file-upload ref="fileUpload" :fileUploadSuccess="fileUploadSuccess" :file-type="['xlsx']" :upload-url="'/apsGoodsForecast/uploadTemplate/'+this.form.id" :value="form.fileId"/>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -85,6 +93,7 @@ export default {
       forecastList: [],
       tableHeaderList: [],
       form: {
+        fileId:"",
         forecastNo: "",
         forecastBeginDate: "",
         forecastEndDate: ""
@@ -99,6 +108,7 @@ export default {
         pageSize: 10,
       },
       open: false,
+      uploadOpen: false,
       single: false,
       multiple: false,
       showSearch: true,
@@ -136,7 +146,7 @@ export default {
     handleAdd() {
       this.title = "新增预测版本"
       this.open = true;
-      this.form.forecastNo = "YC-" + $.formatDate(new Date(), "yyyyMMddHHmmss");
+      this.form.forecastNo = "YC-" + this.formatDates(new Date(), true);
     },
     handleDelete(row) {
       let idList = [];
@@ -172,6 +182,21 @@ export default {
     downloadTemplate(row) {
       downloadForm("/apsGoodsForecast/downloadTemplate/" + row.id, {}, row.forecastName + ".xlsx");
     },
+    uploadTemplate(row) {
+      this.form.id = row.id;
+      this.title = "上传预测版本";
+      this.uploadOpen = true;
+    }, handleData(row) {
+      this.$tab.openPage("预测数据", "/psGoodsForecast/getDataById", {
+            id: row.id
+          }
+      )
+    },
+    fileUploadSuccess(data) {
+      this.$modal.msgSuccess("上传成功")
+      this.uploadOpen = false;
+
+    }
   }
 }
 </script>

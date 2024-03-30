@@ -84,7 +84,7 @@ export const constantRoutes = [
         name: "商品管理",
         component: () => import('@/views/system/aps/goods/index'),
         meta: {title: '商品管理', icon: 'order-1', affix: false}
-      },  {
+      }, {
         path: '/aps/sale/index',
         name: "销售配置管理",
         component: () => import('@/views/system/aps/saleConfig/index'),
@@ -104,8 +104,13 @@ export const constantRoutes = [
         name: "预测管理",
         component: () => import('@/views/system/aps/forecast/index'),
         meta: {title: '预测管理', icon: 'setting', affix: false}
+      }, {
+        path: '/psGoodsForecast/getDataById',
+        component: () => import('@/views/system/aps/forecast/data.vue'),
+        hidden: false
       },
     ]
+
   },
   {
     path: '/base/index',
