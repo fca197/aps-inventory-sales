@@ -40,3 +40,5 @@
 ### 计算结果
 
 ![aps-f-compute-result.jpg](..%2Fimg%2Faps%2Faps-f-compute-result.jpg)
+
+[返回](./page-show.md)
