@@ -9,6 +9,8 @@ participant G as 商品
 participant SG as 销售特征
 participant F as 预测
 participant FM as 预测主版本
+participant FPW as  预测打散(周)
+participant FPD as  预测打散(天)
 participant O as  订单
 participant CN as  产能
 participant P as  排产
@@ -24,6 +26,8 @@ F-->>F: 预测开始
 F-->>U: 预测结果显示
 note over FM: 预测主版本
 F->>FM: 发布到主板本
+FM->>FPW: 发布到预测打散(周)
+FPW->>FPD: 发布到预测打散(天)
 U->>O: 订单录入 
 U-->>CN: 产能维护
 U-->>P: 排产
