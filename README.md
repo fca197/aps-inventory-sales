@@ -90,6 +90,6 @@
 | qrcodejs2      | 0.0.2   | 二维码生成,必须在https下才能使用 |
 | @zxing/library | ^0.20.0 | 二维码扫描               |
 
-# 页面展示
+# 各系统页面展示
 
-[页面展示](./doc/md/page-show.md)
+[各系统页面展示](./doc/md/page-show.md)
