@@ -108,6 +108,11 @@ export const constantRoutes = [
         path: '/psGoodsForecast/getDataById',
         component: () => import('@/views/system/aps/forecast/data.vue'),
         hidden: false
+      }, {
+        path: '/apsGoodsForecast/compute',
+        name:"计算结果",
+        component: () => import('@/views/system/aps/forecast/result.vue'),
+        hidden: false
       },
     ]
 

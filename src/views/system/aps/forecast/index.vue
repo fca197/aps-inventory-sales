@@ -35,6 +35,11 @@
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-download" @click="downloadTemplate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-upload" @click="uploadTemplate(scope.row)"></el-button>
+          <el-button size="mini" type="text"  @click="compute(scope.row)">
+            <svg-icon icon-class="calculator"></svg-icon>
+          </el-button>
+          <el-button size="mini" type="text" icon="el-icon-s-data" @click="computeResult(scope.row)"></el-button>
+
         </template>
       </el-table-column>
     </el-table>
@@ -81,6 +86,7 @@
 import {getGoodsList} from "@/api/aps/goods";
 import {add, deleteByIdList, queryPageList, updateById} from "@/api/common";
 import {downloadForm} from "@/utils/request";
+import {compute} from "@/api/aps/forecast";
 
 export default {
   name: "forecastIndex",
@@ -119,8 +125,6 @@ export default {
     document["pagePath"] = "/apsGoodsForecast";
     getGoodsList({pageNum: 1, pageSize: 999}).then(t => {
       this.goodsList = t.data.dataList
-
-      this.queryParams.data.goodsId = this.goodsList[0].id;
       this.getList();
     })
   },
@@ -195,7 +199,15 @@ export default {
     fileUploadSuccess(data) {
       this.$modal.msgSuccess("上传成功")
       this.uploadOpen = false;
-
+    },
+    compute(row){
+      return compute(row);
+    },
+    computeResult(row){
+      this.$tab.openPage("计算结果", "/apsGoodsForecast/compute", {
+            id: row.id
+          }
+      )
     }
   }
 }
