@@ -22,13 +22,21 @@
 
 ![aps-goods-sale.jpg](..%2Fimg%2Faps%2Faps-goods-sale.jpg)
 
-
 ## 销售预测
-![aps-f-add.jpg](..%2Fimg%2Faps%2Faps-f-add.jpg)
-![aps-f-compute.jpg](..%2Fimg%2Faps%2Faps-f-compute.jpg)
-![aps-f-compute-result.jpg](..%2Fimg%2Faps%2Faps-f-compute-result.jpg)
-![aps-f-d.jpg](..%2Fimg%2Faps%2Faps-f-d.jpg)
+
+### 添加
+
 ![aps-f-list.jpg](..%2Fimg%2Faps%2Faps-f-list.jpg)
+![aps-f-add.jpg](..%2Fimg%2Faps%2Faps-f-add.jpg)
+![aps-f-d.jpg](..%2Fimg%2Faps%2Faps-f-d.jpg)
 ![aps-f-u.jpg](..%2Fimg%2Faps%2Faps-f-u.jpg)
 ![aps-f-update.jpg](..%2Fimg%2Faps%2Faps-f-update.jpg)
 ![aps-f-upl.jpg](..%2Fimg%2Faps%2Faps-f-upl.jpg)
+
+### 开始计算
+
+![aps-f-compute.jpg](..%2Fimg%2Faps%2Faps-f-compute.jpg)
+
+### 计算结果
+
+![aps-f-compute-result.jpg](..%2Fimg%2Faps%2Faps-f-compute-result.jpg)
