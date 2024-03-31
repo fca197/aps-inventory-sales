@@ -8,6 +8,7 @@ participant U as 用户
 participant G as 商品
 participant SG as 销售特征
 participant F as 预测
+participant FM as 预测主版本
 participant O as  订单
 participant CN as  产能
 participant P as  排产
@@ -21,6 +22,7 @@ U->>U: 模板填写
 U-->>F: 预测数据上传
 F-->>F: 预测开始
 F-->>U: 预测结果显示
+F-->>FM: 发布到主板本
 U->>O: 订单录入 
 U-->>CN: 产能维护
 U-->>P: 排产
