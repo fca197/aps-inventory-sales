@@ -153,8 +153,8 @@ export default {
       this.form.forecastNo = "YC-" + this.formatDates(new Date(), true);
     },
     handleDelete(row) {
-      let idList = [];
-      if (row) {
+      let idList = this.ids;
+      if (row && row.id) {
         idList[0] = row.id;
       }
       deleteByIdList({idList: idList}).then(t => {

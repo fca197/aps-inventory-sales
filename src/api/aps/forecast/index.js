@@ -17,7 +17,7 @@ export function compute(row) {
     method: 'post',
     data: row
   }).then(res => {
-    Message.success("开始计算")
+    Message.success("计算成功")
   })
 }
 

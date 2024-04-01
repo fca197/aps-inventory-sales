@@ -59,6 +59,15 @@ export const constantRoutes = [
     path: '/401',
     component: () => import('@/views/error/401'),
     hidden: false
+  }, {
+    path: '/psGoodsForecast/getDataById',
+    component: () => import('@/views/system/aps/forecast/data.vue'),
+    hidden: false
+  }, {
+    path: '/apsGoodsForecast/compute',
+    name: "计算结果",
+    component: () => import('@/views/system/aps/forecast/result.vue'),
+    hidden: false
   },
   {
     path: '',
@@ -103,16 +112,15 @@ export const constantRoutes = [
         path: '/aps/goods/forecast/index',
         name: "预测管理",
         component: () => import('@/views/system/aps/forecast/index'),
-        meta: {title: '预测管理', icon: 'setting', affix: false}
-      }, {
-        path: '/psGoodsForecast/getDataById',
-        component: () => import('@/views/system/aps/forecast/data.vue'),
-        hidden: false
-      }, {
-        path: '/apsGoodsForecast/compute',
-        name:"计算结果",
-        component: () => import('@/views/system/aps/forecast/result.vue'),
-        hidden: false
+        meta: {title: '预测管理', icon: 'eye-open', affix: false},
+        children: [
+
+        ]
+      },{
+        path: '/aps/process/path/index',
+        name: "工艺路径",
+        component: () => import('@/views/system/aps/processPath/index'),
+        meta: {title: '工艺路径管理', icon: 'process-setting', affix: false}
       },
     ]
 

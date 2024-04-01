@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div>预测数据</div>
-    <el-table :data="tableData.dataList" cellpadding="0" cellspacing="0">
+    <el-table :data="tableData.dataList" cellpadding="0" cellspacing="0" show-summary :summary-method="getSummaries">
       <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" align="center" :prop="item.fieldName" :label="item.showName"/>
     </el-table>
   </div>
@@ -36,6 +36,37 @@ export default {
     },
     handleAdd() {
 
+    },
+    getSummaries(param) {
+      const {columns, data} = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计';
+          return;
+        }
+        if (index === 1 || index === 2) {
+          sums[index] = '';
+          return;
+        }
+        const values = data.slice(0).map(item => Number(item[column.property]) ? Number(item[column.property]) : Number(item[column.property].replaceAll("%", "")));
+        const t = values[0];
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[index] = t + "/" + (sums[index] -t)+ '%';
+        } else {
+          sums[index] = t + "/" + 'N/A';
+        }
+      });
+
+      return sums;
     }
   }
 }
