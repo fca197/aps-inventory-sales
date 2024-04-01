@@ -1,41 +1,7 @@
 <template>
   <div class="app-container home">
     <el-row :gutter="20">
-      <el-col :sm="24" :lg="24">
-        <blockquote class="text-warning" style="font-size: 14px">
-          领取阿里云通用云产品1888优惠券
-          <br />
-          <el-link
-            href="https://www.aliyun.com/minisite/goods?userCode=brki8iof"
-            type="primary"
-            target="_blank"
-            >https://www.aliyun.com/minisite/goods?userCode=brki8iof</el-link
-          >
-          <br />
-          领取腾讯云通用云产品2860优惠券
-          <br />
-          <el-link
-            href="https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console"
-            type="primary"
-            target="_blank"
-            >https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console</el-link
-          >
-          <br />
-          阿里云服务器折扣区
-          <el-link href="http://aly.ruoyi.vip" type="primary" target="_blank"
-            >>☛☛点我进入☚☚</el-link
-          >
-          &nbsp;&nbsp;&nbsp; 腾讯云服务器秒杀区
-          <el-link href="http://txy.ruoyi.vip" type="primary" target="_blank"
-            >>☛☛点我进入☚☚</el-link
-          ><br />
-          <h4 class="text-danger">
-            云产品通用红包，可叠加官网常规优惠使用。(仅限新用户)
-          </h4>
-        </blockquote>
 
-        <hr />
-      </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
@@ -103,83 +69,18 @@
     </el-row>
     <el-divider />
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
-        <el-card class="update-log">
-          <div slot="header" class="clearfix">
-            <span>联系信息</span>
-          </div>
-          <div class="body">
-            <p>
-              <i class="el-icon-s-promotion"></i> 官网：<el-link
-                href="http://www.ruoyi.vip"
-                target="_blank"
-                >http://www.ruoyi.vip</el-link
-              >
-            </p>
-            <p>
-              <i class="el-icon-user-solid"></i> QQ群    </p>
-            <p>
-              <i class="el-icon-chat-dot-round"></i> 微信：<a
-                href="javascript:;"
-                >/ *若依</a
-              >
-            </p>
-            <p>
-              <i class="el-icon-money"></i> 支付宝：<a
-                href="javascript:;"
-                class="支付宝信息"
-                >/ *若依</a
-              >
-            </p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
-        <el-card class="update-log">
-          <div slot="header" class="clearfix">
-            <span>更新日志</span>
-          </div>
-          <el-collapse accordion>
-            <el-collapse-item title="v3.8.6 - 2023-06-30">
-              <ol>
-                <li>支持登录IP黑名单限制</li>
-                <li>新增监控页面图标显示</li>
 
-              </ol>
-            </el-collapse-item>
-            <el-collapse-item title="v3.8.5 - 2023-01-01">
-              <ol>
-                <li>定时任务违规的字符</li>
-                <li>重置时取消部门选中</li>
+      <el-timeline>
+        <el-timeline-item  v-for="item in projectTimeLineList" :timestamp="item.time" placement="top"
+                           :color="item.color"
+        >
+          <el-card>
+            <h4>{{item.title}}</h4>
+            <p>{{item.content}}</p>
+          </el-card>
+        </el-timeline-item>
 
-              </ol>
-            </el-collapse-item>
-
-            <el-collapse-item title="v1.0.0 - 2019-10-08">
-              <ol>
-                <li>若依前后端分离系统正式发布</li>
-              </ol>
-            </el-collapse-item>
-          </el-collapse>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
-        <el-card class="update-log">
-          <div slot="header" class="clearfix">
-            <span>捐赠支持</span>
-          </div>
-          <div class="body">
-            <img
-              src="@/assets/images/pay.png"
-              alt="donate"
-              width="100%"
-            />
-            <span style="display: inline-block; height: 30px; line-height: 30px"
-              >你可以请作者喝杯咖啡表示鼓励</span
-            >
-          </div>
-        </el-card>
-      </el-col>
+      </el-timeline>
     </el-row>
   </div>
 </template>
@@ -189,6 +90,12 @@ export default {
   name: "Index",
   data() {
     return {
+      projectTimeLineList:[
+        {time:'2024-03-17 19:01' ,title:"项目初始化",content:"整合从上班到目前现有项目经验"},
+        {time:'2024-03-17 22:50' ,title:"资产盘点项目",content:"包含工厂, 楼层,房间, 资产录入管理, 资产扫码盘点"},
+        {time:'2024-03-19 18:00' ,title:"进存销项目",content:"包含商品管理, 订单生成, 商品盘点,采购计划,采购单 等功能"},
+        {time:'2024-03-29 13:00' ,title:"APS",content:"包含商品,销售配置,预测,工厂配置,工艺流程等功能" ,color:"#409EFF"},
+      ].reverse(),
       // 版本号
       version: "3.8.6"
     };

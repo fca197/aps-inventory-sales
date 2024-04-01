@@ -132,6 +132,11 @@ export const constantRoutes = [
         name: "工位管理",
         component: () => import('@/views/system/aps/station/index'),
         meta: {title: '工位管理', icon: 'workstation', affix: false}
+      },{
+        path: '/aps/room/index',
+        name: "车间管理",
+        component: () => import('@/views/system/aps/room/index'),
+        meta: {title: '车间', icon: 'workstation', affix: false}
       },
       {
         path: '/aps/process/path/index',

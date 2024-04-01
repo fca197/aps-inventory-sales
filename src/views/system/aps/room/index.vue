@@ -6,8 +6,8 @@
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="工艺路径名称" prop="brandName">
-        <el-input v-model="queryParams.data.processPathName" placeholder="请输入工艺路径名称" clearable @keyup.enter.native="handleQuery"/>
+      <el-form-item label="车间名称" prop="brandName">
+        <el-input v-model="queryParams.data.roomName" placeholder="请输入车间名称" clearable @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -47,33 +47,22 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+
         <el-form-item label="工厂" prop="factoryId">
-          <el-select v-model="form.factoryId" placeholder="请选择工厂" @change="getRoomList">
+          <el-select v-model="form.factoryId" placeholder="请选择工厂" clearable>
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="工艺路径名称" prop="processPathName">
-          <el-input v-model="form.processPathName" placeholder="请输入工艺路径名称"/>
+        <el-form-item label="车间编号" prop="roomRemark">
+          <el-input v-model="form.roomCode" placeholder="请输入车间编号"/>
         </el-form-item>
-        <el-form-item label="工艺路径车间" prop="processPathRoom">
-          <div :span="12" v-for="(item,index) in form.processPathRoom">
-            <el-select v-model="item.roomId" placeholder="请选择车间" clearable>
-              <el-option v-for="item in roomList" :key="item.id" :label="item.roomName" :value="item.id"></el-option>
-            </el-select>
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="addRoom"></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteRoom(index)"></el-button>
-            <div>
-              <el-select v-model="item.stationList" placeholder="请选择车间" clearable>
-                <el-option v-for="se in sectionList" :key="item.id" :label="item.roomName" :value="se.id"></el-option>
-              </el-select>
-            </div>
-          </div>
+        <el-form-item label="车间名称" prop="roomName">
+          <el-input v-model="form.roomName" placeholder="请输入车间名称"/>
         </el-form-item>
-
-        <el-form-item label="工艺路径备注" prop="processPathRemark">
-          <el-input v-model="form.processPathRemark" placeholder="请输入工艺路径备注"/>
+        <el-form-item label="车间配置" prop="roomRemark">
+          <el-input v-model="form.roomRemark" placeholder="请输入车间配置"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -88,7 +77,6 @@
 
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import {getFactoryList} from "@/api/factory";
-import {getRoomList} from "@/api/room";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
@@ -99,9 +87,6 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      // 工段
-      sectionList: [],
-      stationList: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -110,7 +95,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-      roomList: [],
+
       brandNameList: [],
       factoryList: [],
       // 弹出层标题
@@ -125,9 +110,7 @@ export default {
       },
       // 表单参数
       form: {
-        processPathRemark: "",
-        processPathRoom: [],
-        processPathName: "",
+        roomRemark: "",
         remark: "",
         brandName: "",
         pwd: "",
@@ -140,13 +123,12 @@ export default {
     };
   },
   created() {
-    document["pagePath"] = "/apsGoods";
+    document["pagePath"] = "/apsRoom";
     // process.env.pagePath = "/tenant"
     this.getList();
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
       this.factoryList = data.data.dataList;
     });
-
   },
   methods: {
     /** 查询公告列表 */
@@ -165,16 +147,9 @@ export default {
       this.open = false;
       this.reset();
     },
-    getRoomList(factoryId) {
-      getRoomList({pageSize: 3000, pageNum: 1, data: {factoryId: factoryId}}).then(data => {
-        this.roomList = data.data.dataList;
-        this.form.processPathRoom = [{}];
-      });
-    },
     // 表单重置
     reset() {
       this.form = {
-        processPathRoom: [{}],
         remark: "",
         tenantCode: "",
         id: undefined,
@@ -202,7 +177,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加工艺路线";
+      this.title = "添加车间";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -211,7 +186,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改工艺路线";
+        this.title = "修改车间";
       });
 
     },
@@ -248,11 +223,6 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
-    }, addRoom() {
-      this.form.processPathRoom.push({})
-    },
-    deleteRoom(index) {
-      this.form.processPathRoom.splice(index, 1)
     }
   }
 };
