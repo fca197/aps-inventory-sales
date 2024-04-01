@@ -116,7 +116,14 @@ export const constantRoutes = [
         children: [
 
         ]
-      },{
+      },
+      {
+        path: '/aps/status/index',
+        name: "状态",
+        component: () => import('@/views/system/aps/status/index'),
+        meta: {title: '状态管理', icon: 'status', affix: false}
+      },
+      {
         path: '/aps/process/path/index',
         name: "工艺路径",
         component: () => import('@/views/system/aps/processPath/index'),
