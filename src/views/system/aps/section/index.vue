@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
 
-      <el-form-item label="节点名称" prop="brandName">
-        <el-input v-model="queryParams.data.statusName" placeholder="请输入节点名称" clearable @keyup.enter.native="handleQuery"/>
+      <el-form-item label="工段名称" prop="brandName">
+        <el-input v-model="queryParams.data.sectionName" placeholder="请输入工段名称" clearable @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -46,11 +46,11 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="节点编号" prop="statusCode">
-          <el-input v-model="form.statusCode" placeholder="请输入编号"/>
+        <el-form-item label="工段编号" prop="sectionCode">
+          <el-input v-model="form.sectionCode" placeholder="请输入编号"/>
         </el-form-item>
-        <el-form-item label="节点名称" prop="statusName">
-          <el-input v-model="form.statusName" placeholder="请输入节点名称"/>
+        <el-form-item label="工段名称" prop="sectionName">
+          <el-input v-model="form.sectionName" placeholder="请输入工段名称"/>
         </el-form-item>
 
       </el-form>
@@ -99,7 +99,7 @@ export default {
       },
       // 表单参数
       form: {
-        statusCode: "",
+        sectionCode: "",
         remark: "",
         brandName: "",
         pwd: "",
@@ -112,7 +112,7 @@ export default {
     };
   },
   created() {
-    document["pagePath"] = "/apsStatus";
+    document["pagePath"] = "/workshopSection";
     // process.env.pagePath = "/tenant"
     this.getList();
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
@@ -166,7 +166,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加节点";
+      this.title = "添加工段";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -175,7 +175,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改节点";
+        this.title = "修改工段";
       });
 
     },

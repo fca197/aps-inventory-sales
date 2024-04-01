@@ -122,6 +122,16 @@ export const constantRoutes = [
         name: "状态",
         component: () => import('@/views/system/aps/status/index'),
         meta: {title: '状态管理', icon: 'status', affix: false}
+      }, {
+        path: '/aps/section/index',
+        name: "工段管理",
+        component: () => import('@/views/system/aps/section/index'),
+        meta: {title: '工段管理', icon: 'section', affix: false}
+      },{
+        path: '/aps/station/index',
+        name: "工位管理",
+        component: () => import('@/views/system/aps/station/index'),
+        meta: {title: '工位管理', icon: 'workstation', affix: false}
       },
       {
         path: '/aps/process/path/index',
