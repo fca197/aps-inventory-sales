@@ -71,6 +71,7 @@
           <el-col :span="5">耗时(秒)
           </el-col>
           <div v-for="item in form.configList">
+
             <el-col :span="5">
               <el-select v-model="item.sectionId" placeholder="请选择工段" clearable>
                 <el-option v-for="item in sectionList" :key="item.id" :label="item.sectionName" :value="item.id"></el-option>
@@ -93,6 +94,7 @@
               <el-button type="primary" icon="el-icon-plus" size="mini" @click="addConfig"></el-button>
               <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteConfig(scope.row,scope.$index)"></el-button>
             </el-col>
+
           </div>
         </el-form-item>
       </el-form>
@@ -201,7 +203,7 @@ export default {
     },
     // 表单重置
     reset() {
-      let d=this.tmpConfig;
+      let d = this.tmpConfig;
       this.form = {
         remark: "",
         tenantCode: "",
@@ -236,11 +238,11 @@ export default {
     handleUpdate(row) {
       this.reset();
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
-      queryPageList(req).then(response => {
+      getById(req).then(response => {
         this.form = response.data.dataList[0]
         if (this.form.configList === undefined || this.form.configList.length === 0) {
           this.form.configList = []
-          this.form.configList.push( {...this.tmpConfig})
+          this.form.configList.push({...this.tmpConfig})
         }
         this.open = true;
         this.title = "修改车间";
@@ -282,8 +284,8 @@ export default {
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
     },
     addConfig() {
-      let d= { ...this.tmpConfig};
-      this.form.configList.push( d)
+      let d = {...this.tmpConfig};
+      this.form.configList.push(d)
     }, deleteConfig(row, index) {
       this.form.configList.splice(index, 1)
     }

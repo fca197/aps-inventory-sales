@@ -72,8 +72,7 @@
 
       <el-timeline>
         <el-timeline-item  v-for="item in projectTimeLineList" :timestamp="item.time" placement="top"
-                           :color="item.color"
-        >
+                           :color="item.color" :key="item">
           <el-card>
             <h4>{{item.title}}</h4>
             <p>{{item.content}}</p>
