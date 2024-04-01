@@ -19,7 +19,7 @@ participant O as  订单
 participant CN as  产能
 participant P as  排产
 participant PART as  零件
-rect rgb(32, 44, 123)
+rect rgb(235, 250, 230)
     note over U,PP: 基础配置
     U-->>WGD: 添加工段 
     U-->>GS: 添加状态
@@ -29,7 +29,7 @@ end
 U->>G: 添加商品
 G->>SG: 配置销售特征
 
-rect rgb(32, 44, 123)
+rect rgb(235, 250, 230)
     note over U,F: 预测模块
     U-->>F: 开始预测
     F-->>U: 预测模板下载
