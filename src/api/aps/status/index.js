@@ -1,8 +1,8 @@
 import request from "@/utils/request";
 
-export  function getSectionList(data) {
+export  function getStatusList(data) {
   return request({
-    url: "/workshopSection/queryPageList",
+    url: "/apsStatus/queryPageList",
     method: "post",
     data
   });

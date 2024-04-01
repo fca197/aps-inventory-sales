@@ -47,7 +47,7 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="工厂" prop="factoryId">
@@ -62,7 +62,38 @@
           <el-input v-model="form.roomName" placeholder="请输入车间名称"/>
         </el-form-item>
         <el-form-item label="车间配置" prop="roomRemark">
-          <el-input v-model="form.roomRemark" placeholder="请输入车间配置"/>
+          <el-col :span="5">工段
+          </el-col>
+          <el-col :span="5">工位
+          </el-col>
+          <el-col :span="5">状态
+          </el-col>
+          <el-col :span="5">耗时(秒)
+          </el-col>
+          <div v-for="item in form.configList">
+            <el-col :span="5">
+              <el-select v-model="item.sectionId" placeholder="请选择工段" clearable>
+                <el-option v-for="item in sectionList" :key="item.id" :label="item.sectionName" :value="item.id"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="5">
+              <el-select v-model="item.stationId" placeholder="请选择工位" clearable>
+                <el-option v-for="item in stationList" :key="item.id" :label="item.stationName" :value="item.id"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="5">
+              <el-select v-model="item.statusId" placeholder="请选择状态" clearable>
+                <el-option v-for="item in statusList" :key="item.id" :label="item.statusName" :value="item.id"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="5">
+              <el-input v-model="item.executeTime" placeholder="请输入"/>
+            </el-col>
+            <el-col :span="4">
+              <el-button type="primary" icon="el-icon-plus" size="mini" @click="addConfig"></el-button>
+              <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteConfig(scope.row,scope.$index)"></el-button>
+            </el-col>
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -77,6 +108,9 @@
 
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import {getFactoryList} from "@/api/factory";
+import {getSectionList} from "@/api/aps/section";
+import {getStationList} from "@/api/aps/station";
+import {getStatusList} from "@/api/aps/status";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
@@ -115,11 +149,20 @@ export default {
         brandName: "",
         pwd: "",
         id: undefined,
-        confirmPwd: undefined
+        configList: [{}]
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      stationList: [],
+      sectionList: [],
+      statusList: [],
+      tmpConfig: {
+        sectionId: undefined,
+        stationId: undefined,
+        statusId: undefined,
+        executeTime: 0
+      }
     };
   },
   created() {
@@ -128,6 +171,15 @@ export default {
     this.getList();
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
       this.factoryList = data.data.dataList;
+    });
+    getSectionList({pageSize: 3000, pageNum: 1}).then(data => {
+      this.sectionList = data.data.dataList;
+    });
+    getStationList({pageSize: 3000, pageNum: 1}).then(data => {
+      this.stationList = data.data.dataList;
+    });
+    getStatusList({pageSize: 3000, pageNum: 1}).then(data => {
+      this.statusList = data.data.dataList;
     });
   },
   methods: {
@@ -149,11 +201,12 @@ export default {
     },
     // 表单重置
     reset() {
+      let d=this.tmpConfig;
       this.form = {
         remark: "",
         tenantCode: "",
         id: undefined,
-        tenantName: undefined
+        configList: [d]
       };
       this.resetForm("form");
     },
@@ -183,8 +236,12 @@ export default {
     handleUpdate(row) {
       this.reset();
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
-      getById(req).then(response => {
+      queryPageList(req).then(response => {
         this.form = response.data.dataList[0]
+        if (this.form.configList === undefined || this.form.configList.length === 0) {
+          this.form.configList = []
+          this.form.configList.push( {...this.tmpConfig})
+        }
         this.open = true;
         this.title = "修改车间";
       });
@@ -223,6 +280,12 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    },
+    addConfig() {
+      let d= { ...this.tmpConfig};
+      this.form.configList.push( d)
+    }, deleteConfig(row, index) {
+      this.form.configList.splice(index, 1)
     }
   }
 };
