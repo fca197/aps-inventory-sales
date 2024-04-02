@@ -30,16 +30,22 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" width="180px" :prop="item.fieldName" :label="item.showName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+<!--          TO_UPLOAD(10, "待上传"), //-->
+<!--          TO_COMPUTED(30, "待计算"), //-->
+<!--          COMPUTED_RESULT(50, "计算结束"),-->
+
           <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleData(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-download" @click="downloadTemplate(scope.row)"></el-button>
+          <el-button size="mini" type="text"  icon="el-icon-download" @click="downloadTemplate(scope.row)"></el-button>
           <el-button size="mini" type="text" icon="el-icon-upload" @click="uploadTemplate(scope.row)"></el-button>
-          <el-button size="mini" type="text"  @click="compute(scope.row)">
+          <el-button size="mini" type="text"   v-if="scope.row.forecastStatus==30"   @click="compute(scope.row)">
             <svg-icon icon-class="calculator"></svg-icon>
           </el-button>
-          <el-button size="mini" type="text" icon="el-icon-s-data" @click="computeResult(scope.row)"></el-button>
-
+          <el-button size="mini" type="text" icon="el-icon-s-data"   v-if="scope.row.forecastStatus==50"   @click="computeResult(scope.row)"></el-button>
+          <el-button size="mini" type="text"  v-if="scope.row.forecastStatus==50" @click="forecastDeploy(scope.row)">
+            <svg-icon icon-class="broadcast"></svg-icon>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,7 +92,7 @@
 import {getGoodsList} from "@/api/aps/goods";
 import {add, deleteByIdList, queryPageList, updateById} from "@/api/common";
 import {downloadForm} from "@/utils/request";
-import {compute} from "@/api/aps/forecast";
+import {compute, forecastDeploy} from "@/api/aps/forecast";
 
 export default {
   name: "forecastIndex",
@@ -208,6 +214,8 @@ export default {
             id: row.id
           }
       )
+    },forecastDeploy(row){
+      forecastDeploy(row);
     }
   }
 }

@@ -59,15 +59,6 @@ export const constantRoutes = [
     path: '/401',
     component: () => import('@/views/error/401'),
     hidden: false
-  }, {
-    path: '/psGoodsForecast/getDataById',
-    component: () => import('@/views/system/aps/forecast/data.vue'),
-    hidden: false
-  }, {
-    path: '/apsGoodsForecast/compute',
-    name: "计算结果",
-    component: () => import('@/views/system/aps/forecast/result.vue'),
-    hidden: false
   },
   {
     path: '',
@@ -109,12 +100,24 @@ export const constantRoutes = [
         component: () => import('@/views/system/aps/goodsSaleConfig/index'),
         meta: {title: '商品销售特征绑定', icon: 'setting', affix: false}
       }, {
-        path: '/aps/goods/forecast/index',
+        path: '/aps/forecast/index',
         name: "预测管理",
         component: () => import('@/views/system/aps/forecast/index'),
         meta: {title: '预测管理', icon: 'eye-open', affix: false},
         children: [
+          {
+            path: '/aps/goods/forecast/index',
+            name: "商品预测",
+            component: () => import('@/views/system/aps/forecast/index'),
+            meta: {title: '商品预测', icon: 'eye-open', affix: false},
+          },
+          {
+            path: '/aps/goods/forecast/main/index',
+            name: "预测主版本",
+            component: () => import('@/views/system/aps/forecast/index'),
+            meta: {title: '预测主版本', icon: 'main', affix: false},
 
+          }
         ]
       },
       {
@@ -136,7 +139,7 @@ export const constantRoutes = [
         path: '/aps/room/index',
         name: "车间管理",
         component: () => import('@/views/system/aps/room/index'),
-        meta: {title: '车间', icon: 'workstation', affix: false}
+        meta: {title: '车间', icon: 'room', affix: false}
       },
       {
         path: '/aps/process/path/index',
@@ -205,6 +208,26 @@ export const constantRoutes = [
         meta: {title: '门店管理', icon: '', affix: false}
       },
 
+    ]
+  },
+  {
+    path: "",
+    component: Layout,
+    hidden: true,
+
+    children: [
+      , {
+        path: '/psGoodsForecast/getDataById',
+        component: () => import('@/views/system/aps/forecast/data.vue'),
+        meta: {title: '上传数据', icon: 'redis', affix: false},
+        hidden: false
+      }, {
+        path: '/apsGoodsForecast/compute',
+        name: "计算结果",
+        component: () => import('@/views/system/aps/forecast/result.vue'),
+        meta: {title: '计算结果', icon: 'redis', affix: false},
+        hidden: false
+      }
     ]
   },
   {
