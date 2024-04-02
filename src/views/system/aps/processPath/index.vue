@@ -58,7 +58,7 @@
           <el-input v-model="form.processPathName" placeholder="请输入工艺路径名称"/>
         </el-form-item>
         <el-form-item label="工艺路径车间" prop="roomList">
-          <div :span="12" v-for="(item,index) in form.roomList">
+          <div :span="12" v-for="(item,index) in form.pathRoomList">
             <el-select v-model="item.roomId" placeholder="请选择车间" clearable>
               <el-option v-for="item in roomList" :key="item.id" :label="item.roomName" :value="item.id"></el-option>
             </el-select>
@@ -72,8 +72,8 @@
         </el-form-item>
         <el-form-item label="默认" prop="isDefault">
           <el-radio-group v-model="form.isDefault">
-            <el-radio :label="1" checked> 是</el-radio>
-            <el-radio :label="0">否</el-radio>
+            <el-radio :label="true" checked >是</el-radio>
+            <el-radio :label="false"  >否</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -124,9 +124,9 @@ export default {
       },
       // 表单参数
       form: {
-        isDefault:1,
+        isDefault:false,
         processPathRemark: "",
-        roomList: [],
+        pathRoomList: [],
         processPathName: "",
         remark: "",
         brandName: "",
@@ -169,14 +169,14 @@ export default {
 
       getRoomList({pageSize: 3000, pageNum: 1, data: {factoryId: factoryId}}).then(data => {
         this.roomList = data.data.dataList;
-        this.form.roomList = [{}];
+        // this.form.pathRoomList = [{}];
       });
     },
     // 表单重置
     reset() {
       this.form = {
-        isDefault:1,
-        roomList: [{}],
+        isDefault:false,
+        pathRoomList: [{}],
         remark: "",
         tenantCode: "",
         id: undefined,
@@ -214,6 +214,7 @@ export default {
         this.form = response.data.dataList[0]
         this.open = true;
         this.title = "修改工艺路线";
+        this.getRoomList(this.form.factoryId)
       });
 
     },
@@ -251,10 +252,10 @@ export default {
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
     }, addRoom() {
-      this.form.roomList.push({})
+      this.form.pathRoomList.push({})
     },
     deleteRoom(index) {
-      this.form.roomList.splice(index, 1)
+      this.form.pathRoomList.splice(index, 1)
     }
   }
 };
