@@ -7,10 +7,10 @@
       <el-col :span="1.5" hidden="hidden">
         <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"></el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar export-table="dataTable" export-table-file-name="销售配置" :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table :default-expand-all="true" :data="saleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+    <el-table :default-expand-all="true" id="dataTable" :data="saleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column label="序号" prop="id"/>
       <el-table-column label="组编码" prop="saleCode">
         <template slot-scope="scope">

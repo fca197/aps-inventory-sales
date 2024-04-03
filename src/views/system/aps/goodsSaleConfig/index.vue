@@ -8,12 +8,13 @@
           <el-option v-for="item in goodsList" :label="item.goodsName" :value="item.id" :key="item.id"></el-option>
         </el-select>
       </el-form-item>
+      <right-toolbar  export-table="dataTable" export-table-file-name="商品销售配置"  :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
 
     </el-form>
 
 
 
-    <el-table :default-expand-all="true" :data="apsSaleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+    <el-table :default-expand-all="true" id="dataTable" :data="apsSaleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <!--      <el-table-column label="全选" type="selection" prop="id"/>-->
       <el-table-column label="组编码" prop="saleCode">
         <template slot-scope="scope">

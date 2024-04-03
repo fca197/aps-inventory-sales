@@ -98,34 +98,41 @@ export default {
     exportExcel() {
       console.log(this.exportTable, this.exportTableFileName);
       var em = document.getElementById(this.exportTable);
-
-      let headerTdList = em.children[1].children[0].children[1].children[0].children;
-
       let h = [];
-      for (let headerTdListElement of headerTdList) {
-        h.push(headerTdListElement.innerText)
-      }
-
-      let dataTr = em.children[2].children[0].children[1].children;
-      let data=[h];
-      for (let dataTrElement of dataTr) {
-        let t = [];
-        data.push(t);
-        for (let i = 0; i < dataTrElement.children.length; i++) {
-          t.push(dataTrElement.children[i].innerText);
+      try {
+        let headerTdList = em.children[1].children[0].children[1].children[0].children;
+        for (let headerTdListElement of headerTdList) {
+          h.push(headerTdListElement.innerText)
         }
+      } catch (e) {
+        console.error(e)
       }
-
+      let data = [h];
+      let dataTr;
+      try {
+        dataTr = em.children[2].children[0].children[1].children;
+        for (let dataTrElement of dataTr) {
+          let t = [];
+          data.push(t);
+          for (let i = 0; i < dataTrElement.children.length; i++) {
+            t.push(dataTrElement.children[i].innerText);
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+      try {
         dataTr = em.children[3].children[0].children[1].children;
-
-      for (let dataTrElement of dataTr) {
-        let t = [];
-        data.push(t);
-        for (let i = 0; i < dataTrElement.children.length; i++) {
-          t.push(dataTrElement.children[i].innerText);
+        for (let dataTrElement of dataTr) {
+          let t = [];
+          data.push(t);
+          for (let i = 0; i < dataTrElement.children.length; i++) {
+            t.push(dataTrElement.children[i].innerText);
+          }
         }
+      } catch (e) {
+        // console.error(e)
       }
-
 
       console.log(h);
       const ws = XLSX.utils.aoa_to_sheet(data);
