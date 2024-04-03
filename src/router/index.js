@@ -164,6 +164,11 @@ export const constantRoutes = [
         name: "工艺路径",
         component: () => import('@/views/system/aps/processPath/index'),
         meta: {title: '工艺路径管理', icon: 'process-setting', affix: false}
+      },  {
+        path: '/aps/bom/index',
+        name: "零件配置",
+        component: () => import('@/views/system/aps/bom/index'),
+        meta: {title: '零件配置', icon: 'setting', affix: false}
       },
     ]
 
