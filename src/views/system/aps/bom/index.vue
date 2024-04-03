@@ -6,8 +6,8 @@
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="商品名称" prop="brandName">
-        <el-input v-model="queryParams.data.goodsName" placeholder="请输入商品名称" clearable @keyup.enter.native="handleQuery"/>
+      <el-form-item label="零件名称" prop="brandName">
+        <el-input v-model="queryParams.data.bomName" placeholder="请输入零件名称" clearable @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -57,8 +57,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="商品" prop="goodsId">
-            <el-select v-model="form.goodsId" placeholder="请选择商品" clearable>
+          <el-form-item label="零件" prop="goodsId">
+            <el-select v-model="form.goodsId" placeholder="请选择零件" clearable>
               <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -76,8 +76,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="商品名称" prop="bomName">
-            <el-input v-model="form.bomName" placeholder="请输入商品名称"/>
+          <el-form-item label="零件名称" prop="bomName">
+            <el-input v-model="form.bomName" placeholder="请输入零件名称"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -233,7 +233,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加商品";
+      this.title = "添加零件";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -242,7 +242,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改商品";
+        this.title = "修改零件";
       });
 
     },
