@@ -42,6 +42,7 @@ import DictData from '@/components/DictData'
 
 import JsBarcode from "@/components/JsBarcode/index.vue";
 import {formatDates} from "@/utils/formatDate";
+import htmlTableToExcel from 'html-table-to-excel';
 
 
 // 全局方法挂载
@@ -55,6 +56,7 @@ Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
+Vue.prototype.htmlTableToExcel = htmlTableToExcel;
 Vue.filter("toInt",function (v){return parseInt(v)});
 
 // 全局组件挂载

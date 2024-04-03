@@ -20,11 +20,13 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
-    </el-row>
+      <el-col :span="1.5">
 
-    <div>主版本预测结果</div>
-    <el-table :data="tableData.dataList" cellpadding="0" cellspacing="0">
+      </el-col>
+      <right-toolbar export-table-file-name="主版本预测结果" export-table="dataTable" :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+    </el-row>
+    <div class="header-value">主版本预测结果</div>
+    <el-table id="dataTable" :data="tableData.dataList" cellpadding="0" cellspacing="0" show-summary>
       <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" align="center" :width="item.width" :prop="item.fieldName" :label="item.showName">
         <template slot-scope="scope">
           <span v-if="scope.row[item.fieldName]">{{ scope.row[item.fieldName] }}</span>

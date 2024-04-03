@@ -1,7 +1,14 @@
 <template>
   <div class="app-container">
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+
+      </el-col>
+      <right-toolbar export-table-file-name="预测计算结果数据" export-table="dataTable" :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+    </el-row>
     <div>计算结果</div>
-    <el-table :data="tableData.dataList" cellpadding="0" cellspacing="0"  show-summary>
+    <el-table :data="tableData.dataList" cellpadding="0" id="dataTable" cellspacing="0"  show-summary>
       <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" align="center"  :width="item.width" :prop="item.fieldName" :label="item.showName">
         <template slot-scope="scope">
           <span v-if="scope.row[item.fieldName]">{{scope.row[item.fieldName]}}</span>
@@ -19,6 +26,7 @@ export default {
   name: "data",
   data() {
     return {
+      showSearch:false,
       id: this.$route.query.id,
       tableData: {}
     }
