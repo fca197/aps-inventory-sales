@@ -30,6 +30,32 @@ Vue.use(Router)
 // 公共路由
 export const constantRoutes = [
   {
+    path: "/hidden.layout",
+    component: Layout,
+    hidden: true,
+
+    children: [
+      {
+        path: '/psGoodsForecast/getDataById',
+        component: () => import('@/views/system/aps/forecast/data.vue'),
+        meta: {title: '上传数据', icon: 'redis', affix: false},
+        hidden: false
+      }, {
+        path: '/apsGoodsForecast/compute',
+        name: "计算结果",
+        component: () => import('@/views/system/aps/forecast/result.vue'),
+        meta: {title: '计算结果', icon: 'redis', affix: false},
+        hidden: false
+      }, {
+        path: '/psGoodsForecastMain/getDataByGoodsId',
+        name: "主版本预测数据",
+        component: () => import('@/views/system/aps/forecastMain/result.vue'),
+        meta: {title: '主版本预测数据', icon: 'redis', affix: false},
+        hidden: false
+      }
+    ]
+  },
+  {
     path: '/redirect',
     component: Layout,
     hidden: false,
@@ -100,26 +126,18 @@ export const constantRoutes = [
         component: () => import('@/views/system/aps/goodsSaleConfig/index'),
         meta: {title: '商品销售特征绑定', icon: 'setting', affix: false}
       }, {
-        path: '/aps/forecast/index',
-        name: "预测管理",
+        path: '/aps/goods/forecast/index',
+        name: "商品预测",
         component: () => import('@/views/system/aps/forecast/index'),
-        meta: {title: '预测管理', icon: 'eye-open', affix: false},
-        children: [
-          {
-            path: '/aps/goods/forecast/index',
-            name: "商品预测",
-            component: () => import('@/views/system/aps/forecast/index'),
-            meta: {title: '商品预测', icon: 'eye-open', affix: false},
-          },
-          {
-            path: '/aps/goods/forecast/main/index',
-            name: "预测主版本",
-            component: () => import('@/views/system/aps/forecast/index'),
-            meta: {title: '预测主版本', icon: 'main', affix: false},
+        meta: {title: '商品预测', icon: 'eye-open', affix: false},
+      }, {
+        path: '/aps/goods/forecast/main/index',
+        name: "预测主版本",
+        component: () => import('@/views/system/aps/forecastMain/index'),
+        meta: {title: '预测主版本', icon: 'main', affix: false},
 
-          }
-        ]
       },
+
       {
         path: '/aps/status/index',
         name: "状态",
@@ -130,12 +148,12 @@ export const constantRoutes = [
         name: "工段管理",
         component: () => import('@/views/system/aps/section/index'),
         meta: {title: '工段管理', icon: 'section', affix: false}
-      },{
+      }, {
         path: '/aps/station/index',
         name: "工位管理",
         component: () => import('@/views/system/aps/station/index'),
         meta: {title: '工位管理', icon: 'workstation', affix: false}
-      },{
+      }, {
         path: '/aps/room/index',
         name: "车间管理",
         component: () => import('@/views/system/aps/room/index'),
@@ -210,26 +228,7 @@ export const constantRoutes = [
 
     ]
   },
-  {
-    path: "",
-    component: Layout,
-    hidden: true,
 
-    children: [
-      , {
-        path: '/psGoodsForecast/getDataById',
-        component: () => import('@/views/system/aps/forecast/data.vue'),
-        meta: {title: '上传数据', icon: 'redis', affix: false},
-        hidden: false
-      }, {
-        path: '/apsGoodsForecast/compute',
-        name: "计算结果",
-        component: () => import('@/views/system/aps/forecast/result.vue'),
-        meta: {title: '计算结果', icon: 'redis', affix: false},
-        hidden: false
-      }
-    ]
-  },
   {
     path: '/food/index',
     component: Layout,
