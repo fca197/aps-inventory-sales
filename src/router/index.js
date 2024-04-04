@@ -104,6 +104,21 @@ export const constantRoutes = [{
     component: () => import('@/views/system/aps/forecastMain/index'),
     meta: {title: '预测主版本', icon: 'main', affix: false},
 
+  },{
+    path: '/aps/goods/forecast/make/week/index',
+    name: "(预)周生产管理",
+    component: () => import('@/views/system/aps/forecastMakeWeek/index'),
+    meta: {title: '(预)周生产管理', icon: 'eye-open', affix: false},
+  },{
+    path: '/aps/goods/forecast/make/weekMain/index',
+    name: "(预)周生产主版本管理",
+    component: () => import('@/views/system/aps/forecastMain/index'),
+    meta: {title: '(预)周生产主版本管理', icon: 'eye-open', affix: false},
+  },{
+    path: '/aps/goods/forecast/make/day/index',
+    name: "(预)天生产管理",
+    component: () => import('@/views/system/aps/forecastMain/index'),
+    meta: {title: '(预)天生产管理', icon: 'eye-open', affix: false},
   },
 
     {
@@ -222,18 +237,17 @@ export const constantRoutes = [{
       component: () => import('@/views/system/brand/index'),
       name: '品牌管理',
       meta: {title: '品牌管理', icon: '', affix: false}
-    },
-      {
-        path: '/prop/spec/index',
-        name: "日历管理",
-        component: () => import('@/views/system/calendar/index'),
-        meta: {title: '日历管理', icon: 'calendar', affix: false}
-      }, {
-        path: '/prop/shift/index',
-        name: "班次管理",
-        component: () => import('@/views/system/basic/shift/index'),
-        meta: {title: '班次管理', icon: 'calendar', affix: false}
-      },]
+    }, {
+      path: '/prop/spec/index',
+      name: "日历管理",
+      component: () => import('@/views/system/calendar/index'),
+      meta: {title: '日历管理', icon: 'calendar', affix: false}
+    }, {
+      path: '/prop/shift/index',
+      name: "班次管理",
+      component: () => import('@/views/system/basic/shift/index'),
+      meta: {title: '班次管理', icon: 'calendar', affix: false}
+    },]
   }, {
     path: '/property/',
     component: Layout,
