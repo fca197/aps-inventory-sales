@@ -3,6 +3,7 @@
 ## 商品管理
 
 ![aps-good-add.jpg](..%2Fimg%2Faps%2Faps-good-add.jpg)
+
 ![aps-good-delete.jpg](..%2Fimg%2Faps%2Faps-good-delete.jpg)
 ![aps-good-list.jpg](..%2Fimg%2Faps%2Faps-good-list.jpg)
 ![aps-good-update.jpg](..%2Fimg%2Faps%2Faps-good-update.jpg)
@@ -42,3 +43,37 @@
 ![aps-f-compute-result.jpg](..%2Fimg%2Faps%2Faps-f-compute-result.jpg)
 
 [返回](./page-show.md)
+
+## 销售预测主版本
+
+![aps-f-m.jpg](..%2Fimg%2Faps%2Faps-f-m.jpg)
+![aps-f-m-d.jpg](..%2Fimg%2Faps%2Faps-f-m-d.jpg)
+
+## 工程特征
+
+![aps-p-add.jpg](..%2Fimg%2Faps%2Faps-p-add.jpg)
+![aps-p-delete.jpg](..%2Fimg%2Faps%2Faps-p-delete.jpg)
+![aps-p-list.jpg](..%2Fimg%2Faps%2Faps-p-list.jpg)
+
+## 工段, 工位,状态管理
+
+![aps-w-st.jpg](..%2Fimg%2Faps%2Faps-w-st.jpg)
+![aps-w-sw.jpg](..%2Fimg%2Faps%2Faps-w-sw.jpg)
+![aps-s.jpg](..%2Fimg%2Faps%2Faps-s.jpg)
+![aps-s-a.jpg](..%2Fimg%2Faps%2Faps-s-a.jpg)
+
+## 房间
+
+![aps-r-list.jpg](..%2Fimg%2Faps%2Faps-r-list.jpg)
+![aps-r-u.jpg](..%2Fimg%2Faps%2Faps-r-u.jpg)
+
+## 工艺路径
+
+![aps-pa-list.jpg](..%2Fimg%2Faps%2Faps-pa-list.jpg)
+![aps-pa-add.jpg](..%2Fimg%2Faps%2Faps-pa-add.jpg)
+
+## 零件
+
+![aps-b-list.jpg](..%2Fimg%2Faps%2Faps-b-list.jpg)
+![aps-b-u.jpg](..%2Fimg%2Faps%2Faps-b-u.jpg)
+
