@@ -35,10 +35,10 @@
 <!--          COMPUTED_RESULT(50, "计算结束"),-->
 
           <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleData(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
+<!--          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>-->
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-          <el-button size="mini" type="text"  icon="el-icon-download" @click="downloadTemplate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-upload" @click="uploadTemplate(scope.row)"></el-button>
+<!--          <el-button size="mini" type="text"  icon="el-icon-download" @click="downloadTemplate(scope.row)"></el-button>-->
+<!--          <el-button size="mini" type="text" icon="el-icon-upload" @click="uploadTemplate(scope.row)"></el-button>-->
           <el-button size="mini" type="text"  v-if="scope.row.forecastMakeMonthStatus==50" @click="forecastDeploy(scope.row)">
             <svg-icon icon-class="broadcast"></svg-icon>
           </el-button>
@@ -168,14 +168,14 @@ export default {
       if (this.form.id) {
         updateById(this.form).then(t => {
           this.$modal.msgSuccess("修改成功")
-          this.getList();
-          this.cancel();
+          // this.getList();
+          // this.cancel();
         })
       } else {
         add(this.form).then(t => {
           this.$modal.msgSuccess("新增成功")
-          this.getList();
-          this.cancel();
+          // this.getList();
+          // this.cancel();
         })
       }
     }, handleUpdate(data) {
