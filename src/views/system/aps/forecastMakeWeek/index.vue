@@ -50,9 +50,9 @@
                 :limit.sync="queryParams.pageSize" @pagination="getList"/>
     <el-dialog :visible.sync="open" :title="title" width="800px" @close="cancel">
       <el-form :model="form" ref="form" label-width="150px">
-        <el-form-item label="(预)周生产产品" prop="goodsId">
-          <el-select v-model="form.goodsId" placeholder="请选择(预)周生产产品" clearable>
-            <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
+        <el-form-item label="预测主版本" prop="goodsId">
+          <el-select v-model="form.forecastMainId" placeholder="请选择预测主版本" >
+            <el-option v-for="item in forecastMainList" :key="item.id" :label="item.forecastName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="(预)周生产版本编码" prop="forecastMakeMonthNo">
@@ -88,6 +88,7 @@
 import {getGoodsList} from "@/api/aps/goods";
 import {add, deleteByIdList, queryPageList, updateById} from "@/api/common";
 import {downloadForm} from "@/utils/request";
+import {getAllForecastMain} from "@/api/aps/forecastMain";
 export default {
   name: "forecastIndex",
   data() {
@@ -96,9 +97,11 @@ export default {
       title: "",
       goodsList: [],
       ids: [],
+      forecastMainList: [],
       forecastMakeMonthList: [],
       tableHeaderList: [],
       form: {
+        forecastMainId:undefined,
         fileId:"",
         forecastNo: "",
         forecastBeginDate: "",
@@ -122,11 +125,11 @@ export default {
     }
   },
   created() {
-    document["pagePath"] = "/apsGoodsForecastMakeMonth";
-    getGoodsList({pageNum: 1, pageSize: 999}).then(t => {
-      this.goodsList = t.data.dataList
-      this.getList();
+    document["pagePath"] = "/apsGoodsForecastMake";
+    getAllForecastMain({pageNum: 1, pageSize: 999}).then(t => {
+      this.forecastMainList = t.data.dataList
     })
+    this.getList();
   },
   methods: {
     // 多选框选中数据
@@ -191,7 +194,7 @@ export default {
       this.title = "上传(预)周生产版本";
       this.uploadOpen = true;
     }, handleData(row) {
-      this.$tab.openPage("(预)周生产数据", "/psGoodsForecast/getDataById", {
+      this.$tab.openPage("(预)周生产数据", "/apsGoodsForecastMakeMonth/queryDataById", {
             id: row.id
           }
       )

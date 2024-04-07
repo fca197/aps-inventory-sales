@@ -42,13 +42,19 @@ export const constantRoutes = [{
     component: () => import('@/views/system/aps/forecast/result.vue'),
     meta: {title: '计算结果', icon: 'redis', affix: false},
     hidden: false
-  }, {
+  },{
     path: '/psGoodsForecastMain/getDataByGoodsId',
     name: "主版本预测数据",
     component: () => import('@/views/system/aps/forecastMain/result.vue'),
     meta: {title: '主版本预测数据', icon: 'redis', affix: false},
     hidden: false
-  }]
+  }, {
+    path: '/apsGoodsForecastMakeMonth/queryDataById',
+    name: "(预)周版本数据",
+    component: () => import('@/views/system/aps/forecastMakeWeek/result.vue'),
+    meta: {title: '(预)周版本数据', icon: 'redis', affix: false},
+    hidden: false
+  }, ]
 }, {
   path: '/redirect', component: Layout, hidden: false, children: [{
     path: '/redirect/:path(.*)', component: () => import('@/views/redirect')
