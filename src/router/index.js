@@ -49,9 +49,9 @@ export const constantRoutes = [{
     meta: {title: '主版本预测数据', icon: 'redis', affix: false},
     hidden: false
   }, {
-    path: '/apsGoodsForecastMakeMonth/queryDataById',
+    path: '/apsGoodsForecastMainMakeWeek/queryDataDataById',
     name: "(预测)生产数据看板",
-    component: () => import('@/views/system/aps/forecastMakeWeek/result.vue'),
+    component: () => import('@/views/system/aps/forecastMainMake/result.vue'),
     meta: {title: '(预测)生产数据看板', icon: 'redis', affix: false},
     hidden: false
   }, ]
@@ -118,7 +118,7 @@ export const constantRoutes = [{
   },{
     path: '/aps/goods/forecast/make/weekMain/index',
     name: "(预)生产数据主版本",
-    component: () => import('@/views/system/aps/forecastMain/index'),
+    component: () => import('@/views/system/aps/forecastMainMake/index'),
     meta: {title: '(预)生产数据主版本', icon: 'eye-open', affix: false},
   },
 
