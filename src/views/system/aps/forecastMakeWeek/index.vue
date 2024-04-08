@@ -27,8 +27,8 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleData(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-          <el-button size="mini" type="text" @click="forecastDeploy(scope.row)">
+          <el-button size="mini" type="text" v-if="scope.row.isDeploy===false" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
+          <el-button size="mini" type="text" v-if="scope.row.isDeploy===false" @click="forecastDeploy(scope.row)">
             <svg-icon icon-class="broadcast"></svg-icon>
           </el-button>
         </template>
@@ -195,7 +195,7 @@ export default {
           }
       )
     }, forecastDeploy(row) {
-      deploy(row);
+      deploy(row).then(()=>this.getList());
     }
   }
 }
