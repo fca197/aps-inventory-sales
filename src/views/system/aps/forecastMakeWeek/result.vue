@@ -5,13 +5,13 @@
       <el-col :span="1.5">
 
       </el-col>
-      <right-toolbar export-table-file-name="预测计算结果数据" export-table="dataTable" :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+      <right-toolbar @search="getData" :search="false" export-table-file-name="预测计算结果数据" export-table="dataTable" :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
     </el-row>
-    <div>(预)周数据</div>
+    <div>(预测)生产数据看板</div>
     <el-table :data="tableData.dataList" cellpadding="0" id="dataTable" cellspacing="0"  show-summary>
       <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" align="center"  :width="(item.width-50)+'px'" :prop="item.fieldName" :label="item.showName">
         <template slot-scope="scope">
-          <span v-if="scope.row[item.fieldName]">{{scope.row[item.fieldName]}}</span>
+          <span v-if="scope.row[item.fieldName]!=0">{{scope.row[item.fieldName]}}</span>
           <span v-else>-</span>
         </template>
       </el-table-column>

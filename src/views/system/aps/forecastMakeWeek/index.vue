@@ -1,11 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="150px">
-      <el-form-item label="(预)周生产产品" prop="goodsId">
-        <el-select v-model="queryParams.data.goodsId" placeholder="请选择(预)周生产产品" @change="getList">
-          <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
-        </el-select>
-      </el-form-item>
+
       <el-form-item label="(预)周生产版本名称" prop="brandName">
         <el-input v-model="queryParams.data.forecastMakeMonthName" placeholder="请输入(预)周生产名称" clearable @keyup.enter.native="handleQuery"/>
       </el-form-item>
@@ -30,16 +26,9 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" width="180px" :prop="item.fieldName" :label="item.showName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-<!--          TO_UPLOAD(10, "待上传"), //-->
-<!--          TO_COMPUTED(30, "待计算"), //-->
-<!--          COMPUTED_RESULT(50, "计算结束"),-->
-
           <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleData(scope.row)"></el-button>
-<!--          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>-->
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-<!--          <el-button size="mini" type="text"  icon="el-icon-download" @click="downloadTemplate(scope.row)"></el-button>-->
-<!--          <el-button size="mini" type="text" icon="el-icon-upload" @click="uploadTemplate(scope.row)"></el-button>-->
-          <el-button size="mini" type="text"  v-if="scope.row.forecastMakeMonthStatus==50" @click="forecastDeploy(scope.row)">
+          <el-button size="mini" type="text" @click="forecastDeploy(scope.row)">
             <svg-icon icon-class="broadcast"></svg-icon>
           </el-button>
         </template>
@@ -51,7 +40,7 @@
     <el-dialog :visible.sync="open" :title="title" width="800px" @close="cancel">
       <el-form :model="form" ref="form" label-width="150px">
         <el-form-item label="预测主版本" prop="goodsId">
-          <el-select v-model="form.forecastMainId" placeholder="请选择预测主版本" >
+          <el-select v-model="form.forecastMainId" placeholder="请选择预测主版本">
             <el-option v-for="item in forecastMainList" :key="item.id" :label="item.forecastName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -77,7 +66,8 @@
     <el-dialog :visible.sync="uploadOpen" :title="title" width="500px" @close="cancel">
       <el-form :model="form" ref="form" label-width="100px">
         <el-form-item label="(预)周生产版本文件" prop="forecastMakeMonthName">
-          <file-upload ref="fileUpload" :fileUploadSuccess="fileUploadSuccess" :file-type="['xlsx']" :upload-url="'/apsGoodsForecast/uploadTemplate/'+this.form.id" :value="form.fileId"/>
+          <file-upload ref="fileUpload" :fileUploadSuccess="fileUploadSuccess" :file-type="['xlsx']" :upload-url="'/apsGoodsForecast/uploadTemplate/'+this.form.id"
+                       :value="form.fileId"/>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -85,10 +75,10 @@
 </template>
 
 <script>
-import {getGoodsList} from "@/api/aps/goods";
-import {add, deleteByIdList, queryPageList, updateById} from "@/api/common";
+import {add, deleteByIdList, queryPageList} from "@/api/common";
 import {downloadForm} from "@/utils/request";
 import {getAllForecastMain} from "@/api/aps/forecastMain";
+
 export default {
   name: "forecastIndex",
   data() {
@@ -101,8 +91,8 @@ export default {
       forecastMakeMonthList: [],
       tableHeaderList: [],
       form: {
-        forecastMainId:undefined,
-        fileId:"",
+        forecastMainId: undefined,
+        fileId: "",
         forecastNo: "",
         forecastBeginDate: "",
         forecastEndDate: ""
@@ -168,19 +158,13 @@ export default {
     }, cancel() {
       this.open = false;
     }, submitForm() {
-      if (this.form.id) {
-        updateById(this.form).then(t => {
-          this.$modal.msgSuccess("修改成功")
-          // this.getList();
-          // this.cancel();
-        })
-      } else {
-        add(this.form).then(t => {
-          this.$modal.msgSuccess("新增成功")
-          // this.getList();
-          // this.cancel();
-        })
-      }
+
+      add(this.form).then(t => {
+        this.$modal.msgSuccess("新增成功")
+        this.getList();
+        this.cancel();
+      })
+
     }, handleUpdate(data) {
       this.form = data;
       this.title = "修改(预)周生产版本";
@@ -204,12 +188,12 @@ export default {
       this.uploadOpen = false;
     },
 
-    computeResult(row){
+    computeResult(row) {
       this.$tab.openPage("计算结果", "/apsGoodsForecast/compute", {
             id: row.id
           }
       )
-    },forecastDeploy(row){
+    }, forecastDeploy(row) {
       forecastDeploy(row);
     }
   }

@@ -50,9 +50,9 @@ export const constantRoutes = [{
     hidden: false
   }, {
     path: '/apsGoodsForecastMakeMonth/queryDataById',
-    name: "(预)周版本数据",
+    name: "(预测)生产数据看板",
     component: () => import('@/views/system/aps/forecastMakeWeek/result.vue'),
-    meta: {title: '(预)周版本数据', icon: 'redis', affix: false},
+    meta: {title: '(预测)生产数据看板', icon: 'redis', affix: false},
     hidden: false
   }, ]
 }, {
@@ -112,19 +112,14 @@ export const constantRoutes = [{
 
   },{
     path: '/aps/goods/forecast/make/week/index',
-    name: "(预)周生产管理",
+    name: "(预)生产数据",
     component: () => import('@/views/system/aps/forecastMakeWeek/index'),
     meta: {title: '(预)周生产管理', icon: 'eye-open', affix: false},
   },{
     path: '/aps/goods/forecast/make/weekMain/index',
-    name: "(预)周生产主版本管理",
+    name: "(预)生产数据主版本",
     component: () => import('@/views/system/aps/forecastMain/index'),
-    meta: {title: '(预)周生产主版本管理', icon: 'eye-open', affix: false},
-  },{
-    path: '/aps/goods/forecast/make/day/index',
-    name: "(预)天生产管理",
-    component: () => import('@/views/system/aps/forecastMain/index'),
-    meta: {title: '(预)天生产管理', icon: 'eye-open', affix: false},
+    meta: {title: '(预)生产数据主版本', icon: 'eye-open', affix: false},
   },
 
     {
