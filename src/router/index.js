@@ -248,6 +248,11 @@ export const constantRoutes = [{
       name: "班次管理",
       component: () => import('@/views/system/basic/shift/index'),
       meta: {title: '班次管理', icon: 'calendar', affix: false}
+    },{
+      path: '/file/upload/index',
+      name: "文件管理",
+      component: () => import('@/views/system/fileUpload/index'),
+      meta: {title: '文件管理', icon: 'calendar', affix: false}
     },]
   }, {
     path: '/property/',
@@ -288,18 +293,7 @@ export const constantRoutes = [{
       name: "盘点管理",
       meta: {title: '盘点管理', icon: 'check-list', affix: false}
     },]
-  }, {
-    path: '/base-data/',
-    component: Layout,
-    redirect: 'index',
-    meta: {title: '基础信息', icon: 'international', affix: false},
-    children: [{
-      path: '/file/upload/index',
-      name: "文件管理",
-      component: () => import('@/views/system/fileUpload/index'),
-      meta: {title: '文件管理', icon: 'calendar', affix: false}
-    },]
-  }, {
+  },  {
     path: '/jxc/',
     component: Layout,
     redirect: 'index',

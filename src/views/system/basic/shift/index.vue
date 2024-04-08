@@ -56,7 +56,7 @@
           <el-input v-model="form.shiftName" placeholder="请输入班次名称"/>
         </el-form-item>
         <el-form-item label="班次">
-          <el-col :span="24" v-for=" (item ,index) in form.shiftItemList">
+          <el-col :span="24" v-for=" (item ,index) in form.shiftItemList" :key="index">
             <el-col :span="18">
               <el-time-picker
                   v-model="item.beginTime" format="HH:mm" value-format="HH:mm"

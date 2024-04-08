@@ -78,6 +78,7 @@
 import {add, deleteByIdList, queryPageList} from "@/api/common";
 import {downloadForm} from "@/utils/request";
 import {getAllForecastMain} from "@/api/aps/forecastMain";
+import {deploy} from "@/api/aps/forecastMakeWeek";
 
 export default {
   name: "forecastIndex",
@@ -194,7 +195,7 @@ export default {
           }
       )
     }, forecastDeploy(row) {
-      forecastDeploy(row);
+      deploy(row);
     }
   }
 }
