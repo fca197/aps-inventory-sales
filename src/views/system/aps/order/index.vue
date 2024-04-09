@@ -6,7 +6,9 @@
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-
+      <el-form-item label="零件名称" prop="brandName">
+        <el-input v-model="queryParams.data.bomName" placeholder="请输入零件名称" clearable @keyup.enter.native="handleQuery"/>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -47,7 +49,62 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" label-width="100px">
-
+        <el-col :span="8">
+          <el-form-item label="工厂" prop="factoryId">
+            <el-select v-model="form.factoryId" placeholder="请选择工厂" clearable>
+              <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="零件" prop="goodsId">
+            <el-select v-model="form.goodsId" placeholder="请选择零件" clearable>
+              <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="工位" prop="bomId">
+            <el-select v-model="form.bomUseWorkStation" placeholder="请选择工位" clearable>
+              <el-option v-for="item in workStationList" :key="item.id" :label="item.stationName" :value="item.id"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="零件编码" prop="bomCode">
+            <el-input v-model="form.bomCode" placeholder="请输入零件编码"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="零件名称" prop="bomName">
+            <el-input v-model="form.bomName" placeholder="请输入零件名称"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="零件用量" prop="bomCode">
+            <el-input v-model="form.bomUsage" placeholder="请输入用量"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="用量单位" prop="bomUnit">
+            <el-input v-model="form.bomUnit" placeholder="请输入用量单位"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="成本价" prop="bomCostPrice">
+            <el-input v-model="form.bomCostPrice" placeholder="请输入成本价"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="用量单位" prop="成本价单位">
+            <el-input v-model="form.bomCostPriceUnit" placeholder="请输入成本价单位"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="使用表达式" prop="bomName">
+            <el-input v-model="form.bomUseExpression" placeholder="请输入零件名称"/>
+          </el-form-item>
+        </el-col>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -113,7 +170,7 @@ export default {
     };
   },
   created() {
-    document["pagePath"] = "/apsOrder";
+    document["pagePath"] = "/apsGoodsBom";
     // process.env.pagePath = "/tenant"
     this.getList();
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {

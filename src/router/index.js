@@ -152,6 +152,11 @@ export const constantRoutes = [{
       name: "零件配置",
       component: () => import('@/views/system/aps/bom/index'),
       meta: {title: '零件配置', icon: 'setting', affix: false}
+    }, {
+      path: '/aps/order/index',
+      name: "订单管理",
+      component: () => import('@/views/system/aps/bom/index'),
+      meta: {title: '订单管理', icon: 'setting', affix: false}
     },]
 
 }, {
