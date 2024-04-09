@@ -12,6 +12,10 @@
 
 [流程图](./doc/md/aps.md)
 
+# 各系统页面展示
+
+[各系统页面展示](./doc/md/page-show.md)
+
 # 系统功能概览
 
 > 图示:
@@ -110,7 +114,3 @@
 | qrcodejs       | 1.0.0   | 条形码生成               |
 | qrcodejs2      | 0.0.2   | 二维码生成,必须在https下才能使用 |
 | @zxing/library | ^0.20.0 | 二维码扫描               |
-
-# 各系统页面展示
-
-[各系统页面展示](./doc/md/page-show.md)
