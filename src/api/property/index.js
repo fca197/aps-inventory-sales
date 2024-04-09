@@ -29,9 +29,10 @@ export function handleOverReport(obj) {
     isOver: obj.isOver,
     versionNum: obj.versionNum
   }
-return   updateById(data);
+  return updateById(data);
 }
-function  updateById(data){
+
+function updateById(data) {
   return request({
     url: "/checkReport/updateById",
     data,
@@ -41,12 +42,12 @@ function  updateById(data){
   });
 }
 
-export  function  handleOpenReport(obj){
+export function handleOpenReport(obj) {
   obj.isOver = false
   let data = {
     id: obj.id,
     isOver: obj.isOver,
     versionNum: obj.versionNum
   }
- return  updateById(data);
+  return updateById(data);
 }

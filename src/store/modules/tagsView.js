@@ -6,23 +6,29 @@ const state = {
 
 const mutations = {
   ADD_IFRAME_VIEW: (state, view) => {
-    if (state.iframeViews.some(v => v.path === view.path)) return
+    if (state.iframeViews.some(v => v.path === view.path)) {
+      return
+    }
     state.iframeViews.push(
-      Object.assign({}, view, {
-        title: view.meta.title || 'no-name'
-      })
+        Object.assign({}, view, {
+          title: view.meta.title || 'no-name'
+        })
     )
   },
   ADD_VISITED_VIEW: (state, view) => {
-    if (state.visitedViews.some(v => v.path === view.path)) return
+    if (state.visitedViews.some(v => v.path === view.path)) {
+      return
+    }
     state.visitedViews.push(
-      Object.assign({}, view, {
-        title: view.meta.title || 'no-name'
-      })
+        Object.assign({}, view, {
+          title: view.meta.title || 'no-name'
+        })
     )
   },
   ADD_CACHED_VIEW: (state, view) => {
-    if (state.cachedViews.includes(view.name)) return
+    if (state.cachedViews.includes(view.name)) {
+      return
+    }
     if (view.meta && !view.meta.noCache) {
       state.cachedViews.push(view.name)
     }
@@ -34,10 +40,12 @@ const mutations = {
         break
       }
     }
-    state.iframeViews = state.iframeViews.filter(item => item.path !== view.path)
+    state.iframeViews = state.iframeViews.filter(
+        item => item.path !== view.path)
   },
   DEL_IFRAME_VIEW: (state, view) => {
-    state.iframeViews = state.iframeViews.filter(item => item.path !== view.path)
+    state.iframeViews = state.iframeViews.filter(
+        item => item.path !== view.path)
   },
   DEL_CACHED_VIEW: (state, view) => {
     const index = state.cachedViews.indexOf(view.name)
@@ -48,7 +56,8 @@ const mutations = {
     state.visitedViews = state.visitedViews.filter(v => {
       return v.meta.affix || v.path === view.path
     })
-    state.iframeViews = state.iframeViews.filter(item => item.path === view.path)
+    state.iframeViews = state.iframeViews.filter(
+        item => item.path === view.path)
   },
   DEL_OTHERS_CACHED_VIEWS: (state, view) => {
     const index = state.cachedViews.indexOf(view.name)
@@ -88,7 +97,7 @@ const mutations = {
       if (i > -1) {
         state.cachedViews.splice(i, 1)
       }
-      if(item.meta.link) {
+      if (item.meta.link) {
         const fi = state.iframeViews.findIndex(v => v.path === item.path)
         state.iframeViews.splice(fi, 1)
       }
@@ -108,7 +117,7 @@ const mutations = {
       if (i > -1) {
         state.cachedViews.splice(i, 1)
       }
-      if(item.meta.link) {
+      if (item.meta.link) {
         const fi = state.iframeViews.findIndex(v => v.path === item.path)
         state.iframeViews.splice(fi, 1)
       }
@@ -118,20 +127,20 @@ const mutations = {
 }
 
 const actions = {
-  addView({ dispatch }, view) {
+  addView({dispatch}, view) {
     dispatch('addVisitedView', view)
     dispatch('addCachedView', view)
   },
-  addIframeView({ commit }, view) {
+  addIframeView({commit}, view) {
     commit('ADD_IFRAME_VIEW', view)
   },
-  addVisitedView({ commit }, view) {
+  addVisitedView({commit}, view) {
     commit('ADD_VISITED_VIEW', view)
   },
-  addCachedView({ commit }, view) {
+  addCachedView({commit}, view) {
     commit('ADD_CACHED_VIEW', view)
   },
-  delView({ dispatch, state }, view) {
+  delView({dispatch, state}, view) {
     return new Promise(resolve => {
       dispatch('delVisitedView', view)
       dispatch('delCachedView', view)
@@ -141,25 +150,25 @@ const actions = {
       })
     })
   },
-  delVisitedView({ commit, state }, view) {
+  delVisitedView({commit, state}, view) {
     return new Promise(resolve => {
       commit('DEL_VISITED_VIEW', view)
       resolve([...state.visitedViews])
     })
   },
-  delIframeView({ commit, state }, view) {
+  delIframeView({commit, state}, view) {
     return new Promise(resolve => {
       commit('DEL_IFRAME_VIEW', view)
       resolve([...state.iframeViews])
     })
   },
-  delCachedView({ commit, state }, view) {
+  delCachedView({commit, state}, view) {
     return new Promise(resolve => {
       commit('DEL_CACHED_VIEW', view)
       resolve([...state.cachedViews])
     })
   },
-  delOthersViews({ dispatch, state }, view) {
+  delOthersViews({dispatch, state}, view) {
     return new Promise(resolve => {
       dispatch('delOthersVisitedViews', view)
       dispatch('delOthersCachedViews', view)
@@ -169,19 +178,19 @@ const actions = {
       })
     })
   },
-  delOthersVisitedViews({ commit, state }, view) {
+  delOthersVisitedViews({commit, state}, view) {
     return new Promise(resolve => {
       commit('DEL_OTHERS_VISITED_VIEWS', view)
       resolve([...state.visitedViews])
     })
   },
-  delOthersCachedViews({ commit, state }, view) {
+  delOthersCachedViews({commit, state}, view) {
     return new Promise(resolve => {
       commit('DEL_OTHERS_CACHED_VIEWS', view)
       resolve([...state.cachedViews])
     })
   },
-  delAllViews({ dispatch, state }, view) {
+  delAllViews({dispatch, state}, view) {
     return new Promise(resolve => {
       dispatch('delAllVisitedViews', view)
       dispatch('delAllCachedViews', view)
@@ -191,28 +200,28 @@ const actions = {
       })
     })
   },
-  delAllVisitedViews({ commit, state }) {
+  delAllVisitedViews({commit, state}) {
     return new Promise(resolve => {
       commit('DEL_ALL_VISITED_VIEWS')
       resolve([...state.visitedViews])
     })
   },
-  delAllCachedViews({ commit, state }) {
+  delAllCachedViews({commit, state}) {
     return new Promise(resolve => {
       commit('DEL_ALL_CACHED_VIEWS')
       resolve([...state.cachedViews])
     })
   },
-  updateVisitedView({ commit }, view) {
+  updateVisitedView({commit}, view) {
     commit('UPDATE_VISITED_VIEW', view)
   },
-  delRightTags({ commit }, view) {
+  delRightTags({commit}, view) {
     return new Promise(resolve => {
       commit('DEL_RIGHT_VIEWS', view)
       resolve([...state.visitedViews])
     })
   },
-  delLeftTags({ commit }, view) {
+  delLeftTags({commit}, view) {
     return new Promise(resolve => {
       commit('DEL_LEFT_VIEWS', view)
       resolve([...state.visitedViews])

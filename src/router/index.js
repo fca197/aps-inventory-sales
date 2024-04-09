@@ -42,7 +42,7 @@ export const constantRoutes = [{
     component: () => import('@/views/system/aps/forecast/result.vue'),
     meta: {title: '计算结果', icon: 'redis', affix: false},
     hidden: false
-  },{
+  }, {
     path: '/psGoodsForecastMain/getDataByGoodsId',
     name: "主版本预测数据",
     component: () => import('@/views/system/aps/forecastMain/result.vue'),
@@ -54,7 +54,7 @@ export const constantRoutes = [{
     component: () => import('@/views/system/aps/forecastMainMake/result.vue'),
     meta: {title: '(预测)生产数据看板', icon: 'redis', affix: false},
     hidden: false
-  }, ]
+  },]
 }, {
   path: '/redirect', component: Layout, hidden: false, children: [{
     path: '/redirect/:path(.*)', component: () => import('@/views/redirect')
@@ -110,12 +110,12 @@ export const constantRoutes = [{
     component: () => import('@/views/system/aps/forecastMain/index'),
     meta: {title: '预测主版本', icon: 'main', affix: false},
 
-  },{
+  }, {
     path: '/aps/goods/forecast/make/week/index',
     name: "(预)生产数据",
     component: () => import('@/views/system/aps/forecastMakeWeek/index'),
     meta: {title: '(预)周生产管理', icon: 'eye-open', affix: false},
-  },{
+  }, {
     path: '/aps/goods/forecast/make/weekMain/index',
     name: "(预)生产数据主版本",
     component: () => import('@/views/system/aps/forecastMainMake/index'),
@@ -253,7 +253,7 @@ export const constantRoutes = [{
       name: "班次管理",
       component: () => import('@/views/system/basic/shift/index'),
       meta: {title: '班次管理', icon: 'calendar', affix: false}
-    },{
+    }, {
       path: '/file/upload/index',
       name: "文件管理",
       component: () => import('@/views/system/fileUpload/index'),
@@ -298,7 +298,7 @@ export const constantRoutes = [{
       name: "盘点管理",
       meta: {title: '盘点管理', icon: 'check-list', affix: false}
     },]
-  },  {
+  }, {
     path: '/jxc/',
     component: Layout,
     redirect: 'index',

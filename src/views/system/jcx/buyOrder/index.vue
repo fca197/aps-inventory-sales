@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
       <el-form-item label="采购订单序号" prop="jcxBuyOrder">
-        <el-input v-model="queryParams.data.id" placeholder="请输入订单序号" clearable @keyup.enter.native="handleQuery"/>
+        <el-input v-model="queryParams.data.id" clearable placeholder="请输入订单序号" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="订单编号" prop="jcxBuyOrder">
-        <el-input v-model="queryParams.data.orderNo" placeholder="请输入订单编号" clearable @keyup.enter.native="handleQuery"/>
+        <el-input v-model="queryParams.data.orderNo" clearable placeholder="请输入订单编号" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="状态" prop="orderStatus">
-        <el-select v-model="queryParams.data.orderStatus" placeholder="请选择状态" clearable>
+        <el-select v-model="queryParams.data.orderStatus" clearable placeholder="请选择状态">
           <el-option :value="undefined" label="全部"></el-option>
           <el-option :value="10" label="草稿"></el-option>
           <el-option :value="50" label="通过"></el-option>
@@ -16,14 +16,14 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
           删除
         </el-button>
       </el-col>
@@ -32,33 +32,33 @@
 
     <el-table v-loading="loading" :data="jcxBuyOrderList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName"
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"
                        :width="item.width+'px'"
-                       :label="item.showName">
+                       align="center">
       </el-table-column>
-      <el-table-column label="状态" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.orderStatus===10" size="mini" type="info">草稿</el-tag>
           <el-tag v-else-if="scope.row.orderStatus===50" size="mini" type="success">通过</el-tag>
           <el-tag v-else-if="scope.row.orderStatus===99" size="mini" type="danger">驳回</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleData(scope.row)"></el-button>
+          <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleData(scope.row)"></el-button>
 
-          <el-button size="mini" v-if="scope.row.orderStatus!==50" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
+          <el-button v-if="scope.row.orderStatus!==50" icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
           <!--          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>-->
-          <el-popover placement="top" v-if="scope.row.orderStatus===50" width="140">
+          <el-popover v-if="scope.row.orderStatus===50" placement="top" width="140">
             <p>通知供应商发货</p>
             <div style="text-align: right; margin: 0">
-              <el-popover placement="top" trigger="hover" width="90px" align="center">
+              <el-popover align="center" placement="top" trigger="hover" width="90px">
                 <div style="text-align: right; margin: 0">
                   点击
                   <el-button size="mini" type="success" @click="noIml(scope.row,'50')">邮件预览</el-button>
                 </div>
-                <el-button size="mini" type="warning" slot="reference" @click="noIml(scope.row,'50')">邮件</el-button>
+                <el-button slot="reference" size="mini" type="warning" @click="noIml(scope.row,'50')">邮件</el-button>
               </el-popover>
               <span style="padding-left: 10px"></span>
               <el-popover placement="top" trigger="hover">
@@ -66,38 +66,38 @@
                   点击
                   <el-button size="mini" type="success" @click="noIml(scope.row,'50')">短信预览</el-button>
                 </div>
-                <el-button size="mini" type="warning" slot="reference" @click="noIml(scope.row,'50')">短信</el-button>
+                <el-button slot="reference" size="mini" type="warning" @click="noIml(scope.row,'50')">短信</el-button>
               </el-popover>
             </div>
-            <el-button style="padding-left: 15px" slot="reference" size="mini" type="text">
+            <el-button slot="reference" size="mini" style="padding-left: 15px" type="text">
               <svg-icon icon-class="send"></svg-icon>
             </el-button>
           </el-popover>
-          <el-popover placement="top" v-if="scope.row.orderStatus===10" width="140">
+          <el-popover v-if="scope.row.orderStatus===10" placement="top" width="140">
             <p>修改订单状态？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">通过</el-button>
-              <el-button type="danger" size="mini" icon="" @click="updatePlanStatus(scope.row,'99')">驳回</el-button>
+              <el-button icon="" size="mini" type="danger" @click="updatePlanStatus(scope.row,'99')">驳回</el-button>
             </div>
-            <el-button size="mini" style="padding-left: 15px" slot="reference" type="text" icon="el-icon-more"></el-button>
+            <el-button slot="reference" icon="el-icon-more" size="mini" style="padding-left: 15px" type="text"></el-button>
           </el-popover>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
+    <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total" @pagination="getList"/>
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <update-buy-plan :buy-plan-info="buyPlanFormData"/>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="upById">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="buyOrderItemDtoListOpen" width="1000px" append-to-body>
+    <el-dialog :title="title" :visible.sync="buyOrderItemDtoListOpen" append-to-body width="1000px">
       <el-table :data="buyOrderItemDtoList">
-        <el-table-column label="序号" type="index" align="center"/>
+        <el-table-column align="center" label="序号" type="index"/>
         <el-table-column label="产品名称" prop="goodsName"/>
         <el-table-column label="价格" prop="goodsCostPrice"/>
         <el-table-column label="购买数量" prop="goodsBuyCount"/>

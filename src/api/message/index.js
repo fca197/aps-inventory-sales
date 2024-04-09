@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {Message, MessageBox} from "element-ui";
+import {Message} from "element-ui";
 
 export function queryUnReadCount() {
   return request({

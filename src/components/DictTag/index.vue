@@ -3,19 +3,19 @@
     <template v-for="(item, index) in options">
       <template v-if="values.includes(item.value)">
         <span
-          v-if="item.raw.listClass == 'default' || item.raw.listClass == ''"
-          :key="item.value"
-          :index="index"
-          :class="item.raw.cssClass"
-          >{{ item.label + " " }}</span
+            v-if="item.raw.listClass == 'default' || item.raw.listClass == ''"
+            :key="item.value"
+            :class="item.raw.cssClass"
+            :index="index"
+        >{{ item.label + " " }}</span
         >
         <el-tag
-          v-else
-          :disable-transitions="true"
-          :key="item.value"
-          :index="index"
-          :type="item.raw.listClass == 'primary' ? '' : item.raw.listClass"
-          :class="item.raw.cssClass"
+            v-else
+            :key="item.value"
+            :class="item.raw.cssClass"
+            :disable-transitions="true"
+            :index="index"
+            :type="item.raw.listClass == 'primary' ? '' : item.raw.listClass"
         >
           {{ item.label + " " }}
         </el-tag>
@@ -60,14 +60,17 @@ export default {
       if (this.value !== null && typeof this.value !== "undefined") {
         // 传入值为非数组
         if (!Array.isArray(this.value)) {
-          if (this.options.some((v) => v.value == this.value)) return false;
+          if (this.options.some((v) => v.value == this.value)) {
+            return false;
+          }
           this.unmatchArray.push(this.value);
           return true;
         }
         // 传入值为Array
         this.value.forEach((item) => {
-          if (!this.options.some((v) => v.value == item))
+          if (!this.options.some((v) => v.value == item)) {
             this.unmatchArray.push(item);
+          }
         });
         return true;
       }
@@ -77,7 +80,9 @@ export default {
   },
   filters: {
     handleArray(array) {
-      if (array.length === 0) return "";
+      if (array.length === 0) {
+        return "";
+      }
       return array.reduce((pre, cur) => {
         return pre + " " + cur;
       })

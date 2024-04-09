@@ -2,15 +2,15 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd(null)"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd(null)"></el-button>
       </el-col>
       <el-col :span="1.5" hidden="hidden">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"></el-button>
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
-      <right-toolbar  export-table="dataTable" export-table-file-name="工程配置"  :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="工程配置" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table :default-expand-all="true"  id="dataTable" :data="saleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+    <el-table id="dataTable" :data="saleConfigList" :default-expand-all="true" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" stripe>
       <el-table-column label="序号" prop="id"/>
       <el-table-column label="组编码" prop="saleCode">
         <template slot-scope="scope">
@@ -40,13 +40,13 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.isValue === 0" type="text" plain icon="el-icon-plus" size="mini" @click="handleAdd(scope.row)"></el-button>
-          <el-button type="text" plain icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)"></el-button>
-          <el-button type="text" plain icon="el-icon-edit" size="mini" @click="handleEdit(scope.row)"></el-button>
+          <el-button v-if="scope.row.isValue === 0" icon="el-icon-plus" plain size="mini" type="text" @click="handleAdd(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" plain size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-edit" plain size="mini" type="text" @click="handleEdit(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="组编码" prop="saleCode">
           <el-input v-model="form.saleCode" placeholder="请输入组编码"/>
@@ -99,7 +99,7 @@ export default {
     getList() {
       return queryPageList({pageNum: 1, pageSize: 999})
       .then(t => {
-        this.saleConfigList =  t.data.dataList;
+        this.saleConfigList = t.data.dataList;
       })
     },
     renderContent(h, {node, data, store}) {
@@ -158,16 +158,16 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
     },
-    handleEdit(data){
-      this.form=data;
-      this.title="修改销售特征"+(data.isValue==1?"值":"")
-      this.open=true
+    handleEdit(data) {
+      this.form = data;
+      this.title = "修改销售特征" + (data.isValue == 1 ? "值" : "")
+      this.open = true
     }
   }
 }
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

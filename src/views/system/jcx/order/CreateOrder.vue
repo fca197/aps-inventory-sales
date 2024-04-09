@@ -2,7 +2,7 @@
   <div>
     <el-form ref="addForm" :model="form" :rules="rules" label-width="100px">
       <el-form-item label="备注">
-        <el-input v-model="form.orderRemark" placeholder="请输入备注" clearable></el-input>
+        <el-input v-model="form.orderRemark" clearable placeholder="请输入备注"></el-input>
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="form.orderStatus" placeholder="请选择状态">
@@ -11,15 +11,15 @@
         </el-select>
       </el-form-item>
       <el-form-item label="商品">
-        <div class="goods-item" v-for="(item,index) in form.goodsList" v-if="toSelectGoods[index]">
+        <div v-for="(item,index) in form.goodsList" v-if="toSelectGoods[index]" class="goods-item">
           <el-col :span="10">
-            {{ index+1}}=>
-            <el-select v-model="item.goodsId" placeholder="请选择商品" width="100%" filterable :filter-method="value=>{changeGoods(value,index)}">
+            {{ index + 1 }}=>
+            <el-select v-model="item.goodsId" :filter-method="value=>{changeGoods(value,index)}" filterable placeholder="请选择商品" width="100%">
               <el-option v-for="(value,index) in toSelectGoods[index]" :key="index" :label="value.goodsName" :value="value.id"/>
             </el-select>
           </el-col>
           <el-col :span="6">
-            <el-input v-model="item.goodsCount" placeholder="商品数量" clearable></el-input>
+            <el-input v-model="item.goodsCount" clearable placeholder="商品数量"></el-input>
           </el-col>
           <el-col :span="2" align="center"><span>-</span>
           </el-col>
@@ -29,7 +29,7 @@
           </el-col>
         </div>
       </el-form-item>
-      <el-form-item label="" prop="" align="right">
+      <el-form-item align="right" label="" prop="">
         <el-button type="primary" @click="submitForm">提交</el-button>
         <el-button @click="cancel">取消</el-button>
       </el-form-item>
@@ -107,7 +107,7 @@ export default {
       }
     },
     changeGoods(val, index) {
-   return   getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
+      return getFoodsList({pageNum: 1, pageSize: 10, data: {goodsName: val}})
       .then(response => {
         this.toSelectGoods[index] = []
         response.dataList.forEach(item => {
@@ -118,7 +118,7 @@ export default {
     }
     , addGoods() {
       this.form.goodsList.push({goodsCount: 1})
-      this.toSelectGoods[this.form.goodsList.length-1] = []
+      this.toSelectGoods[this.form.goodsList.length - 1] = []
     }, deleteGoods(index) {
       if (this.form.goodsList.length !== 1) {
         this.form.goodsList.splice(index, 1)

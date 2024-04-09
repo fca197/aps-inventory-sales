@@ -1,78 +1,78 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="文件" prop="brandCode">
-        <el-select  filterable v-model="queryParams.brandCode" >
-          <el-option v-for="(item) in brandList" :value="item.brandCode" :key="item.brandCode" :label="item.brandName"> </el-option>
+        <el-select v-model="queryParams.brandCode" filterable>
+          <el-option v-for="(item) in brandList" :key="item.brandCode" :label="item.brandName" :value="item.brandCode"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-for="(item,index) in  queryTableHeaderList" :prop="queryTableHeaderList[index].columnName" :key="index" :label="item.showName">
-        <el-input v-model="queryParams[item.columnName]" :prop="queryParams+'.'+item.columnName" :placeholder="'请输入'+item.showName"/>
+      <el-form-item v-for="(item,index) in  queryTableHeaderList" :key="index" :label="item.showName" :prop="queryTableHeaderList[index].columnName">
+        <el-input v-model="queryParams[item.columnName]" :placeholder="'请输入'+item.showName" :prop="queryParams+'.'+item.columnName"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd">新增</el-button>
       </el-col>
-      <el-col :span="1.5" v-show="false">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
+      <el-col v-show="false" :span="1.5">
+        <el-button :disabled="single" icon="el-icon-edit" plain size="mini" type="success" @click="handleUpdate">修改</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">删除</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
-      <el-table-column label="全选" type="selection"  align="center" prop="id" width="45"/>
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="45"/>
 
-      <el-table-column v-for="(item,index) in  tableHeaderList"  :key="index" align="center" :prop="item.columnName" :label="item.showName">
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName" align="center">
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
+        v-show="total>0"
+        :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
+        @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="文件" prop="brandCode">
-          <el-select  filterable v-model="form.brandCode" >
-            <el-option v-for="(item) in brandList" :key="item.brandCode" :value="item.brandCode" :label="item.brandName"> </el-option>
+          <el-select v-model="form.brandCode" filterable>
+            <el-option v-for="(item) in brandList" :key="item.brandCode" :label="item.brandName" :value="item.brandCode"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="门店编码" prop="storeCode">
-          <el-input v-model="form.storeCode" placeholder="请输入编码"  maxlength="20" />
+          <el-input v-model="form.storeCode" maxlength="20" placeholder="请输入编码"/>
         </el-form-item>
         <el-form-item label="门店名称" prop="storeName">
-          <el-input v-model="form.storeName" placeholder="请输入门店名称"  maxlength="20"/>
+          <el-input v-model="form.storeName" maxlength="20" placeholder="请输入门店名称"/>
         </el-form-item>
         <el-form-item label="门店星级" prop="storeStars">
-          <el-select  filterable v-model="form.storeStar">
-            <el-option v-for="(i) in 5" :value="i" :key="i"></el-option>
+          <el-select v-model="form.storeStar" filterable>
+            <el-option v-for="(i) in 5" :key="i" :value="i"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="开业日期" prop="storeOpenDate">
-          <el-date-picker v-model="form.storeOpenDate"  rows="4" value-format="yyyy-MM-dd"   value="new Date()"/>
-      </el-form-item>
+          <el-date-picker v-model="form.storeOpenDate" rows="4" value="new Date()" value-format="yyyy-MM-dd"/>
+        </el-form-item>
         <el-form-item label="门店地址" prop="storeAddress">
-          <el-input v-model="form.storeAddress" placeholder="请输入门店地址"  maxlength="200" type="textarea" :autosize="{minRows:2,maxRows:8}"/>
-      </el-form-item>
+          <el-input v-model="form.storeAddress" :autosize="{minRows:2,maxRows:8}" maxlength="200" placeholder="请输入门店地址" type="textarea"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -130,7 +130,7 @@ export default {
         storeStar: 5,
         id: undefined,
         confirmPwd: undefined,
-        storeOpenDate:undefined
+        storeOpenDate: undefined
       },
       // 表单校验
       rules: {
@@ -164,10 +164,10 @@ export default {
     getBrandList() {
       brandList({}).then(res => {
         this.brandList = res.data.dataList
-        this.brandList.forEach((t)=>{
-          this.brandSet[t.brandCode]=t.brandName;
+        this.brandList.forEach((t) => {
+          this.brandSet[t.brandCode] = t.brandName;
         })
-    console.log("brandSet",this.brandSet)
+        console.log("brandSet", this.brandSet)
       });
     },
     /** 查询公告列表 */
@@ -184,17 +184,17 @@ export default {
         this.setInfo();
       });
     },
-    setInfo(){
-      this.infoList.forEach(t=>{
-        t.brandCode=this.brandSet[t.brandCode]
+    setInfo() {
+      this.infoList.forEach(t => {
+        t.brandCode = this.brandSet[t.brandCode]
       })
     },
     setTableHeaderList() {
       const removeColumnName = ["storeAddress", "updateTime", "createTime", "createByName", "updateByName"];
 
       this.tableHeaderList = this.tableHeaderList.filter(t => !removeColumnName.includes(t.columnName))
-     this.tableHeaderList.forEach(t=>{
-        t.brandCode=this.brandSet[t.brandCode]
+      this.tableHeaderList.forEach(t => {
+        t.brandCode = this.brandSet[t.brandCode]
       })
     },
     setQueryTableHeaderList() {
@@ -217,7 +217,7 @@ export default {
         id: undefined,
         storeStar: 5,
         brandName: undefined,
-        storeOpenDate:undefined
+        storeOpenDate: undefined
       };
       this.resetForm("form");
     },
@@ -241,7 +241,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.form.brandCode=this.brandList[0].brandCode;
+      this.form.brandCode = this.brandList[0].brandCode;
       this.title = "添加文件";
     },
     /** 修改按钮操作 */

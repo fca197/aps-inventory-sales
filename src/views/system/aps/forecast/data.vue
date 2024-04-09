@@ -4,11 +4,11 @@
       <el-col :span="1.5">
 
       </el-col>
-      <right-toolbar export-table-file-name="预测结果" export-table="dataTable" :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="预测结果" @queryTable="getData"></right-toolbar>
     </el-row>
     <div>预测数据</div>
-    <el-table :data="tableData.dataList"  id="dataTable" cellpadding="0" cellspacing="0" show-summary :summary-method="getSummaries">
-      <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" align="center" :prop="item.fieldName" :label="item.showName"/>
+    <el-table id="dataTable" :data="tableData.dataList" :summary-method="getSummaries" cellpadding="0" cellspacing="0" show-summary>
+      <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" :label="item.showName" :prop="item.fieldName" align="center"/>
     </el-table>
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   name: "data",
   data() {
     return {
-      showSearch:false,
+      showSearch: false,
       id: this.$route.query.id,
       tableData: {}
     }
@@ -67,7 +67,7 @@ export default {
               return prev;
             }
           }, 0);
-          sums[index] = t + "/" + (sums[index] -t)+ '%';
+          sums[index] = t + "/" + (sums[index] - t) + '%';
         } else {
           sums[index] = t + "/" + 'N/A';
         }
@@ -80,6 +80,6 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

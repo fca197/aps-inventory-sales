@@ -1,20 +1,20 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
 
       <el-form-item label="预测时间" prop="dataRange">
-        <el-date-picker clearable
-                        v-model="queryParams.dateRange"
-                        type="monthrange"
+        <el-date-picker v-model="queryParams.dateRange"
+                        :value="new Date()"
+                        clearable
+                        end-placeholder="结束日期"
                         range-separator="至"
                         start-placeholder="开始日期"
-                        end-placeholder="结束日期"
+                        type="monthrange"
                         value-format="yyyy-MM"
-                        :value="new Date()"
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="getData">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="getData">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -23,11 +23,11 @@
       <el-col :span="1.5">
 
       </el-col>
-      <right-toolbar export-table-file-name="主版本预测结果" export-table="dataTable" :showSearch.sync="showSearch" @queryTable="getData"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="主版本预测结果" @queryTable="getData"></right-toolbar>
     </el-row>
     <div class="header-value">主版本预测结果</div>
     <el-table id="dataTable" :data="tableData.dataList" cellpadding="0" cellspacing="0" show-summary>
-      <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" align="center" :width="item.width" :prop="item.fieldName" :label="item.showName">
+      <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row[item.fieldName]">{{ scope.row[item.fieldName] }}</span>
           <span v-else>-</span>
@@ -74,6 +74,6 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

@@ -4,18 +4,18 @@ import router from '@/router';
 export default {
   // 刷新当前tab页签
   refreshPage(obj) {
-    const { path, query, matched } = router.currentRoute;
+    const {path, query, matched} = router.currentRoute;
     if (obj === undefined) {
       matched.forEach((m) => {
         if (m.components && m.components.default && m.components.default.name) {
           if (!['Layout', 'ParentView'].includes(m.components.default.name)) {
-            obj = { name: m.components.default.name, path: path, query: query };
+            obj = {name: m.components.default.name, path: path, query: query};
           }
         }
       });
     }
     return store.dispatch('tagsView/delCachedView', obj).then(() => {
-      const { path, query } = obj
+      const {path, query} = obj
       router.replace({
         path: '/redirect' + path,
         query: query
@@ -32,13 +32,14 @@ export default {
   // 关闭指定tab页签
   closePage(obj) {
     if (obj === undefined) {
-      return store.dispatch('tagsView/delView', router.currentRoute).then(({ visitedViews }) => {
-        const latestView = visitedViews.slice(-1)[0]
-        if (latestView) {
-            return router.push(latestView.fullPath)
-        }
-        return router.push('/');
-      });
+      return store.dispatch('tagsView/delView', router.currentRoute).then(
+          ({visitedViews}) => {
+            const latestView = visitedViews.slice(-1)[0]
+            if (latestView) {
+              return router.push(latestView.fullPath)
+            }
+            return router.push('/');
+          });
     }
     return store.dispatch('tagsView/delView', obj);
   },
@@ -56,13 +57,14 @@ export default {
   },
   // 关闭其他tab页签
   closeOtherPage(obj) {
-    return store.dispatch('tagsView/delOthersViews', obj || router.currentRoute);
+    return store.dispatch('tagsView/delOthersViews',
+        obj || router.currentRoute);
   },
   // 添加tab页签
   openPage(title, url, params) {
-    var obj = { path: url, meta: { title: title } }
+    var obj = {path: url, meta: {title: title}}
     store.dispatch('tagsView/addView', obj);
-    return router.push({ path: url, query: params });
+    return router.push({path: url, query: params});
   },
   // 修改tab页签
   updatePage(obj) {

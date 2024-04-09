@@ -3,8 +3,8 @@
 
   <el-dialog
       :visible.sync="isShow.enabled"
-      fullscreen
       append-to-body
+      fullscreen
   >
     <div class="imageZoomDiv">
       <img :src="imgDataProps"/>
@@ -19,7 +19,7 @@ export default {
   name: "ImageZoom",
   props: {
     isShow: {
-      enabled:undefined
+      enabled: undefined
     },
     id: {},
     imgDataProps: {}
@@ -55,14 +55,14 @@ export default {
 
   max-width: 40%;
   max-height: 60%;
-    position: absolute;
-    background: #55a9ff;
-    top: 25%;
-    left: 25%;
-    right: 25%;
-    bottom: 25%;
-    margin: auto;
+  position: absolute;
+  background: #55a9ff;
+  top: 25%;
+  left: 25%;
+  right: 25%;
+  bottom: 25%;
+  margin: auto;
 
-  }
+}
 
 </style>

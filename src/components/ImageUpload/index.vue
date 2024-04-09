@@ -1,27 +1,27 @@
 <template>
   <div class="component-upload-image">
     <el-upload
-        multiple
+        ref="imageUpload"
         :action="uploadImgUrl"
-        list-type="picture-card"
-        :on-success="handleUploadSuccess"
         :before-upload="handleBeforeUpload"
+        :class="{hide: this.fileList.length >= this.limit}"
+        :file-list="fileList"
+        :headers="headers"
         :limit="limit"
         :on-error="handleUploadError"
         :on-exceed="handleExceed"
-        ref="imageUpload"
-        :on-remove="handleDelete"
-        :show-file-list="true"
-        :headers="headers"
-        :file-list="fileList"
         :on-preview="handlePictureCardPreview"
-        :class="{hide: this.fileList.length >= this.limit}"
+        :on-remove="handleDelete"
+        :on-success="handleUploadSuccess"
+        :show-file-list="true"
+        list-type="picture-card"
+        multiple
     >
       <i class="el-icon-plus"></i>
     </el-upload>
 
     <!-- 上传提示 -->
-    <div class="el-upload__tip" slot="tip" v-if="showTip">
+    <div v-if="showTip" slot="tip" class="el-upload__tip">
       请上传
       <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b></template>
       <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b></template>
@@ -29,7 +29,7 @@
     </div>
 
     <el-dialog :visible.sync="dialogVisible" append-to-body>
-      <img  :src="dialogImageUrl" style="display: block; max-width: 100%; margin: 0 auto"/>
+      <img :src="dialogImageUrl" style="display: block; max-width: 100%; margin: 0 auto"/>
     </el-dialog>
   </div>
 </template>
@@ -39,7 +39,7 @@ import {getToken} from "@/utils/auth";
 import {getImageBase64} from "@/api/fileUpload";
 
 export default {
-  name:"ImageUpload",
+  name: "ImageUpload",
   props: {
     value: [String, Object, Array],
     // 图片数量限制
@@ -70,7 +70,7 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       hideUpload: false,
-      baseUrl: process.env.VUE_APP_BASE_API+"/fileUpload/getFileByte/",
+      baseUrl: process.env.VUE_APP_BASE_API + "/fileUpload/getFileByte/",
       uploadImgUrl: process.env.VUE_APP_BASE_API + "/fileUpload/insert", // 上传文件服务器地址
       headers: {
         'j-token': getToken(),
@@ -190,8 +190,8 @@ export default {
     },
     // 预览
     handlePictureCardPreview(file) {
-     return  getImageBase64(file.id).then(t=>{
-        this.dialogImageUrl=t
+      return getImageBase64(file.id).then(t => {
+        this.dialogImageUrl = t
         this.dialogVisible = true
       });
 
@@ -210,7 +210,7 @@ export default {
   }
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 // .el-upload--picture-card 控制加号部分
 ::v-deep.hide .el-upload--picture-card {
   display: none;

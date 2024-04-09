@@ -40,17 +40,19 @@ table.default-table .thead {
 table.default-table .tbody {
   border-bottom: 1px solid #dfe6ec;
 }
-.right{
+
+.right {
   float: right;
 
-  margin: 10px 10px 20px 0 ;
+  margin: 10px 10px 20px 0;
 }
+
 .right .count {
-  margin: 5px  0 50px;
+  margin: 5px 0 50px;
   color: red;
   font-size: 14px;
 }
 
-.table__cell .cell .operation{
+.table__cell .cell .operation {
   margin-left: 15px;
 }

@@ -1,4 +1,4 @@
-import { Message, MessageBox, Notification, Loading } from 'element-ui'
+import {Loading, Message, MessageBox, Notification} from 'element-ui'
 
 let loadingInstance;
 
@@ -20,20 +20,21 @@ export default {
     Message.warning(content)
   },
   // 弹出提示
-  alert(content,title) {
-    MessageBox.alert(content, title|| "系统提示",{ dangerouslyUseHTMLString:true})
+  alert(content, title) {
+    MessageBox.alert(content, title || "系统提示",
+        {dangerouslyUseHTMLString: true})
   },
   // 错误提示
-  alertError(content,title) {
-    MessageBox.alert(content, title||"系统提示", { type: 'error' })
+  alertError(content, title) {
+    MessageBox.alert(content, title || "系统提示", {type: 'error'})
   },
   // 成功提示
-  alertSuccess(content,title) {
-    MessageBox.alert(content, title||"系统提示", { type: 'success' })
+  alertSuccess(content, title) {
+    MessageBox.alert(content, title || "系统提示", {type: 'success'})
   },
   // 警告提示
-  alertWarning(content,title) {
-    MessageBox.alert(content, title||"系统提示", { type: 'warning' })
+  alertWarning(content, title) {
+    MessageBox.alert(content, title || "系统提示", {type: 'warning'})
   },
   // 通知提示
   notify(content) {
@@ -52,17 +53,17 @@ export default {
     Notification.warning(content)
   },
   // 确认窗体
-  confirm(content,title) {
-    return MessageBox.confirm(content, title||"系统提示", {
+  confirm(content, title) {
+    return MessageBox.confirm(content, title || "系统提示", {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: "warning",
-      dangerouslyUseHTMLString:true
+      dangerouslyUseHTMLString: true
     })
   },
   // 提交内容
-  prompt(content,title) {
-    return MessageBox.prompt(content, title||"系统提示", {
+  prompt(content, title) {
+    return MessageBox.prompt(content, title || "系统提示", {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: "warning",

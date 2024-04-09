@@ -2,7 +2,7 @@
   <div class="page-scan">
 
     <!-- 扫码区域 -->
-    <video style="width: 400px; height: 400px" ref="video" id="video" class="scan-video" autoplay></video>
+    <video id="video" ref="video" autoplay class="scan-video" style="width: 400px; height: 400px"></video>
     <!-- 提示语 -->
     <div v-show="tipShow" class="scan-tip">{{ tipMsg }}</div>
     <el-button style="text-align: -webkit-center;margin-bottom: 50px" type="primary" @click="openScan"> {{ scanBtnTitle }}</el-button>
@@ -50,7 +50,7 @@ export default {
   watch: {},
   methods: {
     async openScan() {
-      if(this.checkId===''){
+      if (this.checkId === '') {
         this.$message.error({
           message: '请先选择盘点版本',
           type: 'warning'

@@ -8,8 +8,7 @@ export function getForecastData(data) {
   })
 }
 
-
-export function  getAllForecastMain(data) {
+export function getAllForecastMain(data) {
   return request({
     url: '/apsGoodsForecastMain/queryList',
     method: 'post',

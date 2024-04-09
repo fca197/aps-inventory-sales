@@ -8,12 +8,12 @@
         <el-input v-model="buyOrder.orderRemark"/>
       </el-form-item>
       <div class="header-title">采购单明细:</div>
-        <el-table :key="buyOrder.id" :data="buyOrder.orderGoodsList" align="center" hidden-arrow-on-enter   stripe>
-          <el-table-column label="商品名称" prop="goodsName"/>
-          <el-table-column label="单价" prop="costPrice"/>
-          <el-table-column label="购买数量" prop="goodsBuyCount"/>
-          <el-table-column label="总价" prop="costPriceTotal"/>
-        </el-table>
+      <el-table :key="buyOrder.id" :data="buyOrder.orderGoodsList" align="center" hidden-arrow-on-enter stripe>
+        <el-table-column label="商品名称" prop="goodsName"/>
+        <el-table-column label="单价" prop="costPrice"/>
+        <el-table-column label="购买数量" prop="goodsBuyCount"/>
+        <el-table-column label="总价" prop="costPriceTotal"/>
+      </el-table>
     </el-form>
   </div>
 </template>
@@ -34,6 +34,6 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

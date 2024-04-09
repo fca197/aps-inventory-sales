@@ -1,51 +1,51 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="文件名称" prop="brandName">
-        <el-input v-model="queryParams.brandName" placeholder="请输入文件名称" clearable @keyup.enter.native="handleQuery"/>
+        <el-input v-model="queryParams.brandName" clearable placeholder="请输入文件名称" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"></el-button>
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="brandNameList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList"  :key="index" align="center" width="180px" :prop="item.columnName" :label="item.showName"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template  slot-scope="scope" >
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName" align="center" width="180px"/>
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+        <template slot-scope="scope">
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
+        v-show="total>0"
+        :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
+        @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="租户编码" prop="tenantCode">
-          <el-input v-model="form.tenantCode"  placeholder="请输入租户编码"/>
+          <el-input v-model="form.tenantCode" placeholder="请输入租户编码"/>
         </el-form-item>
         <el-form-item label="租户名称" prop="tenantName">
           <el-input v-model="form.tenantName" placeholder="请输入登陆名"/>
@@ -61,9 +61,7 @@
 
 <script>
 
-import {urlPrefix} from '@/api/tenant'
-
-import {add, deleteByIdList, queryPageList, updateById ,getById} from '@/api/common'
+import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
@@ -83,9 +81,7 @@ export default {
       // 总条数
       total: 0,
 
-      brandNameList: [
-
-      ],
+      brandNameList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -118,29 +114,29 @@ export default {
       },
       tableHeaderList: [
         {
-          "columnName":"id",
-          "showName":"序号"
+          "columnName": "id",
+          "showName": "序号"
         },
         {
-          "columnName":"tenantCode",
-          "showName":"租户编码"
+          "columnName": "tenantCode",
+          "showName": "租户编码"
         }, {
-          "columnName":"tenantName",
-          "showName":"租户名称"
-        },{
-          showName:"创建时间",
-          columnName:"createTime"
-        },{
-          showName:"修改时间",
-          columnName:"updateTime"
+          "columnName": "tenantName",
+          "showName": "租户名称"
+        }, {
+          showName: "创建时间",
+          columnName: "createTime"
+        }, {
+          showName: "修改时间",
+          columnName: "updateTime"
         }
       ]
     };
   },
   created() {
-    document["pagePath"]="/tenantInfo";
+    document["pagePath"] = "/tenantInfo";
     // process.env.pagePath = "/tenant"
-        this.getList();
+    this.getList();
   },
   methods: {
     /** 查询公告列表 */
@@ -194,7 +190,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      let req = {idList:[row.id], pageSize: 1, pageNum: 1};
+      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
@@ -225,7 +221,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？',"删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
         let req = {
           idList: idList
         }
@@ -234,7 +230,7 @@ export default {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       });
-      document.getElementsByClassName("el-message-box")[0].style.width="520px"
+      document.getElementsByClassName("el-message-box")[0].style.width = "520px"
     }
   }
 };

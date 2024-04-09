@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="form.checkId" placeholder="请选择" clearable>
+    <el-select v-model="form.checkId" clearable placeholder="请选择">
       <el-option
           v-for="item in reportList"
           :key="item.id"
@@ -8,7 +8,7 @@
           :value="item.id"
       />
     </el-select>
-    <el-input v-model="form.propertyCode" placeholder="请输入" />
+    <el-input v-model="form.propertyCode" placeholder="请输入"/>
     <el-button type="primary" @click="scanQrTest">扫码测试</el-button>
   </div>
 </template>
@@ -17,7 +17,6 @@
 import ScanQr from "@/components/QRCode/ScanQr.vue";
 import {insertCheckList} from "@/api/property";
 import {getReportList} from "@/api/check";
-import {showMsg} from "@/api/common";
 
 export default {
   name: "propertyScanQr",
@@ -39,7 +38,7 @@ export default {
   }
   , methods: {
     getReportList() {
-      getReportList({data:{isOver:false}}).then(t => this.reportList = t.data.dataList)
+      getReportList({data: {isOver: false}}).then(t => this.reportList = t.data.dataList)
     },
     scanQrTest() {
       let dList = ['3s88LeYibHm']

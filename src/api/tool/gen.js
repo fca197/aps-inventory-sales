@@ -8,6 +8,7 @@ export function listTable(query) {
     params: query
   })
 }
+
 // 查询db数据库列表
 export function listDbTable(query) {
   return request({

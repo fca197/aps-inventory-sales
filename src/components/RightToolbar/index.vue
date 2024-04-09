@@ -1,24 +1,24 @@
 <template>
-  <div class="top-right-btn" :style="style">
+  <div :style="style" class="top-right-btn">
 
     <el-row>
       <el-button v-if="exportTable" icon="el-icon-download" size="mini" @click="exportExcel"></el-button>
-      <el-tooltip class="item" effect="dark" :content="showSearch ? '隐藏搜索' : '显示搜索'" placement="top" v-if="search">
-        <el-button size="mini" circle icon="el-icon-caret-top" v-if="showSearch" @click="toggleSearch()"/>
-        <el-button size="mini" circle icon="el-icon-caret-bottom" v-else @click="toggleSearch()"/>
+      <el-tooltip v-if="search" :content="showSearch ? '隐藏搜索' : '显示搜索'" class="item" effect="dark" placement="top">
+        <el-button v-if="showSearch" circle icon="el-icon-caret-top" size="mini" @click="toggleSearch()"/>
+        <el-button v-else circle icon="el-icon-caret-bottom" size="mini" @click="toggleSearch()"/>
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-        <el-button size="mini" circle icon="el-icon-refresh" @click="refresh()"/>
+      <el-tooltip class="item" content="刷新" effect="dark" placement="top">
+        <el-button circle icon="el-icon-refresh" size="mini" @click="refresh()"/>
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="columns">
-        <el-button size="mini" circle icon="el-icon-menu" @click="showColumn()"/>
+      <el-tooltip v-if="columns" class="item" content="显隐列" effect="dark" placement="top">
+        <el-button circle icon="el-icon-menu" size="mini" @click="showColumn()"/>
       </el-tooltip>
     </el-row>
     <el-dialog :title="title" :visible.sync="open" append-to-body>
       <el-transfer
-          :titles="['显示', '隐藏']"
           v-model="value"
           :data="columns"
+          :titles="['显示', '隐藏']"
           @change="dataChange"
       ></el-transfer>
     </el-dialog>

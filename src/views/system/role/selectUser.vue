@@ -1,52 +1,52 @@
 <template>
   <!-- 授权用户 -->
-  <el-dialog title="选择用户" :visible.sync="visible" width="800px" top="5vh" append-to-body>
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true">
+  <el-dialog :visible.sync="visible" append-to-body title="选择用户" top="5vh" width="800px">
+    <el-form ref="queryForm" :inline="true" :model="queryParams" size="small">
       <el-form-item label="用户名称" prop="userName">
         <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户名称"
-          clearable
-          @keyup.enter.native="handleQuery"
+            v-model="queryParams.userName"
+            clearable
+            placeholder="请输入用户名称"
+            @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="手机号码" prop="phonenumber">
         <el-input
-          v-model="queryParams.phonenumber"
-          placeholder="请输入手机号码"
-          clearable
-          @keyup.enter.native="handleQuery"
+            v-model="queryParams.phonenumber"
+            clearable
+            placeholder="请输入手机号码"
+            @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
     <el-row>
-      <el-table @row-click="clickRow" ref="table" :data="userList" @selection-change="handleSelectionChange" height="260px">
+      <el-table ref="table" :data="userList" height="260px" @row-click="clickRow" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-        <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
-        <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-        <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
-        <el-table-column label="状态" align="center" prop="status">
+        <el-table-column :show-overflow-tooltip="true" label="用户名称" prop="userName"/>
+        <el-table-column :show-overflow-tooltip="true" label="用户昵称" prop="nickName"/>
+        <el-table-column :show-overflow-tooltip="true" label="邮箱" prop="email"/>
+        <el-table-column :show-overflow-tooltip="true" label="手机" prop="phonenumber"/>
+        <el-table-column align="center" label="状态" prop="status">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <el-table-column align="center" label="创建时间" prop="createTime" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
       </el-table>
       <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getList"
+          v-show="total>0"
+          :limit.sync="queryParams.pageSize"
+          :page.sync="queryParams.pageNum"
+          :total="total"
+          @pagination="getList"
       />
     </el-row>
     <div slot="footer" class="dialog-footer">
@@ -57,7 +57,8 @@
 </template>
 
 <script>
-import { unallocatedUserList, authUserSelectAll } from "@/api/system/role";
+import {authUserSelectAll, unallocatedUserList} from "@/api/system/role";
+
 export default {
   dicts: ['sys_normal_disable'],
   props: {
@@ -125,7 +126,7 @@ export default {
         this.$modal.msgError("请选择要分配的用户");
         return;
       }
-      authUserSelectAll({ roleId: roleId, userIds: userIds }).then(res => {
+      authUserSelectAll({roleId: roleId, userIds: userIds}).then(res => {
         this.$modal.msgSuccess(res.msg);
         if (res.code === 200) {
           this.visible = false;

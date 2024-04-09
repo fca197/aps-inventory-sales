@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { mergeRecursive } from "@/utils/ruoyi";
+import {mergeRecursive} from "@/utils/ruoyi";
 import DictMeta from './DictMeta'
 import DictData from './DictData'
 
@@ -22,7 +22,7 @@ export default class Dict {
 
   init(options) {
     if (options instanceof Array) {
-      options = { types: options }
+      options = {types: options}
     }
     const opts = mergeRecursive(DEFAULT_DICT_OPTIONS, options)
     if (opts.types === undefined) {
@@ -63,20 +63,21 @@ export default class Dict {
  */
 function loadDict(dict, dictMeta) {
   return dictMeta.request(dictMeta)
-    .then(response => {
-      const type = dictMeta.type
-      let dicts = dictMeta.responseConverter(response, dictMeta)
-      if (!(dicts instanceof Array)) {
-        console.error('the return of responseConverter must be Array.<DictData>')
-        dicts = []
-      } else if (dicts.filter(d => d instanceof DictData).length !== dicts.length) {
-        console.error('the type of elements in dicts must be DictData')
-        dicts = []
-      }
-      dict.type[type].splice(0, Number.MAX_SAFE_INTEGER, ...dicts)
-      dicts.forEach(d => {
-        Vue.set(dict.label[type], d.value, d.label)
-      })
-      return dicts
+  .then(response => {
+    const type = dictMeta.type
+    let dicts = dictMeta.responseConverter(response, dictMeta)
+    if (!(dicts instanceof Array)) {
+      console.error('the return of responseConverter must be Array.<DictData>')
+      dicts = []
+    } else if (dicts.filter(d => d instanceof DictData).length
+        !== dicts.length) {
+      console.error('the type of elements in dicts must be DictData')
+      dicts = []
+    }
+    dict.type[type].splice(0, Number.MAX_SAFE_INTEGER, ...dicts)
+    dicts.forEach(d => {
+      Vue.set(dict.label[type], d.value, d.label)
     })
+    return dicts
+  })
 }

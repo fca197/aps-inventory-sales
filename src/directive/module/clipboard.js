@@ -1,9 +1,10 @@
 /**
-* v-clipboard 文字复制剪贴
-* Copyright (c) 2021 ruoyi
-*/
+ * v-clipboard 文字复制剪贴
+ * Copyright (c) 2021 ruoyi
+ */
 
 import Clipboard from 'clipboard'
+
 export default {
   bind(el, binding, vnode) {
     switch (binding.arg) {
@@ -36,12 +37,16 @@ export default {
     } else if (binding.arg === 'error') {
       el._vClipBoard_error = binding.value;
     } else {
-      el._vClipBoard.text = function () { return binding.value; };
+      el._vClipBoard.text = function () {
+        return binding.value;
+      };
       el._vClipBoard.action = () => binding.arg === 'cut' ? 'cut' : 'copy';
     }
   },
   unbind(el, binding) {
-    if (!el._vClipboard) return
+    if (!el._vClipboard) {
+      return
+    }
     if (binding.arg === 'success') {
       delete el._vClipBoard_success;
     } else if (binding.arg === 'error') {

@@ -1,7 +1,5 @@
 import request from "@/utils/request";
 import ElementUI from "element-ui";
-import {urlPrefix} from "@/api/tenant";
-import * as XLSX from "xlsx";
 
 export function add(data, options) {
   const urlPrefix = getPathPrefix()
@@ -84,7 +82,7 @@ export function showMsg(res, successMsg) {
   });
 }
 
-export  function toString(obj) {
+export function toString(obj) {
   return JSON.stringify(obj)
 }
 

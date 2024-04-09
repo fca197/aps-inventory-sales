@@ -1,8 +1,3 @@
-import request from '@/utils/request'
-import constantRoutes from "@/router";
-import Layout from "@/layout";
-
-
 // 公共路由
 // 获取路由
 export const getRouters = () => {
@@ -11,5 +6,5 @@ export const getRouters = () => {
   //   method: 'get'
   // })
 
-  return Promise.resolve({data:[]})
+  return Promise.resolve({data: []})
 }

@@ -1,26 +1,26 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="日历名称" prop="calendarName">
-        <el-input v-model="queryParams.calendarName" placeholder="请输入日历名称" clearable
+        <el-input v-model="queryParams.calendarName" clearable placeholder="请输入日历名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-link type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-link>
+        <el-link icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-link>
         <el-link icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-link>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-link type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-link>
+        <el-link icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd">新增</el-link>
       </el-col>
       <el-col :span="1.5" hidden="hidden">
-        <el-link type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改
+        <el-link :disabled="single" icon="el-icon-edit" plain size="mini" type="success" @click="handleUpdate">修改
         </el-link>
       </el-col>
       <el-col :span="1.5">
-        <el-link type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
+        <el-link :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
           删除
         </el-link>
       </el-col>
@@ -29,43 +29,43 @@
 
     <el-table v-loading="loading" :data="calendarNameList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList"  :key="index" align="center" :prop="item.columnName"
-                       :label="item.showName"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="300px">
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName"
+                       align="center"/>
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" width="300px">
         <template slot-scope="scope">
-          <el-link size="mini" type="success" icon="aBtn el-icon-info aBtn" @click="handleInfoDay(scope.row)">
+          <el-link icon="aBtn el-icon-info aBtn" size="mini" type="success" @click="handleInfoDay(scope.row)">
           </el-link>
-          <el-link size="mini" type="primary" icon=" el-icon-setting red aBtn" @click="handleUpdateDay(scope.row)">
+          <el-link icon=" el-icon-setting red aBtn" size="mini" type="primary" @click="handleUpdateDay(scope.row)">
           </el-link>
-          <el-link size="mini" type="primary" icon="aBtn el-icon-edit aBtn" @click="handleUpdate(scope.row)"></el-link>
-          <el-link size="mini" type="danger" plain icon="aBtn el-icon-delete aBtn" @click="handleDelete(scope.row)"></el-link>
+          <el-link icon="aBtn el-icon-edit aBtn" size="mini" type="primary" @click="handleUpdate(scope.row)"></el-link>
+          <el-link icon="aBtn el-icon-delete aBtn" plain size="mini" type="danger" @click="handleDelete(scope.row)"></el-link>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="getList"
     />
-    <el-dialog :title="title" :visible.sync="openSettingDayInfo" width="900px" append-to-body>
-      <el-calendar v-model:value="openSettingDayCalendar" >
-        <template  :class="data.day"
-            slot="dateCell"
-            slot-scope="{date, data}" >
+    <el-dialog :title="title" :visible.sync="openSettingDayInfo" append-to-body width="900px">
+      <el-calendar v-model:value="openSettingDayCalendar">
+        <template slot="dateCell"
+                  slot-scope="{date, data}"
+                  :class="data.day">
           {{ data.day.split('-').slice(1).join('-') }}
         </template>
       </el-calendar>
     </el-dialog>
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openSettingDay" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="openSettingDay" append-to-body width="600px">
       <el-form ref="form" :model="openSettingDayForm" :rules="openSettingDayFormRules" label-width="100px">
 
         <el-form-item label="默认工作日" prop="workYear">
-          <el-select  filterable v-model.trim="openSettingDayForm.workYear" filterable placeholder="请选择">
+          <el-select v-model.trim="openSettingDayForm.workYear" filterable filterable placeholder="请选择">
             <el-option v-for="(item,index) in workYearList" :key="item" :label="item" :value="item">{{ item }}</el-option>
           </el-select>
         </el-form-item>
@@ -82,9 +82,9 @@
         </el-form-item>
         <el-form-item label="增加工作日" prop="workDayList">
           <template v-for="(item,index) in  openSettingDayForm.workDayList">
-            <el-date-picker align="right" v-model.trim="item.date" type="daterange"
+            <el-date-picker v-model.trim="item.date" align="right" end-placeholder="结束日期"
                             range-separator="至" start-placeholder="开始日期"
-                            end-placeholder="结束日期" value-format="yyyy-MM-dd"
+                            type="daterange" value-format="yyyy-MM-dd"
                             @change="datePickerChange">
             </el-date-picker>
             <i class="el-icon-plus   i-ad" @click="addWorkDay"></i>
@@ -93,9 +93,9 @@
         </el-form-item>
         <el-form-item label="增加休息日" prop="noWorkDayList">
           <template v-for="(item,index) in  openSettingDayForm.noWorkDayList">
-            <el-date-picker align="right" v-model.trim="item.date" type="daterange"
+            <el-date-picker v-model.trim="item.date" align="right" end-placeholder="结束日期"
                             range-separator="至" start-placeholder="开始日期"
-                            end-placeholder="结束日期" value-format="yyyy-MM-dd"
+                            type="daterange" value-format="yyyy-MM-dd"
                             @change="datePickerChange">
             </el-date-picker>
             <i class="el-icon-plus  i-ad" size="small" @click="addNoWorkDay"></i>
@@ -109,11 +109,11 @@
       </div>
     </el-dialog>
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="工厂" prop="factoryId">
-          <el-select  filterable v-model="form.factoryId" placeholder="请选择工厂">
+          <el-select v-model="form.factoryId" filterable placeholder="请选择工厂">
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
           </el-select>
         </el-form-item>
@@ -125,7 +125,7 @@
           <el-input v-model="form.calendarName" placeholder="请输入登陆名"/>
         </el-form-item>
         <el-form-item label="状态" prop="calendarDisabled">
-          <el-select  filterable v-model="form.calendarDisabled">
+          <el-select v-model="form.calendarDisabled" filterable>
             <el-option :value="false" label="启用"></el-option>
             <el-option :value="true" label="禁用"></el-option>
           </el-select>
@@ -228,17 +228,17 @@ export default {
         columnName: "calendarDisabledStr",
         showName: "状态"
       }],
-      calendarDayShowMonth:""
+      calendarDayShowMonth: ""
     };
   },
   watch: {
     openSettingDayCalendar(nv, ov) {
       let date = new Date(nv);
       let day = date.getFullYear() + "/" + (date.getMonth() + 1);
-      if (this.calendarDayShowMonth===day){
+      if (this.calendarDayShowMonth === day) {
         return;
       }
-      this.calendarDayShowMonth=day;
+      this.calendarDayShowMonth = day;
       let reqData = {id: this.id, dayYear: date.getFullYear(), dayMonth: (date.getMonth() + 1)};
       document.querySelectorAll('.el-calendar-day').forEach(t => t.style.backgroundColor = '#fff')
       calendarDayById(reqData).then(res => {
@@ -432,6 +432,7 @@ export default {
   text-align: center;
   cursor: pointer;
 }
+
 .aBtn {
   padding: 0 5px;
   text-decoration-line: none;

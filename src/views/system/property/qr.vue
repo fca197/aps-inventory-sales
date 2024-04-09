@@ -1,8 +1,8 @@
 <template>
 
   <div class="pDiv">
-    <img :src="dataURL" :alt="propertyName" v-show="!isFakeData" >
-    <div class="qrCodeDiv" :id="id"  v-show="isFakeData">
+    <img v-show="!isFakeData" :alt="propertyName" :src="dataURL">
+    <div v-show="isFakeData" :id="id" class="qrCodeDiv">
       <div :ref="id" class="qrCodeDivItem">
       </div>
       <div style="text-align: center"> {{ this.code }}</div>
@@ -57,7 +57,7 @@ export default {
       let _this = this;
 
       let div = document.getElementById(DivID);
-      html2Canvas(div,{
+      html2Canvas(div, {
         useCORS: true
       }).then(canvas => {
         let dataURLTmp = canvas.toDataURL("image/png");
@@ -75,8 +75,9 @@ export default {
   text-align: -webkit-center;
   padding: 10px;
 }
-.pDiv{
+
+.pDiv {
   border-right: #eee 1px solid;
-  border-bottom : #eee 1px solid;
+  border-bottom: #eee 1px solid;
 }
 </style>

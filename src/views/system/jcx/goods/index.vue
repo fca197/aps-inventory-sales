@@ -1,25 +1,25 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="商品名称" prop="goodsName">
-        <el-input v-model="queryParams.data.goodsName" placeholder="请输入商品名称" clearable
+        <el-input v-model="queryParams.data.goodsName" clearable placeholder="请输入商品名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete"/>
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"/>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain size="mini" :disabled="multiple" @click="handleCreateLineCode">
+        <el-button :disabled="multiple" plain size="mini" type="success" @click="handleCreateLineCode">
           <svg-icon icon-class="line-code"/>
         </el-button>
       </el-col>
@@ -28,11 +28,11 @@
 
     <el-table v-loading="loading" :data="goodsNameList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName" :width="item.width"
-                       :label="item.showName">
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width"
+                       align="center">
         <template slot-scope="scope">
-          <image-show width="100" height="50" :id="scope.row[item.fieldName]" v-if="item.fieldName=='goodsImg' && tableHeaderIndex"/>
+          <image-show v-if="item.fieldName=='goodsImg' && tableHeaderIndex" :id="scope.row[item.fieldName]" height="50" width="100"/>
           <span v-else>{{ scope.row[item.fieldName] }}</span>
         </template>
       </el-table-column>
@@ -43,35 +43,35 @@
         </template>
 
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" v-if="goodsLineCodeListOpen" :visible.sync="goodsLineCodeListOpen" fullscreen append-to-body>
-      <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :title="item.goodsName" :code="item.goodsBarCode"></lin-code>
+    <el-dialog v-if="goodsLineCodeListOpen" :title="title" :visible.sync="goodsLineCodeListOpen" append-to-body fullscreen>
+      <lin-code v-for="(item,index) in goodsLineCodeList" :key="index" :code="item.goodsBarCode" :title="item.goodsName"></lin-code>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form Guz="form" :model="form" :rules="rules" label-width="100px">
-        <el-tabs tab-position="left" style="height: 450px;">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="600px">
+      <el-form :model="form" :rules="rules" Guz="form" label-width="100px">
+        <el-tabs style="height: 450px;" tab-position="left">
           <el-tab-pane label="基本信息">
             <el-form-item label="商图片" prop="file">
-              <image-upload v-model="form.goodsImg" :limit="1" :file-size="5" :is-show-tip="false"></image-upload>
+              <image-upload v-model="form.goodsImg" :file-size="5" :is-show-tip="false" :limit="1"></image-upload>
             </el-form-item>
             <el-form-item label="商品名称" prop="file">
-              <el-input v-model="form.goodsName" placeholder="请输入商品名称" aria-required="true"/>
+              <el-input v-model="form.goodsName" aria-required="true" placeholder="请输入商品名称"/>
             </el-form-item>
             <el-form-item label="条形码" prop="goodsCode">
               <el-input v-model="form.goodsBarCode" placeholder="请输入商品编码"/>
@@ -105,14 +105,14 @@
           </el-tab-pane>
           <el-tab-pane label="供应商">
             <el-form-item label="供应商" prop="supplierId">
-              <el-select v-model="form.supplierId" placeholder="请选择" :filter-method="selectSupplier" filterable>
+              <el-select v-model="form.supplierId" :filter-method="selectSupplier" filterable placeholder="请选择">
                 <el-option v-for="item in supplierList" :key="item.id" :label="item.supplierName" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="盘点" prop="isInventory">
               <el-select v-model="form.isInventory" placeholder="请选择">
-                <el-option label="是" :value="true"></el-option>
-                <el-option label="否" :value="false"></el-option>
+                <el-option :value="true" label="是"></el-option>
+                <el-option :value="false" label="否"></el-option>
               </el-select>
             </el-form-item>
           </el-tab-pane>

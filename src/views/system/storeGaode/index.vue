@@ -6,21 +6,21 @@
       <h3>查询门店</h3>
       <div class="m-4">
         <p>省：</p>
-        <el-select  filterable id='province' v-model="provinceCode" class="m-2" @change="loadCityAreaList()">
+        <el-select id='province' v-model="provinceCode" class="m-2" filterable @change="loadCityAreaList()">
           <el-option v-for="(p, index) in provinceList" :key="p.adCode" :label="p.name" :value="p.adCode"> {{ p.name }}
           </el-option>
         </el-select>
       </div>
       <div class="m-4">
         <p> 市：</p>
-        <el-select  filterable id='city' v-model="cityCode" class="m-2" @change="showCitySize">
+        <el-select id='city' v-model="cityCode" class="m-2" filterable @change="showCitySize">
           <el-option v-for="(p, index) in cityList" :key="p.adCode" :label="p.name" :value="p.adCode"> {{ p.name }}
           </el-option>
         </el-select>
       </div>
       <div class="m-4">
         <p> 区：</p>
-        <el-select  filterable id='area' v-model="areaCode" class="m-2" @change="showAreaSize">
+        <el-select id='area' v-model="areaCode" class="m-2" filterable @change="showAreaSize">
           <el-option v-for="(p, index) in districtList" :key="p.adCode" :label="p.name" :value="p.adCode"> {{ p.name }}
           </el-option>
         </el-select>
@@ -28,7 +28,7 @@
 
       <div class="m-4">
         <p> H3 层级：</p>
-        <el-select  filterable id='h3Res' v-model="h3Res" class="">
+        <el-select id='h3Res' v-model="h3Res" class="" filterable>
           <el-option v-for="(p, index) in 13" :key="p" :label="p-1" :value="p-1"> {{ p - 1 }}
           </el-option>
         </el-select>
@@ -45,32 +45,32 @@
   top: 5px;
   right: 60px;
 
-.el-select-dropdown {
-  border: none;
-  background-color: rgba(1, 28, 82, 0.8);
-}
+  .el-select-dropdown {
+    border: none;
+    background-color: rgba(1, 28, 82, 0.8);
+  }
 
-.el-input__inner {
-  color: #eee;
-  border-color: #00fff6;
-  background-color: rgba(1, 28, 82, 0.8);
-}
+  .el-input__inner {
+    color: #eee;
+    border-color: #00fff6;
+    background-color: rgba(1, 28, 82, 0.8);
+  }
 
-.el-select .el-input.is-focus .el-input__inner {
-  border-color: #0B61AA;
-  background-color: rgba(1, 28, 82, 0.8);
-  color: #00D3E9;
-}
+  .el-select .el-input.is-focus .el-input__inner {
+    border-color: #0B61AA;
+    background-color: rgba(1, 28, 82, 0.8);
+    color: #00D3E9;
+  }
 
-.el-select-dropdown__item {
-  color: #eee;
-}
+  .el-select-dropdown__item {
+    color: #eee;
+  }
 
-.el-select-dropdown__item.hover,
-.el-select-dropdown__item:hover {
-  color: #00D3E9;
-  background-color: #0F3360;
-}
+  .el-select-dropdown__item.hover,
+  .el-select-dropdown__item:hover {
+    color: #00D3E9;
+    background-color: #0F3360;
+  }
 
 }
 
@@ -128,7 +128,7 @@ export default {
       // "key": process.env.VUE_APP_GAODE_KEY,              // 申请好的Web端开发者Key，首次调用 load 时必填
       "key": '524d016884fc1e717a7083da9fc88961',              // 申请好的Web端开发者Key，首次调用 load 时必填
       // "version": "2.0",   // 指定要加载的 JS API 的版本，缺省时默认为 1.4.15
-      "plugins": ['AMap.Scale',  'AMap.Scale','AMap.ToolBar','AMap.MouseTool', 'AMap.Driving', 'AMap.DistrictSearch', 'AMap.MarkerClusterer', 'AMap.InfoWindow'],           // 需要使用的的插件列表，如比例尺'AMap.Scale'
+      "plugins": ['AMap.Scale', 'AMap.Scale', 'AMap.ToolBar', 'AMap.MouseTool', 'AMap.Driving', 'AMap.DistrictSearch', 'AMap.MarkerClusterer', 'AMap.InfoWindow'],           // 需要使用的的插件列表，如比例尺'AMap.Scale'
     }).then((AMap) => {
 
       this.map = new AMap.Map('container', {zoom: 10});
@@ -149,8 +149,8 @@ export default {
     this.loadAreaList({level: 1});
   },
   methods: {
-    drawPolygon(){
-      if (this.mouseTool===undefined){
+    drawPolygon() {
+      if (this.mouseTool === undefined) {
         this.mouseTool = new AMap.MouseTool(this.map);
 
         let _this = this;
@@ -166,10 +166,10 @@ export default {
           // strokeStyle是dashed时有效
           // strokeDasharray: [30,10],
         })
-        this. mouseTool.on('draw', function(e) {
+        this.mouseTool.on('draw', function (e) {
           // event.obj 为绘制出来的覆盖物对象
-          console.info('覆盖物对象绘制完成',e.obj)
-          _this. mouseTool.close(false);
+          console.info('覆盖物对象绘制完成', e.obj)
+          _this.mouseTool.close(false);
           console.log(e.obj.getPath()); //获取路径/范围
 
         })
@@ -177,8 +177,8 @@ export default {
     },
     drawH3Function(e) {
       if (!this.drawH3) {
-        console.info("drawH3:"+this.drawH3+" break")
-       this. drawPolygon();
+        console.info("drawH3:" + this.drawH3 + " break")
+        this.drawPolygon();
         return;
       }
       let latLngCellToBoundaryList = latLngCellToBoundary({

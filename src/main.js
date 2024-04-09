@@ -7,20 +7,26 @@ import './assets/styles/element-variables.scss'
 
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
-
-import  '@/assets/styles/default.css'
+import '@/assets/styles/default.css'
 import App from './App'
 import store from './store'
 import router from './router'
 import directive from './directive' // directive
 import plugins from './plugins' // plugins
-import { download } from '@/utils/request'
+import {download} from '@/utils/request'
 
 import './assets/icons' // icon
 import './permission' // permission control
-import { getDicts } from "@/api/system/dict/data";
-import { getConfigKey } from "@/api/system/config";
-import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/ruoyi";
+import {getDicts} from "@/api/system/dict/data";
+import {getConfigKey} from "@/api/system/config";
+import {
+  addDateRange,
+  handleTree,
+  parseTime,
+  resetForm,
+  selectDictLabel,
+  selectDictLabels
+} from "@/utils/ruoyi";
 // 分页组件
 import Pagination from "@/components/Pagination";
 // 自定义表格工具组件
@@ -44,7 +50,6 @@ import JsBarcode from "@/components/JsBarcode/index.vue";
 import {formatDates} from "@/utils/formatDate";
 // import htmlTableToExcel from 'html-table-to-excel';
 
-
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.formatDates = formatDates
@@ -57,7 +62,9 @@ Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 // Vue.prototype.htmlTableToExcel = htmlTableToExcel;
-Vue.filter("toInt",function (v){return parseInt(v)});
+Vue.filter("toInt", function (v) {
+  return parseInt(v)
+});
 
 // 全局组件挂载
 Vue.component('DictTag', DictTag)
@@ -72,7 +79,6 @@ Vue.use(directive)
 Vue.use(plugins)
 Vue.use(VueMeta)
 DictData.install()
-
 
 /**
  * If you don't want to use mock-server

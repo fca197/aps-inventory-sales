@@ -8,24 +8,24 @@
     <br/>
     <span class="header-title"> 商品列表:</span>
     <el-table :data="orderItems" style="width: 100%">
-      <el-table-column label="商品名称" align="center" prop="goodsName"/>
-      <el-table-column label="商品数量" align="center" prop="goodsCount"/>
-      <el-table-column label="商品成本价" align="center" prop="goodsCostPrice"/>
-      <el-table-column label="商品销售价" align="center" prop="goodsSalePrice"/>
-      <el-table-column label="商品毛利" align="center" prop="goodsGrossProfit"/>
-      <el-table-column label="商品净利润" align="center" prop="goodsNetProfit"/>
-      <el-table-column label="商品总销售价" align="center" prop="goodsTotalSalePrice"/>
-      <el-table-column label="操作" align="center" prop="id">
+      <el-table-column align="center" label="商品名称" prop="goodsName"/>
+      <el-table-column align="center" label="商品数量" prop="goodsCount"/>
+      <el-table-column align="center" label="商品成本价" prop="goodsCostPrice"/>
+      <el-table-column align="center" label="商品销售价" prop="goodsSalePrice"/>
+      <el-table-column align="center" label="商品毛利" prop="goodsGrossProfit"/>
+      <el-table-column align="center" label="商品净利润" prop="goodsNetProfit"/>
+      <el-table-column align="center" label="商品总销售价" prop="goodsTotalSalePrice"/>
+      <el-table-column align="center" label="操作" prop="id">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.goodsStatus" @change="value=>{updateOrderItem(value,scope.row.id)}" >
-            <el-option label="退款/退货" :value="1"/>
-            <el-option label="退款/不退货"  :value="2"/>
+          <el-select v-model="scope.row.goodsStatus" @change="value=>{updateOrderItem(value,scope.row.id)}">
+            <el-option :value="1" label="退款/退货"/>
+            <el-option :value="2" label="退款/不退货"/>
           </el-select>
         </template>
       </el-table-column>
     </el-table>
     <el-drawer/>
-    <div class="setting-footer" align="right">
+    <div align="right" class="setting-footer">
       <el-button @click="cancel">取消</el-button>
     </div>
   </div>
@@ -110,5 +110,5 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 </style>

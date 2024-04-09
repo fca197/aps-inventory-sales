@@ -1,40 +1,40 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="计划名称" prop="jcxBuyPlan">
-        <el-input v-model="queryParams.data.planName" placeholder="请输入文件名称" clearable
+        <el-input v-model="queryParams.data.planName" clearable placeholder="请输入文件名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="状态" prop="planStatus">
-        <el-select v-model="queryParams.data.planStatus" placeholder="请选择状态" clearable>
-          <el-option label="全部" :value="undefined"></el-option>
+        <el-select v-model="queryParams.data.planStatus" clearable placeholder="请选择状态">
+          <el-option :value="undefined" label="全部"></el-option>
           <el-option :value="10" label="草稿"></el-option>
           <el-option :value="50" label="通过"></el-option>
           <el-option :value="99" label="驳回"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="生成订单" prop="isCreateOrder">
-        <el-select v-model="queryParams.data.isCreateOrder" placeholder="请选择" clearable>
+        <el-select v-model="queryParams.data.isCreateOrder" clearable placeholder="请选择">
           <el-option :value="undefined" label="全部"></el-option>
           <el-option :value="0" label="未生成"></el-option>
           <el-option :value="1" label="已生成"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增采购计划</el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd">新增采购计划</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAddOrder">生成采购单</el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAddOrder">生成采购单</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
           删除
         </el-button>
       </el-col>
@@ -43,18 +43,18 @@
 
     <el-table v-loading="loading" :data="jcxBuyPlanList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName"
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"
                        :width="item.width+'px'"
-                       :label="item.showName">
+                       align="center">
         <template slot-scope="scope">
           <div v-if="Number(scope.row[item.fieldName])">{{ scope.row[item.fieldName] }}</div>
           <div v-else-if="scope.row[item.fieldName].length>=30">
             <el-popover
+                :content="''+scope.row[item.fieldName]"
                 placement="top-start"
-                width="200"
                 trigger="hover"
-                :content="''+scope.row[item.fieldName]">
+                width="200">
               <div slot="reference">{{ scope.row[item.fieldName].substring(0, 30) + '...' }}</div>
             </el-popover>
           </div>
@@ -62,7 +62,7 @@
         </template>
 
       </el-table-column>
-      <el-table-column label="状态" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="状态">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.planStatus==='10'" size="mini" type="info">草稿</el-tag>
           <el-tag v-else-if="scope.row.planStatus==='50'" size="mini" type="success">通过</el-tag>
@@ -75,23 +75,23 @@
           <el-popover placement="top" width="190">
              <p>采购订单序号</p>
              <p>{{ scope.row.buyOrderId }}</p>
-            <el-button type="text" size="mini" slot="reference" icon="el-icon-info"></el-button>
+            <el-button slot="reference" icon="el-icon-info" size="mini" type="text"></el-button>
           </el-popover>
           </span>
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
-          <el-popover placement="top" v-if="scope.row.planStatus==='10'" width="140">
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-popover v-if="scope.row.planStatus==='10'" placement="top" width="140">
             <p>修改计划状态？</p>
             <div style="text-align: right; margin: 0">
               <el-button size="mini" type="success" @click="updatePlanStatus(scope.row,'50')">通过</el-button>
-              <el-button type="danger" size="mini" icon="" @click="updatePlanStatus(scope.row,'99')">驳回</el-button>
+              <el-button icon="" size="mini" type="danger" @click="updatePlanStatus(scope.row,'99')">驳回</el-button>
             </div>
-            <el-button size="mini" style="padding-left: 10px" slot="reference" type="text" icon="el-icon-more"></el-button>
+            <el-button slot="reference" icon="el-icon-more" size="mini" style="padding-left: 10px" type="text"></el-button>
           </el-popover>
         </template>
       </el-table-column>
@@ -99,21 +99,21 @@
 
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <update-buy-plan :buy-plan-info="buyPlanFormData"/>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="upById">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="planOrderOpen" width="800px" append-to-body>
+    <el-dialog :title="title" :visible.sync="planOrderOpen" append-to-body width="800px">
       <create-buy-order :buy-order="planOrder"/>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="savePlanOrder">确 定</el-button>
@@ -369,7 +369,7 @@ export default {
     },
     updatePlanStatus(row, status) {
       // console.info("updatePlanStatus: ",,status)
-      return updateStatus({versionNum: row.versionNum, id: row.id, planStatus: status}).then(t=>this.$message.success("操作成功")).then(() => this.getList());
+      return updateStatus({versionNum: row.versionNum, id: row.id, planStatus: status}).then(t => this.$message.success("操作成功")).then(() => this.getList());
     }, savePlanOrder() {
       console.info("savePlanOrder", this.planOrder)
       let d = {}

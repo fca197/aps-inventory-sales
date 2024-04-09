@@ -3,13 +3,13 @@
     <el-form ref="form" :model="buyPlanInfo" label-width="100px">
       <el-form-item label="计划名称" prop="planName">
         <el-col :span="9">
-          <el-input v-model="buyPlanInfo.planName" width="100px" placeholder="请输入计划名称"/>
+          <el-input v-model="buyPlanInfo.planName" placeholder="请输入计划名称" width="100px"/>
         </el-col>
-        <el-col :span="5" :offset="5">
-          <el-input v-model="batchCount" width="100px" placeholder="" type="number"/>
+        <el-col :offset="5" :span="5">
+          <el-input v-model="batchCount" placeholder="" type="number" width="100px"/>
         </el-col>
         <el-col :span="4">
-          <el-button type="warning" size="medium" @click="batchUpdateBuyCount">
+          <el-button size="medium" type="warning" @click="batchUpdateBuyCount">
             <svg-icon icon-class="brush"/>
           </el-button>
         </el-col>
@@ -29,14 +29,14 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button v-if="scope.row.isTmp!=='1'" type="warning" size="mini" @click="handleDelete(scope.$index)">删除</el-button>
+            <el-button v-if="scope.row.isTmp!=='1'" size="mini" type="warning" @click="handleDelete(scope.$index)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
       <el-divider><i class="el-icon-plus"></i></el-divider>
-      <div >
+      <div>
         <el-col :offset="14" :span="10" style="padding-top: 10px"> 选择添加的商品:
-          <el-select filterable placeholder="请选择商品" @change="selectGoods" width="100%" :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
+          <el-select v-model="buyPlanVisibleFormGoodsId" :filter-method="value=>{changeGoods(value)}" filterable placeholder="请选择商品" width="100%" @change="selectGoods">
             <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"/>
           </el-select>
         </el-col>
@@ -90,7 +90,7 @@ export default {
     },
 
     totalPrice() {
-      this.buyPlanInfo.jcxBuyPlanItemDtoList= this.buyPlanInfo.jcxBuyPlanItemDtoList||[]
+      this.buyPlanInfo.jcxBuyPlanItemDtoList = this.buyPlanInfo.jcxBuyPlanItemDtoList || []
       this.totalTmp("costPrice")
       this.totalTmp("salesPrice")
       this.totalTmp("goodsGrossProfit")

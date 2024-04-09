@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import md5 from 'js-md5';
+
 // 登录方法
 export function login(username, password, code, uuid) {
   const data = {
@@ -35,7 +36,7 @@ export function getInfo() {
   return request({
     url: '/loginAccount/getInfo',
     method: 'post',
-    data:{}
+    data: {}
   })
 }
 
@@ -45,7 +46,7 @@ export function logout() {
   //   url: '/logout',
   //   method: 'post'
   // })
-  return  Promise.resolve({});
+  return Promise.resolve({});
 }
 
 // 获取验证码
@@ -58,5 +59,5 @@ export function getCodeImg() {
   //   method: 'get',
   //   timeout: 20000
   // })
-  return Promise.resolve({captchaEnabled:false});
+  return Promise.resolve({captchaEnabled: false});
 }

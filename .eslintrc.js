@@ -23,7 +23,7 @@ module.exports = {
       }
     }],
     "vue/singleline-html-element-content-newline": "off",
-    "vue/multiline-html-element-content-newline":"off",
+    "vue/multiline-html-element-content-newline": "off",
     "vue/name-property-casing": ["error", "PascalCase"],
     "vue/no-v-html": "off",
     'accessor-pairs': 2,
@@ -181,7 +181,8 @@ module.exports = {
       'nonwords': false
     }],
     'spaced-comment': [2, 'always', {
-      'markers': ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!', ',']
+      'markers': ['global', 'globals', 'eslint', 'eslint-disable', '*package',
+        '!', ',']
     }],
     'template-curly-spacing': [2, 'never'],
     'use-isnan': 2,

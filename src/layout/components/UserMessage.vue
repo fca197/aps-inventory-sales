@@ -1,19 +1,19 @@
 <template>
   <div :key="nowTime">
     <el-col :offset="19" :span="5">
-      <el-button @click="messageMaskRead" :size="'mini'">全部已读</el-button>
+      <el-button :size="'mini'" @click="messageMaskRead">全部已读</el-button>
       <div style="height: 10px"></div>
     </el-col>
     <el-col>
       <el-collapse accordion>
-        <el-collapse-item v-for="(item,index) in messageList" width="100%" :title="item.messageTitle" :id="'md_'+item.id" :name="'name_'+index" :key="'a'+index">
+        <el-collapse-item v-for="(item,index) in messageList" :id="'md_'+item.id" :key="'a'+index" :name="'name_'+index" :title="item.messageTitle" width="100%">
           <div class="header-div"><span class="header-title ">创建时间: </span> <span class="header-value">{{ item.createTime }}</span></div>
           <div class="header-div"><span class="header-title ">消息内容: </span> <span class="header-value">{{ item.messageContext }}</span></div>
           <div style="height: 10px"></div>
           <dynamic-table v-if="item.hasJsonData" :table-data="item.messageJsonDataObject"/>
         </el-collapse-item>
       </el-collapse>
-      <pagination @pagination="showMsgDrawer" v-show="messageList.length>0" :total="messageListTotal" :page.sync="messageListPageNum" :limit.sync="messageListPageSize"/>
+      <pagination v-show="messageList.length>0" :limit.sync="messageListPageSize" :page.sync="messageListPageNum" :total="messageListTotal" @pagination="showMsgDrawer"/>
     </el-col>
   </div>
 </template>
@@ -26,7 +26,7 @@ import {messageMaskRead, msgMessageReadQueryPageList} from "@/api/message";
 export default {
   name: "Message",
   components: {DynamicTable},
-  props: {nowTime: String,queryUnReadCountFun:{}},
+  props: {nowTime: String, queryUnReadCountFun: {}},
   data() {
     return {
       messageList: [],
@@ -90,6 +90,6 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

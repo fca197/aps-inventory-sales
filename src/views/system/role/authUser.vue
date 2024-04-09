@@ -1,26 +1,26 @@
 <template>
   <div class="app-container">
-     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" size="small">
       <el-form-item label="用户名称" prop="userName">
         <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户名称"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
+            v-model="queryParams.userName"
+            clearable
+            placeholder="请输入用户名称"
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="手机号码" prop="phonenumber">
         <el-input
-          v-model="queryParams.phonenumber"
-          placeholder="请输入手机号码"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
+            v-model="queryParams.phonenumber"
+            clearable
+            placeholder="请输入手机号码"
+            style="width: 240px"
+            @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -28,85 +28,89 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="openSelectUser"
-          v-hasPermi="['system:role:add']"
-        >添加用户</el-button>
+            v-hasPermi="['system:role:add']"
+            icon="el-icon-plus"
+            plain
+            size="mini"
+            type="primary"
+            @click="openSelectUser"
+        >添加用户
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
-          icon="el-icon-circle-close"
-          size="mini"
-          :disabled="multiple"
-          @click="cancelAuthUserAll"
-          v-hasPermi="['system:role:remove']"
-        >批量取消授权</el-button>
+            v-hasPermi="['system:role:remove']"
+            :disabled="multiple"
+            icon="el-icon-circle-close"
+            plain
+            size="mini"
+            type="danger"
+            @click="cancelAuthUserAll"
+        >批量取消授权
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
-          plain
-          icon="el-icon-close"
-          size="mini"
-          @click="handleClose"
-        >关闭</el-button>
+            icon="el-icon-close"
+            plain
+            size="mini"
+            type="warning"
+            @click="handleClose"
+        >关闭
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户名称" prop="userName" :show-overflow-tooltip="true" />
-      <el-table-column label="用户昵称" prop="nickName" :show-overflow-tooltip="true" />
-      <el-table-column label="邮箱" prop="email" :show-overflow-tooltip="true" />
-      <el-table-column label="手机" prop="phonenumber" :show-overflow-tooltip="true" />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column align="center" type="selection" width="55"/>
+      <el-table-column :show-overflow-tooltip="true" label="用户名称" prop="userName"/>
+      <el-table-column :show-overflow-tooltip="true" label="用户昵称" prop="nickName"/>
+      <el-table-column :show-overflow-tooltip="true" label="邮箱" prop="email"/>
+      <el-table-column :show-overflow-tooltip="true" label="手机" prop="phonenumber"/>
+      <el-table-column align="center" label="状态" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column align="center" label="创建时间" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-circle-close"
-            @click="cancelAuthUser(scope.row)"
-            v-hasPermi="['system:role:remove']"
-          >取消授权</el-button>
+              v-hasPermi="['system:role:remove']"
+              icon="el-icon-circle-close"
+              size="mini"
+              type="text"
+              @click="cancelAuthUser(scope.row)"
+          >取消授权
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
+        v-show="total>0"
+        :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
+        @pagination="getList"
     />
-    <select-user ref="select" :roleId="queryParams.roleId" @ok="handleQuery" />
+    <select-user ref="select" :roleId="queryParams.roleId" @ok="handleQuery"/>
   </div>
 </template>
 
 <script>
-import { allocatedUserList, authUserCancel, authUserCancelAll } from "@/api/system/role";
+import {allocatedUserList, authUserCancel, authUserCancelAll} from "@/api/system/role";
 import selectUser from "./selectUser";
 
 export default {
   name: "AuthUser",
   dicts: ['sys_normal_disable'],
-  components: { selectUser },
+  components: {selectUser},
   data() {
     return {
       // 遮罩层
@@ -143,15 +147,15 @@ export default {
     getList() {
       this.loading = true;
       allocatedUserList(this.queryParams).then(response => {
-          this.userList = response.rows;
-          this.total = response.total;
-          this.loading = false;
-        }
+            this.userList = response.rows;
+            this.total = response.total;
+            this.loading = false;
+          }
       );
     },
     // 返回按钮
     handleClose() {
-      const obj = { path: "/system/role" };
+      const obj = {path: "/system/role"};
       this.$tab.closeOpenPage(obj);
     },
     /** 搜索按钮操作 */
@@ -176,23 +180,25 @@ export default {
     /** 取消授权按钮操作 */
     cancelAuthUser(row) {
       const roleId = this.queryParams.roleId;
-      this.$modal.confirm('确认要取消该用户"' + row.userName + '"角色吗？').then(function() {
-        return authUserCancel({ userId: row.userId, roleId: roleId });
+      this.$modal.confirm('确认要取消该用户"' + row.userName + '"角色吗？').then(function () {
+        return authUserCancel({userId: row.userId, roleId: roleId});
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("取消授权成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 批量取消授权按钮操作 */
     cancelAuthUserAll(row) {
       const roleId = this.queryParams.roleId;
       const userIds = this.userIds.join(",");
-      this.$modal.confirm('是否取消选中用户授权数据项？').then(function() {
-        return authUserCancelAll({ roleId: roleId, userIds: userIds });
+      this.$modal.confirm('是否取消选中用户授权数据项？').then(function () {
+        return authUserCancelAll({roleId: roleId, userIds: userIds});
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("取消授权成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     }
   }
 };

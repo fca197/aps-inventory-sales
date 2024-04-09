@@ -1,22 +1,22 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="工厂名称" prop="factoryName">
-        <el-input v-model="queryParams.factoryName" placeholder="请输入工厂名称" clearable
+        <el-input v-model="queryParams.factoryName" clearable placeholder="请输入工厂名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -24,32 +24,32 @@
 
     <el-table v-loading="loading" :data="factoryNameList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList"  :key="index" align="center" :prop="item.columnName"
-                       :label="item.showName"/>
-      <el-table-column align="center" prop="factoryStatus" label="状态">
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName"
+                       align="center"/>
+      <el-table-column align="center" label="状态" prop="factoryStatus">
         <template slot-scope="scope">
           <el-switch :value="scope.row.factoryStatus"
                      active-value="ENABLED"
                      inactive-value="DISABLED"
                      @change="factoryStatusChange(scope.row,$event)"
-                     />
+          />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+    <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total"
                 @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="工厂编码" prop="factoryCode">
@@ -59,13 +59,13 @@
           <el-input v-model="form.factoryName" placeholder="请输入登陆名"/>
         </el-form-item>
         <el-form-item label="工厂状态" prop="factoryName">
-          <el-select  filterable v-model="form.factoryStatus" placeholder="请选择">
+          <el-select v-model="form.factoryStatus" filterable placeholder="请选择">
             <el-option
-              v-for="item in statusOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              selected="item.selected"
+                v-for="item in statusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                selected="item.selected"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -81,15 +81,15 @@
 <script>
 
 
-import {add,updateStatus, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import {add, deleteByIdList, getById, queryPageList, updateById, updateStatus} from '@/api/common'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   data() {
 
     return {
-      statusOptions:[
-        {label:"启用",value:"ENABLED" ,selected:"selected"},
-        {label:"禁用",value:"DISABLED"}
+      statusOptions: [
+        {label: "启用", value: "ENABLED", selected: "selected"},
+        {label: "禁用", value: "DISABLED"}
       ],
       // 遮罩层
       loading: true,
@@ -206,7 +206,7 @@ export default {
     handleUpdate(row) {
       this.reset();
 
-      let req = {idList:[row.id], pageSize: 1, pageNum: 1};
+      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
@@ -248,21 +248,21 @@ export default {
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
     },
-    factoryStatusChange(row,val){
+    factoryStatusChange(row, val) {
 
       this.$confirm(`是否确认${val === 'DISABLED' ? '禁用' : '启用'}工厂？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then( async (va3)=>{
-        updateStatus({id:row.id,status:val}).then(response => {
-          row.factoryStatus=val;
+      }).then(async (va3) => {
+        updateStatus({id: row.id, status: val}).then(response => {
+          row.factoryStatus = val;
           this.$modal.msgSuccess("修改成功");
           this.open = false;
           this.getList();
         });
-      }).catch((status)=>{
-                        row.factoryStatus=val==="DISABLED"?"DISABLED" :"ENABLED";
+      }).catch((status) => {
+        row.factoryStatus = val === "DISABLED" ? "DISABLED" : "ENABLED";
       });
 
     }

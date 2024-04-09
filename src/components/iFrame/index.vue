@@ -1,10 +1,10 @@
 <template>
   <div v-loading="loading" :style="'height:' + height">
     <iframe
-      :src="src"
-      frameborder="no"
-      style="width: 100%; height: 100%"
-      scrolling="auto"
+        :src="src"
+        frameborder="no"
+        scrolling="auto"
+        style="width: 100%; height: 100%"
     />
   </div>
 </template>

@@ -1,43 +1,43 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
 
-      <el-form-item  label="工厂" >
-        <el-select v-model="queryParams.data.factoryId" placeholder="请选择工厂" clearable
-                     @change="handleQuery">
+      <el-form-item label="工厂">
+        <el-select v-model="queryParams.data.factoryId" clearable placeholder="请选择工厂"
+                   @change="handleQuery">
           <el-option
-            v-for="item in factoryList"
-            :key="item.id"
-            :label="item.factoryName"
-            :value="item.id"/>
+              v-for="item in factoryList"
+              :key="item.id"
+              :label="item.factoryName"
+              :value="item.id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="楼层名称" prop="storeyName">
 
 
-        <el-input v-model="queryParams.data.storeyName" placeholder="请输入楼层名称" clearable
+        <el-input v-model="queryParams.data.storeyName" clearable placeholder="请输入楼层名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" title="添加" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" title="添加" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5" title="批量添加">
-        <el-button type="primary" plain size="mini" @click="handleBatchAdd">
+        <el-button plain size="mini" type="primary" @click="handleBatchAdd">
           <svg-icon icon-class="batch-add"></svg-icon>
         </el-button>
       </el-col>
       <el-col :span="1.5" hidden="hidden">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" title="修改" @click="handleUpdate"></el-button>
+        <el-button :disabled="single" icon="el-icon-edit" plain size="mini" title="修改" type="success" @click="handleUpdate"></el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" title="删除" :disabled="multiple" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" title="删除" type="danger" @click="handleDelete">
 
         </el-button>
       </el-col>
@@ -46,29 +46,29 @@
 
     <el-table v-loading="loading" :data="storeyNameList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList"  :key="index" align="center" :prop="item.columnName"
-                       :label="item.showName"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName"
+                       align="center"/>
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openBatchAdd" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="openBatchAdd" append-to-body width="500px">
       <el-form ref="openBatchAddForm" :model="openBatchAddForm" :rules="rules" label-width="100px">
         <el-form-item label="工厂" prop="factoryId">
-          <el-select filterable v-model="openBatchAddForm.factoryId" placeholder="请选择工厂">
+          <el-select v-model="openBatchAddForm.factoryId" filterable placeholder="请选择工厂">
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
           </el-select>
         </el-form-item>
@@ -82,7 +82,7 @@
           <el-input v-model="openBatchAddForm.storeyCode" placeholder="请输入楼层编码"/>
         </el-form-item>
         <el-form-item label="楼层数量" prop="storeyCount">
-          <el-select filterable v-model="openBatchAddForm.storeyCount" placeholder="请输入数量">
+          <el-select v-model="openBatchAddForm.storeyCount" filterable placeholder="请输入数量">
             <el-option v-for="item in 100" :key="item" :label="item" :value="item"/>
           </el-select>
         </el-form-item>
@@ -92,10 +92,10 @@
         <el-button @click="cancelBatchAdd">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="工厂" prop="factoryId">
-          <el-select filterable v-model="form.factoryId" placeholder="请选择工厂">
+          <el-select v-model="form.factoryId" filterable placeholder="请选择工厂">
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
           </el-select>
         </el-form-item>
@@ -106,7 +106,7 @@
           <el-input v-model="form.storeyName" placeholder="请输入登陆名"/>
         </el-form-item>
         <el-form-item label="楼层排序" prop="storeySort">
-          <el-select filterable v-model="form.storeySort" placeholder="请选择">
+          <el-select v-model="form.storeySort" filterable placeholder="请选择">
             <el-option
                 v-for="item in storeySortList"
                 :key="item"
@@ -221,7 +221,7 @@ export default {
   },
   methods: {
     getFactoryList() {
-            return getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+      return getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
         this.factoryList = data.data.dataList;
       });
     },
@@ -328,16 +328,16 @@ export default {
       this.title = "批量添加楼层";
       this.openBatchAdd = true;
     },
-    submitBatchForm(){
+    submitBatchForm() {
       request({
         url: '/storey/addBatch',
         method: 'post',
         data: this.openBatchAddForm
       }).then(res => {
-        if(res.code === 200){
+        if (res.code === 200) {
           this.$modal.msgSuccess("批量添加成功");
           this.openBatchAdd = false;
-        }else {
+        } else {
           this.$modal.msgError("批量添加成功");
           this.openBatchAdd = false;
         }

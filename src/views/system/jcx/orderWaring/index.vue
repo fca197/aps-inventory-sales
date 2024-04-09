@@ -1,22 +1,22 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="文件名称" prop="jcxGoodsWaringName">
-        <el-input v-model="queryParams.jcxGoodsWaringName" placeholder="请输入文件名称" clearable
+        <el-input v-model="queryParams.jcxGoodsWaringName" clearable placeholder="请输入文件名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="goodsInventory">新增预警</el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="goodsInventory">新增预警</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" plain size="mini" @click="createBuyPlan">
+        <el-button plain size="mini" type="primary" @click="createBuyPlan">
           <svg-icon icon-class="buy-car"></svg-icon>
           采购计划
         </el-button>
@@ -26,9 +26,9 @@
 
     <el-table v-loading="loading" :data="jcxGoodsWaringNameList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName"
-                       :label="item.showName"/>
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"
+                       align="center"/>
       <!--      <el-table-column label="完成" align="center" prop="isDone" width="50">-->
       <!--        <template slot-scope="scope">-->
       <!--          <span v-if="scope.row.isDone">是</span>-->
@@ -39,43 +39,43 @@
 
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="getList"
     />
 
-    <el-dialog title="采购计划" :visible.sync="buyPlanVisible" width="900px" append-to-body>
+    <el-dialog :visible.sync="buyPlanVisible" append-to-body title="采购计划" width="900px">
       <el-form ref="form" :model="buyPlanVisibleForm" :rules="rules" label-width="100px">
         <el-form-item label="计划名称" prop="planName">
           <el-col :span="7">
-            <el-input v-model="buyPlanVisibleForm.planName" width="100px" placeholder="请输入计划名称"/>
+            <el-input v-model="buyPlanVisibleForm.planName" placeholder="请输入计划名称" width="100px"/>
           </el-col>
-          <el-col :span="3" :offset="8">
-            <el-input v-model="buyPlanVisibleForm.batchCount" width="100px" placeholder=""  type="number"/>
+          <el-col :offset="8" :span="3">
+            <el-input v-model="buyPlanVisibleForm.batchCount" placeholder="" type="number" width="100px"/>
           </el-col>
           <el-col :span="6">
-            <el-button type="warning" size="medium" @click="batchUpdateBuyCount">
+            <el-button size="medium" type="warning" @click="batchUpdateBuyCount">
               <svg-icon icon-class="brush"/>
             </el-button>
           </el-col>
         </el-form-item>
       </el-form>
       <el-table :data="buyPlanVisibleForm.jcxBuyPlanItemDtoList">
-        <el-table-column label="商品名称" align="center" prop="goodsName"/>
-        <el-table-column label="成本价" align="center" prop="costPrice"/>
-        <el-table-column label="销售价" align="center" prop="salesPrice"/>
-        <el-table-column label="剩余库存" align="center" prop="goodsInventoryCount"/>
-        <el-table-column label="毛利" align="center" prop="goodsGrossProfit"/>
-        <el-table-column label="净利" align="center" prop="goodsNetProfit"/>
-        <el-table-column label="购买数" align="center" width="100px">
+        <el-table-column align="center" label="商品名称" prop="goodsName"/>
+        <el-table-column align="center" label="成本价" prop="costPrice"/>
+        <el-table-column align="center" label="销售价" prop="salesPrice"/>
+        <el-table-column align="center" label="剩余库存" prop="goodsInventoryCount"/>
+        <el-table-column align="center" label="毛利" prop="goodsGrossProfit"/>
+        <el-table-column align="center" label="净利" prop="goodsNetProfit"/>
+        <el-table-column align="center" label="购买数" width="100px">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.goodsBuyCount" :min="1" @change="value => updateBuyCount(scope.row,value)" type="number"/>
+            <el-input v-model="scope.row.goodsBuyCount" :min="1" type="number" @change="value => updateBuyCount(scope.row,value)"/>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="100px">
+        <el-table-column align="center" label="操作" width="100px">
           <template slot-scope="scope">
-            <el-button type="danger" plain icon="el-icon-delete" size="mini" @click="deleteGoods(scope.$index,scope.row)"></el-button>
+            <el-button icon="el-icon-delete" plain size="mini" type="danger" @click="deleteGoods(scope.$index,scope.row)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -83,15 +83,15 @@
       <div style="text-align: right;margin-top: 20px">
         <el-col :offset="14" :span="10"> 选择添加的商品:
 
-          <el-select filterable placeholder="请选择商品" @change="addGoods" width="100%" :filter-method="value=>{changeGoods(value)}" v-model="buyPlanVisibleFormGoodsId">
-            <el-option v-for="(it,index) in jcxGoodsWaringToSelectList" :label="it.goodsName" :value="it.id" :key="index"></el-option>
+          <el-select v-model="buyPlanVisibleFormGoodsId" :filter-method="value=>{changeGoods(value)}" filterable placeholder="请选择商品" width="100%" @change="addGoods">
+            <el-option v-for="(it,index) in jcxGoodsWaringToSelectList" :key="index" :label="it.goodsName" :value="it.id"></el-option>
           </el-select>
         </el-col>
       </div>
       <div class="header-title">
         <el-col :span="9">款项预览<span style="color: #aaa ;font-size: 13px">(成本*数量)</span></el-col>
       </div>
-      <table class="default-table" cellspacing="0" cellpadding="0">
+      <table cellpadding="0" cellspacing="0" class="default-table">
         <tr class="thead">
           <td>采购总计</td>
           <td>出售价格</td>

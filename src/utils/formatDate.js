@@ -13,11 +13,12 @@ export function formatDate(val) {
 }
 
 //方法二
-export function formatDates(date ,b) {
+export function formatDates(date, b) {
   var s = date.getFullYear() + '-' + padLeftZero(date.getMonth() + 1) + '-'
       + padLeftZero(date.getDate()) + ' ' + padLeftZero(date.getHours()) + ':'
       + padLeftZero(date.getMinutes()) + ':' + padLeftZero(date.getSeconds());
-  return (b===true)?s.replaceAll("-","").replaceAll(" ","").replaceAll(":",""):s;
+  return (b === true) ? s.replaceAll("-", "").replaceAll(" ", "").replaceAll(
+      ":", "") : s;
 }
 
 export function padLeftZero(str) {

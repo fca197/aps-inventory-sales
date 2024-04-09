@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="工厂">
-        <el-select v-model="queryParams.data.factoryId" placeholder="请选择工厂" clearable>
+        <el-select v-model="queryParams.data.factoryId" clearable placeholder="请选择工厂">
           <el-option
               v-for="item in factoryList"
               :key="item.id"
@@ -13,21 +13,21 @@
 
 
       <el-form-item label="盘点名称" prop="reportName">
-        <el-input v-model="queryParams.data.reportName" placeholder="请输入盘点名称" clearable
+        <el-input v-model="queryParams.data.reportName" clearable placeholder="请输入盘点名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="handleQuery"></right-toolbar>
@@ -35,17 +35,17 @@
 
 
     <el-table v-loading="loading" :data="checkList" @selection-change="handleSelectionChange">
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.fieldName"
-                       :label="item.showName"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"
+                       align="center"/>
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-s-data" title="查看统计" @click="handleQueryData(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" title="修改" @click="handleUpdate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" title="删除" @click="handleDelete(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-circle-close" title="关闭盘点" @click="handleOverReport(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-refresh-right" title="打开盘点" @click="handleOpenReport(scope.row)"></el-button>
-          <el-button size="mini" type="text"   title="生成快照"  @click="handleCreateSnapshot(scope.row)">
+          <el-button icon="el-icon-s-data" size="mini" title="查看统计" type="text" @click="handleQueryData(scope.row)"></el-button>
+          <el-button icon="el-icon-edit" size="mini" title="修改" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" size="mini" title="删除" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-circle-close" size="mini" title="关闭盘点" type="text" @click="handleOverReport(scope.row)"></el-button>
+          <el-button icon="el-icon-refresh-right" size="mini" title="打开盘点" type="text" @click="handleOpenReport(scope.row)"></el-button>
+          <el-button size="mini" title="生成快照" type="text" @click="handleCreateSnapshot(scope.row)">
             <svg-icon icon-class="snapshot"></svg-icon>
           </el-button>
         </template>
@@ -53,66 +53,66 @@
     </el-table>
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="handleQuery"
     />
 
-    <el-dialog title="盘点详情" :visible.sync="checkReportListRoomOpen" width="800px" append-to-body>
+    <el-dialog :visible.sync="checkReportListRoomOpen" append-to-body title="盘点详情" width="800px">
 
       <el-table v-loading="loading" :data="checkReportListRoomData" max-height="650">
-        <el-table-column prop="propertyName" label="资产" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="isCheck" label="盘点" :show-overflow-tooltip="true">
+        <el-table-column :show-overflow-tooltip="true" label="资产" prop="propertyName"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" label="盘点" prop="isCheck">
           <template slot-scope="scope">
-            <el-button type="success" circle v-if="scope.row.isCheck"></el-button>
-            <el-button type="danger" circle v-else></el-button>
+            <el-button v-if="scope.row.isCheck" circle type="success"></el-button>
+            <el-button v-else circle type="danger"></el-button>
           </template>
         </el-table-column>
 
-        <el-table-column label="盘点时间" prop="checkDate" :show-overflow-tooltip="true">
+        <el-table-column :show-overflow-tooltip="true" label="盘点时间" prop="checkDate">
         </el-table-column>
-        <el-table-column label="在用" :show-overflow-tooltip="true" :render-header="render2InUse">
+        <el-table-column :render-header="render2InUse" :show-overflow-tooltip="true" label="在用">
           <template slot-scope="scope">
             <el-select v-model="scope.row.inUse" @change="value=>{propertyChangeInUse(scope.row,value)}">
-              <el-option label="是" :value="true"></el-option>
-              <el-option label="否" :value="false"></el-option>
+              <el-option :value="true" label="是"></el-option>
+              <el-option :value="false" label="否"></el-option>
             </el-select>
           </template>
         </el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog title="报表" :visible.sync="handleQueryDataOpen" width="800px" append-to-body>
+    <el-dialog :visible.sync="handleQueryDataOpen" append-to-body title="报表" width="800px">
       <el-table v-loading="loading" :data="handleQueryDataList">
-        <el-table-column prop="storeyName" label="楼层" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="roomName" label="房间" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="checkCount" label="盘点数据" :show-overflow-tooltip="true">
+        <el-table-column :show-overflow-tooltip="true" label="楼层" prop="storeyName"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" label="房间" prop="roomName"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" label="盘点数据" prop="checkCount">
           <template slot-scope="scope">
             {{ scope.row.checkCount }}/{{ scope.row.allCount }}
           </template>
         </el-table-column>
-        <el-table-column prop="result" label="盘点结果" :show-overflow-tooltip="true">
+        <el-table-column :show-overflow-tooltip="true" label="盘点结果" prop="result">
           <template slot-scope="scope">
-            <el-button type="success" circle v-if="scope.row.checkCount === scope.row.allCount"></el-button>
-            <el-button type="danger" circle v-else></el-button>
+            <el-button v-if="scope.row.checkCount === scope.row.allCount" circle type="success"></el-button>
+            <el-button v-else circle type="danger"></el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" :show-overflow-tooltip="true">
+        <el-table-column :show-overflow-tooltip="true" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" icon="el-icon-s-data" @click="handleQueryInfoRoomData()"></el-button>
+            <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleQueryInfoRoomData()"></el-button>
           </template>
         </el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" plain icon="el-icon-download" @click="handleDownLoad()">下载</el-button>
-        <el-button plain icon="el-icon-close" @click="cancel">取 消</el-button>
+        <el-button icon="el-icon-download" plain type="primary" @click="handleDownLoad()">下载</el-button>
+        <el-button icon="el-icon-close" plain @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" label-width="100px">
 
         <el-form-item label="工厂" prop="factoryId">
-          <el-select filterable v-model="form.factoryId" placeholder="请选择工厂">
+          <el-select v-model="form.factoryId" filterable placeholder="请选择工厂">
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
           </el-select>
         </el-form-item>
@@ -125,8 +125,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" v-if="form.id===undefined" @click="submitForm">确 定</el-button>
-        <el-button type="primary" v-else @click="updateForm">确 定</el-button>
+        <el-button v-if="form.id===undefined" type="primary" @click="submitForm">确 定</el-button>
+        <el-button v-else type="primary" @click="updateForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -134,7 +134,7 @@
 </template>
 <script>
 import {handleOpenReport, handleOverReport, updateInUse} from '@/api/property'
-import {checkReportListFactory, checkReportListRoom,downloadReportList} from '@/api/check'
+import {checkReportListFactory, checkReportListRoom, downloadReportList} from '@/api/check'
 import {getFactoryList} from '@/api/factory'
 import {add, checkCompare, checkCompareDesc, deleteByIdList, queryPageList, updateById} from '@/api/common'
 
@@ -161,7 +161,7 @@ export default {
         pageNum: 1,
       },
       open: false,
-      checkId:undefined,
+      checkId: undefined,
       handleQueryDataOpen: false,
       checkReportListRoomOpen: false,
       checkReportListRoomData: [{isCheck: false}],
@@ -250,7 +250,7 @@ export default {
     },
     handleQueryData(row) {
       this.handleQueryDataOpen = true;
-      this.checkId=row.id;
+      this.checkId = row.id;
       checkReportListFactory({checkId: row.id}).then(t => {
         this.handleQueryDataList = t.data.dataList;
         this.handleQueryDataList.forEach(t => t.unCheckCount = t.allCount - t.checkCount)
@@ -292,9 +292,9 @@ export default {
             [
               h("span", {
                 style: {
-                width: "5px",
+                  width: "5px",
                 },
-              },"改为否时不记录该资产"),
+              }, "改为否时不记录该资产"),
 
               h("i", {                            // 生成 i 标签 ，添加icon 设置 样式，slot 必填
                 class: "el-icon-question",
@@ -305,10 +305,10 @@ export default {
       ])
 
     },
-    handleDownLoad(){
+    handleDownLoad() {
       downloadReportList({id: this.checkId})
     },
-    handleCreateSnapshot(row){
+    handleCreateSnapshot(row) {
       this.$message.warning("功能开发中");
     }
   }

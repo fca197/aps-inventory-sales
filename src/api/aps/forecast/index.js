@@ -29,11 +29,12 @@ export function computeResult(data) {
   });
 }
 
-
-export  function  forecastDeploy(data){
+export function forecastDeploy(data) {
   return request({
     url: '/apsGoodsForecast/deploy',
     method: 'post',
     data
-  }).then(res => {Message.success("发布成功")});
+  }).then(res => {
+    Message.success("发布成功")
+  });
 }

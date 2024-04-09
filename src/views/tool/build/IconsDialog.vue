@@ -1,32 +1,32 @@
 <template>
   <div class="icon-dialog">
     <el-dialog
-      v-bind="$attrs"
-      width="980px"
-      :modal-append-to-body="false"
-      v-on="$listeners"
-      @open="onOpen"
-      @close="onClose"
+        :modal-append-to-body="false"
+        v-bind="$attrs"
+        width="980px"
+        @close="onClose"
+        @open="onOpen"
+        v-on="$listeners"
     >
       <div slot="title">
         选择图标
         <el-input
-          v-model="key"
-          size="mini"
-          :style="{width: '260px'}"
-          placeholder="请输入图标名称"
-          prefix-icon="el-icon-search"
-          clearable
+            v-model="key"
+            :style="{width: '260px'}"
+            clearable
+            placeholder="请输入图标名称"
+            prefix-icon="el-icon-search"
+            size="mini"
         />
       </div>
       <ul class="icon-ul">
         <li
-          v-for="icon in iconList"
-          :key="icon"
-          :class="active===icon?'active-item':''"
-          @click="onSelect(icon)"
+            v-for="icon in iconList"
+            :key="icon"
+            :class="active===icon?'active-item':''"
+            @click="onSelect(icon)"
         >
-          <i :class="icon" />
+          <i :class="icon"/>
           <div>{{ icon }}</div>
         </li>
       </ul>
@@ -62,7 +62,8 @@ export default {
       this.active = this.current
       this.key = ''
     },
-    onClose() {},
+    onClose() {
+    },
     onSelect(icon) {
       this.active = icon
       this.$emit('select', icon)
@@ -76,6 +77,7 @@ export default {
   margin: 0;
   padding: 0;
   font-size: 0;
+
   li {
     list-style-type: none;
     text-align: center;
@@ -87,19 +89,23 @@ export default {
     padding: 15px 6px 6px 6px;
     cursor: pointer;
     overflow: hidden;
+
     &:hover {
       background: #f2f2f2;
     }
-    &.active-item{
+
+    &.active-item {
       background: #e1f3fb;
       color: #7a6df0
     }
+
     > i {
       font-size: 30px;
       line-height: 50px;
     }
   }
 }
+
 .icon-dialog {
   ::v-deep .el-dialog {
     border-radius: 8px;
@@ -110,9 +116,11 @@ export default {
     max-height: 92vh;
     overflow: hidden;
     box-sizing: border-box;
+
     .el-dialog__header {
       padding-top: 14px;
     }
+
     .el-dialog__body {
       margin: 0 20px 20px 20px;
       padding: 0;

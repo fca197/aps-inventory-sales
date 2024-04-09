@@ -1,4 +1,4 @@
-Math.easeInOutQuad = function(t, b, c, d) {
+Math.easeInOutQuad = function (t, b, c, d) {
   t /= d / 2
   if (t < 1) {
     return c / 2 * t * t + b
@@ -8,8 +8,11 @@ Math.easeInOutQuad = function(t, b, c, d) {
 }
 
 // requestAnimationFrame for Smart Animating http://goo.gl/sx5sts
-var requestAnimFrame = (function() {
-  return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) { window.setTimeout(callback, 1000 / 60) }
+var requestAnimFrame = (function () {
+  return window.requestAnimationFrame || window.webkitRequestAnimationFrame
+      || window.mozRequestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000 / 60)
+      }
 })()
 
 /**
@@ -23,7 +26,8 @@ function move(amount) {
 }
 
 function position() {
-  return document.documentElement.scrollTop || document.body.parentNode.scrollTop || document.body.scrollTop
+  return document.documentElement.scrollTop
+      || document.body.parentNode.scrollTop || document.body.scrollTop
 }
 
 /**
@@ -37,7 +41,7 @@ export function scrollTo(to, duration, callback) {
   const increment = 20
   let currentTime = 0
   duration = (typeof (duration) === 'undefined') ? 500 : duration
-  var animateScroll = function() {
+  var animateScroll = function () {
     // increment the time
     currentTime += increment
     // find the value with the quadratic in-out easing function

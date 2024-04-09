@@ -1,12 +1,12 @@
 import request from "@/utils/request";
 
-export  function  getOrderStatus(){
+export function getOrderStatus() {
 
   return request({
     url: '/jcx/order/orderStatus',
     method: 'post',
-    data:{}
-  }).then((res)=>{
+    data: {}
+  }).then((res) => {
     return res.data.orderStatusName;
   })
 }

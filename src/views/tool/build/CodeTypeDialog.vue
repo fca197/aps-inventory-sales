@@ -1,37 +1,37 @@
 <template>
   <div>
     <el-dialog
-      v-bind="$attrs"
-      width="500px"
-      :close-on-click-modal="false"
-      :modal-append-to-body="false"
-      v-on="$listeners"
-      @open="onOpen"
-      @close="onClose"
+        :close-on-click-modal="false"
+        :modal-append-to-body="false"
+        v-bind="$attrs"
+        width="500px"
+        @close="onClose"
+        @open="onOpen"
+        v-on="$listeners"
     >
       <el-row :gutter="15">
         <el-form
-          ref="elForm"
-          :model="formData"
-          :rules="rules"
-          size="medium"
-          label-width="100px"
+            ref="elForm"
+            :model="formData"
+            :rules="rules"
+            label-width="100px"
+            size="medium"
         >
           <el-col :span="24">
             <el-form-item label="生成类型" prop="type">
               <el-radio-group v-model="formData.type">
                 <el-radio-button
-                  v-for="(item, index) in typeOptions"
-                  :key="index"
-                  :label="item.value"
-                  :disabled="item.disabled"
+                    v-for="(item, index) in typeOptions"
+                    :key="index"
+                    :disabled="item.disabled"
+                    :label="item.value"
                 >
                   {{ item.label }}
                 </el-radio-button>
               </el-radio-group>
             </el-form-item>
             <el-form-item v-if="showFileName" label="文件名" prop="fileName">
-              <el-input v-model="formData.fileName" placeholder="请输入文件名" clearable />
+              <el-input v-model="formData.fileName" clearable placeholder="请输入文件名"/>
             </el-form-item>
           </el-col>
         </el-form>
@@ -79,10 +79,10 @@ export default {
       }]
     }
   },
-  computed: {
-  },
+  computed: {},
   watch: {},
-  mounted() {},
+  mounted() {
+  },
   methods: {
     onOpen() {
       if (this.showFileName) {
@@ -96,8 +96,10 @@ export default {
     },
     handleConfirm() {
       this.$refs.elForm.validate(valid => {
-        if (!valid) return
-        this.$emit('confirm', { ...this.formData })
+        if (!valid) {
+          return
+        }
+        this.$emit('confirm', {...this.formData})
         this.close()
       })
     }

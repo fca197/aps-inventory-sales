@@ -8,7 +8,7 @@ export function listNotice(query) {
   //   params: query
   // })
 
-  return Promise.resolve({data:[]});
+  return Promise.resolve({data: []});
 }
 
 // 查询公告详细

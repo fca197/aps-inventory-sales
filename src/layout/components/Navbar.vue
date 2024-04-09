@@ -2,8 +2,8 @@
   <div class="navbar">
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar"/>
 
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
-    <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
+    <breadcrumb v-if="!topNav" id="breadcrumb-container" class="breadcrumb-container"/>
+    <top-nav v-if="topNav" id="topmenu-container" class="topmenu-container"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'" hidden="hidden">
@@ -12,7 +12,7 @@
         <el-button class="right-menu-item hover-effect" type="text">
           <span @click="showMsgDrawerShow">
             <i class="el-icon-bell" title="消息中心"/>
-            <span class=" msg-count-tips" v-if="messageCount>0">{{ messageCount }}</span>
+            <span v-if="messageCount>0" class=" msg-count-tips">{{ messageCount }}</span>
           </span>
         </el-button>
         <search id="header-search" class="right-menu-item"/>
@@ -24,7 +24,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" :title="userName">
+          <img :src="avatar" :title="userName" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -40,8 +40,8 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-drawer title="消息中心" :key="toStr(messageList)" :visible.sync="showDrawerMsg" direction="rtl">
-      <user-message :now-time="nowTime"  :query-un-read-count-fun="queryUnReadCountFun"></user-message>
+    <el-drawer :key="toStr(messageList)" :visible.sync="showDrawerMsg" direction="rtl" title="消息中心">
+      <user-message :now-time="nowTime" :query-un-read-count-fun="queryUnReadCountFun"></user-message>
     </el-drawer>
   </div>
 </template>
@@ -54,7 +54,7 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import {messageMaskRead, msgMessageReadQueryPageList, queryUnReadCount} from "@/api/message";
+import {queryUnReadCount} from "@/api/message";
 import DynamicTable from "@/components/DynamicTable/index.vue";
 import {toString} from "@/api/common";
 import UserMessage from "@/layout/components/UserMessage.vue";
@@ -62,7 +62,7 @@ import UserMessage from "@/layout/components/UserMessage.vue";
 export default {
   data() {
     return {
-      nowTime:"123",
+      nowTime: "123",
       visible: false,
       messageList: [],
       messageListTotal: 0,
@@ -114,9 +114,9 @@ export default {
   updated() {
   },
   methods: {
-    showMsgDrawerShow(){
-      this.showDrawerMsg=true
-      this.nowTime='a--'+new Date().getTime()
+    showMsgDrawerShow() {
+      this.showDrawerMsg = true
+      this.nowTime = 'a--' + new Date().getTime()
     },
     toStr() {
       return toString(this.messageList)

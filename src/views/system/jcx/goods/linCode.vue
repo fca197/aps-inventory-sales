@@ -1,5 +1,5 @@
 <template>
-  <div class="line-code-div" :id="'lineCode_parent_'+this.code">
+  <div :id="'lineCode_parent_'+this.code" class="line-code-div">
     <img :id="'lineCode_'+this.code" :alt="this.title" src=""/>
     <br/>
     <div> {{ title }}</div>
@@ -41,19 +41,21 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .line-code-div {
   width: 250px;
   display: inline-block;
   border-right: #eee 1px solid;
-  border-bottom : #eee 1px solid;
+  border-bottom: #eee 1px solid;
   margin: 0 10px 15px 0;
   text-align: center;
 }
+
 .line-code-div:after {
   content: "";
-  margin: 0  20px;
+  margin: 0 20px;
 }
+
 .line-code-div > img {
   padding: 10px 20px 10px;
 }

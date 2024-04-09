@@ -1,8 +1,8 @@
 <template>
   <div>
-    <img class="errorImgDiv" :src="data" v-if="data&&data.length>0" :width="width" :height="height" @click="showImg"/>
-    <div  style="border: #ccc 1px  solid" class="errorImgDiv" v-else></div>
-    <image-zoom :is-show=" this.zoomIsShow" :img-data-props="data" :id="id"/>
+    <img v-if="data&&data.length>0" :height="height" :src="data" :width="width" class="errorImgDiv" @click="showImg"/>
+    <div v-else class="errorImgDiv" style="border: #ccc 1px  solid"></div>
+    <image-zoom :id="id" :img-data-props="data" :is-show=" this.zoomIsShow"/>
   </div>
 </template>
 
@@ -35,8 +35,8 @@ export default {
     };
   },
   mounted() {
-    this.$el.style.setProperty("--main-height", this.height+"px")
-    this.$el.style.setProperty("--main-width", this.width+"px")
+    this.$el.style.setProperty("--main-height", this.height + "px")
+    this.$el.style.setProperty("--main-width", this.width + "px")
   },
   created() {
     this.getFileBase64();

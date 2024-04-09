@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="工厂">
-        <el-select v-model="queryParams.data.factoryId" placeholder="请选择工厂" clearable @change="changeFactory">
+        <el-select v-model="queryParams.data.factoryId" clearable placeholder="请选择工厂" @change="changeFactory">
           <el-option
               v-for="item in factoryList"
               :key="item.id"
@@ -12,7 +12,7 @@
       </el-form-item>
 
       <el-form-item label="楼层">
-        <el-select v-model="queryParams.data.storeyId" placeholder="请选择楼层" clearable
+        <el-select v-model="queryParams.data.storeyId" clearable placeholder="请选择楼层"
                    @change="changeStorey">
           <el-option
               v-for="item in storeyList"
@@ -22,7 +22,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="房间">
-        <el-select v-model="queryParams.data.roomId" placeholder="请选择房间" clearable>
+        <el-select v-model="queryParams.data.roomId" clearable placeholder="请选择房间">
           <el-option
               v-for="item in roomList"
               :key="item.id"
@@ -31,21 +31,21 @@
         </el-select>
       </el-form-item>
       <el-form-item label="资产名称" prop="propertyName">
-        <el-input v-model="queryParams.data.propertyName" placeholder="请输入资产名称" clearable
+        <el-input v-model="queryParams.data.propertyName" clearable placeholder="请输入资产名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -54,25 +54,25 @@
 
     <el-table v-loading="loading" :data="checkList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList"  :key="index" align="center" :prop="item.fieldName"
-                       :label="item.showName"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"
+                       align="center"/>
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="getList"
     />
 
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
     </el-dialog>
   </div>
 </template>
@@ -107,8 +107,8 @@ export default {
       queryParams: {
         data: {
           factoryId: undefined,
-          roomId:undefined,
-          storeyId:undefined
+          roomId: undefined,
+          storeyId: undefined
         }
       }
     }

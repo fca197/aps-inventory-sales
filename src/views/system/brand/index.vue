@@ -1,26 +1,26 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="文件名称" prop="brandName">
-        <el-input v-model="queryParams.brandName" placeholder="请输入文件名称" clearable
+        <el-input v-model="queryParams.brandName" clearable placeholder="请输入文件名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd">新增</el-button>
       </el-col>
       <el-col :span="1.5" hidden="hidden">
-        <el-button type="success" plain icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改
+        <el-button :disabled="single" icon="el-icon-edit" plain size="mini" type="success" @click="handleUpdate">修改
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
           删除
         </el-button>
       </el-col>
@@ -29,33 +29,33 @@
 
     <el-table v-loading="loading" :data="brandNameList" @selection-change="handleSelectionChange">
 
-      <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :prop="item.columnName"
-                       :label="item.showName"/>
-      <el-table-column label="在用"  align="center" prop="isUsed" width="50">
+      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName"
+                       align="center"/>
+      <el-table-column align="center" label="在用" prop="isUsed" width="50">
         <template slot-scope="scope">
-           <span v-if="scope.row.isUsed===true">是</span>
-           <span v-else>否</span>
+          <span v-if="scope.row.isUsed===true">是</span>
+          <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"></el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
         v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
         @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
 
@@ -66,9 +66,9 @@
           <el-input v-model="form.brandName" placeholder="请输入登陆名"/>
         </el-form-item>
         <el-form-item label="状态" prop="inUsed">
-          <el-select filterable v-model="form.isUsed">
-            <el-option  label="否"  :value="false"></el-option>
-            <el-option  label="是" :value="true"></el-option>
+          <el-select v-model="form.isUsed" filterable>
+            <el-option :value="false" label="否"></el-option>
+            <el-option :value="true" label="是"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -139,7 +139,7 @@ export default {
       tableHeaderList: [{
         columnName: "id",
         showName: "序号"
-      },   {
+      }, {
         columnName: "brandCode",
         showName: "文件编码"
       }, {

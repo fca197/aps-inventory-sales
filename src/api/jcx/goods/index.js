@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 
-export  function  getFoodsList(data){
+export function getFoodsList(data) {
   return request({
     url: '/jcx/goods/queryPageList',
     method: 'post',

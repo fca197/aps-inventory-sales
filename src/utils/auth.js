@@ -17,6 +17,7 @@ export function removeToken() {
 export function getTenantId() {
   return Cookies.get('tenantId')
 }
-export  function setTenantId(tenantId) {
+
+export function setTenantId(tenantId) {
   return Cookies.set('tenantId', tenantId)
 }

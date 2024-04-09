@@ -2,19 +2,18 @@
   <div class="app-container">
 
 
-    <el-form  ref="queryForm" size="small" :inline="true"  label-width="100px">
-      <el-form-item label="请选择商品" prop="goodsId" >
+    <el-form ref="queryForm" :inline="true" label-width="100px" size="small">
+      <el-form-item label="请选择商品" prop="goodsId">
         <el-select v-model="form.goodsId">
-          <el-option v-for="item in goodsList" :label="item.goodsName" :value="item.id" :key="item.id"></el-option>
+          <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <right-toolbar  export-table="dataTable" export-table-file-name="商品销售配置"  :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="商品销售配置" @queryTable="getList"></right-toolbar>
 
     </el-form>
 
 
-
-    <el-table :default-expand-all="true" id="dataTable" :data="apsSaleConfigList" stripe row-key="id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+    <el-table id="dataTable" :data="apsSaleConfigList" :default-expand-all="true" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" stripe>
       <!--      <el-table-column label="全选" type="selection" prop="id"/>-->
       <el-table-column label="组编码" prop="saleCode">
         <template slot-scope="scope">
@@ -171,6 +170,6 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

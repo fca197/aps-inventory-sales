@@ -1,12 +1,12 @@
 <template>
 
-  <div style="text-align: -webkit-center" class="page-scan-div ">
-    <table width="100%" style="margin: 20px 0px">
+  <div class="page-scan-div " style="text-align: -webkit-center">
+    <table style="margin: 20px 0px" width="100%">
       <tbody>
       <tr>
-        <td width="40%" style="text-align: right"> 盘点版本</td>
+        <td style="text-align: right" width="40%"> 盘点版本</td>
         <td width="50%">
-          <el-select v-model="form.checkId" placeholder="请选择" clearable>
+          <el-select v-model="form.checkId" clearable placeholder="请选择">
             <el-option
                 v-for="item in reportList"
                 :key="item.id"

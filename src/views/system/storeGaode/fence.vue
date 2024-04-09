@@ -6,11 +6,11 @@
       <div class="m-4">
         <p> 功能点：</p>
 
-          <el-button type="info" icon="el-icon-circle-plus-outline" @click="drawRectangle">绘制围栏</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click="editRectangle">编辑围栏</el-button>
-          <el-button type="warning" icon="el-icon-delete" @click="cancelRectangle">取消编辑</el-button>
-          <el-button type="success" icon="el-icon-success" @click="saveRectangle">保存围栏</el-button>
-          <el-button type="danger" icon="el-icon-delete" @click="deleRectangle">删除围栏</el-button>
+        <el-button icon="el-icon-circle-plus-outline" type="info" @click="drawRectangle">绘制围栏</el-button>
+        <el-button icon="el-icon-edit" type="primary" @click="editRectangle">编辑围栏</el-button>
+        <el-button icon="el-icon-delete" type="warning" @click="cancelRectangle">取消编辑</el-button>
+        <el-button icon="el-icon-success" type="success" @click="saveRectangle">保存围栏</el-button>
+        <el-button icon="el-icon-delete" type="danger" @click="deleRectangle">删除围栏</el-button>
 
       </div>
     </div>
@@ -23,32 +23,32 @@
   top: 5px;
   right: 60px;
 
-.el-select-dropdown {
-  border: none;
-  background-color: rgba(1, 28, 82, 0.8);
-}
+  .el-select-dropdown {
+    border: none;
+    background-color: rgba(1, 28, 82, 0.8);
+  }
 
-.el-input__inner {
-  color: #eee;
-  border-color: #00fff6;
-  background-color: rgba(1, 28, 82, 0.8);
-}
+  .el-input__inner {
+    color: #eee;
+    border-color: #00fff6;
+    background-color: rgba(1, 28, 82, 0.8);
+  }
 
-.el-select .el-input.is-focus .el-input__inner {
-  border-color: #0B61AA;
-  background-color: rgba(1, 28, 82, 0.8);
-  color: #00D3E9;
-}
+  .el-select .el-input.is-focus .el-input__inner {
+    border-color: #0B61AA;
+    background-color: rgba(1, 28, 82, 0.8);
+    color: #00D3E9;
+  }
 
-.el-select-dropdown__item {
-  color: #eee;
-}
+  .el-select-dropdown__item {
+    color: #eee;
+  }
 
-.el-select-dropdown__item.hover,
-.el-select-dropdown__item:hover {
-  color: #00D3E9;
-  background-color: #0F3360;
-}
+  .el-select-dropdown__item.hover,
+  .el-select-dropdown__item:hover {
+    color: #00D3E9;
+    background-color: #0F3360;
+  }
 
 }
 
@@ -98,7 +98,8 @@ export default {
       // "key": process.env.VUE_APP_GAODE_KEY,              // 申请好的Web端开发者Key，首次调用 load 时必填
       "key": '524d016884fc1e717a7083da9fc88961',              // 申请好的Web端开发者Key，首次调用 load 时必填
       "version": "2.0",   // 指定要加载的 JS API 的版本，缺省时默认为 1.4.15
-      "plugins": ['AMap.Scale','AMap.ContextMenu', 'AMap.PolyEditor','AMap.Scale', 'AMap.ToolBar', 'AMap.MouseTool', 'AMap.Driving', 'AMap.DistrictSearch', 'AMap.MarkerClusterer', 'AMap.InfoWindow'],           // 需要使用的的插件列表，如比例尺'AMap.Scale'
+      "plugins": ['AMap.Scale', 'AMap.ContextMenu', 'AMap.PolyEditor', 'AMap.Scale', 'AMap.ToolBar', 'AMap.MouseTool', 'AMap.Driving', 'AMap.DistrictSearch',
+        'AMap.MarkerClusterer', 'AMap.InfoWindow'],           // 需要使用的的插件列表，如比例尺'AMap.Scale'
     }).then((AMap) => {
       // 添加工具栏
 
@@ -206,24 +207,36 @@ export default {
     },
     // 取消编辑状态
     cancelRectangle() {
-      this.polyEditors.forEach(item => { item.close(); });//新增
-      this.polyEditorsBefore.forEach(item => { item.close(); });//历史
+      this.polyEditors.forEach(item => {
+        item.close();
+      });//新增
+      this.polyEditorsBefore.forEach(item => {
+        item.close();
+      });//历史
     },
     //保存围栏
     saveRectangle() {
       // 取消编辑状态
-      this.polyEditors.forEach(item => { item.close(); });
-      this.polyEditorsBefore.forEach(item => { item.close(); });
-     console.log(this.paths,this.path) //;;=>成功（重新刷新页面）
-    //...
+      this.polyEditors.forEach(item => {
+        item.close();
+      });
+      this.polyEditorsBefore.forEach(item => {
+        item.close();
+      });
+      console.log(this.paths, this.path) //;;=>成功（重新刷新页面）
+      //...
     },
     // 删除围栏
     deleRectangle() {
-      this.polyEditors.forEach(item => { item.close(); });// 取消编辑状态
-      this.polyEditorsBefore.forEach(item => { item.close(); });// 取消编辑状态
+      this.polyEditors.forEach(item => {
+        item.close();
+      });// 取消编辑状态
+      this.polyEditorsBefore.forEach(item => {
+        item.close();
+      });// 取消编辑状态
       this.map.clearMap(); // 删除地图所有覆盖物
       //删除=>成功（重新刷新页面）
-    //...
+      //...
     },
     //获取后台数据
     init() {
@@ -233,13 +246,13 @@ export default {
         pageNum: this.formData.pageNum,//string false 当前页数
         pageSize: this.formData.pageSize,//string false 每页条数
       }
-      geofenceList({ param }).then(res => {
+      geofenceList({param}).then(res => {
         if (res.data.code == 0) {
-          if (res.data.data.list.length==0) {
+          if (res.data.data.list.length == 0) {
             this.$message.error('没有围栏数据')
             return
           }
-          that.path=[]
+          that.path = []
           that.map.clearMap(); // 删除地图所有覆盖物
           res.data.data.list.forEach((item, index) => { //同时展示多个围栏
             that.path.push(item.points)//编辑时，可以一起编辑
