@@ -50,7 +50,7 @@
           <div slot="header" class="clearfix">
             <span>基本资料</span>
           </div>
-          <el-tabs v-model="activeTab">
+          <el-tabs v-model="activeTab"  type="border-card">
             <el-tab-pane label="基本资料" name="userinfo">
               <userInfo :user="user"/>
             </el-tab-pane>

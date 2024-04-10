@@ -49,6 +49,7 @@ import DictData from '@/components/DictData'
 import JsBarcode from "@/components/JsBarcode/index.vue";
 import {formatDates} from "@/utils/formatDate";
 // import htmlTableToExcel from 'html-table-to-excel';
+import watermark from 'watermark-dom'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts

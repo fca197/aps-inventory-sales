@@ -65,7 +65,7 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" append-to-body width="600px">
       <el-form :model="form" :rules="rules" Guz="form" label-width="100px">
-        <el-tabs style="height: 450px;" tab-position="left">
+        <el-tabs style="height: 450px;" tab-position="left"  type="border-card">
           <el-tab-pane label="基本信息">
             <el-form-item label="商图片" prop="file">
               <image-upload v-model="form.goodsImg" :file-size="5" :is-show-tip="false" :limit="1"></image-upload>

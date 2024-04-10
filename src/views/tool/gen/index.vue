@@ -168,7 +168,7 @@
     />
     <!-- 预览界面 -->
     <el-dialog :title="preview.title" :visible.sync="preview.open" append-to-body class="scrollbar" top="5vh" width="80%">
-      <el-tabs v-model="preview.activeName">
+      <el-tabs v-model="preview.activeName"  type="border-card">
         <el-tab-pane
             v-for="(value, key) in preview.data"
             :key="key"
