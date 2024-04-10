@@ -87,6 +87,9 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+import watermark from "watermark-dom";
+
 export default {
   name: "Index",
   data() {
@@ -100,6 +103,12 @@ export default {
       // 版本号
       version: "3.8.6"
     };
+  },
+  created() {
+
+  },
+  mounted() {
+
   },
   methods: {
     goTarget(href) {
