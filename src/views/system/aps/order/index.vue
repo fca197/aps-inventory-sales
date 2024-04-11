@@ -6,9 +6,7 @@
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="零件名称" prop="brandName">
-        <el-input v-model="queryParams.data.bomName" clearable placeholder="请输入零件名称" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
+
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -38,73 +36,116 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
-    />
+    <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total" @pagination="getList"/>
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <el-form ref="form" :model="form" label-width="100px">
-        <el-col :span="8">
-          <el-form-item label="工厂" prop="factoryId">
-            <el-select v-model="form.factoryId" clearable placeholder="请选择工厂">
-              <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="零件" prop="goodsId">
-            <el-select v-model="form.goodsId" clearable placeholder="请选择零件">
-              <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="工位" prop="bomId">
-            <el-select v-model="form.bomUseWorkStation" clearable placeholder="请选择工位">
-              <el-option v-for="item in workStationList" :key="item.id" :label="item.stationName" :value="item.id"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="零件编码" prop="bomCode">
-            <el-input v-model="form.bomCode" placeholder="请输入零件编码"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="零件名称" prop="bomName">
-            <el-input v-model="form.bomName" placeholder="请输入零件名称"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="零件用量" prop="bomCode">
-            <el-input v-model="form.bomUsage" placeholder="请输入用量"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="用量单位" prop="bomUnit">
-            <el-input v-model="form.bomUnit" placeholder="请输入用量单位"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="成本价" prop="bomCostPrice">
-            <el-input v-model="form.bomCostPrice" placeholder="请输入成本价"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="用量单位" prop="成本价单位">
-            <el-input v-model="form.bomCostPriceUnit" placeholder="请输入成本价单位"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="使用表达式" prop="bomName">
-            <el-input v-model="form.bomUseExpression" placeholder="请输入零件名称"/>
-          </el-form-item>
-        </el-col>
+        <el-tabs tab-position="left" style="height: 650px;" type="border-card">
+          <el-tab-pane label="基本信息">
+            <el-form-item label="订单编号" prop="orderNo">
+              <el-input v-model="form.orderNo" placeholder="请输入订单编号"/>
+            </el-form-item>
+            <el-form-item label="订单金额" prop="orderAmount">
+              <el-input v-model="form.orderTotalPrice" placeholder="请输入订单金额"/>
+            </el-form-item>
+            <el-form-item label="定金金额" prop="orderAmount">
+              <el-input v-model="form.reserveAmount" placeholder="请输入定金金额"/>
+            </el-form-item>
+            <el-form-item label="定金支付时间">
+              <el-date-picker v-model="form.reserveDatetime" type="datetime" placeholder="选择日期时间"
+                              align="right" value-format="yyyy-MM-dd HH:mm:ss"/>
+            </el-form-item>
+
+            <el-form-item label="尾款金额" prop="finishPayedAmount">
+              <el-input v-model="form.finishPayedAmount" placeholder="请输入尾款金额"/>
+            </el-form-item>
+            <el-form-item label="尾款支付时间" prop="finishPayedDatetime">
+              <el-date-picker v-model="form.finishPayedDatetime" type="datetime" placeholder="选择日期时间"
+                              align="right" value-format="yyyy-MM-dd HH:mm:ss"/>
+            </el-form-item>
+            <el-form-item label="制造完成时间" prop="makeFinishDate">
+              <el-date-picker v-model="form.makeFinishDate" type="date" placeholder="选择日期时间"
+                              align="right" value-format="yyyy-MM-dd"/>
+            </el-form-item>
+            <el-form-item label="交付时间" prop="deliveryDate">
+              <el-date-picker v-model="form.deliveryDate" type="date" placeholder="选择日期时间"
+                              align="right" value-format="yyyy-MM-dd"/>
+            </el-form-item>
+
+
+            <el-form-item label="订单状态" prop="orderStatus">
+              <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
+                <el-option label="待支付" value="1"/>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="订单备注" prop="orderRemark">
+              <el-input v-model="form.orderRemark" placeholder="请输入订单备注"/>
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="用户管理">
+            <el-form-item label="客户名称" prop="userName">
+              <el-input v-model="form.orderUser.userName" placeholder="请输入客户名称"/>
+            </el-form-item>
+            <el-form-item label="客户电话" prop="userPhone">
+              <el-input v-model="form.orderUser.userPhone" placeholder="请输入客户电话"/>
+            </el-form-item>
+            <el-form-item label="客户性别" prop="userMobile">
+              <el-radio-group v-model="form.orderUser.userSex">
+                <el-radio :label="1">男</el-radio>
+                <el-radio :label="0">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="国家" prop="userEmail">
+              <el-select v-model="form.orderUser.countryCode" placeholder="请选择省份">
+                <el-option v-for="item in countryCodeList" :key="item.id" :label="item.name" :value="item.id"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="省份" prop="provinceCode">
+              <el-select v-model="form.orderUser.provinceCode" placeholder="请选择省份">
+                <el-option v-for="item in provinceCodeList" :key="item.id" :label="item.name" :value="item.id"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="城市" prop="cityCode">
+              <el-select v-model="form.orderUser.cityCode" placeholder="请选择城市">
+                <el-option v-for="item in cityCodeList" :key="item.id" :label="item.name" :value="item.id"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="区县" prop="areaCode">
+              <el-select v-model="form.orderUser.areaCode" placeholder="请选择区县">
+                <el-option v-for="item in areaCodeList" :key="item.id" :label="item.name" :value="item.id"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="客户地址" prop="userAddress">
+              <el-input v-model="form.orderUser.userAddress" placeholder="请输入客户地址"/>
+            </el-form-item>
+            <el-form-item label="备注" prop="userAddress">
+              <el-input v-model="form.orderUser.userRemark" placeholder="请输入备注"/>
+            </el-form-item>
+            <el-button type="text" @click="getRandomUser">随机用户</el-button>
+          </el-tab-pane>
+          <el-tab-pane label="商品管理">
+            <el-col :span="24" v-for="(it ,i) in form.goodsList" :key="i">
+              <el-col :span="14">
+                <el-col :span="14">
+                  <el-select v-model="it.goodsId" placeholder="请选择商品">
+                    <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"/>
+                  </el-select>
+                </el-col>
+                <el-col :span="10">
+                  <el-input v-model="it.goodsNum" placeholder="请输入商品数量"/>
+                </el-col>
+              </el-col>
+              <el-col :span="7" :offset="1">
+                <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteGoods(i)"></el-button>
+                <el-button type="primary" size="mini" icon="el-icon-plus" @click="addGoods"></el-button>
+              </el-col>
+            </el-col>
+          </el-tab-pane>
+          <el-tab-pane label="销售配置">销售配置</el-tab-pane>
+          <el-tab-pane label="工程配置">工程配置</el-tab-pane>
+        </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -119,7 +160,7 @@
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 import {getGoodsList} from "@/api/aps/goods";
-import {getWorkStationList} from "@/api/aps/workStation";
+import {getRandomUser} from "@/api/tool/random";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
@@ -153,14 +194,26 @@ export default {
         pageSize: 10,
         data: {}
       },
+      countryCodeList: [],
+      provinceCodeList: [],
+      cityCodeList: [],
+      areaCodeList: [],
       // 表单参数
       form: {
-        goodsId: undefined,
-        factoryId: undefined,
-        goodsRemark: "",
-        remark: "",
-        brandName: "",
-        pwd: "",
+        goodsList: [],
+        orderUser: {
+          userName: undefined,
+          userPhone: undefined,
+          userSex: undefined,
+          countryCode: undefined,
+          provinceCode: undefined,
+          cityCode: undefined,
+          areaCode: undefined,
+          userAddress: undefined,
+          userRemark: undefined
+        },
+        goodsProjectConfigList: [],
+        goodsSaleConfigList: [],
         id: undefined,
         confirmPwd: undefined
       },
@@ -170,20 +223,16 @@ export default {
     };
   },
   created() {
-    document["pagePath"] = "/apsGoodsBom";
+    document["pagePath"] = "/apsOrder";
     // process.env.pagePath = "/tenant"
     this.getList();
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
       this.factoryList = data.data.dataList;
-      console.info("factoryList: ", this.factoryList);
+      // console.info("factoryList: ", this.factoryList);
     });
     getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
       this.goodsList = data.data.dataList;
-      console.info("goodsList: ", this.goodsList);
-    });
-    getWorkStationList({pageSize: 3000, pageNum: 1}).then(data => {
-      this.workStationList = data.data.dataList;
-      console.info("workStationList: ", this.workStationList);
+      // console.info("goodsList: ", this.goodsList);
     });
   },
   methods: {
@@ -206,10 +255,18 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        tenantCode: "",
-        id: undefined,
-        tenantName: undefined
+        goodsList: [{goodsNum: 1}],
+        orderUser: {
+          userName: undefined,
+          userPhone: undefined,
+          userSex: undefined,
+          countryCode: undefined,
+          provinceCode: undefined,
+          cityCode: undefined,
+          areaCode: undefined,
+          userAddress: undefined,
+          userRemark: undefined
+        },
       };
       this.resetForm("form");
     },
@@ -279,7 +336,26 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    },
+    getRandomUser() {
+      getRandomUser().then(d => {
+        let randomUser = d.data;
+        this.form.orderUser.userName = randomUser.name;
+        this.form.orderUser.userPhone = randomUser.phone;
+        this.form.orderUser.userSex = randomUser.sex;
+        this.form.orderUser.userAddress = randomUser.address;
+
+      });
+    },
+    addGoods() {
+      this.form.goodsList.push({
+        goodsNum: 1
+      })
+    },
+    deleteGoods(index) {
+      this.form.goodsList.splice(index, 1);
     }
-  }
+  },
+
 };
 </script>

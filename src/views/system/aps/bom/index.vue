@@ -36,102 +36,18 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total" @pagination="getList"/>
+    <pagination
+        v-show="total>0"
+        :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
+        @pagination="getList"
+    />
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <el-form ref="form" :model="form" label-width="100px">
-        <el-tabs tab-position="left" style="height: 650px;" type="border-card">
-          <el-tab-pane label="基本信息">
-            <el-form-item label="订单编号" prop="orderNo">
-              <el-input v-model="form.orderNo" placeholder="请输入订单编号"/>
-            </el-form-item>
-            <el-form-item label="订单金额" prop="orderAmount">
-              <el-input v-model="form.orderTotalPrice" placeholder="请输入订单金额"/>
-            </el-form-item>
-            <el-form-item label="定金金额" prop="orderAmount">
-              <el-input v-model="form.reserveAmount" placeholder="请输入定金金额"/>
-            </el-form-item>
-            <el-form-item label="定金支付时间">
-              <el-date-picker v-model="form.reserveDatetime" type="datetime" placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd HH:mm:ss"/>
-            </el-form-item>
 
-            <el-form-item label="尾款金额" prop="finishPayedAmount">
-              <el-input v-model="form.finishPayedAmount" placeholder="请输入尾款金额"/>
-            </el-form-item>
-            <el-form-item label="尾款支付时间" prop="finishPayedDatetime">
-              <el-date-picker v-model="form.finishPayedDatetime" type="datetime" placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd HH:mm:ss"/>
-            </el-form-item>
-            <el-form-item label="制造完成时间" prop="makeFinishDate">
-              <el-date-picker v-model="form.makeFinishDate" type="date" placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd"/>
-            </el-form-item>
-            <el-form-item label="交付时间" prop="deliveryDate">
-              <el-date-picker v-model="form.deliveryDate"  type="date"  placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd"/>
-            </el-form-item>
-
-
-            <el-form-item label="订单状态" prop="orderStatus">
-              <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
-                <el-option label="待支付" value="1"/>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="订单备注" prop="orderRemark">
-              <el-input v-model="form.orderRemark" placeholder="请输入订单备注"/>
-            </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="用户管理">
-            <el-form-item label="客户名称" prop="userName">
-              <el-input v-model="form.orderUser.userName" placeholder="请输入客户名称"/>
-            </el-form-item>
-            <el-form-item label="客户电话" prop="userPhone">
-              <el-input v-model="form.orderUser.userPhone" placeholder="请输入客户电话"/>
-            </el-form-item>
-            <el-form-item label="客户性别" prop="userMobile">
-              <el-radio-group v-model="form.orderUser.userSex">
-                <el-radio label="1">男</el-radio>
-                <el-radio label="0">女</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="国家" prop="userEmail">
-              <el-select v-model="form.orderUser.countryCode" placeholder="请选择省份">
-                <el-option v-for="item in countryCodeList" :key="item.id" :label="item.name" :value="item.id"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="省份" prop="provinceCode">
-              <el-select v-model="form.orderUser.provinceCode" placeholder="请选择省份">
-                <el-option v-for="item in provinceCodeList" :key="item.id" :label="item.name" :value="item.id"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="城市" prop="cityCode">
-              <el-select v-model="form.orderUser.cityCode" placeholder="请选择城市">
-                <el-option v-for="item in cityCodeList" :key="item.id" :label="item.name" :value="item.id"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="区县" prop="areaCode">
-              <el-select v-model="form.orderUser.areaCode" placeholder="请选择区县">
-                <el-option v-for="item in areaCodeList" :key="item.id" :label="item.name" :value="item.id"/>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="客户地址" prop="userAddress">
-              <el-input v-model="form.orderUser.userAddress" placeholder="请输入客户地址"/>
-            </el-form-item>
-            <el-form-item label="备注" prop="userAddress">
-              <el-input v-model="form.orderUser.userRemark" placeholder="请输入备注"/>
-            </el-form-item>
-            <el-button  type="text" @click="getRandomUser">随机用户</el-button>
-          </el-tab-pane>
-          <el-tab-pane label="商品管理">
-
-
-          </el-tab-pane>
-          <el-tab-pane label="销售配置">销售配置</el-tab-pane>
-          <el-tab-pane label="工程配置">工程配置</el-tab-pane>
-        </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -146,7 +62,7 @@
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 import {getGoodsList} from "@/api/aps/goods";
-import {getRandomUser} from "@/api/tool/random";
+import {getWorkStationList} from "@/api/aps/workStation";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
@@ -180,16 +96,14 @@ export default {
         pageSize: 10,
         data: {}
       },
-      countryCodeList: [],
-      provinceCodeList: [],
-      cityCodeList: [],
-      areaCodeList: [],
       // 表单参数
       form: {
-        goodsList:[],
-        orderUser: {},
-        goodsProjectConfigList:[],
-        goodsSaleConfigList:[],
+        goodsId: undefined,
+        factoryId: undefined,
+        goodsRemark: "",
+        remark: "",
+        brandName: "",
+        pwd: "",
         id: undefined,
         confirmPwd: undefined
       },
@@ -204,11 +118,15 @@ export default {
     this.getList();
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
       this.factoryList = data.data.dataList;
-      // console.info("factoryList: ", this.factoryList);
+      console.info("factoryList: ", this.factoryList);
     });
     getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
       this.goodsList = data.data.dataList;
-      // console.info("goodsList: ", this.goodsList);
+      console.info("goodsList: ", this.goodsList);
+    });
+    getWorkStationList({pageSize: 3000, pageNum: 1}).then(data => {
+      this.workStationList = data.data.dataList;
+      console.info("workStationList: ", this.workStationList);
     });
   },
   methods: {
@@ -231,8 +149,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        goodsList:[],
-        orderUser: {},
+        remark: "",
+        tenantCode: "",
+        id: undefined,
+        tenantName: undefined
       };
       this.resetForm("form");
     },
@@ -302,15 +222,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
-    },
-    getRandomUser(){
-      let randomUser = getRandomUser();
-      if(randomUser){
-        this.form.orderUser.userName=randomUser.name;
-        this.form.orderUser.userName=randomUser.name;
-      }
     }
-  },
-
+  }
 };
 </script>

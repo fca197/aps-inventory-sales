@@ -18,28 +18,24 @@ participant FPD as  预测打散(天)
 participant O as  订单
 participant CN as  产能
 participant P as  排产
-participant PART as  零件
-rect rgb(235, 250, 230)
-    note over U,PP: 基础配置
-    U-->>WGD: 添加工段 
-    U-->>GS: 添加状态
-    U-->>WGW: 添加工位
-    U-->>PP: 添加工路径
-end
+participant PART as  零件 
+note over U,PP: 基础配置
+U-->>WGD: 添加工段 
+U-->>GS: 添加状态
+U-->>WGW: 添加工位
+U-->>PP: 添加工路径 
 U->>G: 添加商品
 G->>SG: 配置销售特征
-
-rect rgb(235, 250, 230)
-    note over U,F: 预测模块
-    U-->>F: 开始预测
-    F-->>U: 预测模板下载
-    U->>U: 模板填写
-    U-->>F: 预测数据上传
-    F-->>F: 预测开始
-    F-->>U: 预测结果显示
-    note over FM: 预测主版本
-    F->>FM: 发布到主板本
-end
+ 
+note over U,F: 预测模块
+U-->>F: 开始预测
+F-->>U: 预测模板下载
+U->>U: 模板填写
+U-->>F: 预测数据上传
+F-->>F: 预测开始
+F-->>U: 预测结果显示
+note over FM: 预测主版本
+F->>FM: 发布到主板本
 FM->>FPW: 发布到预测打散(周)
 FPW->>FPD: 发布到预测打散(天)
 U->>O: 订单录入 
