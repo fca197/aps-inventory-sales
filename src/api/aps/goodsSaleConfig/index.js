@@ -15,3 +15,4 @@ export function updateForecast(data) {
     data
   });
 }
+

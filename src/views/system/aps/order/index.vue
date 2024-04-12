@@ -18,6 +18,9 @@
         <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>
+      </el-col>
+      <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -28,7 +31,7 @@
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
 
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width" align="center"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" width="150">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
@@ -44,7 +47,7 @@
         <el-tabs tab-position="left" style="height: 650px;" type="border-card">
           <el-tab-pane label="基本信息">
             <el-form-item label="订单编号" prop="orderNo">
-              <el-input v-model="form.orderNo" placeholder="请输入订单编号"/>
+              <el-input disabled v-model="form.orderNo" placeholder="请输入订单编号"/>
             </el-form-item>
             <el-form-item label="订单金额" prop="orderAmount">
               <el-input v-model="form.orderTotalPrice" placeholder="请输入订单金额"/>
@@ -129,7 +132,7 @@
             <el-col :span="24" v-for="(it ,i) in form.goodsList" :key="i">
               <el-col :span="14">
                 <el-col :span="14">
-                  <el-select v-model="it.goodsId" placeholder="请选择商品">
+                  <el-select v-model="it.goodsId" placeholder="请选择商品" @change="value=>selectGoods(i,value)">
                     <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"/>
                   </el-select>
                 </el-col>
@@ -143,7 +146,24 @@
               </el-col>
             </el-col>
           </el-tab-pane>
-          <el-tab-pane label="销售配置">销售配置</el-tab-pane>
+          <el-tab-pane label="销售配置">
+            <el-collapse accordion value="0">
+              <el-collapse-item title="销售配置" v-for="(it ,i) in  form.goodsList" :name="i" :key="i">
+                <div v-if="goodsMap[it.goodsId]"> {{ goodsMap[it.goodsId].goodsName }}/ <span>{{ it.goodsNum }} /{{ goodsMap[it.goodsId].goodsRemark }}</span></div>
+                <el-col :span="24" v-for="(sa ,index) in apsSaleConfigList" :key="index">
+                  <el-divider/>
+                  <el-col :span="6">
+                    {{ sa.saleName }}/{{ sa.saleCode }}
+                  </el-col>
+                  <el-col :span="18">
+                    <el-radio-group v-model="goodsSaleConfigMap[it.goodsId][sa.id]" @change="value=>changeGM(it.goodsId, sa.id,value)">
+                      <el-radio v-for=" (ss ,j) in sa.children" :label="ss.id">{{ ss.saleName }}/{{ ss.saleCode }}/{{ ss.id }}</el-radio>
+                    </el-radio-group>
+                  </el-col>
+                </el-col>
+              </el-collapse-item>
+            </el-collapse>
+          </el-tab-pane>
           <el-tab-pane label="工程配置">工程配置</el-tab-pane>
         </el-tabs>
       </el-form>
@@ -157,10 +177,13 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import {add, deleteByIdList, getById, queryPageList} from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 import {getGoodsList} from "@/api/aps/goods";
 import {getRandomUser} from "@/api/tool/random";
+import request from "@/utils/request";
+import {apsGoodsSaleItemQueryPageList} from "@/api/aps/apsGoodsSaleItem";
+import {getSaleConfigList} from "@/api/aps/saleConfig"; // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
@@ -182,6 +205,7 @@ export default {
 
       brandNameList: [],
       goodsList: [],
+      goodsMap: {},
       workStationList: [],
       factoryList: [],
       // 弹出层标题
@@ -197,7 +221,9 @@ export default {
       countryCodeList: [],
       provinceCodeList: [],
       cityCodeList: [],
+      apsSaleConfigList: [],
       areaCodeList: [],
+      goodsSaleConfigMap: {},
       // 表单参数
       form: {
         goodsList: [],
@@ -232,8 +258,14 @@ export default {
     });
     getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
       this.goodsList = data.data.dataList;
+      this.goodsList.forEach(item => {
+        this.goodsMap[item.id] = item;
+      });
       // console.info("goodsList: ", this.goodsList);
     });
+    getSaleConfigList({pageNum: 1, pageSize: 9990}).then(res => {
+      this.apsSaleConfigList = res.data.dataList;
+    })
   },
   methods: {
     /** 查询公告列表 */
@@ -255,7 +287,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        goodsList: [{goodsNum: 1}],
+        goodsList: [],
         orderUser: {
           userName: undefined,
           userPhone: undefined,
@@ -289,6 +321,8 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.addGoods(this.goodsList[0].id)
+      this.selectGoods(0, this.goodsList[0].id)
       this.open = true;
       this.title = "添加零件";
     },
@@ -305,24 +339,29 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
+      //
+      // private Long orderId;
+      // private Long goodsId;
+      // private Long configId;
+      // private Long factoryId
+      let apsOrderSaleConfigList = [];
+      for (let g in this.goodsSaleConfigMap) {
+        for (let gs in this.goodsSaleConfigMap[g]) {
+          apsOrderSaleConfigList.push({
+            orderId: this.form.id,
+            goodsId: g,
+            configId: this.goodsSaleConfigMap[g][gs],
+          })
         }
+      }
+      this.form.apsOrderSaleConfigList = apsOrderSaleConfigList;
+      add(this.form).then(response => {
+        this.$modal.msgSuccess("新增成功");
+        this.open = false;
+        this.getList();
       });
-    },
+    }
+    ,
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
@@ -336,7 +375,8 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
-    },
+    }
+    ,
     getRandomUser() {
       getRandomUser().then(d => {
         let randomUser = d.data;
@@ -344,18 +384,57 @@ export default {
         this.form.orderUser.userPhone = randomUser.phone;
         this.form.orderUser.userSex = randomUser.sex;
         this.form.orderUser.userAddress = randomUser.address;
-
       });
     },
-    addGoods() {
+    addGoods(val) {
       this.form.goodsList.push({
-        goodsNum: 1
+        goodsNum: 1,
+        goodsId: val,
+
       })
     },
     deleteGoods(index) {
       this.form.goodsList.splice(index, 1);
+    },
+    selectGoods(index, value) {
+      let v = this.form.goodsList.filter(t => t.goodsId === value).length;
+      if (v > 1) {
+        this.$message.error(this.goodsMap[value].goodsName + "该商品已存在");
+        this.form.goodsList[index].goodsId = undefined;
+      }
+      apsGoodsSaleItemQueryPageList({data: {goodsId: value}, pageNum: 1, pageSize: 9990}).then(res => {
+        console.info("res: ", res);
+      })
+      this.goodsSaleConfigMap[value] = {}
+      this.apsSaleConfigList.forEach(t => {
+        this.goodsSaleConfigMap[value][t.id] = undefined
+        t.children.forEach(t1 => {
+          this.goodsSaleConfigMap[value][t.id] = t1.id
+        })
+      })
+      this.goodsSaleConfigMap = {...this.goodsSaleConfigMap}
+      console.info(".goodsSaleConfigMap: ", this.goodsSaleConfigMap);
+    },
+    saveBatch() {
+      request({
+        url: "/apsOrder/batchInsert",
+        method: "post",
+        data: {
+          createCount: 100
+        }
+      }).then(response => {
+        this.$message.success("保存成功");
+      });
+    },
+    changeGM(gid, sid, value) {
+      console.info("changeGM: ", gid, sid, value);
+      console.info("this.goodsSaleConfigMap: ", this.goodsSaleConfigMap);
+      this.goodsSaleConfigMap[gid][sid] = value
+      console.info("this.goodsSaleConfigMap: ", this.goodsSaleConfigMap);
+      this.$forceUpdate();
     }
-  },
+  }
 
-};
+}
+
 </script>
