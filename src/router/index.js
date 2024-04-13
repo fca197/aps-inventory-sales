@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
+import ParentView from '@/components/ParentView'
 
 Vue.use(Router)
 
@@ -77,13 +78,13 @@ export const constantRoutes = [{
 }, {
   path: '/aps/base-data/',
   component: Layout,
-  redirect: 'index',
+  // redirect: 'index',
   meta: {title: 'Aps系统', icon: 'android-system', affix: false},
   children: [
     {
       path: '/aps/upload/index',
       name: "商品管理",
-      component: () => import('@/views/system/aps/goods/index'),
+      component: ParentView,
       meta: {title: '商品管理', icon: 'order-1', affix: false},
       children: [
         {
@@ -101,7 +102,7 @@ export const constantRoutes = [{
     }, {
       path: '/aps/goods/forecast/index',
       name: "预测管理",
-      component: () => import('@/views/system/aps/forecast/index'),
+      component: ParentView,
       meta: {title: '预测管理', icon: 'eye-open', affix: false},
 
       children: [{
@@ -130,7 +131,7 @@ export const constantRoutes = [{
     {
       path: '/aps/basic/config/index',
       name: "基础配置",
-      component: () => import('@/views/system/aps/saleConfig/index'),
+      component: ParentView,
       meta: {title: '基础配置', icon: 'setting', affix: false},
       children: [{
         path: '/aps/sale/index',
@@ -182,13 +183,14 @@ export const constantRoutes = [{
     }, {
       path: '/aps/make/q/index',
       name: "产能管理",
+      component: ParentView,
       // component: () => import('@/views/system/aps/order/index'),
       meta: {title: '产能管理', icon: 'order-1', affix: false},
       children: [{
-        path: '/aps/make/q2/index',
+        path: '/aps/make_capacity_factory/index',
         name: "工厂产能管理",
-        component: () => import('@/views/noImpl/index.vue'),
-        meta: {title: '工厂产能管理', icon: 'order-1', affix: false},
+        component: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue'),
+        meta: {title: '工厂产能管理', icon: 'order-1', affix: true},
       }, {
         path: '/aps/make/q22/index',
         name: "销售特征产能管理",
