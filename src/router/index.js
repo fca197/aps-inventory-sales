@@ -194,7 +194,7 @@ export const constantRoutes = [{
       }, {
         path: '/aps/make/q22/index',
         name: "销售特征产能管理",
-        component: () =>import('@/views/noImpl/index.vue'),
+        component: () =>import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue'),
         meta: {title: '销售特征产能管理', icon: 'order-1', affix: false},
       }, {
         path: '/aps/make/q223/index',
