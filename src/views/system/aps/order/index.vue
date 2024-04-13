@@ -157,7 +157,7 @@
                   </el-col>
                   <el-col :span="18">
                     <el-radio-group v-model="goodsSaleConfigMap[it.goodsId][sa.id]" @change="value=>changeGM(it.goodsId, sa.id,value)">
-                      <el-radio v-for=" (ss ,j) in sa.children" :label="ss.id">{{ ss.saleName }}/{{ ss.saleCode }}/{{ ss.id }}</el-radio>
+                      <el-radio v-for=" (ss ,j) in sa.children" :label="ss.id" :key="j">{{ ss.saleName }}/{{ ss.saleCode }}/{{ ss.id }}</el-radio>
                     </el-radio-group>
                   </el-col>
                 </el-col>
