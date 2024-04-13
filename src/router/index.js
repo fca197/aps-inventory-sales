@@ -199,7 +199,7 @@ export const constantRoutes = [{
       }, {
         path: '/aps/make/q223/index',
         name: "商品产能",
-        component: () => import('@/views/noImpl'),
+        component: () => import('@/views/system/aps/make_capacity/make_capacity_goods'),
         meta: {title: '商品产能', icon: 'order-1', affix: false},
       }]
     },
