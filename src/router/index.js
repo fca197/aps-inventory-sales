@@ -192,16 +192,23 @@ export const constantRoutes = [{
         component: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue'),
         meta: {title: '工厂产能管理', icon: 'order-1', affix: true},
       }, {
-        path: '/aps/make/q22/index',
+        path: '/aps/make/make_capacity_sale_config/index',
         name: "销售特征产能管理",
         component: () =>import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue'),
         meta: {title: '销售特征产能管理', icon: 'order-1', affix: false},
       }, {
-        path: '/aps/make/q223/index',
+        path: '/aps/make/make_capacity_goods/index',
         name: "商品产能",
         component: () => import('@/views/system/aps/make_capacity/make_capacity_goods'),
         meta: {title: '商品产能', icon: 'order-1', affix: false},
-      }]
+      }, {
+        path: '/aps/make/constraint/index',
+        name: "排产约束",
+        component: () => import('@/views/system/aps/make_capacity/constraint'),
+        meta: {title: '排产约束', icon: 'order-1', affix: false},
+      }
+
+      ]
     },
 
   ]
