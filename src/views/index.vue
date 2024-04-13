@@ -73,7 +73,7 @@
     <el-row :gutter="20">
 
       <el-timeline>
-        <el-timeline-item v-for="item in projectTimeLineList" :key="item" :color="item.color"
+        <el-timeline-item v-for="item in projectTimeLineList" :key="item.time" :color="item.color"
                           :timestamp="item.time" placement="top">
           <el-card>
             <h4>{{ item.title }}</h4>
