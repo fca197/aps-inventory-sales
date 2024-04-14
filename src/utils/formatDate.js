@@ -21,6 +21,13 @@ export function formatDates(date, b) {
       ":", "") : s;
 }
 
+export function formatDateNo(date) {
+  var s = date.getFullYear() + '' + padLeftZero(date.getMonth() + 1) + ''
+      + padLeftZero(date.getDate()) + '' + padLeftZero(date.getHours()) + ''
+      + padLeftZero(date.getMinutes()) + '' + padLeftZero(date.getSeconds());
+  return s;
+}
+
 export function padLeftZero(str) {
   return str <= 9 ? '0' + str : str;
 }

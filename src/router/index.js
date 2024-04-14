@@ -187,7 +187,7 @@ export const constantRoutes = [{
       path: '/aps/make_capacity_factory/index',
       name: "工厂产能管理",
       component: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue'),
-      meta: {title: '工厂产能管理', icon: 'order-1', affix: true},
+      meta: {title: '工厂产能管理', icon: 'order-1', affix: false},
     }, {
       path: '/aps/make/make_capacity_sale_config/index',
       name: "销售特征产能管理",

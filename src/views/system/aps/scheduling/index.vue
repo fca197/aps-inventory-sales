@@ -179,13 +179,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
-      getById(req).then(response => {
-        this.form = response.data.dataList[0]
-        this.open = true;
-        this.title = "修改零件";
-      });
+      this.$tab.openPage("修改版本","/aps/make/scheduling/create?id="+row.id)
 
     },
     /** 提交按钮 */
