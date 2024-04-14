@@ -33,7 +33,6 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-setting" @click="handleUpdateContent(scope.row)">约束</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -48,26 +47,8 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openContent" width="900px" append-to-body>
-      <el-form>
-        <create :constraint-list="constraintList"></create>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitFormContent">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="编号" prop="constraintsNo">
-          <el-input v-model="form.constraintsNo" placeholder="请输入约束编号" clearable/>
-        </el-form-item>
-        <el-form-item label="名称" prop="constraintsName">
-          <el-input v-model="form.constraintsName" placeholder="请输入约束名称" clearable/>
-        </el-form-item>
-        <el-form-item label="备注" prop="constraintsRemark">
-          <el-input v-model="form.constraintsRemark" placeholder="请输入约束备注" clearable/>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -78,19 +59,17 @@
 </template>
 
 <script>
-import Create from "@/views/system/aps/make_capacity/constraint/Create.vue";
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common' // console.info("xxx: ",uc.urlPrefix)
+
+import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import {getFactoryList} from "@/api/factory";
+import {getGoodsList} from "@/api/aps/goods";
+import {getWorkStationList} from "@/api/aps/workStation";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
-  components: {Create},
-  comments: {
-    Create
-  },
   data() {
 
     return {
-
       // 遮罩层
       loading: true,
       // 选中数组
@@ -103,7 +82,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-      constraintList: [],
+
       brandNameList: [],
       goodsList: [],
       workStationList: [],
@@ -112,7 +91,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      openContent: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -136,9 +114,21 @@ export default {
     };
   },
   created() {
-    document["pagePath"] = "/apsSchedulingConstraints";
+    document["pagePath"] = "/apsSchedulingVersion";
     // process.env.pagePath = "/tenant"
     this.getList();
+    getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+      this.factoryList = data.data.dataList;
+      console.info("factoryList: ", this.factoryList);
+    });
+    // getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
+    //   this.goodsList = data.data.dataList;
+    //   console.info("goodsList: ", this.goodsList);
+    // });
+    // getWorkStationList({pageSize: 3000, pageNum: 1}).then(data => {
+    //   this.workStationList = data.data.dataList;
+    //   console.info("workStationList: ", this.workStationList);
+    // });
   },
   methods: {
     /** 查询公告列表 */
@@ -155,7 +145,6 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-      this.openContent = false;
       this.reset();
     },
     // 表单重置
@@ -186,9 +175,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加约束";
+      this.$tab.openPage("创建版本","/aps/make/scheduling/create")
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -197,21 +184,11 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改约束";
+        this.title = "修改零件";
       });
 
     },
     /** 提交按钮 */
-    submitFormContent: function () {
-      var t = JSON.stringify(this.constraintList);
-      console.info("constraintList", t)
-      this.form.constraintsContext = t
-      updateById(this.form).then(response => {
-        this.$modal.msgSuccess("修改成功");
-        this.cancel();
-        this.getList();
-      });
-    },
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
@@ -244,15 +221,7 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
-    },
-
-    handleUpdateContent(data) {
-      this.title = "修改约束"
-      this.openContent = true;
-      this.form.id = data.id
-      this.constraintList = JSON.parse(data.constraintsContext)
-
-    },
+    }
   }
 };
 </script>

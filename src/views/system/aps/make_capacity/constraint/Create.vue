@@ -143,6 +143,28 @@ export default {
                 {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
               ],
               valueType: "DATE"
+            }, {
+              fieldName: "deliveryDate",
+              showName: "交付时间",
+              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
+                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
+                // {name: "右模糊匹配", value: "RIGHT_LIKE"},
+                {name: "范围", value: "BETWEEN"},
+                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
+              ],
+              valueType: "DATE"
+            }, {
+              fieldName: "finishPayedDatetime",
+              showName: "支付时间",
+              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
+                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
+                // {name: "右模糊匹配", value: "RIGHT_LIKE"},
+                {name: "范围", value: "BETWEEN"},
+                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
+              ],
+              valueType: "DATE"
             }
           ]
         }
