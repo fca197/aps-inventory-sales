@@ -29,6 +29,7 @@
         <el-button style="margin-top: 12px;" @click="saveOrUpdate">下一步</el-button>
       </div>
       <div v-if="active===1">
+        <use-constraints-result :id="form.id"></use-constraints-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
         <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
       </div>
@@ -43,11 +44,14 @@
 <script>
 import {getSchedulingConstraintsList} from "@/api/aps/schedulingConstraints";
 import {add, queryPageList, showMsg, updateById} from "@/api/common";
-
+import useConstraintsResult from "@/views/system/aps/scheduling/useConstraintsResult.vue";
+import request from "@/utils/request";
 
 export default {
   name: "CreateScheduling",
-
+  components: {
+    useConstraintsResult
+  },
   data() {
     return {
       active: 0,
@@ -80,12 +84,14 @@ export default {
         updateById(this.form).then(t => {
           showMsg(t, "修改成功")
           this.next();
+          this.useConstraints();
         });
       } else {
         add(this.form).then(t => {
           showMsg(t, "保存成功")
           this.form.id = t.data.id;
           this.next();
+          this.useConstraints();
         });
       }
     },
@@ -105,6 +111,19 @@ export default {
         type: 'success'
       });
       this.active = 0;
+    },
+
+    useConstraints() {
+      request({
+        url: "/apsSchedulingVersion/useConstraints",
+        method: "post",
+        data: {
+          id: this.form.id
+        }
+      })
+    },
+    useConstraintsResult() {
+
     }
   }
 }
