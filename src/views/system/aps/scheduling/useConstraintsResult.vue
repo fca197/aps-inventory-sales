@@ -10,12 +10,13 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="brandNameList">
+    <el-table v-loading="loading" :data="brandNameList"  width="100%" >
 
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
 
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :width="item.width" :prop="item.fieldName" :label="item.showName"/>
 
+      <el-table-column label="" type="text" align="center"/>
     </el-table>
 
     <pagination
