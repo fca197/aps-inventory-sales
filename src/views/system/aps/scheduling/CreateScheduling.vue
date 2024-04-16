@@ -91,7 +91,7 @@ export default {
           showMsg(t, "保存成功")
           this.form.id = t.data.id;
           this.next();
-          this.useConstraints();
+           this.useConstraints();
         });
       }
     },

@@ -25,7 +25,14 @@
           </div>
           <div v-else>
             过滤值:
-            <el-input style="width: 90%" v-model="it.valueList[0]" placeholder="请输入过滤值" clearable/>
+            <div v-if="it.operator==='BETWEEN'">
+              <el-input style="width: 30%" v-model="it.valueList[0]" placeholder="请输入过滤值" clearable/>
+              至
+              <el-input style="width: 30%" v-model="it.valueList[1]" placeholder="请输入过滤值" clearable/>
+            </div>
+            <div v-else>
+              <el-input style="width: 90%" v-model="it.valueList[0]" placeholder="请输入过滤值" clearable/>
+            </div>
           </div>
           <div style="height: 10px"></div>
           排序:
@@ -100,7 +107,7 @@ export default {
               fieldName: "createTime",
               showName: "销售创建时间",
               operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                , {name: "大于等于", value: ""}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
                 // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
                 // {name: "右模糊匹配", value: "RIGHT_LIKE"},
                 {name: "范围", value: "BETWEEN"},
@@ -116,7 +123,7 @@ export default {
               fieldName: "createTime",
               showName: "创建时间",
               operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                , {name: "大于等于", value: ""}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
                 {name: "范围", value: "BETWEEN"},
                 {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
               ],
@@ -125,7 +132,7 @@ export default {
               fieldName: "orderTotalPrice",
               showName: "订单总额",
               operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                , {name: "大于等于", value: ""}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
                 // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
                 // {name: "右模糊匹配", value: "RIGHT_LIKE"},
                 {name: "范围", value: "BETWEEN"},
@@ -136,7 +143,7 @@ export default {
               fieldName: "updateTime",
               showName: "修改时间",
               operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
                 // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
                 // {name: "右模糊匹配", value: "RIGHT_LIKE"},
                 {name: "范围", value: "BETWEEN"},
@@ -147,7 +154,7 @@ export default {
               fieldName: "deliveryDate",
               showName: "交付时间",
               operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
                 // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
                 // {name: "右模糊匹配", value: "RIGHT_LIKE"},
                 {name: "范围", value: "BETWEEN"},
@@ -158,7 +165,7 @@ export default {
               fieldName: "finishPayedDatetime",
               showName: "支付时间",
               operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+                , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
                 // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
                 // {name: "右模糊匹配", value: "RIGHT_LIKE"},
                 {name: "范围", value: "BETWEEN"},
@@ -178,7 +185,7 @@ export default {
     }
     for (let i = 0; i < this.constraintList.length; i++) {
       this.operatorMap[i] = [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-        , {name: "大于等于", value: "EGT"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "ELT}"},
+        , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
         {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
         {name: "右模糊匹配", value: "RIGHT_LIKE"},
         {name: "范围", value: "BETWEEN"},

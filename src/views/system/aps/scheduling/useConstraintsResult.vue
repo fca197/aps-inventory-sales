@@ -69,8 +69,7 @@ export default {
     getGoodList() {
       getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
         this.goodsList = data.data.dataList;
-
-        console.info("goodsList: ", this.goodsList);
+        // console.info("goodsList: ", this.goodsList);
       });
     },
 
@@ -91,8 +90,8 @@ export default {
       })
     },
     handleQuery() {
-      this.$emit('query', this.queryParams);
-    },
+      this.useConstraintsResult();
+     },
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
