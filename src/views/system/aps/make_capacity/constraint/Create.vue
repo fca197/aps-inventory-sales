@@ -1,72 +1,103 @@
 <template>
   <div>
-    <table width="100%" v-for="(item,index) in constraintList" :key="index" cellpadding="0" cellspacing="0" style="border-bottom: #00afff 1px solid ;padding-bottom: 20px;">
-      <tr v-for="(it,i) in item.filterList" :key="i">
-        <td width="60px" style="border-right: #a15050 1px solid"> {{ '约束' + (index + 1) }}</td>
-        <td style="padding: 10px">
-          <el-select v-model="it.filterFieldType" :placeholder="it.name" clearable>
-            <el-option v-for="(itt,i) in  filterFieldMap " :key="i" :label="itt.name" :value="i">{{ itt.name }}</el-option>
-          </el-select>
-          <el-select v-model="it.fieldName" :placeholder="it.name" clearable v-if="it.filterFieldType" @change="value=>selectFieldName(it,index,value)">
-            <el-option v-for="(itt,i) in  filterFieldMap[it.filterFieldType].values " :key="i" :label="itt.showName" :value="itt.fieldName"></el-option>
-          </el-select>
-          <el-select v-model="it.operator" @change="value=>changeOperator(it,index,value)">
-            <el-option v-for="(itt,i) in  operatorMap[index] " :key="i" :label="itt.name" :value="itt.value">{{ itt.name }}</el-option>
-          </el-select>
-          <el-button type="danger" v-if=" deleteFirst|| index!==0" icon="el-icon-delete" size="mini" @click="deleteFilter(item,index)"></el-button>
-          <el-button type="primary" icon="el-icon-plus" size="mini" @click="addFilter(item,index)"></el-button>
-          <div style="height: 10px"></div>
-          <div v-if="operatorFieldMap[index]==='DATE'">
+    <el-col style="margin-bottom: 10px" :span="24" v-if="!isChild">
+      <el-button type="primary" size="mini" @click="addRowConstraint">
+        <i class="el-icon-plus"></i>
+      </el-button>
+    </el-col>
+    <el-col :span="24" v-for="(item,ooo) in rowConstraintList" :key="ooo" style="border-bottom: #00afff 1px solid ;margin-bottom: 20px; margin-top: 10px">
+      <el-col :span="2" width="60px"> {{ '约束-' + (ooo + 1) }}
+        <el-button type="danger" v-if="ooo!==0" size="mini" @click="deleteRowConstraint(ooo)">  <i class="el-icon-delete"></i></el-button>
+      </el-col>
+      <el-col :span="22" style="padding-left: 10px ;border-left: #a15050 1px solid">
+        <el-col :span="24" v-for="(f,index) in item.filterList" :key="index">
+          <el-col :span="24" style="padding-bottom: 10px">
+            <el-select v-model="f.fieldName" @change="changeField(f)">
+              <el-option
+                  v-for="(item,index3) in constrainedFieldList"
+                  :key="index3"
+                  :label="item.showName"
+                  :value="item.fieldName">
+              </el-option>
+            </el-select>
+            -
+            <el-select v-model="f.operator">
+              <el-option @change="changeOperator(f)"
+                         v-for="(item,index3) in operatorMap[f.id]" :key="index3" :label="item.name" :value="item.value">
+              </el-option>
+            </el-select>
+            <el-button type="danger" size="mini" v-if="index!==0" @click="deleteFilter(item,ooo)">
+              <i class="el-icon-plus"></i>
+            </el-button>
+            <el-button type="primary" size="mini" @click="addFilter(item,ooo)"> <i class="el-icon-plus"></i></el-button>
+          </el-col>
+          <el-col :span="2">
             过滤值:
-            <el-date-picker v-if="it.operator==='BETWEEN'"
-                            v-model="it.valueList" type="daterange" placeholder="选择日期" value-format="yyyy-MM-dd"/>
-            <el-date-picker v-else
-                            v-model="it.valueList[0]" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"/>
-          </div>
-          <div v-else>
-            过滤值:
-            <div v-if="it.operator==='BETWEEN'">
-              <el-input style="width: 30%" v-model="it.valueList[0]" placeholder="请输入过滤值" clearable/>
-              至
-              <el-input style="width: 30%" v-model="it.valueList[1]" placeholder="请输入过滤值" clearable/>
+          </el-col>
+          <el-col :span="22" style="padding-bottom: 10px">
+            <div v-if="f.filterFieldType==='DATE'">
+              <div v-if="f.operator==='BETWEEN'">
+                <el-date-picker type="daterange" v-model="f.valueList" placeholder="请输入过滤值" clearable/>
+              </div>
+              <div v-else>
+                <el-date-picker type="date" v-model="f.valueList" placeholder="请输入过滤值" clearable/>
+              </div>
             </div>
             <div v-else>
-              <el-input style="width: 90%" v-model="it.valueList[0]" placeholder="请输入过滤值" clearable/>
+              <div v-if="f.operator==='BETWEEN'">
+                <el-input style="width: 30%" v-model="f.valueList[0]" placeholder="请输入过滤值" clearable/>
+                至
+                <el-input style="width: 30%" v-model="f.valueList[1]" placeholder="请输入过滤值" clearable/>
+              </div>
+              <div v-else>
+                <el-input style="width: 90%" v-model="f.valueList[0]" placeholder="请输入过滤值" clearable/>
+              </div>
             </div>
-          </div>
-          <div style="height: 10px"></div>
-          排序:
-          <el-button type="primary" icon="el-icon-plus" size="mini" @click="addOrderBy(item)"></el-button>
-          <div v-for="(orderBy,ind) in item.orderBy" :key="ind">
-            <el-select v-model="orderBy.orderFieldName">
-              <el-option-group v-for="(ittr,i) in  filterFieldMap" :key="i+11" :value="ittr.showName" :label="ittr.name">
-                <el-option v-for="(itt,i) in  ittr.values " :key="i+11" :label="itt.showName" :value="itt.fieldName"></el-option>
-              </el-option-group>
-            </el-select>
-            <el-select v-model="orderBy.orderBy">
-              <el-option label="正序" value="ASC"></el-option>
-              <el-option label="倒序" value="DSC"></el-option>
-            </el-select>
-            <el-button v-if="item.orderBy.length>1" type="danger" icon="el-icon-delete" size="mini" @click="deleteOrderBy(item,ind)"></el-button>
-
-          </div>
-
-          子约束:
-          <el-button type="primary" icon="el-icon-plus" size="mini" @click="addSecondFilter(item)"></el-button>
-          <div v-if="item.children.length>0">
-            <create :deleteFirst="true" :constraint-list="item.children"></create>
-          </div>
+          </el-col>
 
 
-        </td>
-      </tr>
-    </table>
+        </el-col>
+
+        <el-col :span="24" style="padding-bottom: 10px">
+          <el-col :span="3">
+            排序:
+            <el-button type="primary" size="mini" @click="addOrderBy(item)"> <i class="el-icon-plus"></i></el-button>
+          </el-col>
+          <el-col :span="21">
+            <div v-for="(o,i) in item.orderBy" :key="i" style="padding-bottom: 10px">
+              <el-select v-model="o.fieldName">
+                <el-option
+                    v-for="(item,index3) in constrainedFieldList"
+                    :key="index3"
+                    :label="item.showName"
+                    :value="item.fieldName">
+                </el-option>
+              </el-select>
+              <el-select v-model="o.orderType">
+                <el-option label="升序" value="ASC"></el-option>
+                <el-option label="降序" value="DESC"></el-option>
+              </el-select>
+              <el-button type="danger" size="mini" @click="deleteOrderBy(item,i)"> <i class="el-icon-delete"></i></el-button>
+            </div>
+          </el-col>
+        </el-col>
+
+        <el-col :span="24" style="padding-bottom: 10px">
+          <el-col :span="6">
+            子约束:
+            <el-button type="primary" size="mini" @click="addChild(item)"> <i class="el-icon-plus"></i></el-button>
+          </el-col>
+          <create v-if="item.children.length>0" :deleteFirst="deleteFirst" :constrainedFieldList="constrainedFieldList" :isChild="true" :rowConstraintList="item.children"/>
+        </el-col>
+      </el-col>
+    </el-col>
   </div>
 </template>
 
 <script>
 
 import Create from './Create.vue'
+import {randomNum} from "@/api/common";
 
 export default {
   name: "Create",
@@ -76,7 +107,11 @@ export default {
       type: Boolean,
       default: false
     },
-    constraintList: {
+    isChild: {
+      default: false
+    },
+    constrainedFieldList: {},
+    rowConstraintList: {
       type: Array
     },
   },
@@ -93,139 +128,111 @@ export default {
           "fieldName": "",
           "operator": "",
           "valueList": []
+
         }],
         children: [],
-        "orderBy": []
+        orderBy: []
       },
       operatorMap: {},
-      operatorFieldMap: {},
-      filterFieldMap: {
-        GOODS_SALE: {
-          name: "销售值",
-          values: [
-            {
-              fieldName: "createTime",
-              showName: "销售创建时间",
-              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: ""}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
-                // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
-                // {name: "右模糊匹配", value: "RIGHT_LIKE"},
-                {name: "范围", value: "BETWEEN"},
-                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
-              ],
-              valueType: "DATE"
-            }]
-        },
-        ORDER: {
-          name: "订单信息",
-          values: [
-            {
-              fieldName: "createTime",
-              showName: "创建时间",
-              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: ""}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
-                {name: "范围", value: "BETWEEN"},
-                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
-              ],
-              valueType: "DATE"
-            }, {
-              fieldName: "orderTotalPrice",
-              showName: "订单总额",
-              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: ""}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
-                // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
-                // {name: "右模糊匹配", value: "RIGHT_LIKE"},
-                {name: "范围", value: "BETWEEN"},
-                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
-              ],
-              valueType: "TEXT"
-            }, {
-              fieldName: "updateTime",
-              showName: "修改时间",
-              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
-                // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
-                // {name: "右模糊匹配", value: "RIGHT_LIKE"},
-                {name: "范围", value: "BETWEEN"},
-                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
-              ],
-              valueType: "DATE"
-            }, {
-              fieldName: "deliveryDate",
-              showName: "交付时间",
-              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
-                // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
-                // {name: "右模糊匹配", value: "RIGHT_LIKE"},
-                {name: "范围", value: "BETWEEN"},
-                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
-              ],
-              valueType: "DATE"
-            }, {
-              fieldName: "finishPayedDatetime",
-              showName: "支付时间",
-              operator: [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-                , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
-                // {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
-                // {name: "右模糊匹配", value: "RIGHT_LIKE"},
-                {name: "范围", value: "BETWEEN"},
-                {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
-              ],
-              valueType: "DATE"
-            }
-          ]
-        }
-      },
+
+      filterFieldMap: {},
     }
   },
   created() {
-    if (this.constraintList.length === 0) {
-      let d = JSON.parse(JSON.stringify(this.constObj));
-      this.constraintList.push(d)
+    // console.info("rowConstraintList: ", this.isChild, JSON.stringify(this.rowConstraintList))
+    if (this.isChild && this.rowConstraintList && this.rowConstraintList.length === 0) {
+      return
     }
-    for (let i = 0; i < this.constraintList.length; i++) {
-      this.operatorMap[i] = [{name: "等于", value: "EQ"}, {name: "不等于", value: "NE"}, {name: "大于", value: "GT"}
-        , {name: "大于等于", value: "GE"}, {name: "小于", value: "LT"}, {name: "小于等于", value: "LE}"},
-        {name: "模糊匹配", value: "LIKE"}, {name: "左模糊匹配", value: "LEFT_LIKE"},
-        {name: "右模糊匹配", value: "RIGHT_LIKE"},
-        {name: "范围", value: "BETWEEN"},
-        {name: "空", value: "NULL"}, {name: "非空", value: "NOT_NULL"},
-      ];
-    }
+    // if (this.rowConstraintList.length === 0) {
+    //   this.addRowConstraint();
+    // }
+    // this.rowConstraintList.forEach(t => {
+    //   t.filterList.forEach(item => {
+    //     item.id = randomNum(38);
+    //   })
+    //   t.id = randomNum(38);
+    // })
+    // console.info("rowConstraintList: ", JSON.stringify(this.rowConstraintList))
+
+    this.initSetOperatorMap(this.rowConstraintList);
   },
   methods: {
 
-    changeOperator(filter, index, value) {
-      console.info("changeOperator: ", filter, index, value)
-      filter.valueList = []
+    initSetOperatorMap(list) {
+      if (list) {
+        list.forEach(t => {
+          if (t.orderBy === undefined) {
+            t.orderBy = [];
+          }
+          t.filterList.forEach(t2 => {
+            try {
+              let t3 = this.constrainedFieldList.filter(t => t.fieldName === t2.fieldName)[0];
+              // console.info("t3: ", JSON.stringify(t3))
+              this.operatorMap[t2.id] = t3.operator;
+            } catch (e) {
+              this.operatorMap[t2.id] = this.constrainedFieldList[0].operator;
+            }
+          })
+          this.initSetOperatorMap(t.children);
+        })
+      }
+      // console.info(JSON.stringify(this.operatorMap))
     },
-    selectFieldName(filter, index, value) {
-      console.info("filter: ", filter, index, value)
-      var filterElement = this.filterFieldMap[filter.filterFieldType].values.filter(it => it.fieldName === value)[0];
-      this.operatorMap[index] = filterElement.operator;
-      this.operatorFieldMap[index] = filterElement.valueType;
-      filter.valueList = [];
+    changeOperator(f) {
+      f.valueList = [];
     },
-    deleteFilter(item, index) {
-      this.constraintList.splice(index, 1);
+    changeField(it) {
+      let t = this.constrainedFieldList.filter(t => t.fieldName === it.fieldName)[0];
+      it.fieldName = t.fieldName;
+      it.showName = t.showName;
+      it.filterFieldType = t.valueType;
+      this.operatorMap[it.id] = t.operator;
+      console.info("changeField: ", JSON.stringify(it))
+      it.valueList = [];
     },
-    addFilter(item, index) {
-      let d = JSON.parse(JSON.stringify(this.constObj));
-      this.constraintList.push(d);
-    },
-    deleteOrderBy(item, index) {
-      item.orderBy.splice(index, 1);
+    addRowConstraint() {
+      try {
+
+        var items = JSON.parse(JSON.stringify(this.constObj));
+        items.id = randomNum(38);
+        items.filterList.forEach(t => {
+          t.id = randomNum(38);
+        })
+        this.rowConstraintList.push(items);
+      } catch (e) {
+        console.info("addRowConstraint: ", e)
+      }
     },
     addOrderBy(item) {
+      debugger
+      if (item.orderBy === undefined) {
+        item.orderBy = []
+      }
       item.orderBy.push({})
     },
-    addSecondFilter(item) {
-      let d = JSON.parse(JSON.stringify(this.constObj));
-      if (item.children) {
-        item.children.push(d);
-      } else {
-        item.children = [d];
+    deleteOrderBy(item, i) {
+      item.orderBy.splice(i, 1);
+    }, addChild(item) {
+      try {
+        var items = JSON.parse(JSON.stringify(this.constObj));
+        items.id = randomNum(38);
+        items.filterList.forEach(t => {
+          t.id = randomNum(38);
+        })
+        item.children.push(items)
+      } catch (e) {
+        console.info("addChild: ", e)
       }
+
+    },
+    deleteFilter(item, i) {
+      item.filterList.splice(i, 1);
+    },
+    addFilter(item) {
+      item.filterList.push({valueList: []})
+    },
+    deleteRowConstraint(index){
+      this.rowConstraintList.splice(index, 1);
     }
   }
 }

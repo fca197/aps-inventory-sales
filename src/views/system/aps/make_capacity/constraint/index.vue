@@ -48,9 +48,9 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openContent" width="900px" append-to-body>
+    <el-dialog :title="title" :visible.sync="openContent" width="1000px" append-to-body>
       <el-form>
-        <create :constraint-list="constraintList"></create>
+        <create :row-constraint-list="constraintList" :constrained-field-list="constrainedFieldList"></create>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFormContent">确 定</el-button>
@@ -79,7 +79,8 @@
 
 <script>
 import Create from "@/views/system/aps/make_capacity/constraint/Create.vue";
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common' // console.info("xxx: ",uc.urlPrefix)
+import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import request from "@/utils/request"; // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
@@ -104,6 +105,7 @@ export default {
       // 总条数
       total: 0,
       constraintList: [],
+      constrainedFieldList: [],
       brandNameList: [],
       goodsList: [],
       workStationList: [],
@@ -139,6 +141,7 @@ export default {
     document["pagePath"] = "/apsSchedulingConstraints";
     // process.env.pagePath = "/tenant"
     this.getList();
+   this. loadConstrainedFieldList();
   },
   methods: {
     /** 查询公告列表 */
@@ -250,8 +253,34 @@ export default {
       this.title = "修改约束"
       this.openContent = true;
       this.form.id = data.id
-      this.constraintList = JSON.parse(data.constraintsContext)
+      if (data.constraintsContext === null || data.constraintsContext === "") {
+       let  constObj={
+             "filterList": [{
+               "filterFieldType": "",
+               "fieldName": "",
+               "operator": "",
+               "valueList": []
 
+             }],
+             children: [],
+             orderBy: []
+           };
+        this.constraintList = [constObj]
+      }else {
+        this.constraintList = JSON.parse(data.constraintsContext)
+
+      }
+
+    },
+    loadConstrainedFieldList() {
+      return request({
+        url: "/apsSchedulingConstraints/getUseField",
+        method: "get"
+      }).then(res => {
+        this.constrainedFieldList=res.data.values
+        // console.info(JSON.stringify(res))
+
+      })
     },
   }
 };

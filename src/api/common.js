@@ -88,3 +88,15 @@ export function toString(obj) {
 
 
 
+export  function  randomNum( maxNum){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWSYZabcdefghijklmnopqrstuvwsyz0123456789';
+  const list = [];
+  //通过随机获取八个字符串的索引下标
+  for (let i = 0; i < maxNum; i++) {
+    //61为chars字符串长度为62，注意索引是从0开始的
+    const val_1 = Math.round(Math.random() * 61);
+    list.push(val_1);
+  }
+
+  return list.map(item => chars[item]).join('');
+}
