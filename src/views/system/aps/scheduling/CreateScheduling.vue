@@ -31,9 +31,10 @@
       <div v-if="active===1">
         <use-constraints-result :id="form.id"></use-constraints-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
-        <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+        <el-button style="margin-top: 12px;" @click="useMakeCapacity">下一步</el-button>
       </div>
       <div v-if="active===2">
+        <use-make-capacity-result :id="form.id"></use-make-capacity-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
         <el-button style="margin-top: 12px;" @click="finish">完成</el-button>
       </div>
@@ -45,12 +46,14 @@
 import {getSchedulingConstraintsList} from "@/api/aps/schedulingConstraints";
 import {add, queryPageList, showMsg, updateById} from "@/api/common";
 import useConstraintsResult from "@/views/system/aps/scheduling/useConstraintsResult.vue";
+import useMakeCapacityResult from "@/views/system/aps/scheduling/useMakeCapacityResult.vue"
 import request from "@/utils/request";
 
 export default {
   name: "CreateScheduling",
   components: {
-    useConstraintsResult
+    useConstraintsResult,
+    useMakeCapacityResult
   },
   data() {
     return {
@@ -91,7 +94,7 @@ export default {
           showMsg(t, "保存成功")
           this.form.id = t.data.id;
           this.next();
-           this.useConstraints();
+          this.useConstraints();
         });
       }
     },
@@ -114,13 +117,26 @@ export default {
     },
 
     useConstraints() {
-      request({
-        url: "/apsSchedulingVersion/useConstraints",
-        method: "post",
-        data: {
-          id: this.form.id
-        }
-      })
+      // request({
+      //   url: "/apsSchedulingVersion/useConstraints",
+      //   method: "post",
+      //   data: {
+      //     id: this.form.id
+      //   }
+      // })
+    },
+    useMakeCapacity() {
+      // request({
+      //   url: "/apsSchedulingVersion/useMakeCapacity",
+      //   method: "post",
+      //   data: {
+      //     id: this.form.id
+      //   }
+      // }).then(t=>{
+      //   this.next();
+      // })
+      this.next();
+
     },
     useConstraintsResult() {
 
