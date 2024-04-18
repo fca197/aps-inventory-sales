@@ -75,7 +75,7 @@
               </el-select>
               <el-select v-model="o.orderType">
                 <el-option label="升序" value="ASC"></el-option>
-                <el-option label="降序" value="DESC"></el-option>
+                <el-option label="降序" value="DSC"></el-option>
               </el-select>
               <el-button type="danger" size="mini" @click="deleteOrderBy(item,i)"> <i class="el-icon-delete"></i></el-button>
             </div>
