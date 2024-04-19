@@ -18,6 +18,13 @@ export function queryPageList(data) {
     data: data
   })
 }
+export function queryUrlPageList(url,data) {
+  return request({
+    url: url + "/queryPageList",
+    "method": "POST",
+    data: data
+  })
+}
 
 export function updateById(data) {
   const urlPrefix = getPathPrefix()

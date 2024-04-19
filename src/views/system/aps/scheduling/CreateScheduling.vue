@@ -3,12 +3,13 @@
     <el-steps :active="active" finish-status="success">
       <el-step title="基本信息">
       </el-step>
-      <el-step title="步骤 2"></el-step>
-      <el-step title="步骤 3"></el-step>
+      <el-step title="订单排序"></el-step>
+      <el-step title="产能排单"></el-step>
+      <el-step title="结束"></el-step>
     </el-steps>
     <div style="height: 20px"></div>
     <el-form :model="form" label-width="100px">
-      <div v-if="active===0">
+      <div v-if="active===1">
         <el-form-item label="版本号">
           <el-input v-model="form.schedulingVersionNo" placeholder="请输入版本号"></el-input>
         </el-form-item>
@@ -28,12 +29,12 @@
 
         <el-button style="margin-top: 12px;" @click="saveOrUpdate">下一步</el-button>
       </div>
-      <div v-if="active===1">
+      <div v-if="active===2">
         <use-constraints-result :id="form.id"></use-constraints-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
         <el-button style="margin-top: 12px;" @click="useMakeCapacity">下一步</el-button>
       </div>
-      <div v-if="active===2">
+      <div v-if="active===3">
         <use-make-capacity-result :id="form.id"></use-make-capacity-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
         <el-button style="margin-top: 12px;" @click="finish">完成</el-button>
@@ -57,7 +58,7 @@ export default {
   },
   data() {
     return {
-      active: 0,
+      active: 1,
       schedulingConstraintsList: [],
       form: {
         schedulingVersionNo: "",
@@ -113,7 +114,9 @@ export default {
         message: '提交成功',
         type: 'success'
       });
-      this.active = 0;
+
+      this.active = 4;
+      this.$tab.closeOpenPage("/aps/make/scheduling/index")
     },
 
     useConstraints() {
