@@ -129,16 +129,16 @@ export default {
       // })
     },
     useMakeCapacity() {
-      // request({
-      //   url: "/apsSchedulingVersion/useMakeCapacity",
-      //   method: "post",
-      //   data: {
-      //     id: this.form.id
-      //   }
-      // }).then(t=>{
-      //   this.next();
-      // })
-      this.next();
+      request({
+        url: "/apsSchedulingVersion/useMakeCapacity",
+        method: "post",
+        data: {
+          id: this.form.id
+        }
+      }).then(t=>{
+        this.next();
+      })
+      // this.next();
 
     },
     useConstraintsResult() {

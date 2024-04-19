@@ -17,7 +17,7 @@
       <el-col :span="21">
         <el-col :span="24">
         <el-col :span="6" v-for="(li,i) in apsSchedulingVersionLimit.filter(t=> queryParams.currentDate.includes(t.currentDay))" :key="i">
-          {{li.currentDay}}: {{li.showName}}: {{li.currentCount}} / {{li.min}} / {{li.max}}
+          {{li.currentDay}}: {{li.showName}}: {{li.currentCount}}/{{li.min}}-{{li.max}}
         </el-col>
         </el-col>
         <el-col :span="24">
