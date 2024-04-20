@@ -25,8 +25,12 @@
                 :value="item.id">
             </el-option>
           </el-select>
+
         </el-form-item>
 
+        <el-form-item label="排产天数">
+          <el-input v-model="form.schedulingDayCount" placeholder="请输入排产天数"></el-input>
+        </el-form-item>
         <el-button style="margin-top: 12px;" @click="saveOrUpdate">下一步</el-button>
       </div>
       <div v-if="active===2">
@@ -61,6 +65,7 @@ export default {
       active: 1,
       schedulingConstraintsList: [],
       form: {
+        schedulingDayCount:94,
         schedulingVersionNo: "",
         schedulingVersionName: "",
         schedulingConstraintsId: "",
@@ -87,14 +92,14 @@ export default {
       if (this.form.id) {
         updateById(this.form).then(t => {
           showMsg(t, "修改成功")
-          this.next();
+
           this.useConstraints();
         });
       } else {
         add(this.form).then(t => {
           showMsg(t, "保存成功")
           this.form.id = t.data.id;
-          this.next();
+
           this.useConstraints();
         });
       }
@@ -120,13 +125,13 @@ export default {
     },
 
     useConstraints() {
-      // request({
-      //   url: "/apsSchedulingVersion/useConstraints",
-      //   method: "post",
-      //   data: {
-      //     id: this.form.id
-      //   }
-      // })
+      request({
+        url: "/apsSchedulingVersion/useConstraints",
+        method: "post",
+        data: {
+          id: this.form.id
+        }
+      }).then((()=>  this.next()))
     },
     useMakeCapacity() {
       request({
