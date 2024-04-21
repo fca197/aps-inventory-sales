@@ -1,24 +1,25 @@
 <template>
   <div>
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="true" label-width="88px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="false" label-width="88px">
       <el-form-item label="商品" prop="goodsId">
-        <!--        <el-select v-model="queryParams.data.goodsId" placeholder="请选择商品" clearable>-->
-        <!--          <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>-->
-        <!--        </el-select>-->
+        <el-select v-model="queryParams.goodsId" placeholder="请选择商品" clearable>
+          <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
+        </el-select>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-col :span="24">
+    <el-col :span="24"  v-loading="loading" >
       <el-col :span="3" style="max-height: 400px; overflow: auto">
-        <el-checkbox v-model="queryParams.currentDate" v-for="(d ,index) in dayList" :key="index" :value="d" :label="d"></el-checkbox>
+        <el-checkbox v-model="queryParams.currentDate" v-for="(d ,index) in dayList" :key="index" :value="d" :label="d" @change="useConstraintsResult"></el-checkbox>
       </el-col>
       <el-col :span="21">
         <el-col :span="24">
-        <el-col :span="6" v-for="(li,i) in apsSchedulingVersionLimit.filter(t=> queryParams.currentDate.includes(t.currentDay))" :key="i">
-           {{li.currentDay}}/{{li.showName}}:  {{li.currentCount}}/{{li.min}}-{{li.max}}
-        </el-col>
+          <el-col :span="6" v-for="(li,i) in apsSchedulingVersionLimit.filter(t=> queryParams.currentDate.includes(t.currentDay)).reverse()" :key="i">
+            <el-col :span="7">{{ li.currentDay }}</el-col>
+            <el-col :span="17">{{ li.showName }}: {{ li.currentCount }}/{{ li.min }}-{{ li.max }}</el-col>
+          </el-col>
         </el-col>
         <el-col :span="24">
           <el-table v-loading="loading" :data="brandNameList" width="100%">
@@ -53,7 +54,7 @@ export default {
   data() {
     return {
       // 遮罩层
-      loading: false,
+      loading: true,
       total: 0,
       // 选中数组
       ids: [],
@@ -68,35 +69,36 @@ export default {
         currentDate: [],
         pageNum: 1,
         pageSize: 10
-      }
+      },
+      interval:undefined
     }
   },
   created() {
-    this.loadVersion().then(() => {
-      this.getGoodList();
-    });
-    queryUrlPageList("/apsSchedulingVersionLimit", {queryPage: false, data: {versionId: this.id}}).then(t => {
-      // console.info("t: ", t);
-      this.apsSchedulingVersionLimit=t.data.dataList;
-
-    })
+     this. interval = setInterval(()=>{
+       this.loadVersion()
+     },1000);
   },
   mounted() {
     this.useConstraintsResult();
   },
   methods: {
-    getGoodList() {
-      // getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
-      //   this.goodsList = data.data.dataList;
-      //   // console.info("goodsList: ", this.goodsList);
-      // });
-    },
 
     loadVersion() {
       return getById({idList: [this.id]}).then(v => {
         // console.info("v: ", v);
-        this.dayList = JSON.parse(v.data.dataList[0].capacityDateList);
+        var version = v.data.dataList[0];
+        if (version.versionStep!==40){
+          return new Promise(()=>{})
+        }
+        clearInterval(this.interval);
+        this.dayList = JSON.parse(version.capacityDateList);
         this.queryParams.currentDate = [this.dayList[0]];
+
+      }).then(()=>{
+        queryUrlPageList("/apsSchedulingVersionLimit", {queryPage: false, data: {versionId: this.id}}).then(t => {
+          this.loading = false;
+          this.apsSchedulingVersionLimit = t.data.dataList;
+        })
       });
     },
 

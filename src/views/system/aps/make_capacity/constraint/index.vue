@@ -50,7 +50,7 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="openContent" width="1000px" append-to-body>
       <el-form>
-        <create :row-constraint-list="constraintList" :constrained-field-list="constrainedFieldList"></create>
+        <create :row-constraint-list="constraintList" :key="indexCreate" :is-child="false" :constrained-field-list="constrainedFieldList"></create>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitFormContent">确 定</el-button>
@@ -104,6 +104,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
+      indexCreate: 0,
       constraintList: [],
       constrainedFieldList: [],
       brandNameList: [],
@@ -251,8 +252,9 @@ export default {
 
     handleUpdateContent(data) {
       this.title = "修改约束"
-      this.openContent = true;
+
       this.form.id = data.id
+      // console.info("data.constraintsContext", data.constraintsContext)
       if (data.constraintsContext === null || data.constraintsContext === "") {
        let  constObj={
              "filterList": [{
@@ -260,7 +262,6 @@ export default {
                "fieldName": "",
                "operator": "",
                "valueList": []
-
              }],
              children: [],
              orderBy: []
@@ -270,6 +271,8 @@ export default {
         this.constraintList = JSON.parse(data.constraintsContext)
 
       }
+      this.indexCreate++;
+      this.openContent = true;
 
     },
     loadConstrainedFieldList() {

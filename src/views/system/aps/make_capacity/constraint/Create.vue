@@ -7,12 +7,12 @@
     </el-col>
     <el-col :span="24" v-for="(item,ooo) in rowConstraintList" :key="ooo" style="border-bottom: #00afff 1px solid ;margin-bottom: 20px; margin-top: 10px">
       <el-col :span="2" width="60px"> {{ '约束-' + (ooo + 1) }}
-        <el-button type="danger" v-if="ooo!==0" size="mini" @click="deleteRowConstraint(ooo)">  <i class="el-icon-delete"></i></el-button>
+        <el-button type="danger" v-if="ooo!==0" size="mini" @click="deleteRowConstraint(ooo)"><i class="el-icon-delete"></i></el-button>
       </el-col>
       <el-col :span="22" style="padding-left: 10px ;border-left: #a15050 1px solid">
         <el-col :span="24" v-for="(f,index) in item.filterList" :key="index">
-          <el-col :span="24" style="padding-bottom: 10px">
-            <el-select v-model="f.fieldName" @change="changeField(f)">
+          <el-col :span="24" style="padding-bottom: 10px;">
+            <el-select v-model="f.fieldName" @change="changeField(f,index)">
               <el-option
                   v-for="(item,index3) in constrainedFieldList"
                   :key="index3"
@@ -27,30 +27,53 @@
               </el-option>
             </el-select>
             <el-button type="danger" size="mini" v-if="index!==0" @click="deleteFilter(item,ooo)">
-              <i class="el-icon-plus"></i>
+              <i class="el-icon-delete"></i>
             </el-button>
-            <el-button type="primary" size="mini" @click="addFilter(item,ooo)"> <i class="el-icon-plus"></i></el-button>
+            <el-button type="primary" size="mini" @click="addFilter(item,ooo)"><i class="el-icon-plus"></i></el-button>
           </el-col>
           <el-col :span="2">
             过滤值:
           </el-col>
-          <el-col :span="22" style="padding-bottom: 10px">
+          <el-col :span="22" style="padding-bottom: 10px ">
             <div v-if="f.filterFieldType==='DATE'">
-              <div v-if="f.operator==='BETWEEN'">
+              <div v-if="f.operator==='BETWEEN' || f.operator==='NOT_BETWEEN'">
                 <el-date-picker type="daterange" v-model="f.valueList" placeholder="请输入过滤值" clearable/>
               </div>
-              <div v-else>
-                <el-date-picker type="date" v-model="f.valueList" placeholder="请输入过滤值" clearable/>
+              <div v-else-if="f.operator!=='IS_NULL'">
+                <el-date-picker type="date" v-model="f.valueList[0]" placeholder="请输入过滤值" clearable/>
               </div>
+
             </div>
-            <div v-else>
-              <div v-if="f.operator==='BETWEEN'">
+            <div v-else-if="f.filterFieldType==='TEXT'">
+              <div v-if="f.operator==='BETWEEN' || f.operator==='NOT_BETWEEN' ">
                 <el-input style="width: 30%" v-model="f.valueList[0]" placeholder="请输入过滤值" clearable/>
                 至
                 <el-input style="width: 30%" v-model="f.valueList[1]" placeholder="请输入过滤值" clearable/>
               </div>
-              <div v-else>
+              <div v-else-if="f.operator!=='IS_NULL'">
                 <el-input style="width: 90%" v-model="f.valueList[0]" placeholder="请输入过滤值" clearable/>
+              </div>
+            </div>
+            <div v-else-if="f.filterFieldType==='SELECT'">
+              <div v-if="f.operator==='IN'">
+                <el-select v-model="f.valueList" multiple>
+                  <el-option
+                      v-for="(item4,index4) in operatorMapValueList[f.id]"
+                      :key="index4"
+                      :label="item4.valueName"
+                      :value="item4.value">
+                  </el-option>
+                </el-select>
+              </div>
+              <div v-else>
+                <el-select v-model="f.valueList[0]">
+                  <el-option
+                      v-for="(item4,index4) in operatorMapValueList[f.id]"
+                      :key="index4"
+                      :label="item4.valueName"
+                      :value="item4.value">
+                  </el-option>
+                </el-select>
               </div>
             </div>
           </el-col>
@@ -61,7 +84,7 @@
         <el-col :span="24" style="padding-bottom: 10px">
           <el-col :span="3">
             排序:
-            <el-button type="primary" size="mini" @click="addOrderBy(item)"> <i class="el-icon-plus"></i></el-button>
+            <el-button type="primary" size="mini" @click="addOrderBy(item)"><i class="el-icon-plus"></i></el-button>
           </el-col>
           <el-col :span="21">
             <div v-for="(o,i) in item.orderBy" :key="i" style="padding-bottom: 10px">
@@ -77,7 +100,7 @@
                 <el-option label="升序" value="ASC"></el-option>
                 <el-option label="降序" value="DSC"></el-option>
               </el-select>
-              <el-button type="danger" size="mini" @click="deleteOrderBy(item,i)"> <i class="el-icon-delete"></i></el-button>
+              <el-button type="danger" size="mini" @click="deleteOrderBy(item,i)"><i class="el-icon-delete"></i></el-button>
             </div>
           </el-col>
         </el-col>
@@ -85,7 +108,7 @@
         <el-col :span="24" style="padding-bottom: 10px">
           <el-col :span="6">
             子约束:
-            <el-button type="primary" size="mini" @click="addChild(item)"> <i class="el-icon-plus"></i></el-button>
+            <el-button type="primary" size="mini" @click="addChild(item)"><i class="el-icon-plus"></i></el-button>
           </el-col>
           <create v-if="item.children.length>0" :deleteFirst="deleteFirst" :constrainedFieldList="constrainedFieldList" :isChild="true" :rowConstraintList="item.children"/>
         </el-col>
@@ -134,6 +157,7 @@ export default {
         orderBy: []
       },
       operatorMap: {},
+      operatorMapValueList: {},
 
       filterFieldMap: {},
     }
@@ -143,17 +167,6 @@ export default {
     if (this.isChild && this.rowConstraintList && this.rowConstraintList.length === 0) {
       return
     }
-    // if (this.rowConstraintList.length === 0) {
-    //   this.addRowConstraint();
-    // }
-    // this.rowConstraintList.forEach(t => {
-    //   t.filterList.forEach(item => {
-    //     item.id = randomNum(38);
-    //   })
-    //   t.id = randomNum(38);
-    // })
-    // console.info("rowConstraintList: ", JSON.stringify(this.rowConstraintList))
-
     this.initSetOperatorMap(this.rowConstraintList);
   },
   methods: {
@@ -164,15 +177,22 @@ export default {
           if (t.orderBy === undefined) {
             t.orderBy = [];
           }
-          t.filterList.forEach(t2 => {
+          // console.info("t: ", t.filterList)
+          for (let i = 0; i < t.filterList.length; i++) {
             try {
-              let t3 = this.constrainedFieldList.filter(t => t.fieldName === t2.fieldName)[0];
-              // console.info("t3: ", JSON.stringify(t3))
-              this.operatorMap[t2.id] = t3.operator;
+              let t2 = t.filterList[i];
+              // console.info("t2: ", t2)
+
+              let f = this.constrainedFieldList.filter(t => t.fieldName === t2.fieldName)[0];
+              // console.info("t2,f: ", t2,f )
+              this.operatorMap[t2.id] = f.operator;
+              this.operatorMapValueList[t2.id] = f.valueItemList;
             } catch (e) {
+              console.info(e)
               this.operatorMap[t2.id] = this.constrainedFieldList[0].operator;
             }
-          })
+
+          }
           this.initSetOperatorMap(t.children);
         })
       }
@@ -181,13 +201,14 @@ export default {
     changeOperator(f) {
       f.valueList = [];
     },
-    changeField(it) {
+    changeField(it, index) {
       let t = this.constrainedFieldList.filter(t => t.fieldName === it.fieldName)[0];
       it.fieldName = t.fieldName;
       it.showName = t.showName;
       it.filterFieldType = t.valueType;
       this.operatorMap[it.id] = t.operator;
-      console.info("changeField: ", JSON.stringify(it))
+      this.operatorMapValueList[it.id] = t.valueItemList;
+      console.info("changeField: ", JSON.stringify(it), this.operatorMapValueList)
       it.valueList = [];
     },
     addRowConstraint() {
@@ -215,9 +236,9 @@ export default {
     }, addChild(item) {
       try {
         var items = JSON.parse(JSON.stringify(this.constObj));
-        items.id = randomNum(38);
+        items.id = randomNum(9) + "-";
         items.filterList.forEach(t => {
-          t.id = randomNum(38);
+          t.id = randomNum(9) + "-";
         })
         item.children.push(items)
       } catch (e) {
@@ -231,7 +252,7 @@ export default {
     addFilter(item) {
       item.filterList.push({valueList: []})
     },
-    deleteRowConstraint(index){
+    deleteRowConstraint(index) {
       this.rowConstraintList.splice(index, 1);
     }
   }

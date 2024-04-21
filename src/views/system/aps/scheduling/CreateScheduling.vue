@@ -65,7 +65,7 @@ export default {
       active: 1,
       schedulingConstraintsList: [],
       form: {
-        schedulingDayCount:94,
+        schedulingDayCount: 94,
         schedulingVersionNo: "",
         schedulingVersionName: "",
         schedulingConstraintsId: "",
@@ -115,13 +115,18 @@ export default {
       }
     },
     finish() {
-      this.$message({
-        message: '提交成功',
-        type: 'success'
-      });
 
-      this.active = 4;
-      this.$tab.closeOpenPage("/aps/make/scheduling/index")
+      request({
+        url: "/apsSchedulingVersion/finish",
+        method: "post",
+        data: {
+          id: this.form.id
+        }
+      }).then(() => {
+        showMsg({code: 200, msg: "完成"})
+        this.active = 4;
+        this.$tab.closeOpenPage("/aps/make/scheduling/index")
+      })
     },
 
     useConstraints() {
@@ -131,17 +136,18 @@ export default {
         data: {
           id: this.form.id
         }
-      }).then((()=>  this.next()))
+      }).then((() => this.next()))
     },
     useMakeCapacity() {
+      this.next();
       request({
         url: "/apsSchedulingVersion/useMakeCapacity",
         method: "post",
         data: {
           id: this.form.id
         }
-      }).then(t=>{
-        this.next();
+      }).then(t => {
+
       })
       // this.next();
 
