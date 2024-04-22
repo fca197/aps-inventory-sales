@@ -137,6 +137,7 @@ export default {
           id: this.form.id
         }
       }).then((() => this.next()))
+      // this.next();
     },
     useMakeCapacity() {
       this.next();
