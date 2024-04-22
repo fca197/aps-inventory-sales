@@ -269,7 +269,6 @@ export default {
         this.constraintList = [constObj]
       }else {
         this.constraintList = JSON.parse(data.constraintsContext)
-
       }
       this.indexCreate++;
       this.openContent = true;
