@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       active: 1,
+      isShow: false,
       schedulingConstraintsList: [],
       form: {
         schedulingDayCount: 94,
@@ -83,12 +84,17 @@ export default {
       queryPageList({data: {id: this.$route.query.id}, pageNum: 1, pageSize: 300})
       .then(t => {
         this.form = t.data.dataList[0];
+        this.isShow = this.form.versionStep === 100;
       });
     }
   },
   methods: {
 
     saveOrUpdate() {
+      if (this.isShow) {
+        this.next();
+        return;
+      }
       if (this.form.id) {
         updateById(this.form).then(t => {
           showMsg(t, "修改成功")
@@ -115,7 +121,10 @@ export default {
       }
     },
     finish() {
-
+      if (this.isShow) {
+        this.next();
+        return;
+      }
       request({
         url: "/apsSchedulingVersion/finish",
         method: "post",
@@ -130,6 +139,10 @@ export default {
     },
 
     useConstraints() {
+      if (this.isShow) {
+        this.next();
+        return;
+      }
       request({
         url: "/apsSchedulingVersion/useConstraints",
         method: "post",
@@ -140,7 +153,10 @@ export default {
       // this.next();
     },
     useMakeCapacity() {
-      this.next();
+      if (this.isShow) {
+        this.next();
+        return;
+      }
       request({
         url: "/apsSchedulingVersion/useMakeCapacity",
         method: "post",
@@ -148,7 +164,7 @@ export default {
           id: this.form.id
         }
       }).then(t => {
-
+        this.next();
       })
       // this.next();
 
