@@ -41,7 +41,9 @@
       <div v-if="active===3">
         <use-make-capacity-result :id="form.id"></use-make-capacity-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
-        <el-button style="margin-top: 12px;" @click="finish">完成</el-button>
+
+        <el-button style="margin-top: 12px;" @click="finish" v-if="form.versionStep!==100">完成</el-button>
+        <el-button style="margin-top: 12px;" @click="finish" v-else>选择排产发布到制造系统</el-button>
       </div>
     </el-form>
   </div>
