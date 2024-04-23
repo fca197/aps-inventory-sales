@@ -180,7 +180,7 @@ export const constantRoutes = [{
     meta: {title: '订单管理', icon: 'order-1', affix: false}
   }, {
     path: '/aps/make/q/index',
-    name: "产能管理",
+    name: "排产管理",
     component: ParentView, // component: () => import('@/views/system/aps/order/index'),
     meta: {title: '产能管理', icon: 'order-1', affix: false},
     children: [{

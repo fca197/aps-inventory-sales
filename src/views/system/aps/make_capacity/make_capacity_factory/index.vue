@@ -31,7 +31,11 @@
           <span>{{ scope.row["dayMin" + item] }} / {{ scope.row["dayMax" + item] }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
