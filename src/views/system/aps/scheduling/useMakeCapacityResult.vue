@@ -10,16 +10,18 @@
       </el-form-item>
     </el-form>
 
-    <el-col :span="24"  v-loading="loading" >
+    <el-col :span="24" v-loading="loading">
       <el-col :span="3" style="max-height: 400px; overflow: auto">
         <el-checkbox v-model="queryParams.currentDate" v-for="(d ,index) in dayList" :key="index" :value="d" :label="d" @change="useConstraintsResult"></el-checkbox>
       </el-col>
       <el-col :span="21">
-        <el-col :span="24">
-          <el-col :span="6" v-for="(li,i) in apsSchedulingVersionLimit.filter(t=> queryParams.currentDate.includes(t.currentDay)).reverse()" :key="i">
-            <el-col :span="7">{{ li.currentDay }}</el-col>
-            <el-col :span="17">{{ li.showName }}: {{ li.currentCount }}/{{ li.min }}-{{ li.max }}</el-col>
-          </el-col>
+        <el-col style="border-bottom: #f89494 1px solid;margin-bottom: 20px" :span="24" v-for="(d,i) in  queryParams.currentDate" :key="i">
+          <el-col :span="24">当前日期: <label>{{ d }}</label></el-col>
+          <el-row  type="flex" style="flex-wrap: wrap;width:100%">
+            <el-col :span="6" style="margin: 2px 0 " v-for="(li,index) in  apsSchedulingVersionLimitMap[d]" :key="index">
+              {{ li.showName }}: {{ li.currentCount }}/{{ li.min }}-{{ li.max }}
+            </el-col>
+          </el-row>
         </el-col>
         <el-col :span="24">
           <el-table v-loading="loading" :data="brandNameList" width="100%">
@@ -63,6 +65,7 @@ export default {
       dayList: [],
       tableHeaderList: [],
       apsSchedulingVersionLimit: [],
+      apsSchedulingVersionLimitMap: {},
       // 非单个
       queryParams: {
         id: this.id,
@@ -70,14 +73,14 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
-      maxLoop:100,
-      interval:undefined
+      maxLoop: 100,
+      interval: undefined
     }
   },
   created() {
-     this. interval = setInterval(()=>{
-       this.loadVersion()
-     },1000);
+    this.interval = setInterval(() => {
+      this.loadVersion()
+    }, 1000);
   },
   mounted() {
     this.useConstraintsResult();
@@ -86,23 +89,37 @@ export default {
 
     loadVersion() {
       this.maxLoop--;
-      if (this.maxLoop<=0){
+      if (this.maxLoop <= 0) {
         clearInterval(this.interval);
       }
       return getById({idList: [this.id]}).then(v => {
         // console.info("v: ", v);
         var version = v.data.dataList[0];
-        if (version.versionStep <40){
-          return new Promise(()=>{})
+        if (version.versionStep < 40) {
+          return new Promise(() => {
+          })
         }
         clearInterval(this.interval);
         this.dayList = JSON.parse(version.capacityDateList);
         // this.queryParams.currentDate = [this.dayList[0]];
 
-      }).then(()=>{
+      }).then(() => {
         queryUrlPageList("/apsSchedulingVersionLimit", {queryPage: false, data: {versionId: this.id}}).then(t => {
           this.loading = false;
-          this.apsSchedulingVersionLimit = t.data.dataList;
+          let d = t.data.dataList
+          d.map(v => {
+            var tt = this.apsSchedulingVersionLimitMap[v.currentDay];
+            if (tt === undefined) {
+              tt = [v]
+            } else {
+              tt.push(v)
+            }
+            tt = tt.sort((a, b) => {
+              return a.limitType - b.limitType
+            })
+            this.apsSchedulingVersionLimitMap[v.currentDay] = tt;
+          })
+          // this.apsSchedulingVersionLimit
         })
       });
     },
