@@ -12,14 +12,20 @@
 
     <el-col :span="24" v-loading="loading">
       <el-col :span="3" style="max-height: 400px; overflow: auto">
-        <el-checkbox v-model="queryParams.currentDate" v-for="(d ,index) in dayList" :key="index" :value="d" :label="d" @change="useConstraintsResult"></el-checkbox>
+        <el-checkbox v-model="queryParams.currentDate" v-for="(d ,index) in dayList" :key="index" :value="d.currentDay" :label="d.currentDay" @change="useConstraintsResult">
+          <label>{{ d.currentDay }} </label>
+          <el-badge is-dot class="item" v-if="!d.hasEnough"> {{ d.currentCount }}</el-badge>
+        </el-checkbox>
       </el-col>
       <el-col :span="21">
-        <el-col style="border-bottom: #f89494 1px solid;margin-bottom: 20px" :span="24" v-for="(d,i) in  queryParams.currentDate" :key="i">
-          <el-col :span="24">当前日期: <label>{{ d }}</label></el-col>
-          <el-row  type="flex" style="flex-wrap: wrap;width:100%">
-            <el-col :span="6" style="margin: 2px 0 " v-for="(li,index) in  apsSchedulingVersionLimitMap[d]" :key="index">
+        <el-col style="border-bottom: #f6c1c1 1px solid;margin-bottom: 20px" :span="24" v-for="(d,i) in  queryParams.currentDate" :key="i">
+          <el-col :span="24">当前日期: <label>{{ d }}</label>
+            <el-badge is-dot class="item" v-if="dayList.filter(iten=>iten.currentDay===d)[0].hasEnough===false"></el-badge>
+          </el-col>
+          <el-row type="flex" style="flex-wrap: wrap;width:100%">
+            <el-col :span="6" style="margin: 2px 0 ;height: 25px" v-for="(li,index) in  apsSchedulingVersionLimitMap[d]" :key="index">
               {{ li.showName }}: {{ li.currentCount }}/{{ li.min }}-{{ li.max }}
+              <el-badge is-dot class="item" v-if="li.currentCount < li.min" :value="li.min-li.currentCount"></el-badge>
             </el-col>
           </el-row>
         </el-col>
@@ -102,6 +108,9 @@ export default {
         clearInterval(this.interval);
         this.dayList = JSON.parse(version.capacityDateList);
         // this.queryParams.currentDate = [this.dayList[0]];
+        queryUrlPageList("/apsSchedulingVersionDay", {queryPage: false, data: {versionId: this.id}}).then(t => {
+          this.dayList = t.data.dataList.reverse();
+        })
 
       }).then(() => {
         queryUrlPageList("/apsSchedulingVersionLimit", {queryPage: false, data: {versionId: this.id}}).then(t => {
@@ -119,13 +128,12 @@ export default {
             })
             this.apsSchedulingVersionLimitMap[v.currentDay] = tt;
           })
-          // this.apsSchedulingVersionLimit
         })
       });
     },
 
     useConstraintsResult() {
-
+      this.queryParams.currentDate = this.queryParams.currentDate.sort();
       request({
         url: "/apsSchedulingVersion/useMakeCapacityResult",
         method: "post",
