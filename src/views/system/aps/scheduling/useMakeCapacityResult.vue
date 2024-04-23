@@ -70,6 +70,7 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
+      maxLoop:100,
       interval:undefined
     }
   },
@@ -84,15 +85,19 @@ export default {
   methods: {
 
     loadVersion() {
+      this.maxLoop--;
+      if (this.maxLoop<=0){
+        clearInterval(this.interval);
+      }
       return getById({idList: [this.id]}).then(v => {
         // console.info("v: ", v);
         var version = v.data.dataList[0];
-        if (version.versionStep!==40){
+        if (version.versionStep <40){
           return new Promise(()=>{})
         }
         clearInterval(this.interval);
         this.dayList = JSON.parse(version.capacityDateList);
-        this.queryParams.currentDate = [this.dayList[0]];
+        // this.queryParams.currentDate = [this.dayList[0]];
 
       }).then(()=>{
         queryUrlPageList("/apsSchedulingVersionLimit", {queryPage: false, data: {versionId: this.id}}).then(t => {

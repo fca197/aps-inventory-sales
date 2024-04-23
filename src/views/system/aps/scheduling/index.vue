@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="88px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" hidden="hidden" v-show="showSearch" label-width="88px">
       <el-form-item label="工厂" prop="factoryList">
         <el-select v-model="queryParams.data.factoryId" placeholder="请选择工厂" clearable>
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
@@ -32,8 +32,13 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :width="item.width" :prop="item.fieldName" :label="item.showName"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
+          <div  v-if="scope.row.versionStep<40">
+          <el-button size="mini" type="text"  icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+          </div>
+          <div v-else>
+            <el-button size="mini" type="text"  icon="el-icon-s-data"  @click="handleUpdate(scope.row)">查看</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>

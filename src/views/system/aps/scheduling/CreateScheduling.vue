@@ -122,7 +122,7 @@ export default {
     },
     finish() {
       if (this.isShow) {
-        this.next();
+        this.$tab.closeOpenPage("/aps/make/scheduling/index")
         return;
       }
       request({
