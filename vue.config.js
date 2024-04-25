@@ -77,7 +77,7 @@ module.exports = {
           onEnd: {
             delete: [`./dist/*.zip`],
             archive: [
-              {source: `./dist`, destination: `./dist/app.zip`}
+              {source: `./dist`, destination: `./dist/aps.zip`}
             ]
           }
         }
