@@ -18,7 +18,8 @@ export function queryPageList(data) {
     data: data
   })
 }
-export function queryUrlPageList(url,data) {
+
+export function queryUrlPageList(url, data) {
   return request({
     url: url + "/queryPageList",
     "method": "POST",
@@ -82,9 +83,16 @@ export function checkCompare(property) {
   }
 }
 
-export function showMsg(res, successMsg) {
+export function showMsg(res, showMsg) {
+  if ( res.code !== 200) {
+    ElementUI.Message({
+      message: res.msg || showMsg || '操作失败',
+      type: 'error'
+    });
+    return false;
+  }
   ElementUI.Message({
-    message: successMsg || '操作成功',
+    message: showMsg || '操作成功',
     type: 'success'
   });
 }
@@ -93,9 +101,7 @@ export function toString(obj) {
   return JSON.stringify(obj)
 }
 
-
-
-export  function  randomNum( maxNum){
+export function randomNum(maxNum) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWSYZabcdefghijklmnopqrstuvwsyz0123456789';
   const list = [];
   //通过随机获取八个字符串的索引下标

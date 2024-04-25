@@ -39,11 +39,11 @@
         <el-button style="margin-top: 12px;" @click="useMakeCapacity">下一步</el-button>
       </div>
       <div v-if="active===3">
-        <use-make-capacity-result :id="form.id"></use-make-capacity-result>
+        <use-make-capacity-result ref="makeResult" :id="form.id"></use-make-capacity-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
 
         <el-button style="margin-top: 12px;" @click="finish" v-if="form.versionStep!==100">完成</el-button>
-        <el-button style="margin-top: 12px;" @click="finish" v-else>选择排产日期发布到制造系统</el-button>
+        <el-button style="margin-top: 12px;" @click="deploy" v-else>选择排产日期发布到制造系统</el-button>
       </div>
     </el-form>
   </div>
@@ -122,6 +122,16 @@ export default {
         this.active = 2;
       }
     },
+    deploy() {
+      var dateList = this.$refs.makeResult.queryParams.currentDate;
+      if (dateList.length === 0){
+        this.$message.error("请选择排产日期");
+        return
+      }
+
+      showMsg({code: 200},  dateList+"发布完成");
+    },
+
     finish() {
       if (this.isShow) {
         this.$tab.closeOpenPage("/aps/make/scheduling/index")
