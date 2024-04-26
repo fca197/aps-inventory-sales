@@ -135,7 +135,7 @@ export const constantRoutes = [{
     component: ParentView,
     meta: {title: '商品管理', icon: 'order-1', affix: false},
     children: [{
-      path: '/aps/upload/index',
+      path: '/aps/goods/index',
       name: "商品管理",
       component: () => import('@/views/system/aps/goods/index'),
       meta: {title: '商品管理', icon: 'order-1', affix: false}
