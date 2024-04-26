@@ -20,14 +20,14 @@
           <span v-if="scope.row.isValue !== 1">{{ scope.row.saleCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="值编码" prop="saleCode">
-        <template slot-scope="scope">
-          <span v-if="scope.row.isValue === 1">{{ scope.row.saleCode }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="组名称" prop="saleName">
         <template slot-scope="scope">
           <span v-if="scope.row.isValue !== 1">{{ scope.row.saleName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="值编码" prop="saleCode">
+        <template slot-scope="scope">
+          <span v-if="scope.row.isValue === 1">{{ scope.row.saleCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="值名称" prop="saleName">
@@ -35,25 +35,24 @@
           <span v-if="scope.row.isValue === 1">{{ scope.row.saleName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="组/值">
+<!--      <el-table-column label="组/值"  >-->
+<!--        <template slot-scope="scope">-->
+<!--          <span v-if="scope.row.isValue === 1">值</span>-->
+<!--          <span v-else>组</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+
+      <el-table-column label="工程特征组">
         <template slot-scope="scope">
-          <span v-if="scope.row.isValue === 1">值</span>
-          <span v-else>组</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="本商品配置">
-        <template slot-scope="scope">
-          <span v-if="scope.row.isValue === 1">
-            <el-checkbox v-model="goodsSaleConfig[scope.row.id]" @change="value=>{changeSaleSelect(scope.row.id,value)}"></el-checkbox>
-            <span style="margin: 0 10px"></span>    <span v-if="goodsSaleConfig[scope.row.id]">是</span><span v-else>否</span>
+          <span v-if="scope.row.isValue !== 1">
+            <el-select></el-select>
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="参与预测">
+      <el-table-column label="工程特征值">
         <template slot-scope="scope">
-          <span v-if="scope.row.isValue === 1">
-           <el-checkbox v-model="goodsSaleForecastConfig[scope.row.id]" :value="scope.row.id" @change="value=>{changeForecastSelect(scope.row.id,value)}"></el-checkbox>
-           <span style="margin: 0 10px"></span>    <span v-if="goodsSaleForecastConfig[scope.row.id]">是</span><span v-else>否</span>
+          <span v-if="goodsSaleConfig[scope.row.id]">
+            <el-select></el-select>
           </span>
         </template>
       </el-table-column>
