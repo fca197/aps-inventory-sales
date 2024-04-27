@@ -153,33 +153,35 @@ export default {
         this.goodsSaleForecastConfig = f;
       }).then(r => {
         post("/apsGoodsSaleProjectConfig/queryPageList", {queryPage: false, data: {goodsId: this.form.goodsId}}, false).then(res => {
-          //console.log("res", res);
-          let ttt = {};
+
+          this.goodsProjectMap = []
           res.data.dataList.forEach(tt => {
-            var key = tt.saleConfigParentId + "-" + tt.saleConfigId;
-            var lt = this.goodsProjectMap[key];
-            if (lt) {
-              lt.push(tt);
-            } else {
-              this.goodsProjectMap[key] = [tt];
-            }
-            ttt[key] = lt;
+            let key = tt.saleConfigParentId + "-" + tt.saleConfigId;
+            let lt = this.goodsProjectMap[key] || [];
+            let parse = {
+              quantity: tt.quantity,
+              factoryId: tt.factoryId,
+              saleConfigId: tt.saleConfigId,
+              saleConfigParentId: tt.saleConfigParentId,
+              saleConfigName: tt.saleConfigName,
+              goodsId: tt.goodsId,
+              projectConfigId: tt.projectConfigId,
+              projectConfigParentId: tt.projectConfigParentId,
+              projectConfigName: tt.projectConfigName
+            };
+            lt.push(parse);
+
+            this.$set(this.goodsProjectMap, key, lt)
             for (let scc in this.apsSaleConfigList) {
-              if (this.apsSaleConfigList[scc].id === tt.saleConfigParentId){
-                // this.apsSaleConfigList[scc].projectId=tt.parentId;
+              if (this.apsSaleConfigList[scc].id === tt.saleConfigParentId) {
                 this.$set(this.apsSaleConfigList[scc], "projectId", tt.projectConfigParentId)
                 break;
               }
-
             }
-
           })
-          // console.log("ttt", ttt, this.apsSaleConfigList);
-          for (var key in ttt) {
-            this.$set(this.goodsProjectMap, key, ttt[key])
-          }
-          // this.$set(this.goodsProjectMap, key, lt)
-          // this.$forceUpdate();
+        }).then(() => {
+          console.log("goodsProjectMap", this.goodsProjectMap)
+          this.$forceUpdate();
         });
 
       })
@@ -239,7 +241,7 @@ export default {
         lt.forEach(t => {
           let parse = {
             quantity: 0,
-            factoryId: this.form.factoryId,
+            factoryId: this.form.goods.factoryId,
             saleConfigId: sc.id,
             saleConfigParentId: sc.parentId,
             saleConfigName: sc.saleName,
@@ -271,6 +273,9 @@ export default {
         return;
       }
       post("/apsGoodsSaleProjectConfig/insertBatch", f);
+    },
+    onInput() {
+      this.$forceUpdate();
     }
   }
 }
