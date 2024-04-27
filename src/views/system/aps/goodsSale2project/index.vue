@@ -8,14 +8,16 @@
           <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <right-toolbar :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="商品销售配置" @queryTable="getList"></right-toolbar>
+
+      <el-button type="primary" size="mini" @click="saveConfig">保存配置</el-button>
+      <!--      <right-toolbar :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="商品销售配置" @queryTable="getList"></right-toolbar>-->
 
     </el-form>
 
 
     <el-table id="dataTable" :data="apsSaleConfigList" :default-expand-all="true" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" row-key="id" stripe>
       <!--      <el-table-column label="全选" type="selection" prop="id"/>-->
-      <el-table-column label="序号" prop="id" width="170px"/>
+      <!--      <el-table-column label="序号" prop="id" width="170px"/>-->
       <el-table-column label="组编码" prop="saleCode" width="170px">
         <template slot-scope="scope">
           <span v-if="scope.row.isValue !== 1">{{ scope.row.saleCode }}</span>
@@ -36,13 +38,6 @@
           <span v-if="scope.row.isValue === 1">{{ scope.row.saleName }}</span>
         </template>
       </el-table-column>
-      <!--      <el-table-column label="组/值"  >-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <span v-if="scope.row.isValue === 1">值</span>-->
-      <!--          <span v-else>组</span>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-
       <el-table-column label="工程特征组" width="170px">
         <template slot-scope="scope">
           <span v-if="scope.row.isValue !== 1">
@@ -54,9 +49,8 @@
       </el-table-column>
       <el-table-column label="工程特征值">
         <template slot-scope="scope">
-          <span v-if="goodsSaleConfig[scope.row.parentId]">
-            <el-col :span="12" v-for="(plt ,index ) in goodsProjectMap[scope.row.parentId]">
-<!--              {{goodsProjectMap[scope.row.id]}}-->
+          <span v-if="scope.row.isValue === 1">
+            <el-col :span="12" v-for="(plt ,index ) in goodsProjectMap[scope.row.parentId+'-'+scope.row.id]" :key="index">
               <el-col :span="24">
                    <el-col :span="12">
                    <el-input v-model="plt.saleConfigId" disabled style="display: none"/>
@@ -77,7 +71,7 @@
 </template>
 
 <script>
-import {deleteByIdList, queryPageList, queryUrlPageList} from '@/api/common'
+import {deleteByIdList, post, queryPageList, queryUrlPageList} from '@/api/common'
 import {getGoodsList} from '@/api/aps/goods'
 import {getSaleConfigList} from "@/api/aps/saleConfig";
 import {updateForecast, updateSaleConfig} from "@/api/aps/goodsSaleConfig";
@@ -110,10 +104,11 @@ export default {
       saleProjectMap: {
         "1": []
       },
-      goodsProjectMap: {}
+      goodsProjectMap: []
     }
   },
   created() {
+
     document["pagePath"] = "/apsGoodsSaleItem";
     getSaleConfigList({pageNum: 1, pageSize: 999})
     .then(t => {
@@ -129,10 +124,12 @@ export default {
       queryUrlPageList("/apsProjectConfig", {queryPage: false}).then(t => {
         // console.log("apsProjectConfig",t)
         this.apsProjectConfigList = t.data.dataList
+
       })
       getGoodsList({}).then(t => {
         this.goodsList = t.data.dataList
         this.form.goodsId = this.goodsList[0].id;
+        this.form.goods = this.goodsList[0];
       })
     })
   }
@@ -154,6 +151,37 @@ export default {
         })
         this.goodsSaleConfig = d;
         this.goodsSaleForecastConfig = f;
+      }).then(r => {
+        post("/apsGoodsSaleProjectConfig/queryPageList", {queryPage: false, data: {goodsId: this.form.goodsId}}, false).then(res => {
+          //console.log("res", res);
+          let ttt = {};
+          res.data.dataList.forEach(tt => {
+            var key = tt.saleConfigParentId + "-" + tt.saleConfigId;
+            var lt = this.goodsProjectMap[key];
+            if (lt) {
+              lt.push(tt);
+            } else {
+              this.goodsProjectMap[key] = [tt];
+            }
+            ttt[key] = lt;
+            for (let scc in this.apsSaleConfigList) {
+              if (this.apsSaleConfigList[scc].id === tt.saleConfigParentId){
+                // this.apsSaleConfigList[scc].projectId=tt.parentId;
+                this.$set(this.apsSaleConfigList[scc], "projectId", tt.projectConfigParentId)
+                break;
+              }
+
+            }
+
+          })
+          // console.log("ttt", ttt, this.apsSaleConfigList);
+          for (var key in ttt) {
+            this.$set(this.goodsProjectMap, key, ttt[key])
+          }
+          // this.$set(this.goodsProjectMap, key, lt)
+          // this.$forceUpdate();
+        });
+
       })
     },
     handleAdd(row) {
@@ -198,21 +226,51 @@ export default {
       })
     },
     selectProject(saleId, projectId) {
+
       let lt = this.apsProjectConfigList.filter(t => t.id === projectId)[0].children || [];
       if (lt.length === 0) {
         $.modal.msgError("请先添加工程特征值")
         return;
       }
-      let ltt = [];
-      this.items.saleConfigId = saleId
-      lt.forEach(t => {
-        var parse = JSON.parse(JSON.stringify(this.items));
-        parse.projectConfigId = t.id
-        parse.projectConfigName = t.saleName
-        ltt.push(parse)
+      let saleConfigList = this.apsSaleConfigList.filter(t => t.id === saleId)[0].children || []
+
+      saleConfigList.forEach(sc => {
+        let ltt = []
+        lt.forEach(t => {
+          let parse = {
+            quantity: 0,
+            factoryId: this.form.factoryId,
+            saleConfigId: sc.id,
+            saleConfigParentId: sc.parentId,
+            saleConfigName: sc.saleName,
+            goodsId: this.form.goodsId,
+            projectConfigId: t.id,
+            projectConfigParentId: t.parentId,
+            projectConfigName: t.saleName
+          };
+          ltt.push(parse);
+        })
+        // this.goodsProjectMap[saleId + '-' + sc.id] = ltt;
+        this.$set(this.goodsProjectMap, saleId + '-' + sc.id, ltt)
+
       })
-      this.goodsProjectMap[saleId] = ltt;
-      console.log("selectProject", saleId, projectId, this.goodsSaleConfig)
+
+      // console.log("goodsSaleConfig", saleId, projectId, this.goodsProjectMap)
+    },
+    saveConfig() {
+      let f = [];
+      for (let key in this.goodsProjectMap) {
+        let l = this.goodsProjectMap[key];
+        l.forEach(t => {
+          f.push(t)
+        })
+      }
+
+      if (f.length === 0) {
+        $.modal.msgError("请先选择工程特征值")
+        return;
+      }
+      post("/apsGoodsSaleProjectConfig/insertBatch", f);
     }
   }
 }

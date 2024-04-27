@@ -10,6 +10,29 @@ export function add(data, options) {
   })
 }
 
+export function post(url, data, showMsg) {
+  return request({
+    url: url,
+    "method": "POST",
+    data: data
+  }).then(res => {
+    if (showMsg === undefined || showMsg === true) {
+      if (res.code === 200) {
+        ElementUI.Message({
+          message: '操作成功',
+          type: "success"
+        });
+      } else {
+        ElementUI.Message({
+          message: res.msg,
+          type: "error"
+        });
+      }
+    }
+    return res;
+  })
+}
+
 export function queryPageList(data) {
   const urlPrefix = getPathPrefix()
   return request({
@@ -84,7 +107,7 @@ export function checkCompare(property) {
 }
 
 export function showMsg(res, showMsg) {
-  if ( res.code !== 200) {
+  if (res.code !== 200) {
     ElementUI.Message({
       message: res.msg || showMsg || '操作失败',
       type: 'error'
