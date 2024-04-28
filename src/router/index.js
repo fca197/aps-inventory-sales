@@ -130,7 +130,7 @@ export const constantRoutes = [{
       meta: {title: '零件配置', icon: 'setting', affix: false}
     },]
   }, {
-    path: '/aps/upload/index',
+    path: '/aps/goods/main/index',
     name: "商品管理",
     component: ParentView,
     meta: {title: '商品管理', icon: 'order-1', affix: false},
