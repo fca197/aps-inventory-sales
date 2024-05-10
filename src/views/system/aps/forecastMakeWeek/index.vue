@@ -63,14 +63,7 @@
         <el-button @click="cancel">取消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="uploadOpen" width="500px" @close="cancel">
-      <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="(预)周生产版本文件" prop="forecastMakeMonthName">
-          <file-upload ref="fileUpload" :file-type="['xlsx']" :fileUploadSuccess="fileUploadSuccess" :upload-url="'/apsGoodsForecast/uploadTemplate/'+this.form.id"
-                       :value="form.fileId"/>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+
   </div>
 </template>
 
@@ -174,12 +167,8 @@ export default {
     downloadTemplate(row) {
       downloadForm("/apsGoodsForecast/downloadTemplate/" + row.id, {}, row.forecastName + ".xlsx");
     },
-    uploadTemplate(row) {
-      this.form.id = row.id;
-      this.title = "上传(预)周生产版本";
-      this.uploadOpen = true;
-    }, handleData(row) {
-      this.$tab.openPage("(预)周生产数据", "/apsGoodsForecastMakeMonth/queryDataById", {
+     handleData(row) {
+      this.$tab.openPage("(预)周生产数据", "/aps/goods/forecast/make/week/result", {
             id: row.id
           }
       )
@@ -189,12 +178,7 @@ export default {
       this.uploadOpen = false;
     },
 
-    computeResult(row) {
-      this.$tab.openPage("计算结果", "/apsGoodsForecast/compute", {
-            id: row.id
-          }
-      )
-    }, forecastDeploy(row) {
+    forecastDeploy(row) {
       deploy(row).then(() => this.getList());
     }
   }

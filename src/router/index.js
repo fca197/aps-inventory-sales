@@ -32,7 +32,14 @@ Vue.use(Router)
 export const constantRoutes = [{
   path: "/hidden.layout", component: Layout, hidden: true,
 
-  children: [{
+  children: [
+    {
+      path: '/aps/goods/forecast/make/week/result',
+      name: "(预)生产数据",
+      component: () => import('@/views/system/aps/forecastMakeWeek/result'),
+      meta: {title: '(预)周生产管理数据', icon: 'eye-open', affix: false},
+    },
+      {
     path: '/psGoodsForecast/getDataById',
     component: () => import('@/views/system/aps/forecast/data.vue'),
     meta: {title: '上传数据', icon: 'redis', affix: false},
