@@ -203,7 +203,6 @@ export default {
         this.form.shiftCode = response.data.dataList[0].shiftCode
         this.form.shiftItemList = response.data.dataList[0].shiftItemDtoList
         this.open = true;
-        // console.info(  this.form)
       });
 
     },
