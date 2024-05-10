@@ -38,37 +38,42 @@ export const constantRoutes = [{
       name: "(预)生产数据",
       component: () => import('@/views/system/aps/forecastMakeWeek/result'),
       meta: {title: '(预)周生产管理数据', icon: 'eye-open', affix: false},
+    }, {
+      path: '/aps/goods/forecast/make/week/projectResult',
+      name: "(预)生产数据",
+      component: () => import('@/views/system/aps/forecastMakeWeek/projectResult'),
+      meta: {title: '(预)周生产管理数据-规划配置', icon: 'eye-open', affix: false},
     },
-      {
-    path: '/psGoodsForecast/getDataById',
-    component: () => import('@/views/system/aps/forecast/data.vue'),
-    meta: {title: '上传数据', icon: 'redis', affix: false},
-    hidden: false
-  }, {
-    path: '/apsGoodsForecast/compute',
-    name: "计算结果",
-    component: () => import('@/views/system/aps/forecast/result.vue'),
-    meta: {title: '计算结果', icon: 'redis', affix: false},
-    hidden: false
-  }, {
-    path: '/psGoodsForecastMain/getDataByGoodsId',
-    name: "主版本预测数据",
-    component: () => import('@/views/system/aps/forecastMain/result.vue'),
-    meta: {title: '主版本预测数据', icon: 'redis', affix: false},
-    hidden: false
-  }, {
-    path: '/apsGoodsForecastMainMakeWeek/queryDataDataById',
-    name: "(预测)生产数据看板",
-    component: () => import('@/views/system/aps/forecastMainMake/result.vue'),
-    meta: {title: '(预测)生产数据看板', icon: 'redis', affix: false},
-    hidden: false
-  }, {
-    path: '/aps/make/scheduling/create',
-    name: "创建排产版本",
-    component: () => import('@/views/system/aps/scheduling/CreateScheduling.vue'),
-    meta: {title: '创建排产版本', icon: 'redis', affix: false},
-    hidden: false
-  },]
+    {
+      path: '/psGoodsForecast/getDataById',
+      component: () => import('@/views/system/aps/forecast/data.vue'),
+      meta: {title: '上传数据', icon: 'redis', affix: false},
+      hidden: false
+    }, {
+      path: '/apsGoodsForecast/compute',
+      name: "计算结果",
+      component: () => import('@/views/system/aps/forecast/result.vue'),
+      meta: {title: '计算结果', icon: 'redis', affix: false},
+      hidden: false
+    }, {
+      path: '/psGoodsForecastMain/getDataByGoodsId',
+      name: "主版本预测数据",
+      component: () => import('@/views/system/aps/forecastMain/result.vue'),
+      meta: {title: '主版本预测数据', icon: 'redis', affix: false},
+      hidden: false
+    }, {
+      path: '/apsGoodsForecastMainMakeWeek/queryDataDataById',
+      name: "(预测)生产数据看板",
+      component: () => import('@/views/system/aps/forecastMainMake/result.vue'),
+      meta: {title: '(预测)生产数据看板', icon: 'redis', affix: false},
+      hidden: false
+    }, {
+      path: '/aps/make/scheduling/create',
+      name: "创建排产版本",
+      component: () => import('@/views/system/aps/scheduling/CreateScheduling.vue'),
+      meta: {title: '创建排产版本', icon: 'redis', affix: false},
+      hidden: false
+    },]
 }, {
   path: '/redirect', component: Layout, hidden: false, children: [{
     path: '/redirect/:path(.*)', component: () => import('@/views/redirect')

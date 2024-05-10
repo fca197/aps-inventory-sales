@@ -8,6 +8,13 @@ export function queryDataById(data) {
     data
   })
 }
+export function queryProjectDataById(data) {
+  return request({
+    url: '/apsGoodsForecastMake/queryProjectDataById',
+    method: 'post',
+    data
+  })
+}
 
 export function deploy(data) {
   return request({

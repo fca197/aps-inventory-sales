@@ -67,8 +67,8 @@
                   start-placeholder="上班时间" value-format="HH:mm"/>
             </el-col>
             <el-col :span="5">
-              <el-button v-if="index< form.shiftItemList.length-1" icon="el-icon-plus" size="mini" type="primary" @click="addItem"></el-button>
-              <el-button v-if="index!=0" icon="el-icon-delete" size="mini" type="danger" @click="deleteItem(index)"></el-button>
+              <el-button icon="el-icon-plus" size="mini" type="primary" @click="addItem"></el-button>
+              <el-button v-if="index!==0" icon="el-icon-delete" size="mini" type="danger" @click="deleteItem(index)"></el-button>
             </el-col>
           </el-col>
         </el-form-item>
@@ -167,13 +167,6 @@ export default {
     },
     // 表单重置
     reset() {
-      // this.form = {
-      //   shiftItemList: [{timeRange: []}],
-      //   remark: "",
-      //   tenantCode: "",
-      //   id: undefined,
-      //   tenantName: undefined
-      // };
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -203,11 +196,14 @@ export default {
       this.reset();
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
-        this.form = response.data.dataList[0]
-        this.form.shiftItemList = this.form.shiftItemDtoList;
-        // console.info(this.form)
-        this.open = true;
         this.title = "修改班次";
+        this.form.id = response.data.dataList[0].id
+        this.form.factoryId = response.data.dataList[0].factoryId
+        this.form.shiftName = response.data.dataList[0].shiftName
+        this.form.shiftCode = response.data.dataList[0].shiftCode
+        this.form.shiftItemList = response.data.dataList[0].shiftItemDtoList
+        this.open = true;
+        // console.info(  this.form)
       });
 
     },
@@ -248,11 +244,12 @@ export default {
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
     },
     addItem() {
-      this.form.shiftItemList.push({beginTime: "", endTime: ""});
-      this.$forceUpdate();
+      return new Promise(()=>this.form.shiftItemList.push({beginTime: "", endTime: ""})).then(() => {
+      }).then(() => {
+        this.$forceUpdate();
+      })
     },
     deleteItem(index) {
-      // console.info(index)
       this.form.shiftItemList.splice(index, 1)
     },
   }
