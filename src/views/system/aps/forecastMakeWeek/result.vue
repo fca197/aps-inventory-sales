@@ -5,7 +5,7 @@
       <el-col :span="1.5">
 
       </el-col>
-      <right-toolbar :search="false" :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="预测计算结果数据" @queryTable="getData"
+      <right-toolbar :search="false" :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="(预测)生产数据看板-销售配置" @queryTable="getData"
                      @search="getData"></right-toolbar>
     </el-row>
     <div>(预测)生产数据看板-销售配置</div>
@@ -17,7 +17,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-button style="margin-top: 20px" type="primary" @click="toProject">查看规划配置</el-button>
+    <div style="margin-top: 20px" >
+      <el-button type="primary" @click="toProject">查看规划配置</el-button>
+      <el-button type="primary" @click="toBom">查看零件</el-button>
+    </div>
   </div>
 </template>
 
@@ -47,6 +50,13 @@ export default {
     toProject(){
       // this.$tab.openPage("(预)周生产管理数据-规划配置","/aps/goods/forecast/make/week/projectResult?",{id:this.id});
          this.$tab.openPage("(预)周生产数据-规划配置", "/aps/goods/forecast/make/week/projectResult", {
+            id: this.id
+          }
+      )
+    },
+    toBom(){
+      // this.$tab.openPage("(预)周生产管理数据-规划配置","/aps/goods/forecast/make/week/projectResult?",{id:this.id});
+         this.$tab.openPage("(预)周生产数据-零件", "/aps/goods/forecast/make/week/bomResult", {
             id: this.id
           }
       )

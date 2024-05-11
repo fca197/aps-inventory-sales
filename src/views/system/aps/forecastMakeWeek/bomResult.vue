@@ -5,10 +5,10 @@
       <el-col :span="1.5">
 
       </el-col>
-      <right-toolbar :search="false" :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="(预测)生产数据看板-规划配置" @queryTable="getData"
+      <right-toolbar :search="false" :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="(预测)生产数据看板-零件" @queryTable="getData"
                      @search="getData"></right-toolbar>
     </el-row>
-    <div>(预测)生产数据看板-规划配置</div>
+    <div>(预测)生产数据看板-零件</div>
     <el-table id="dataTable" :data="tableData.dataList" cellpadding="0" cellspacing="0" show-summary>
       <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" :label="item.showName" :prop="item.fieldName" :width="(item.width-50)+'px'" align="center">
         <template slot-scope="scope">

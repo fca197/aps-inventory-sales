@@ -43,6 +43,11 @@ export const constantRoutes = [{
       name: "(预)生产数据",
       component: () => import('@/views/system/aps/forecastMakeWeek/projectResult'),
       meta: {title: '(预)周生产管理数据-规划配置', icon: 'eye-open', affix: false},
+    }, {
+      path: '/aps/goods/forecast/make/week/bomResult',
+      name: "(预)生产数据",
+      component: () => import('@/views/system/aps/forecastMakeWeek/bomResult.vue'),
+      meta: {title: '(预)周生产管理数据-零件', icon: 'eye-open', affix: false},
     },
     {
       path: '/psGoodsForecast/getDataById',
