@@ -15,6 +15,13 @@ export function queryProjectDataById(data) {
     data
   })
 }
+export function queryBomUseDataById(data) {
+  return request({
+    url: '/apsGoodsForecastMake/queryBomUseDataById',
+    method: 'post',
+    data
+  })
+}
 
 export function deploy(data) {
   return request({
