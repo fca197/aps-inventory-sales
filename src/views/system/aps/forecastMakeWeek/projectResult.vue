@@ -10,7 +10,7 @@
     </el-row>
     <div>(预测)生产数据看板-规划配置</div>
     <el-table id="dataTable" :data="tableData.dataList" cellpadding="0" cellspacing="0" show-summary>
-      <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" :label="item.showName" :prop="item.fieldName" :width="(item.width-50)+'px'" align="center">
+      <el-table-column v-for="(item,index) in  tableData.headerList" :key="index" :label="item.showName" :prop="item.fieldName"  align="center">
         <template slot-scope="scope">
           <span v-if="scope.row[item.fieldName]!==0">{{ scope.row[item.fieldName] }}</span>
           <span v-else>-</span>

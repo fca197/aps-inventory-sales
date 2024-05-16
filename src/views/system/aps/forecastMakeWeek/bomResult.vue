@@ -7,6 +7,7 @@
       </el-col>
       <right-toolbar :search="false" :showSearch.sync="showSearch" export-table="dataTable" export-table-file-name="(预测)生产数据看板-零件" @queryTable="getData"
                      @search="getData"></right-toolbar>
+
     </el-row>
     <div>(预测)生产数据看板-零件</div>
     <el-table id="dataTable" :data="tableData.dataList" cellpadding="0" cellspacing="0" >
