@@ -4,11 +4,12 @@
 
     </el-row>
     <el-row :gutter="20">
-      <el-col :lg="24" :sm="24" style="padding-left: 20px">
+      <el-col :span="12">
         <div id="mainDiv" style="width: 100%;height: 400px;"></div>
-
       </el-col>
-
+      <el-col :span="12">
+        <div id="cityMap" style="width: 100%;height: 400px;"></div>
+      </el-col>
     </el-row>
     <el-divider/>
     <el-row :gutter="20">
@@ -50,21 +51,21 @@ export default {
     };
   },
   mounted() {
-    let c = document.getElementById('mainDiv');
-    // console.log(c);
-    let myChart = echarts.init(c)
+    let myChart = echarts.init(document.getElementById('mainDiv'))
     // 绘制图表
     myChart.setOption({
       title: {text: '生产数量'},
       tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'  // 阴影模式
-        }
+        trigger: 'axis'
       },
-
+      grid: {
+        left: '0%',
+        right: '0%',
+        bottom: '0%',
+        containLabel: true
+      },
       legend: {
-        data: ['产能', '限制']
+        data: ['产能', '限制', '订单量']
       },
       xAxis: {
         data: ["2024-01-03", "2024-01-04", "2024-01-05", "2024-01-06", "2024-01-07", "2024-01-08"]
@@ -74,13 +75,45 @@ export default {
         name: '产能',
         type: 'line',
         data: [15, 20, 37, 15, 8, 23]
-      },{
+      }, {
         name: '限制',
         type: 'line',
         data: [13, 23, 27, 45, 18, 43]
+      }, {
+        name: '订单量',
+        type: 'line',
+        data: [33, 23, 47, 15, 48, 63]
       }]
     });
-
+    let cityChart = echarts.init(document.getElementById('cityMap'))
+    cityChart.setOption({
+      title: {text: '最近30天下单量'},
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        left: '0%',
+        right: '0%',
+        bottom: '0%',
+        containLabel: true
+      },
+      legend: {
+        data: [ 'SUV-订单量', 'MPV-订单量']
+      },
+      xAxis: {
+        data: ["2024-02-03", "2024-02-04", "2024-02-05", "2024-02-06", "2024-02-07", "2024-02-08"]
+      },
+      yAxis: {},
+      series: [  {
+        name: 'SUV-订单量',
+        type: 'line',
+        data: [42, 33, 67, 35, 18, 93]
+      }, {
+        name: 'MPV-订单量',
+        type: 'line',
+        data: [32, 13, 67, 55, 38, 83]
+      }]
+    });
   },
   methods: {
     goTarget(href) {
