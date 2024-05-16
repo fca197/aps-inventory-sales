@@ -4,70 +4,11 @@
 
     </el-row>
     <el-row :gutter="20">
-      <el-col :lg="12" :sm="24" style="padding-left: 20px">
-        <h2>若依后台管理框架</h2>
-        <p>
-          一直想做一款后台管理系统， </p>
-        <p>
-          <b>当前版本:</b> <span>v{{ version }}</span>
-        </p>
-        <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
-        </p>
-        <p>
-          <el-button
-              icon="el-icon-cloudy"
-              plain
-              size="mini"
-              type="primary"
-              @click="goTarget('https://gitee.com/y_project/RuoYi-Vue')"
-          >访问码云
-          </el-button
-          >
-          <el-button
-              icon="el-icon-s-home"
-              plain
-              size="mini"
-              @click="goTarget('http://ruoyi.vip')"
-          >访问主页
-          </el-button
-          >
-        </p>
+      <el-col :lg="24" :sm="24" style="padding-left: 20px">
+        <div id="mainDiv" style="width: 100%;height: 400px;"></div>
+
       </el-col>
 
-      <el-col :lg="12" :sm="24" style="padding-left: 50px">
-        <el-row>
-          <el-col :span="12">
-            <h2>技术选型</h2>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <h4>后端技术</h4>
-            <ul>
-              <li>SpringBoot</li>
-              <li>Spring Security</li>
-              <li>JWT</li>
-              <li>MyBatis</li>
-              <li>Druid</li>
-              <li>Fastjson</li>
-              <li>...</li>
-            </ul>
-          </el-col>
-          <el-col :span="6">
-            <h4>前端技术</h4>
-            <ul>
-              <li>Vue</li>
-              <li>Vuex</li>
-              <li>Element-ui</li>
-              <li>Axios</li>
-              <li>Sass</li>
-              <li>Quill</li>
-              <li>...</li>
-            </ul>
-          </el-col>
-        </el-row>
-      </el-col>
     </el-row>
     <el-divider/>
     <el-row :gutter="20">
@@ -87,13 +28,17 @@
 </template>
 
 <script>
-import Cookies from "js-cookie";
-import watermark from "watermark-dom";
+import ECharts from 'events'
+import * as echarts from "echarts";
 
 export default {
   name: "Index",
+  components: {
+    ECharts
+  },
   data() {
     return {
+
       projectTimeLineList: [
         {time: '2024-03-17 19:01', title: "项目初始化", content: "整合从上班到目前现有项目经验"},
         {time: '2024-03-17 22:50', title: "资产盘点项目", content: "包含工厂, 楼层,房间, 资产录入管理, 资产扫码盘点"},
@@ -104,10 +49,37 @@ export default {
       version: "3.8.6"
     };
   },
-  created() {
-
-  },
   mounted() {
+    let c = document.getElementById('mainDiv');
+    // console.log(c);
+    let myChart = echarts.init(c)
+    // 绘制图表
+    myChart.setOption({
+      title: {text: '生产数量'},
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'  // 阴影模式
+        }
+      },
+
+      legend: {
+        data: ['产能', '限制']
+      },
+      xAxis: {
+        data: ["2024-01-03", "2024-01-04", "2024-01-05", "2024-01-06", "2024-01-07", "2024-01-08"]
+      },
+      yAxis: {},
+      series: [{
+        name: '产能',
+        type: 'line',
+        data: [15, 20, 37, 15, 8, 23]
+      },{
+        name: '限制',
+        type: 'line',
+        data: [13, 23, 27, 45, 18, 43]
+      }]
+    });
 
   },
   methods: {

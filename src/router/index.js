@@ -35,17 +35,17 @@ export const constantRoutes = [{
   children: [
     {
       path: '/aps/goods/forecast/make/week/result',
-      name: "(预)生产数据",
+      name: "(预)生产数据-销售配置",
       component: () => import('@/views/system/aps/forecastMakeWeek/result'),
       meta: {title: '(预)周生产管理数据', icon: 'eye-open', affix: false},
     }, {
       path: '/aps/goods/forecast/make/week/projectResult',
-      name: "(预)生产数据",
+      name: "(预)生产数据-工程配置",
       component: () => import('@/views/system/aps/forecastMakeWeek/projectResult'),
       meta: {title: '(预)周生产管理数据-规划配置', icon: 'eye-open', affix: false},
     }, {
       path: '/aps/goods/forecast/make/week/bomResult',
-      name: "(预)生产数据",
+      name: "(预)生产数据-零件配置",
       component: () => import('@/views/system/aps/forecastMakeWeek/bomResult.vue'),
       meta: {title: '(预)周生产管理数据-零件', icon: 'eye-open', affix: false},
     },
@@ -148,7 +148,7 @@ export const constantRoutes = [{
     },]
   }, {
     path: '/aps/goods/main/index',
-    name: "商品管理",
+    name: "APS商品管理",
     component: ParentView,
     meta: {title: '商品管理', icon: 'order-1', affix: false},
     children: [{
@@ -199,11 +199,13 @@ export const constantRoutes = [{
     },]
   }, {
     path: '/aps/order/index',
-    name: "订单管理",
+    name: "APS-订单管理",
     component: () => import('@/views/system/aps/order/index'),
     meta: {title: '订单管理', icon: 'order-1', affix: false}
   }, {
-    path: '/aps/make/q/index', name: "排产管理", component: ParentView, // component: () => import('@/views/system/aps/order/index'),
+    path: '/aps/make/q/index',
+    name: "APS工厂产能管理",
+    component: ParentView, // component: () => import('@/views/system/aps/order/index'),
     meta: {title: '产能管理', icon: 'order-1', affix: false}, children: [{
       path: '/aps/make_capacity_factory/index',
       name: "工厂产能管理",
@@ -380,7 +382,7 @@ export const constantRoutes = [{
     meta: {title: '进存销', icon: 'international', affix: false},
     children: [{
       path: '/jcx/goods/index',
-      name: "商品管理",
+      name: "进存销-商品管理",
       component: () => import('@/views/system/jcx/goods/index'),
       meta: {title: '商品管理', icon: 'order-1', affix: false}
     }, {
