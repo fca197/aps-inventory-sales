@@ -35,10 +35,6 @@
       </el-table-column>
     </el-table>
 
-    <el-row style="margin-top: 20px">
-      <el-button type="primary">查看工程配置</el-button>
-      <el-button type="primary">查看零件使用</el-button>
-    </el-row>
   </div>
 </template>
 

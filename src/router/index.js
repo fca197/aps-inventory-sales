@@ -66,13 +66,28 @@ export const constantRoutes = [{
       component: () => import('@/views/system/aps/forecastMain/result.vue'),
       meta: {title: '主版本预测数据', icon: 'redis', affix: false},
       hidden: false
-    }, {
+    },
+    {
       path: '/apsGoodsForecastMainMakeWeek/queryDataDataById',
       name: "(预测)生产数据看板",
       component: () => import('@/views/system/aps/forecastMainMake/result.vue'),
       meta: {title: '(预测)生产数据看板', icon: 'redis', affix: false},
       hidden: false
+    },
+    {
+      path: '/apsGoodsForecastMainMakeWeek/queryProjectDataById',
+      name: "(预测)生产数据看板-工程配置",
+      component: () => import('@/views/system/aps/forecastMainMake/projectResult.vue'),
+      meta: {title: '(预测)生产数据看板-工程配置', icon: 'redis', affix: false},
+      hidden: true
     }, {
+      path: '/apsGoodsForecastMainMakeWeek/queryBomDataById',
+      name: "(预测)生产数据看板-零件配置",
+      component: () => import('@/views/system/aps/forecastMainMake/bomResult.vue'),
+      meta: {title: '(预测)生产数据看板-零件配置', icon: 'redis', affix: false},
+      hidden: true
+    },
+    {
       path: '/aps/make/scheduling/create',
       name: "创建排产版本",
       component: () => import('@/views/system/aps/scheduling/CreateScheduling.vue'),
