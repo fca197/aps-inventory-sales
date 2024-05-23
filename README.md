@@ -2,8 +2,8 @@
 
 ## aps 功能
 > APS门户主页 [ https://fengnuanxiang.com/]( https://fengnuanxiang.com/)   👈👈👈👈  
-> APS门户后台[ https://aps.fengnuanxiang.com/](https://aps.fengnuanxiang.com/)  👈👈👈👈  
-> 如有疑问,请拨打 18616771546 (QQ: 2363745556)
+> APS操作平台 [ https://aps.fengnuanxiang.com/](https://aps.fengnuanxiang.com/)  👈👈👈👈  
+> 如有疑问,请拨打 18616771546 (QQ: 2363745556)  👈👈👈👈
 > 
 > 
 ### 使用范围
