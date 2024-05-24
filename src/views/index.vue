@@ -5,10 +5,10 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
-        <div id="mainDiv" style="width: 100%;height: 400px;"></div>
+        <div id="mainDiv" style="width: 100%;height: 200px"></div>
       </el-col>
       <el-col :span="12">
-        <div id="cityMap" style="width: 100%;height: 400px;"></div>
+        <div id="cityMap" style="width: 100%;height: 200px"></div>
       </el-col>
     </el-row>
     <el-divider/>
@@ -54,7 +54,7 @@ export default {
     let myChart = echarts.init(document.getElementById('mainDiv'))
     // 绘制图表
     myChart.setOption({
-      title: {text: '生产数量'},
+      title: {text: '生产数量-示例'},
       tooltip: {
         trigger: 'axis'
       },
@@ -87,7 +87,7 @@ export default {
     });
     let cityChart = echarts.init(document.getElementById('cityMap'))
     cityChart.setOption({
-      title: {text: '最近30天下单量'},
+      title: {text: '最近30天下单量-示例'},
       tooltip: {
         trigger: 'axis'
       },
