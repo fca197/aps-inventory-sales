@@ -70,7 +70,7 @@
           </el-col>
           <el-col :span="5">耗时(秒)
           </el-col>
-          <div v-for="item in form.configList">
+          <div v-for="(item,index) in form.configList">
 
             <el-col :span="5">
               <el-select v-model="item.sectionId" clearable placeholder="请选择工段">
@@ -92,7 +92,7 @@
             </el-col>
             <el-col :span="4">
               <el-button icon="el-icon-plus" size="mini" type="primary" @click="addConfig"></el-button>
-              <el-button icon="el-icon-delete" size="mini" type="danger" @click="deleteConfig(scope.row,scope.$index)"></el-button>
+              <el-button icon="el-icon-delete" size="mini" type="danger" @click="deleteConfig(form.configList, index)"></el-button>
             </el-col>
 
           </div>
@@ -286,8 +286,8 @@ export default {
     addConfig() {
       let d = {...this.tmpConfig};
       this.form.configList.push(d)
-    }, deleteConfig(row, index) {
-      this.form.configList.splice(index, 1)
+    }, deleteConfig(list, index) {
+      list.splice(index, 1)
     }
   }
 };
