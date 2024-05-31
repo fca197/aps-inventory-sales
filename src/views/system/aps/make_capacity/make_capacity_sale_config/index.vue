@@ -52,7 +52,7 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="商品" prop="saleConfigId">
+        <el-form-item label="商品销售特征" prop="saleConfigId">
           <el-select v-model="form.saleConfigId" clearable placeholder="请选择销售特征">
             <el-option-group v-for="item in saleConfigList" :key="item.saleName" :label="item.saleName">
               <el-option v-for="option in item.children" :key="option.saleName" :label="option.saleName" :value="option.id">
@@ -197,7 +197,7 @@ export default {
       this.reset();
       this.addDataConfigList();
       this.open = true;
-      this.title = "添加商品产能";
+      this.title = "添加商品销售特征产能";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -206,7 +206,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改商品产能";
+        this.title = "修改商品销售特征产能";
       });
 
     },

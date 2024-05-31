@@ -97,9 +97,10 @@ export default {
       this.maxLoop--;
       if (this.maxLoop <= 0) {
         clearInterval(this.interval);
+        return
       }
       return getById({idList: [this.id]}).then(v => {
-        // console.info("v: ", v);
+        console.info("v: ", v);
         var version = v.data.dataList[0];
         if (version.versionStep < 40) {
           return new Promise(() => {

@@ -36,7 +36,7 @@
       <div v-if="active===2">
         <use-constraints-result :id="form.id"></use-constraints-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
-        <el-button style="margin-top: 12px;" @click="useMakeCapacity">下一步</el-button>
+        <el-button style="margin-top: 12px;" @click="useMakeCapacity"  :disabled="useMakeCapacityDisable">下一步</el-button>
       </div>
       <div v-if="active===3">
         <use-make-capacity-result ref="makeResult" :id="form.id"></use-make-capacity-result>
@@ -64,6 +64,7 @@ export default {
   },
   data() {
     return {
+      useMakeCapacityDisable:false,
       active: 1,
       isShow: false,
       schedulingConstraintsList: [],
@@ -161,7 +162,11 @@ export default {
         data: {
           id: this.form.id
         }
-      }).then((() => this.next()))
+      }).then((() =>
+      {
+        this.next()
+        this.useMakeCapacityDisable=false;
+      }))
       // this.next();
     },
     useMakeCapacity() {
