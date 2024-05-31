@@ -225,7 +225,7 @@ export default {
       }
     },
     addOrderBy(item) {
-      debugger
+      // debugger
       if (item.orderBy === undefined) {
         item.orderBy = []
       }
