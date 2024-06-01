@@ -62,6 +62,13 @@
         <el-form-item label="商品备注" prop="goodsRemark">
           <el-input v-model="form.goodsRemark" placeholder="请输入商品备注"/>
         </el-form-item>
+
+        <el-form-item label="工艺路径">
+          <el-select v-model="form.processPathId">
+            <el-option v-for="item in processPathList" :key="item.id" :label="item.processPathName" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -73,7 +80,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import {add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById} from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
@@ -93,7 +100,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-
+      processPathList: [],
       brandNameList: [],
       factoryList: [],
       // 弹出层标题
@@ -124,6 +131,11 @@ export default {
     document["pagePath"] = "/apsGoods";
     // process.env.pagePath = "/tenant"
     this.getList();
+
+    queryUrlPageList("/apsProcessPath", {pageSize: 3000, pageNum: 1}).then(t => {
+      this.processPathList = t.data.dataList
+    })
+
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
       this.factoryList = data.data.dataList;
     });
