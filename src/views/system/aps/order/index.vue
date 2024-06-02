@@ -333,7 +333,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改零件";
+        this.title = "修改订单";
       });
 
     },
