@@ -124,7 +124,7 @@ export default {
     this.getList();
     getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
       this.factoryList = data.data.dataList;
-      console.info("factoryList: ", this.factoryList);
+    //  console.info("factoryList: ", this.factoryList);
     });
     // getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
     //   this.goodsList = data.data.dataList;

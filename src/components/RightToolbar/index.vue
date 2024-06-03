@@ -7,7 +7,7 @@
         <el-button v-if="showSearch" circle icon="el-icon-caret-top" size="mini" @click="toggleSearch()"/>
         <el-button v-else circle icon="el-icon-caret-bottom" size="mini" @click="toggleSearch()"/>
       </el-tooltip>
-      <el-tooltip class="item" content="刷新" effect="dark" placement="top">
+      <el-tooltip  v-if="refreshShow" class="item" content="刷新" effect="dark" placement="top">
         <el-button circle icon="el-icon-refresh" size="mini" @click="refresh()"/>
       </el-tooltip>
       <el-tooltip v-if="columns" class="item" content="显隐列" effect="dark" placement="top">
@@ -40,6 +40,9 @@ export default {
     };
   },
   props: {
+    refreshShow:{
+      default:true
+    },
     exportTable: {},
     exportTableFileName: {},
     showSearch: {

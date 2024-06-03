@@ -36,7 +36,7 @@
       <div v-if="active===2">
         <use-constraints-result :id="form.id"></use-constraints-result>
         <el-button style="margin-top: 12px;" @click="pre">上一步</el-button>
-        <el-button style="margin-top: 12px;" @click="useMakeCapacity"  :disabled="useMakeCapacityDisable">下一步</el-button>
+        <el-button style="margin-top: 12px;" @click="useMakeCapacity" :disabled="useMakeCapacityDisable">下一步</el-button>
       </div>
       <div v-if="active===3">
         <use-make-capacity-result ref="makeResult" :id="form.id"></use-make-capacity-result>
@@ -44,8 +44,12 @@
 
         <el-button style="margin-top: 12px;" @click="finish" v-if="form.versionStep!==100">完成</el-button>
         <el-button style="margin-top: 12px;" @click="deploy" v-else>选择排产日期发布到制造系统</el-button>
+        <el-button style="margin-top: 12px;" @click="showBomTotal">查看零件使用</el-button>
       </div>
     </el-form>
+    <el-dialog title="零件使用" :visible.sync="showBomTotalShow" width="80%">
+      <bom-total-result :id="schedulingVersionId"></bom-total-result>
+    </el-dialog>
   </div>
 </template>
 
@@ -54,17 +58,27 @@ import {getSchedulingConstraintsList} from "@/api/aps/schedulingConstraints";
 import {add, queryPageList, showMsg, updateById} from "@/api/common";
 import useConstraintsResult from "@/views/system/aps/scheduling/useConstraintsResult.vue";
 import useMakeCapacityResult from "@/views/system/aps/scheduling/useMakeCapacityResult.vue"
+import bomTotalResult from "@/views/system/aps/scheduling/bomTotalResult.vue";
 import request from "@/utils/request";
+import scheduling from "@/views/system/aps/scheduling/index.vue";
 
 export default {
   name: "CreateScheduling",
+  computed: {
+    scheduling() {
+      return scheduling
+    }
+  },
   components: {
+    bomTotalResult,
     useConstraintsResult,
     useMakeCapacityResult
   },
   data() {
     return {
-      useMakeCapacityDisable:false,
+      schedulingVersionId:0,
+      showBomTotalShow: false,
+      useMakeCapacityDisable: false,
       active: 1,
       isShow: false,
       schedulingConstraintsList: [],
@@ -108,7 +122,6 @@ export default {
         add(this.form).then(t => {
           showMsg(t, "保存成功")
           this.form.id = t.data.id;
-
           this.useConstraints();
         });
       }
@@ -125,17 +138,17 @@ export default {
     },
     deploy() {
       var dateList = this.$refs.makeResult.queryParams.currentDate;
-      if (dateList.length === 0){
+      if (dateList.length === 0) {
         this.$message.error("请选择排产日期");
         return
       }
 
-      showMsg({code: 200},  dateList+"发布完成");
+      showMsg({code: 200}, dateList + "发布完成");
     },
 
     finish() {
       if (this.isShow) {
-        this.$tab.closeOpenPage("/aps/make/scheduling/index")
+        this.$tab.closeOpenPage("/aps/scheduling/index")
         return;
       }
       request({
@@ -147,7 +160,7 @@ export default {
       }).then(() => {
         showMsg({code: 200, msg: "完成"})
         this.active = 4;
-        this.$tab.closeOpenPage("/aps/make/scheduling/index")
+        this.$tab.closeOpenPage("/aps/scheduling/index")
       })
     },
 
@@ -162,10 +175,9 @@ export default {
         data: {
           id: this.form.id
         }
-      }).then((() =>
-      {
+      }).then((() => {
         this.next()
-        this.useMakeCapacityDisable=false;
+        this.useMakeCapacityDisable = false;
       }))
       // this.next();
     },
@@ -188,6 +200,10 @@ export default {
     },
     useConstraintsResult() {
 
+    },
+    showBomTotal() {
+      this.schedulingVersionId=this.form.id;
+      this.showBomTotalShow = true;
     }
   }
 }

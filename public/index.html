@@ -209,6 +209,10 @@
 <script>
   var _hmt = _hmt || [];
   (function() {
+    var documentURI = document.documentURI;
+    if (documentURI.indexOf('//localhost') > -1) {
+      return;
+    }
     var hm = document.createElement("script");
     hm.src = "https://hm.baidu.com/hm.js?ed08c21c62d74219720b142abc176010";
     var s = document.getElementsByTagName("script")[0];
