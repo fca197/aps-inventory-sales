@@ -302,6 +302,7 @@ export const constantRoutes = [{
       path: '/login/account/index',
       component: () => import('@/views/loginAccount/index'),
       name: '账户管理',
+      hidden: true,
       meta: {title: '账户管理', icon: 'peoples', affix: false}
     }, {
       path: '/supplier/index',
