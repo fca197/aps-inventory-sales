@@ -4,17 +4,17 @@
     <el-table id="bomTotalTable" v-loading="loading" :data="bomTotalList" height="650">
       <el-table-column v-for="(item,index) in tableHeaderList"
                        :key="index" :prop="item.fieldName.replaceAll('-','/')" :label="item.showName">
-        <template slot-scope="scope">
-          <span v-if="scope.row[item.fieldName]">
-            <span v-if="scope.row[item.fieldName]==='缺少'">
-                 {{ scope.row[item.fieldName] }} |  <span class="red"> {{ scope.row['bomUseCount'] - scope.row['bomInventory'] }} </span>
-             </span>
-              <span v-else>
-                 {{ scope.row[item.fieldName] }}
-              </span>
-            </span>
-          <span v-else>-</span>
-        </template>
+<!--        <template slot-scope="scope">-->
+<!--          <span v-if="scope.row[item.fieldName]">-->
+<!--            <span v-if="scope.row[item.fieldName]==='缺少'">-->
+<!--                 {{ scope.row[item.fieldName] }} |  <span class="red"> {{ scope.row['bomUseCount'] - scope.row['bomInventory'] }} </span>-->
+<!--             </span>-->
+<!--              <span v-else>-->
+<!--                 {{ scope.row[item.fieldName] }}-->
+<!--              </span>-->
+<!--            </span>-->
+<!--          <span v-else>-</span>-->
+<!--        </template>-->
       </el-table-column>
     </el-table>
   </div>
