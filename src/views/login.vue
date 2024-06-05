@@ -52,12 +52,18 @@
         <div v-if="register" style="float: right;">
           <router-link :to="'/register'" class="link-type">立即注册</router-link>
         </div>
+        <el-button type="text" style="float: right;margin-top: 10px;margin-bottom: -5px" @click="showVersion">版本变更记录</el-button>
       </el-form-item>
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
       <span>Copyright © 2018-2023 ruoyi.vip All Rights Reserved.</span>
     </div>
+
+
+    <el-drawer title="版本变更记录" :visible.sync="versionchangeShow" direction="rtl">
+      <version-change></version-change>
+    </el-drawer>
   </div>
 </template>
 
@@ -65,11 +71,17 @@
 import {getCodeImg} from "@/api/login";
 import Cookies from "js-cookie";
 import {decrypt, encrypt} from '@/utils/jsencrypt'
+import versionChange from '@/views/version/index.vue'
 
 export default {
   name: "Login",
+  components: {
+    versionChange
+  },
   data() {
     return {
+
+      versionchangeShow: false,
       codeUrl: "",
       loginForm: {
         username: "18616771546",
@@ -106,6 +118,7 @@ export default {
   created() {
     this.getCode();
     this.getCookie();
+    const h = this.$createElement;
   },
   methods: {
     getCode() {
@@ -126,6 +139,9 @@ export default {
         password: password === undefined ? this.loginForm.password : decrypt(password),
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       };
+    },
+    showVersion() {
+      this.versionchangeShow = true;
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {

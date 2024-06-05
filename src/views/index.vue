@@ -12,18 +12,8 @@
       </el-col>
     </el-row>
     <el-divider/>
-    <el-row :gutter="20">
-
-      <el-timeline>
-        <el-timeline-item v-for="item in projectTimeLineList" :key="item.time" :color="item.color"
-                          :timestamp="item.time" placement="top">
-          <el-card>
-            <h4>{{ item.title }}</h4>
-            <p>{{ item.content }}</p>
-          </el-card>
-        </el-timeline-item>
-
-      </el-timeline>
+    <el-row :gutter="24">
+      <version-change></version-change>
     </el-row>
   </div>
 </template>
@@ -31,11 +21,12 @@
 <script>
 import ECharts from 'events'
 import * as echarts from "echarts";
+import versionChange from '@/views/version/index.vue'
 
 export default {
-  name: "Index",
+  name: "VersionChangeIndex",
   components: {
-    ECharts
+    ECharts, versionChange
   },
   data() {
     return {
@@ -98,13 +89,13 @@ export default {
         containLabel: true
       },
       legend: {
-        data: [ 'SUV-订单量', 'MPV-订单量']
+        data: ['SUV-订单量', 'MPV-订单量']
       },
       xAxis: {
         data: ["2024-02-03", "2024-02-04", "2024-02-05", "2024-02-06", "2024-02-07", "2024-02-08"]
       },
       yAxis: {},
-      series: [  {
+      series: [{
         name: 'SUV-订单量',
         type: 'line',
         data: [42, 33, 67, 35, 18, 93]
@@ -131,6 +122,7 @@ export default {
     font-size: 17.5px;
     border-left: 5px solid #eee;
   }
+
   hr {
     margin-top: 20px;
     margin-bottom: 20px;
