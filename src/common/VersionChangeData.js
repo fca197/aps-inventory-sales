@@ -29,6 +29,8 @@ const versionChangeData = [{
 }, {
   time: '2024-05-10', title: "APS系统", content: "班次修改完成"
 }, {
+  time: '2024-05-15', title: "APS系统", content: "根据预测计算BOM使用"
+}, {
   time: '2024-06-01', title: "APS系统", content: "部分BUG修正"
 }, {
   time: '2024-06-03', title: "APS系统", content: "排产增加bom使用统计查询完成"
