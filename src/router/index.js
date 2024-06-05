@@ -285,10 +285,10 @@ export const constantRoutes = [{
       meta: {title: '排产管理', icon: 'order-1', affix: false},
     }, {
       path: '/aps/scheduling/bom/index',
-      name: "排产零件查询管理",
+      name: "排产零件",
       hidden: true,
       component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
-      meta: {title: '排产零件查询管理', icon: 'order-1', affix: false},
+      meta: {title: '排产零件', icon: 'order-1', affix: false},
     }]
   }
   ]

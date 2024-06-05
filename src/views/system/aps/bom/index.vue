@@ -105,6 +105,14 @@
             <el-input v-model="form.bomUseExpression" placeholder="请输入零件名称"/>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="使用表达式" prop="bomName">
+             <el-radio-group v-model="form.isFollow" size="medium" >
+              <el-radio :label="true" >是</el-radio>
+              <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -162,7 +170,8 @@ export default {
         brandName: "",
         pwd: "",
         id: undefined,
-        confirmPwd: undefined
+        confirmPwd: undefined,
+        isFollow:false
       },
       // 表单校验
       rules: {},
@@ -209,7 +218,8 @@ export default {
         remark: "",
         tenantCode: "",
         id: undefined,
-        tenantName: undefined
+        tenantName: undefined,
+        isFollow:false
       };
       this.resetForm("form");
     },

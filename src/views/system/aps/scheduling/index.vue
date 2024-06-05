@@ -37,7 +37,8 @@
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
           </div>
           <div v-else>
-            <el-button size="mini" type="text"  icon="el-icon-s-data"  @click="handleUpdate(scope.row)">查看</el-button>
+            <el-button size="mini" type="text"  icon="el-icon-s-data"  @click="handleUpdate(scope.row)">排产</el-button>
+            <el-button size="mini" type="text"  icon="el-icon-s-data"  @click="handleBom(scope.row)">零件</el-button>
           </div>
         </template>
       </el-table-column>
@@ -220,6 +221,9 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    },
+    handleBom(row){
+      this.$tab.openPage("排产零件","/aps/scheduling/bom/index",{id:row.id});
     }
   }
 };

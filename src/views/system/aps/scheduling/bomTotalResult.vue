@@ -1,20 +1,16 @@
 <template>
   <div>
     <right-toolbar :refresh-show="false" :search="false" export-table="bomTotalTable" export-table-file-name="零件排产使用"></right-toolbar>
-    <el-table id="bomTotalTable" v-loading="loading" :data="bomTotalList" height="650">
-      <el-table-column v-for="(item,index) in tableHeaderList"
-                       :key="index" :prop="item.fieldName.replaceAll('-','/')" :label="item.showName">
-<!--        <template slot-scope="scope">-->
-<!--          <span v-if="scope.row[item.fieldName]">-->
-<!--            <span v-if="scope.row[item.fieldName]==='缺少'">-->
-<!--                 {{ scope.row[item.fieldName] }} |  <span class="red"> {{ scope.row['bomUseCount'] - scope.row['bomInventory'] }} </span>-->
-<!--             </span>-->
-<!--              <span v-else>-->
-<!--                 {{ scope.row[item.fieldName] }}-->
-<!--              </span>-->
-<!--            </span>-->
-<!--          <span v-else>-</span>-->
-<!--        </template>-->
+    <el-table id="bomTotalTable" v-loading="loading" :data="bomTotalList" height="650"
+              :row-class-name="tableRowClassName">
+      <el-table-column v-for="(item,index) in tableHeaderList" :width="item.width"  align="center"
+                       :key="index" :prop="item.fieldName" :label="item.showName">
+        <template slot-scope="scope">
+          <span v-if="scope.row[item.fieldName]" :class="item.fieldName">
+            {{ scope.row[item.fieldName] }}
+            </span>
+          <span v-else>-</span>
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -42,7 +38,7 @@ export default {
     }
   },
   created() {
-    this.schedulingVersionId = this.$route.query.id ||this.id;
+    this.schedulingVersionId = this.$route.query.id || this.id;
     console.info("id ", this.schedulingVersionId)
 
     post("/apsSchedulingGoodsBomTotal/queryBomTotal",
@@ -57,13 +53,24 @@ export default {
         }
     );
 
+  }, methods: {
+    tableRowClassName({row, rowIndex}) {
+      if (row.enough === 0) {
+        return 'warning-row';
+      }
+      return '';
+    }
   }
 }
 </script>
 
 
-<style scoped lang="scss">
-.red {
+<style>
+.el-table .warning-row {
+  //background-color: #f56c6c;
+}
+
+.el-table .warning-row  span.bomContrast {
   color: red;
 }
 </style>
