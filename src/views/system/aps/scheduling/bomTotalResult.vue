@@ -1,18 +1,23 @@
 <template>
   <div>
-    <right-toolbar :refresh-show="false" :search="false" export-table="bomTotalTable" export-table-file-name="零件排产使用"></right-toolbar>
-    <el-table id="bomTotalTable" v-loading="loading" :data="bomTotalList" height="650"
-              :row-class-name="tableRowClassName">
-      <el-table-column v-for="(item,index) in tableHeaderList" :width="item.width"  align="center"
-                       :key="index" :prop="item.fieldName" :label="item.showName">
-        <template slot-scope="scope">
+    <el-row>
+      <right-toolbar :refresh-show="false" :search="false" export-table="bomTotalTable" export-table-file-name="零件排产使用"></right-toolbar>
+      <el-table id="bomTotalTable" v-loading="loading" :data="bomTotalList" height="650"
+                :row-class-name="tableRowClassName">
+        <el-table-column v-for="(item,index) in tableHeaderList" :width="item.width" align="center"
+                         :key="index" :prop="item.fieldName" :label="item.showName">
+          <template slot-scope="scope">
           <span v-if="scope.row[item.fieldName]" :class="item.fieldName">
             {{ scope.row[item.fieldName] }}
             </span>
-          <span v-else>-</span>
-        </template>
-      </el-table-column>
-    </el-table>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
+    <el-row>
+      <el-button style="margin:10px 0 0 10px; " type="primary" size="mini"  @click="createBuyPlan">创建购买计划</el-button>
+    </el-row>
   </div>
 </template>
 
@@ -59,6 +64,10 @@ export default {
         return 'warning-row';
       }
       return '';
+    },
+    createBuyPlan(){
+      console.info("this.schedulingVersionId", this.schedulingVersionId)
+      post("/apsSchedulingGoodsBomTotal/createBomBuyPlan",{schedulingVersionId:this.schedulingVersionId},true)
     }
   }
 }
@@ -67,10 +76,10 @@ export default {
 
 <style>
 .el-table .warning-row {
-  //background-color: #f56c6c;
+//background-color: #f56c6c;
 }
 
-.el-table .warning-row  span.bomContrast {
+.el-table .warning-row span.bomContrast {
   color: red;
 }
 </style>

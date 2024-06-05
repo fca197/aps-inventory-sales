@@ -13,6 +13,7 @@
     </el-row>
     <el-divider/>
     <el-row :gutter="24">
+      <h3>版本变更记录</h3>
       <version-change></version-change>
     </el-row>
   </div>
