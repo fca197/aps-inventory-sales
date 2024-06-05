@@ -188,33 +188,39 @@ export const constantRoutes = [{
       name: "工艺路径",
       component: () => import('@/views/system/aps/processPath/index'),
       meta: {title: '工艺路径管理', icon: 'process-setting', affix: false}
-    }, {
-      path: '/aps/bom/index',
-      name: "零件配置",
-      component: () => import('@/views/system/aps/bom/index'),
-      meta: {title: '零件配置', icon: 'setting', affix: false}
     },]
   }, {
     path: '/aps/goods/main/index',
     name: "APS商品管理",
     component: ParentView,
     meta: {title: '商品管理', icon: 'order-1', affix: false},
-    children: [{
-      path: '/aps/goods/index',
-      name: "商品管理",
-      component: () => import('@/views/system/aps/goods/index'),
-      meta: {title: '商品管理', icon: 'order-1', affix: false}
-    }, {
-      path: '/aps/goods/sale/index',
-      name: "商品销售特征绑定",
-      component: () => import('@/views/system/aps/goodsSaleConfig/index'),
-      meta: {title: '商品销售特征绑定', icon: 'setting', affix: false}
-    }, {
-      path: '/aps/goods/sale/project/index',
-      name: "商品销售特转规划",
-      component: () => import('@/views/system/aps/goodsSale2project/index'),
-      meta: {title: '商品销售特转规划', icon: 'setting', affix: false}
-    },
+    children: [
+      {
+        path: '/aps/bom/index',
+        name: "零件配置",
+        component: () => import('@/views/system/aps/bom/index'),
+        meta: {title: '零件配置', icon: 'setting', affix: false}
+      },{
+        path: '/aps/bomBuyPlan/index',
+        name: "零件购买计划",
+        component: () => import('@/views/system/aps/bomBuyPlan/index'),
+        meta: {title: '零件购买计划', icon: 'setting', affix: false}
+      }, {
+        path: '/aps/goods/index',
+        name: "商品管理",
+        component: () => import('@/views/system/aps/goods/index'),
+        meta: {title: '商品管理', icon: 'order-1', affix: false}
+      }, {
+        path: '/aps/goods/sale/index',
+        name: "商品销售特征绑定",
+        component: () => import('@/views/system/aps/goodsSaleConfig/index'),
+        meta: {title: '商品销售特征绑定', icon: 'setting', affix: false}
+      }, {
+        path: '/aps/goods/sale/project/index',
+        name: "商品销售特转规划",
+        component: () => import('@/views/system/aps/goodsSale2project/index'),
+        meta: {title: '商品销售特转规划', icon: 'setting', affix: false}
+      },
 
     ]
   }, {
