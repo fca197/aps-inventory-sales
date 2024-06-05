@@ -37,7 +37,7 @@ const versionChangeData = [{
 }, {
   time: '2024-06-04', title: "APS系统", content: "切换数据库, 废除sqlite 使用mysql 8完成"
 }, {
-  time: '2024-06-05', title: "APS系统", content: "排产版本增加零件汇总统计入口"
+  time: '2024-06-05', title: "APS系统", content: "排产版本增加零件汇总统计入口,基于库存增加零件购买计划"
 }
 
 ]
