@@ -197,9 +197,14 @@ export const constantRoutes = [{
     children: [
       {
         path: '/aps/bom/index',
-        name: "零件配置",
+        name: "商品配置",
         component: () => import('@/views/system/aps/bom/index'),
-        meta: {title: '零件配置', icon: 'setting', affix: false}
+        meta: {title: '商品配置', icon: 'setting', affix: false}
+      }, {
+        path: '/aps/goodsBom/index',
+        name: "商品零件配置",
+        component: () => import('@/views/system/aps/goodsBom/index'),
+        meta: {title: '商品零件配置', icon: 'setting', affix: false}
       },{
         path: '/aps/bomBuyPlan/index',
         name: "零件购买计划",
