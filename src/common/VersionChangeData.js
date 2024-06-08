@@ -41,7 +41,9 @@ const versionChangeData = [{
 }, {
   time: '2024-06-06', title: "APS系统", content: "抽取BOM基础,商品关联BOM,修改排产零件生成BUG"
 }, {
-  time: '2024-06-07', title: "APS系统", content: "价格 库存等字段改为 BigDecimal 类型, 增加参数校验"
+  time: '2024-06-07',
+  title: "APS系统",
+  content: "价格 库存等字段改为 BigDecimal 类型, 增加参数校验,增加帮助中心"
 }
 ]
 

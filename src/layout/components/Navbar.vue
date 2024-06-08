@@ -10,13 +10,23 @@
 
 
         <el-button class="right-menu-item hover-effect" type="text">
-          <span @click="showMsgDrawerShow">
-            <i class="el-icon-bell" title="消息中心"/>
-            <span v-if="messageCount>0" class=" msg-count-tips">{{ messageCount }}</span>
+          <span @click="showHelpDrawerShow">
+            <el-tooltip class="item" effect="dark" content="帮助中心" placement="top">
+               <svg-icon icon-class="question-thin"></svg-icon>
+              </el-tooltip>
           </span>
         </el-button>
-        <search id="header-search" class="right-menu-item"/>
-        <screenfull id="screenfull" class="right-menu-item hover-effect"/>
+        <el-button class="right-menu-item hover-effect" type="text">
+          <span @click="showMsgDrawerShow">
+             <el-tooltip class="item" effect="dark" content="消息中心" placement="top">
+            <i class="el-icon-bell" title="消息中心"/>
+               <span v-if="messageCount>0" class=" msg-count-tips">{{ messageCount }}</span></el-tooltip>
+          </span>
+        </el-button>
+        <!--        <search id="header-search"   class="right-menu-item"/>-->
+        <el-tooltip class="item" effect="dark" content="全屏" placement="top">
+          <screenfull id="screenfull" class="right-menu-item hover-effect"/>
+        </el-tooltip>
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect"/>
         </el-tooltip>
@@ -43,6 +53,15 @@
     <el-drawer :key="toStr(messageList)" :visible.sync="showDrawerMsg" direction="rtl" title="消息中心">
       <user-message :now-time="nowTime" :query-un-read-count-fun="queryUnReadCountFun"></user-message>
     </el-drawer>
+    <el-drawer :visible.sync="showHelpDrawer" direction="rtl" title="帮助中心">
+      <div style="width: 90%;margin-left: 5%">
+        <el-collapse accordion>
+          <el-collapse-item v-for="(h ,i) in helpDataList" :title=" (i+1)+') '+ h.title" :key="i">
+           <div v-html="h.content"></div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -60,6 +79,7 @@ import {toString} from "@/api/common";
 import UserMessage from "@/layout/components/UserMessage.vue";
 import Cookies from "js-cookie";
 import watermark from "watermark-dom";
+import helpData from '@/api/help'
 
 export default {
   data() {
@@ -67,10 +87,12 @@ export default {
       nowTime: "123",
       visible: false,
       messageList: [],
+      helpDataList: [],
       messageListTotal: 0,
       messageListPageNum: 0,
       messageListPageSize: 10,
       showDrawerMsg: false,
+      showHelpDrawer: false,
       showDrawerMsgIndex: '',
       messageCount: 0
     }
@@ -145,17 +167,18 @@ export default {
       }).catch(() => {
       });
     }
-    ,addMark(){
-      let username =  Cookies.get("username");
-      if(username){
+    , addMark() {
+      let username = Cookies.get("username");
+      if (username) {
         let now = new Date();
         let year = now.getFullYear();
-        let month = now.getMonth()+1;
+        let month = now.getMonth() + 1;
         let day = now.getDate();
-        month = month<10?'0'+month:month;
-        day = day<10?'0'+day:day;
-        let date = year+'-'+month+'-'+day;
-        watermark.load({ watermark_txt: username+','+date ,
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+        let date = year + '-' + month + '-' + day;
+        watermark.load({
+          watermark_txt: username + ',' + date,
           // 水印起始位置x轴坐标
           watermark_x: 100,
           // 水印起始位置Y轴坐标
@@ -184,6 +207,11 @@ export default {
           watermark_angle: 20
         })
       }
+    },
+    showHelpDrawerShow() {
+      var path = this.$route.path;
+      this.helpDataList = helpData[path];
+      this.showHelpDrawer = true
     }
   }
 }

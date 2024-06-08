@@ -114,7 +114,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="使用表达式" prop="bomName">
+          <el-form-item label="是否关注" prop="bomName">
             <el-radio-group v-model="form.isFollow" size="medium">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
