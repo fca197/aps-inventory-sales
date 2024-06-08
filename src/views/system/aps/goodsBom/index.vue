@@ -304,7 +304,7 @@ export default {
       if (v.length === '') {
         this.selectBomList = [];
       }
-      queryUrlPageList("/apsBom/", {queryPage: false, data: {bomName: v}}).then(t => {
+      queryUrlPageList("/apsBom", {queryPage: false, data: {bomName: v}}).then(t => {
         this.selectBomList = t.data.dataList;
       })
     },

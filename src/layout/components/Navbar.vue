@@ -12,7 +12,7 @@
         <el-button class="right-menu-item hover-effect" type="text">
           <span @click="showHelpDrawerShow">
             <el-tooltip class="item" effect="dark" content="帮助中心" placement="top">
-               <svg-icon icon-class="question-thin"></svg-icon>
+               <svg-icon icon-class="question-thin" ></svg-icon>
               </el-tooltip>
           </span>
         </el-button>
