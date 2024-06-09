@@ -32,14 +32,14 @@
           <el-input v-model="form.schedulingDayCount" placeholder="请输入排产天数"></el-input>
         </el-form-item>
 
-        <el-form-item label="零件汇总结束日期">
-          <el-date-picker
-              v-model="form.bomTotalEndDate"
-              type="date"
-              placeholder="选择日期"
-              value-format="yyyy-MM-dd">
-          </el-date-picker>
-        </el-form-item>
+<!--        <el-form-item label="零件汇总结束日期">-->
+<!--          <el-date-picker-->
+<!--              v-model="form.bomTotalEndDate"-->
+<!--              type="date"-->
+<!--              placeholder="选择日期"-->
+<!--              value-format="yyyy-MM-dd">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
         <el-button style="margin-top: 12px;" @click="saveOrUpdate">下一步</el-button>
       </div>
       <div v-if="active===2">
