@@ -12,7 +12,7 @@
         <el-button class="right-menu-item hover-effect" type="text">
           <span @click="showHelpDrawerShow">
             <el-tooltip class="item" effect="dark" content="帮助中心" placement="top">
-               <svg-icon icon-class="question-thin" ></svg-icon>
+               <svg-icon icon-class="question-thin"></svg-icon>
               </el-tooltip>
           </span>
         </el-button>
@@ -53,11 +53,11 @@
     <el-drawer :key="toStr(messageList)" :visible.sync="showDrawerMsg" direction="rtl" title="消息中心">
       <user-message :now-time="nowTime" :query-un-read-count-fun="queryUnReadCountFun"></user-message>
     </el-drawer>
-    <el-drawer :visible.sync="showHelpDrawer" direction="rtl" title="帮助中心">
+    <el-drawer :visible.sync="showHelpDrawer" direction="rtl" :title="helpDataTitle">
       <div style="width: 90%;margin-left: 5%">
         <el-collapse accordion>
           <el-collapse-item v-for="(h ,i) in helpDataList" :title=" (i+1)+') '+ h.title" :key="i">
-           <div v-html="h.content"></div>
+            <div v-html="h.content"></div>
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -66,25 +66,26 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import {queryUnReadCount} from "@/api/message";
-import DynamicTable from "@/components/DynamicTable/index.vue";
-import {toString} from "@/api/common";
-import UserMessage from "@/layout/components/UserMessage.vue";
-import Cookies from "js-cookie";
-import watermark from "watermark-dom";
+import { queryUnReadCount } from '@/api/message'
+import DynamicTable from '@/components/DynamicTable/index.vue'
+import { toString } from '@/api/common'
+import UserMessage from '@/layout/components/UserMessage.vue'
+import Cookies from 'js-cookie'
+import watermark from 'watermark-dom'
 import helpData from '@/api/help'
 
 export default {
   data() {
     return {
-      nowTime: "123",
+      nowTime: '123',
+      helpDataTitle: '',
       visible: false,
       messageList: [],
       helpDataList: [],
@@ -134,7 +135,7 @@ export default {
   },
   created() {
     this.queryUnReadCountFun()
-    this.addMark();
+    this.addMark()
   },
   updated() {
   },
@@ -149,8 +150,8 @@ export default {
     queryUnReadCountFun() {
       return queryUnReadCount().then(res => {
         this.messageCount = res
-        this.showDrawerMsgIndex = "a_" + new Date().getTime()
-      });
+        this.showDrawerMsgIndex = 'a_' + new Date().getTime()
+      })
     },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -162,21 +163,21 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = '/';
+          location.href = '/'
         })
       }).catch(() => {
-      });
+      })
     }
     , addMark() {
-      let username = Cookies.get("username");
+      let username = Cookies.get('username')
       if (username) {
-        let now = new Date();
-        let year = now.getFullYear();
-        let month = now.getMonth() + 1;
-        let day = now.getDate();
-        month = month < 10 ? '0' + month : month;
-        day = day < 10 ? '0' + day : day;
-        let date = year + '-' + month + '-' + day;
+        let now = new Date()
+        let year = now.getFullYear()
+        let month = now.getMonth() + 1
+        let day = now.getDate()
+        month = month < 10 ? '0' + month : month
+        day = day < 10 ? '0' + day : day
+        let date = year + '-' + month + '-' + day
         watermark.load({
           watermark_txt: username + ',' + date,
           // 水印起始位置x轴坐标
@@ -209,8 +210,16 @@ export default {
       }
     },
     showHelpDrawerShow() {
-      var path = this.$route.path;
-      this.helpDataList = helpData[path];
+      var path = this.$route.path
+      this.helpDataTitle="帮助中心";
+      this.helpDataList = []
+      helpData.filter(t => t.url === path).forEach(
+          (res) => {
+            this.helpDataTitle=res.pageName;
+            this.helpDataList = res.item
+          }
+      )
+      // this.helpDataList = helpData[path];
       this.showHelpDrawer = true
     }
   }

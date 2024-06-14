@@ -31,10 +31,11 @@
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
 
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width" align="center"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" width="150">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" width="100" fixed="right">
         <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleStatusInfo(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -57,7 +58,8 @@
             </el-form-item>
             <el-form-item label="定金支付时间">
               <el-date-picker v-model="form.reserveDatetime" type="datetime" placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd HH:mm:ss"/>
+                              align="right" value-format="yyyy-MM-dd HH:mm:ss"
+              />
             </el-form-item>
 
             <el-form-item label="尾款金额" prop="finishPayedAmount">
@@ -65,15 +67,18 @@
             </el-form-item>
             <el-form-item label="尾款支付时间" prop="finishPayedDatetime">
               <el-date-picker v-model="form.finishPayedDatetime" type="datetime" placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd HH:mm:ss"/>
+                              align="right" value-format="yyyy-MM-dd HH:mm:ss"
+              />
             </el-form-item>
             <el-form-item label="制造完成时间" prop="makeFinishDate">
               <el-date-picker v-model="form.makeFinishDate" type="date" placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd"/>
+                              align="right" value-format="yyyy-MM-dd"
+              />
             </el-form-item>
             <el-form-item label="交付时间" prop="deliveryDate">
               <el-date-picker v-model="form.deliveryDate" type="date" placeholder="选择日期时间"
-                              align="right" value-format="yyyy-MM-dd"/>
+                              align="right" value-format="yyyy-MM-dd"
+              />
             </el-form-item>
 
 
@@ -172,21 +177,28 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="title" :visible.sync="orderGoodsStatusDateShow" width="500px" append-to-body>
+      <el-table :data="orderGoodsStatusDateList" style="width: 100%;">
+        <el-table-column prop="goodsStatusName" label="状态名称"/>
+        <el-table-column prop="expectMakeTime" label="预计时间"/>
+        <el-table-column prop="actualMakeTime" label="实际时间"/>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList} from '@/api/common'
-import {getFactoryList} from "@/api/factory";
-import {getGoodsList} from "@/api/aps/goods";
-import {getRandomUser} from "@/api/tool/random";
-import request from "@/utils/request";
-import {apsGoodsSaleItemQueryPageList} from "@/api/aps/apsGoodsSaleItem";
-import {getSaleConfigList} from "@/api/aps/saleConfig"; // console.info("xxx: ",uc.urlPrefix)
+import { add, deleteByIdList, getById, queryPageList, queryUrlPageList } from '@/api/common'
+import { getFactoryList } from '@/api/factory'
+import { getGoodsList } from '@/api/aps/goods'
+import { getRandomUser } from '@/api/tool/random'
+import request from '@/utils/request'
+import { apsGoodsSaleItemQueryPageList } from '@/api/aps/apsGoodsSaleItem'
+import { getSaleConfigList } from '@/api/aps/saleConfig' // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
 export default {
-  name: "tenantName",
+  name: 'tenantName',
   data() {
 
     return {
@@ -209,7 +221,7 @@ export default {
       workStationList: [],
       factoryList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -222,6 +234,8 @@ export default {
       provinceCodeList: [],
       cityCodeList: [],
       apsSaleConfigList: [],
+      orderGoodsStatusDateList: [],
+      orderGoodsStatusDateShow: false,
       areaCodeList: [],
       goodsSaleConfigMap: {},
       // 表单参数
@@ -246,43 +260,44 @@ export default {
       // 表单校验
       rules: {},
       tableHeaderList: []
-    };
+    }
   },
   created() {
-    document["pagePath"] = "/apsOrder";
+    document['pagePath'] = '/apsOrder'
     // process.env.pagePath = "/tenant"
-    this.getList();
-    getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
-      this.factoryList = data.data.dataList;
+    this.getList()
+    getFactoryList({ pageSize: 3000, pageNum: 1 }).then(data => {
+      this.factoryList = data.data.dataList
       // console.info("factoryList: ", this.factoryList);
-    });
-    getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
-      this.goodsList = data.data.dataList;
+    })
+    getGoodsList({ pageSize: 3000, pageNum: 1 }).then(data => {
+      this.goodsList = data.data.dataList
       this.goodsList.forEach(item => {
-        this.goodsMap[item.id] = item;
-      });
+        this.goodsMap[item.id] = item
+      })
       // console.info("goodsList: ", this.goodsList);
-    });
-    getSaleConfigList({pageNum: 1, pageSize: 9990}).then(res => {
-      this.apsSaleConfigList = res.data.dataList;
+    })
+    getSaleConfigList({ pageNum: 1, pageSize: 9990 }).then(res => {
+      this.apsSaleConfigList = res.data.dataList
     })
   },
   methods: {
     /** 查询公告列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
-        this.brandNameList = response.dataList;
-        this.total = parseInt(response.total);
-        this.loading = false;
-      });
+        this.brandNameList = response.dataList
+        this.total = parseInt(response.total)
+        this.loading = false
+      })
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.orderGoodsStatusDateShow = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -298,19 +313,19 @@ export default {
           areaCode: undefined,
           userAddress: undefined,
           userRemark: undefined
-        },
-      };
-      this.resetForm("form");
+        }
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -320,90 +335,90 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.reset()
       this.addGoods(this.goodsList[0].id)
       this.selectGoods(0, this.goodsList[0].id)
-      this.open = true;
-      this.title = "添加零件";
+      this.open = true
+      this.title = '添加零件'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
+      this.reset()
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.open = true;
-        this.title = "修改订单";
-      });
+        this.open = true
+        this.title = '修改订单'
+      })
 
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       //
       // private Long orderId;
       // private Long goodsId;
       // private Long configId;
       // private Long factoryId
-      let apsOrderSaleConfigList = [];
+      let apsOrderSaleConfigList = []
       for (let g in this.goodsSaleConfigMap) {
         for (let gs in this.goodsSaleConfigMap[g]) {
           apsOrderSaleConfigList.push({
             orderId: this.form.id,
             goodsId: g,
-            configId: this.goodsSaleConfigMap[g][gs],
+            configId: this.goodsSaleConfigMap[g][gs]
           })
         }
       }
-      this.form.apsOrderSaleConfigList = apsOrderSaleConfigList;
+      this.form.apsOrderSaleConfigList = apsOrderSaleConfigList
       add(this.form).then(response => {
-        this.$modal.msgSuccess("新增成功");
-        this.open = false;
-        this.getList();
-      });
+        this.$modal.msgSuccess('新增成功')
+        this.open = false
+        this.getList()
+      })
     }
     ,
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
-        return deleteByIdList(req);
+        return deleteByIdList(req)
       }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      });
-      document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+        this.getList()
+        this.$modal.msgSuccess('删除成功')
+      })
+      document.getElementsByClassName('el-message-box')[0].style.width = '520px'
     }
     ,
     getRandomUser() {
       getRandomUser().then(d => {
-        let randomUser = d.data;
-        this.form.orderUser.userName = randomUser.name;
-        this.form.orderUser.userPhone = randomUser.phone;
-        this.form.orderUser.userSex = randomUser.sex;
-        this.form.orderUser.userAddress = randomUser.address;
-      });
+        let randomUser = d.data
+        this.form.orderUser.userName = randomUser.name
+        this.form.orderUser.userPhone = randomUser.phone
+        this.form.orderUser.userSex = randomUser.sex
+        this.form.orderUser.userAddress = randomUser.address
+      })
     },
     addGoods(val) {
       this.form.goodsList.push({
         goodsNum: 1,
-        goodsId: val,
+        goodsId: val
 
       })
     },
     deleteGoods(index) {
-      this.form.goodsList.splice(index, 1);
+      this.form.goodsList.splice(index, 1)
     },
     selectGoods(index, value) {
-      let v = this.form.goodsList.filter(t => t.goodsId === value).length;
+      let v = this.form.goodsList.filter(t => t.goodsId === value).length
       if (v > 1) {
-        this.$message.error(this.goodsMap[value].goodsName + "该商品已存在");
-        this.form.goodsList[index].goodsId = undefined;
+        this.$message.error(this.goodsMap[value].goodsName + '该商品已存在')
+        this.form.goodsList[index].goodsId = undefined
       }
-      apsGoodsSaleItemQueryPageList({data: {goodsId: value}, pageNum: 1, pageSize: 9990}).then(res => {
-        console.info("res: ", res);
+      apsGoodsSaleItemQueryPageList({ data: { goodsId: value }, pageNum: 1, pageSize: 9990 }).then(res => {
+        console.info('res: ', res)
       })
       this.goodsSaleConfigMap[value] = {}
       this.apsSaleConfigList.forEach(t => {
@@ -412,29 +427,38 @@ export default {
           this.goodsSaleConfigMap[value][t.id] = t1.id
         })
       })
-      this.goodsSaleConfigMap = {...this.goodsSaleConfigMap}
-      console.info(".goodsSaleConfigMap: ", this.goodsSaleConfigMap);
+      this.goodsSaleConfigMap = { ...this.goodsSaleConfigMap }
+      console.info('.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
     },
     saveBatch() {
       request({
-        url: "/apsOrder/batchInsert",
-        method: "post",
+        url: '/apsOrder/batchInsert',
+        method: 'post',
         data: {
           createCount: 100
         }
       }).then(response => {
-        this.$message.success("保存成功");
-      });
+        this.$message.success('保存成功')
+      })
     },
     changeGM(gid, sid, value) {
-      console.info("changeGM: ", gid, sid, value);
-      console.info("this.goodsSaleConfigMap: ", this.goodsSaleConfigMap);
+      console.info('changeGM: ', gid, sid, value)
+      console.info('this.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
       this.goodsSaleConfigMap[gid][sid] = value
-      console.info("this.goodsSaleConfigMap: ", this.goodsSaleConfigMap);
-      this.$forceUpdate();
+      console.info('this.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
+      this.$forceUpdate()
+    },
+    handleStatusInfo(row) {
+      queryUrlPageList('/apsOrderGoodsStatusDate', {
+        queryPage: false, data: {
+          orderId: row.id
+        }
+      }).then(res => {
+        this.orderGoodsStatusDateShow = true
+        this.orderGoodsStatusDateList = res.data.dataList
+      })
     }
   }
-
 }
 
 </script>
