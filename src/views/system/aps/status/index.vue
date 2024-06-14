@@ -25,7 +25,14 @@
 
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
 
+
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
+      <el-table-column label="订单商品默认状态" prop="isOrderGoodsInit" width="150">
+        <template slot-scope="scope">
+          <span v-if="scope.row.isOrderGoodsInit">是</span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
@@ -52,6 +59,12 @@
         <el-form-item label="状态名称" prop="statusName">
           <el-input v-model="form.statusName" placeholder="请输入状态名称"/>
         </el-form-item>
+        <el-form-item label="状态名称" prop="isOrderGoodsInit">
+          <el-radio-group v-model="form.isOrderGoodsInit">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -64,11 +77,11 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
-import {getFactoryList} from "@/api/factory";
+import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { getFactoryList } from '@/api/factory'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
-  name: "tenantName",
+  name: 'tenantName',
   data() {
 
     return {
@@ -88,7 +101,7 @@ export default {
       brandNameList: [],
       factoryList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -99,62 +112,62 @@ export default {
       },
       // 表单参数
       form: {
-        statusCode: "",
-        remark: "",
-        brandName: "",
-        pwd: "",
+        statusCode: '',
+        remark: '',
+        brandName: '',
+        pwd: '',
         id: undefined,
         confirmPwd: undefined
       },
       // 表单校验
       rules: {},
       tableHeaderList: []
-    };
+    }
   },
   created() {
-    document["pagePath"] = "/apsStatus";
+    document['pagePath'] = '/apsStatus'
     // process.env.pagePath = "/tenant"
-    this.getList();
-    getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
-      this.factoryList = data.data.dataList;
-    });
+    this.getList()
+    getFactoryList({ pageSize: 3000, pageNum: 1 }).then(data => {
+      this.factoryList = data.data.dataList
+    })
   },
   methods: {
     /** 查询公告列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
-        this.brandNameList = response.dataList;
-        this.total = parseInt(response.total);
-        this.loading = false;
-      });
+        this.brandNameList = response.dataList
+        this.total = parseInt(response.total)
+        this.loading = false
+      })
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        tenantCode: "",
+        remark: '',
+        tenantCode: '',
         id: undefined,
         tenantName: undefined
-      };
-      this.resetForm("form");
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -164,55 +177,55 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加状态";
+      this.reset()
+      this.open = true
+      this.title = '添加状态'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
+      this.reset()
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.open = true;
-        this.title = "修改状态";
-      });
+        this.open = true
+        this.title = '修改状态'
+      })
 
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate(valid => {
+    submitForm: function() {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
             updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.$modal.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
           } else {
             add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.$modal.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
-        return deleteByIdList(req);
+        return deleteByIdList(req)
       }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      });
-      document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+        this.getList()
+        this.$modal.msgSuccess('删除成功')
+      })
+      document.getElementsByClassName('el-message-box')[0].style.width = '520px'
     }
   }
-};
+}
 </script>

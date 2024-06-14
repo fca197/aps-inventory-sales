@@ -1,9 +1,6 @@
 <template>
   <div class="app-container home">
     <el-row :gutter="20">
-
-    </el-row>
-    <el-row :gutter="20">
       <el-col :span="12">
         <div id="mainDiv" style="width: 100%;height: 200px"></div>
       </el-col>
@@ -21,11 +18,11 @@
 
 <script>
 import ECharts from 'events'
-import * as echarts from "echarts";
+import * as echarts from 'echarts'
 import versionChange from '@/views/version/index.vue'
 
 export default {
-  name: "VersionChangeIndex",
+  name: 'VersionChangeIndex',
   components: {
     ECharts, versionChange
   },
@@ -33,20 +30,20 @@ export default {
     return {
 
       projectTimeLineList: [
-        {time: '2024-03-17 19:01', title: "项目初始化", content: "整合从上班到目前现有项目经验"},
-        {time: '2024-03-17 22:50', title: "资产盘点项目", content: "包含工厂, 楼层,房间, 资产录入管理, 资产扫码盘点"},
-        {time: '2024-03-19 18:00', title: "进存销项目", content: "包含商品管理, 订单生成, 商品盘点,采购计划,采购单 等功能"},
-        {time: '2024-03-29 13:00', title: "APS", content: "包含商品,销售配置,预测,工厂配置,工艺流程等功能", color: "#409EFF"},
+        { time: '2024-03-17 19:01', title: '项目初始化', content: '整合从上班到目前现有项目经验' },
+        { time: '2024-03-17 22:50', title: '资产盘点项目', content: '包含工厂, 楼层,房间, 资产录入管理, 资产扫码盘点' },
+        { time: '2024-03-19 18:00', title: '进存销项目', content: '包含商品管理, 订单生成, 商品盘点,采购计划,采购单 等功能' },
+        { time: '2024-03-29 13:00', title: 'APS', content: '包含商品,销售配置,预测,工厂配置,工艺流程等功能', color: '#409EFF' }
       ].reverse(),
       // 版本号
-      version: "3.8.6"
-    };
+      version: '3.8.6'
+    }
   },
   mounted() {
     let myChart = echarts.init(document.getElementById('mainDiv'))
     // 绘制图表
     myChart.setOption({
-      title: {text: '生产数量-示例'},
+      title: { text: '生产数量-示例' },
       tooltip: {
         trigger: 'axis'
       },
@@ -60,7 +57,7 @@ export default {
         data: ['产能', '限制', '订单量']
       },
       xAxis: {
-        data: ["2024-01-03", "2024-01-04", "2024-01-05", "2024-01-06", "2024-01-07", "2024-01-08"]
+        data: ['2024-01-03', '2024-01-04', '2024-01-05', '2024-01-06', '2024-01-07', '2024-01-08']
       },
       yAxis: {},
       series: [{
@@ -76,10 +73,10 @@ export default {
         type: 'line',
         data: [33, 23, 47, 15, 48, 63]
       }]
-    });
+    })
     let cityChart = echarts.init(document.getElementById('cityMap'))
     cityChart.setOption({
-      title: {text: '最近30天下单量-示例'},
+      title: { text: '最近30天下单量-示例' },
       tooltip: {
         trigger: 'axis'
       },
@@ -93,7 +90,7 @@ export default {
         data: ['SUV-订单量', 'MPV-订单量']
       },
       xAxis: {
-        data: ["2024-02-03", "2024-02-04", "2024-02-05", "2024-02-06", "2024-02-07", "2024-02-08"]
+        data: ['2024-02-03', '2024-02-04', '2024-02-05', '2024-02-06', '2024-02-07', '2024-02-08']
       },
       yAxis: {},
       series: [{
@@ -105,14 +102,14 @@ export default {
         type: 'line',
         data: [32, 13, 67, 55, 38, 83]
       }]
-    });
+    })
   },
   methods: {
     goTarget(href) {
-      window.open(href, "_blank");
+      window.open(href, '_blank')
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
