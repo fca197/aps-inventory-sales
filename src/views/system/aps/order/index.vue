@@ -177,12 +177,13 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="orderGoodsStatusDateShow" width="500px" append-to-body>
-      <el-table :data="orderGoodsStatusDateList" style="width: 100%;">
-        <el-table-column prop="goodsStatusName" label="状态名称"/>
-        <el-table-column prop="expectMakeTime" label="预计时间"/>
-        <el-table-column prop="actualMakeTime" label="实际时间"/>
-      </el-table>
+    <el-dialog title="订单状态时间一览表" :visible.sync="orderGoodsStatusDateShow" width="600px" append-to-body>
+      <step :Index="3" :okRouteList="orderGoodsStatusDateList"/>
+      <!--      <el-table :data="orderGoodsStatusDateList" style="width: 100%;">-->
+      <!--        <el-table-column prop="goodsStatusName" label="状态名称"/>-->
+      <!--        <el-table-column prop="expectMakeTime" label="预计时间"/>-->
+      <!--        <el-table-column prop="actualMakeTime" label="实际时间"/>-->
+      <!--      </el-table>-->
     </el-dialog>
   </div>
 </template>
@@ -197,8 +198,13 @@ import request from '@/utils/request'
 import { apsGoodsSaleItemQueryPageList } from '@/api/aps/apsGoodsSaleItem'
 import { getSaleConfigList } from '@/api/aps/saleConfig' // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
+import Step from '@/views/components/step/Steps.vue'
+
 export default {
   name: 'tenantName',
+  components: {
+    Step
+  },
   data() {
 
     return {
@@ -455,7 +461,8 @@ export default {
         }
       }).then(res => {
         this.orderGoodsStatusDateShow = true
-        this.orderGoodsStatusDateList = res.data.dataList
+        this.orderGoodsStatusDateList = res.data.dataList.reverse()
+
       })
     }
   }
