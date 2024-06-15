@@ -256,15 +256,17 @@ export const constantRoutes = [{
       meta: { title: '(预)生产数据主版本', icon: 'eye-open', affix: false }
     }]
   }, {
-    path: '/aps/order/index',
+    path: '/aps/order/main/index',
     name: '订单管理',
-    component: () => import('@/views/system/aps/order/index'),
+    component: ParentView,
     meta: { title: '订单管理', icon: 'order-1', affix: false },
     children: [{
+      path: '/aps/order/index',
       name: '订单管理',
       component: () => import('@/views/system/aps/order/index'),
-      meta: { title: '订单进度', icon: 'order-1', affix: false }
+      meta: { title: '订单管理', icon: 'order-1', affix: false }
     }, {
+      path: '/aps/order/timeline/index',
       name: '订单进度',
       component: () => import('@/views/system/aps/order/timeLine.vue'),
       meta: { title: '订单进度', icon: 'order-1', affix: false }

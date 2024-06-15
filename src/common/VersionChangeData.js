@@ -48,8 +48,9 @@ const versionChangeData = [{
   time: '2024-06-14',
   title: 'APS系统',
   content: '订单列表增加订单节点经过时间,目前以基于排产时间和工艺路径推算每个节点的日期'
-}
-]
+}, {
+  time: '2024-06-16', title: 'APS系统', content: '增加订单进度一览表'
+}]
 
 versionChangeData[versionChangeData.length - 1].color = '#FF3EB4'
 versionChangeData.reverse()

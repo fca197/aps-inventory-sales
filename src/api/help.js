@@ -325,5 +325,16 @@ const data = [
     }, {
       title: '班次删除', content: '删除班次'
     }]
-  }]
+  }
+  , {
+    url: '/aps/order/timeline/index', pageName: '订单-订单时间线', item: [
+
+      {
+        title: '操作前置条件', content: '订单排产或订单状态变更'
+      }
+
+    ]
+  }
+
+]
 export default data
