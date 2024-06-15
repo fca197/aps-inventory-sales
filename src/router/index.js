@@ -257,9 +257,18 @@ export const constantRoutes = [{
     }]
   }, {
     path: '/aps/order/index',
-    name: 'APS-订单管理',
+    name: '订单管理',
     component: () => import('@/views/system/aps/order/index'),
-    meta: { title: 'APS-订单管理', icon: 'order-1', affix: false }
+    meta: { title: '订单管理', icon: 'order-1', affix: false },
+    children: [{
+      name: '订单管理',
+      component: () => import('@/views/system/aps/order/index'),
+      meta: { title: '订单进度', icon: 'order-1', affix: false }
+    }, {
+      name: '订单进度',
+      component: () => import('@/views/system/aps/order/timeLine.vue'),
+      meta: { title: '订单进度', icon: 'order-1', affix: false }
+    }]
   }, {
     path: '/aps/make/q/index', name: 'APS工厂产能管理', component: ParentView, // component: () => import('@/views/system/aps/order/index'),
     meta: { title: '产能管理', icon: 'order-1', affix: false }, children: [{
