@@ -38,7 +38,32 @@
       <el-table-column label="总价" align="center" prop="orderTotalPrice" width="130"/>
       <el-table-column label="交付时间" align="center" prop="deliveryDate" width="130"/>
       <el-table-column label="订单备注" align="center" prop="orderRemark" width="130"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px">
+        <template slot-scope="scope">
+          <span v-if='scope.row[item.fieldName+"_isDelay"]===true'>
+            <el-tooltip placement="top">
+            <div slot="content">节点时间:
+
+<!--    private LocalDate expectMakeBeginTime;-->
+<!--    private LocalDate expectMakeEndTime;-->
+<!--    /***-->
+<!--     *  实际制造时间-->
+<!--     */-->
+<!--    private LocalDate actualMakeBeginTime;-->
+<!--    private LocalDate actualMakeEndTime;-->
+              <br/>预计开始时间: {{scope.row[item.fieldName+"_expectMakeBeginTime"]}}
+              <br/>实际开始时间: {{scope.row[item.fieldName+"_actualMakeBeginTime"]}}
+            </div>
+            <span class="statusDelay"> {{ scope.row[item.fieldName] }}</span>
+          </el-tooltip>
+          </span>
+          <span v-else-if='scope.row[item.fieldName+"_isDelay"]===false'>
+            <span> {{ scope.row[item.fieldName] }}</span>
+          </span> <span v-else>
+             {{ scope.row[item.fieldName] }}
+          </span>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -80,7 +105,9 @@ export default {
     }
   },
   created() {
-    this.queryParams.dateArr[0] = this.formatDates(new Date(), false).substring(0, 10)
+    const beginDate = new Date()
+    beginDate.setDate(beginDate.getDate() - 10)
+    this.queryParams.dateArr[0] = this.formatDates(beginDate, false).substring(0, 10)
     const today = new Date()
     today.setMonth(today.getMonth() + 1) // 设置为下个月
     this.queryParams.dateArr[1] = this.formatDates(today, false).substring(0, 10)
@@ -96,10 +123,15 @@ export default {
         this.tableData = t.data.records
         this.tableData.forEach(r => {
           r.statusInfoList.forEach(rt => {
+            //
             r[rt.beginDate] = r[rt.beginDate] === undefined ? rt.statusName : r[rt.beginDate] + '/' + rt.statusName
+            r[rt.beginDate + '_isDelay'] = rt.isDelay
+            r[rt.beginDate + '_actualMakeBeginTime'] = rt.actualMakeBeginTime
+            r[rt.beginDate + '_expectMakeBeginTime'] = rt.expectMakeBeginTime
           })
         })
         this.total = parseInt(t.data.total)
+        console.log(this.tableData)
       })
     },
     handleQuery() {
@@ -114,5 +146,7 @@ export default {
 
 
 <style scoped lang="scss">
-
+.statusDelay {
+  color: red;
+}
 </style>
