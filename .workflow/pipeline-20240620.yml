@@ -9,7 +9,7 @@ triggers:
         - deploy
 stages:
   - name: stage-4df17c31
-    displayName: 未命名
+    displayName: 构建
     strategy: naturally
     trigger: auto
     executor: []
@@ -24,7 +24,7 @@ stages:
           - ''
           - '# 执行编译命令'
           - '# npm install && npm run build'
-          - ''
+          - pwd
           - sh build.sh
         artifacts:
           - name: BUILD_ARTIFACT
