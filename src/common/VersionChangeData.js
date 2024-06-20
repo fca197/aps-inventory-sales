@@ -52,6 +52,8 @@ const versionChangeData = [{
   time: '2024-06-16', title: 'APS系统', content: '增加订单进度一览表'
 }, {
   time: '2024-06-18', title: 'APS系统', content: '增加订单进度中订单节点过期提醒(页面,非消息)'
+}, {
+  time: '2024-06-20', title: 'APS系统', content: '增加基本配置->零件组'
 }
 
 ]
