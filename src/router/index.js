@@ -195,6 +195,11 @@ export const constantRoutes = [{
     component: ParentView,
     meta: { title: '商品管理', icon: 'order-1', affix: false },
     children: [{
+      path: '/aps/bomGroup/index',
+      name: '零件组配置',
+      component: () => import('@/views/system/aps/bomGroup/index'),
+      meta: { title: '零件组配置', icon: 'setting', affix: false }
+    },{
       path: '/aps/bom/index',
       name: '零件配置',
       component: () => import('@/views/system/aps/bom/index'),

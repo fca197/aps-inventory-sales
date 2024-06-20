@@ -1,1 +1,1 @@
- yarn   build:prod
+ yarn install && yarn   build:prod

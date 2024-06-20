@@ -21,27 +21,48 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="brandNameList" @selection-change="handleSelectionChange">
+    <el-row>
+      <el-col :span="3">
+        <el-input
+            placeholder="输入关键字进行过滤"
+            v-model="filterGroupName">
+        </el-input>
 
-      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+        <el-tree
+            class="filter-tree"
+            :data="groupData"
+            default-expand-all
+            :filter-node-method="filterNode"
+            ref="tree">
+        </el-tree>
 
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
-        <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
 
-    <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
-    />
+      </el-col>
+      <el-col :span="21">
+        <el-table v-loading="loading" :data="brandNameList" @selection-change="handleSelectionChange">
 
+          <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+
+          <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
+          <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+            <template slot-scope="scope">
+              <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
+              <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <pagination
+            v-show="total>0"
+            :limit.sync="queryParams.pageSize"
+            :page.sync="queryParams.pageNum"
+            :total="total"
+            @pagination="getList"
+        />
+
+      </el-col>
+
+    </el-row>
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
@@ -74,17 +95,22 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "tenantName",
   data() {
 
     return {
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
+      groupData: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -93,7 +119,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-
+      filterGroupName:"",
       brandNameList: [],
       // 弹出层标题
       title: "",
@@ -122,6 +148,11 @@ export default {
   created() {
     document["pagePath"] = "/apsBom";
     // process.env.pagePath = "/tenant"
+    queryUrlPageList("/apsBomGroup",{queryPage:false})
+    .then(t=>{
+      this.groupData = t.data.dataList
+    })
+
     this.getList();
 
   },
@@ -218,6 +249,10 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    },
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
     }
   }
 };
