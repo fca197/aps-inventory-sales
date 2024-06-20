@@ -80,6 +80,9 @@
         <el-form-item label="请输入库存" prop="bomInventory">
           <el-input v-model="form.bomInventory" placeholder="请输入库存"/>
         </el-form-item>
+        <el-form-item label="零件组" prop="groupId">
+          <tree-select ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"></tree-select>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -95,9 +98,11 @@
 import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
 import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import bomGroup from '@/views/system/aps/bomGroup/index.vue'
+import treeSelect from '@/views/components/treeSelect/index.vue'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: 'tenantName',
+  components: { treeSelect },
   computed: {
     bomGroup() {
       return bomGroup
@@ -134,7 +139,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {
-          groupId:undefined
+          groupId: undefined
         }
       },
       // 表单参数
@@ -154,11 +159,19 @@ export default {
   created() {
     document['pagePath'] = '/apsBom'
     // process.env.pagePath = "/tenant"
-    queryBomGroupTree(true).then(t => {
-      this.groupData = t
-      this.groupData[0].parentId = undefined
-      this.groupData[0].id = undefined
-      this.groupData[0].groupName = '全部'
+    queryBomGroupTree(false).then(t => {
+      this.groupData = []
+
+      let tt = {
+        parentId: undefined,
+        id: undefined,
+        groupName: '全部',
+        name: '全部'
+      }
+      this.groupData.push(tt)
+      for (let i = 0; i < t.length; i++) {
+        this.groupData.push(t[i])
+      }
       console.info('groupData: ', this.groupData)
     }).then(t => {
       this.getList()
@@ -166,9 +179,9 @@ export default {
 
   },
   methods: {
-    bomGroupClick(data){
+    bomGroupClick(data) {
       this.queryParams.data.groupId = data.id
-      this.getList();
+      this.getList()
     },
     /** 查询公告列表 */
     getList() {

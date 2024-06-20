@@ -37,7 +37,7 @@ export default {
   props: {
     //绑定的值
     value: {
-      tyep: Object
+      type: String
     },
     // 树结构数据
     list: {
