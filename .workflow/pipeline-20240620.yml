@@ -4,9 +4,9 @@ displayName: pipeline-20240620
 triggers:
   trigger: manual
   push:
-    branches:
+    tags:
       prefix:
-        - deploy
+        - deploy_
 stages:
   - name: stage-4df17c31
     displayName: 构建
