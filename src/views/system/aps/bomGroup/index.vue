@@ -55,38 +55,9 @@
         <el-form-item label="零件组名称" prop="groupName">
           <el-input v-model="form.groupName" placeholder="请输入名称"/>
         </el-form-item>
-        <el-form-item label="上级" prop="groupName">
+        <el-form-item label="上级" prop="parentId">
 
-          <el-popover
-              placement="bottom"
-              width="350"
-              trigger="click">
-            <el-tree
-                style="width:300px"
-                ref="tree"
-                :data="options"
-                :check-strictly="false"
-                show-checkbox
-                node-key="id"
-                :default-expanded-keys="[]"
-                :default-checked-keys="[]"
-                :props="{
-           children: 'children',
-           label: 'name'
-         }"
-                @check-change="handleCheckChage"
-                @node-click="handleNodeClick"
-            >
-            </el-tree>
-
-            <el-input slot="reference"
-                      style="width:380px"
-                      v-model="form.parentId"
-                      placeholder="节点"
-                      clearable
-                      @clear="handleIptClear">
-            </el-input>
-          </el-popover>
+          <tree-select ref="treeSelect" :list="bomGroupList" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.parentId"></tree-select>
 
         </el-form-item>
       </el-form>
@@ -100,10 +71,14 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common' // console.info("xxx: ",uc.urlPrefix)
+import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { queryBomGroupTree } from '@/api/aps/apsGroup'
+import treeSelect from '@/views/components/treeSelect/index.vue'
+// console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: 'tenantName',
+  components:{treeSelect},
   data() {
 
     return {
@@ -147,18 +122,21 @@ export default {
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      bomGroupList: []
     }
   },
   created() {
     document['pagePath'] = '/apsBomGroup'
     // process.env.pagePath = "/tenant"
 
-
     this.getList()
 
   },
   methods: {
+    parentIdClear() {
+      this.form.parentId = 0
+    },
     /** 查询公告列表 */
     getList() {
       this.loading = true
@@ -203,6 +181,10 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      queryBomGroupTree(true).then(t => {
+        this.bomGroupList = t
+      })
+      console.log(this.bomGroupList)
       this.reset()
       this.open = true
       this.title = '添加零件组'

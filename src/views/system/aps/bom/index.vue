@@ -22,20 +22,17 @@
     </el-row>
 
     <el-row>
-      <el-col :span="3">
-        <el-input
-            placeholder="输入关键字进行过滤"
-            v-model="filterGroupName">
-        </el-input>
-
+      <el-col :span="3" style="border: 1px solid #ccc;">
         <el-tree
+            style="margin: 10px 5px;height: 600px"
             class="filter-tree"
             :data="groupData"
             default-expand-all
-            :filter-node-method="filterNode"
-            ref="tree">
+            @node-click="bomGroupClick"
+            :props="{ children: 'children',label: 'groupName'}"
+            ref="tree"
+        >
         </el-tree>
-
 
       </el-col>
       <el-col :span="21">
@@ -95,10 +92,17 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { queryBomGroupTree } from '@/api/aps/apsGroup'
+import bomGroup from '@/views/system/aps/bomGroup/index.vue'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
-  name: "tenantName",
+  name: 'tenantName',
+  computed: {
+    bomGroup() {
+      return bomGroup
+    }
+  },
   data() {
 
     return {
@@ -119,79 +123,88 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-      filterGroupName:"",
+      filterGroupName: '',
       brandNameList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        data: {}
+        data: {
+          groupId:undefined
+        }
       },
       // 表单参数
       form: {
-        bomCode: "",
-        remark: "",
-        brandName: "",
-        pwd: "",
+        bomCode: '',
+        remark: '',
+        brandName: '',
+        pwd: '',
         id: undefined,
         confirmPwd: undefined
       },
       // 表单校验
       rules: {},
       tableHeaderList: []
-    };
+    }
   },
   created() {
-    document["pagePath"] = "/apsBom";
+    document['pagePath'] = '/apsBom'
     // process.env.pagePath = "/tenant"
-    queryUrlPageList("/apsBomGroup",{queryPage:false})
-    .then(t=>{
-      this.groupData = t.data.dataList
+    queryBomGroupTree(true).then(t => {
+      this.groupData = t
+      this.groupData[0].parentId = undefined
+      this.groupData[0].id = undefined
+      this.groupData[0].groupName = '全部'
+      console.info('groupData: ', this.groupData)
+    }).then(t => {
+      this.getList()
     })
-
-    this.getList();
 
   },
   methods: {
+    bomGroupClick(data){
+      this.queryParams.data.groupId = data.id
+      this.getList();
+    },
     /** 查询公告列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
-        this.brandNameList = response.dataList;
-        this.total = parseInt(response.total);
-        this.loading = false;
-      });
+        this.brandNameList = response.dataList
+        this.total = parseInt(response.total)
+        this.loading = false
+      })
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        tenantCode: "",
+        remark: '',
+        tenantCode: '',
         id: undefined,
         tenantName: undefined
-      };
-      this.resetForm("form");
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -201,59 +214,59 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加零件";
+      this.reset()
+      this.open = true
+      this.title = '添加零件'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
+      this.reset()
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.open = true;
-        this.title = "修改零件";
-      });
+        this.open = true
+        this.title = '修改零件'
+      })
 
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate(valid => {
+    submitForm: function() {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
             updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.$modal.msgSuccess('修改成功')
+              this.open = false
+              this.getList()
+            })
           } else {
             add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.$modal.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
-        return deleteByIdList(req);
+        return deleteByIdList(req)
       }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      });
-      document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+        this.getList()
+        this.$modal.msgSuccess('删除成功')
+      })
+      document.getElementsByClassName('el-message-box')[0].style.width = '520px'
     },
     filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
     }
   }
-};
+}
 </script>
