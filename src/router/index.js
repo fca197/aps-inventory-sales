@@ -199,7 +199,7 @@ export const constantRoutes = [{
       name: '零件组配置',
       component: () => import('@/views/system/aps/bomGroup/index'),
       meta: { title: '零件组配置', icon: 'setting', affix: false }
-    },{
+    }, {
       path: '/aps/bom/index',
       name: '零件配置',
       component: () => import('@/views/system/aps/bom/index'),
@@ -452,7 +452,26 @@ export const constantRoutes = [{
       component: () => import('@/views/system/jcx/buyOrder/index'),
       meta: { title: '采购订单', icon: 'order-2', affix: false }
     }]
-  }]
+  },
+  {
+    path: '/blog/',
+    component: Layout,
+    redirect: 'index',
+    meta: { title: '博客', icon: 'international', affix: false },
+    children: [
+      {
+        path: '/blog/group/index',
+        component: () => import('@/views/system/blog/blogGroup'),
+        meta: { title: '博客组', icon: 'international', affix: false }
+      }, {
+        path: '/blog/index',
+        component: () => import('@/views/system/blog/blog'),
+        meta: { title: '博客', icon: 'international', affix: false }
+      }
+    ]
+  }
+
+]
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = []

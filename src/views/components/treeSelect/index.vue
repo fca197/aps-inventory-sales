@@ -372,7 +372,7 @@ export default {
   float: right;
 }
 .el-row{
-  padding-top: 0px !important;
+  padding-top: 0 !important;
 }
 </style>
 
