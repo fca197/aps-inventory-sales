@@ -38,10 +38,11 @@ stages:
         strategy:
           retry: '0'
   - name: stage-1ac138e8
-    displayName: 未命名
+    displayName: 部署
     strategy: naturally
     trigger: auto
-    executor: []
+    executor:
+      - slsplatform
     steps:
       - step: deploy@agent
         name: deploy_agent
