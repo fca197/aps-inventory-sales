@@ -22,10 +22,13 @@ stages:
           - '# 设置NPM源，提升安装速度'
           - npm config set registry https://registry.npmmirror.com
           - ''
+          - git clone git@gitee.com:slsplatform/aps-inventory-sales.git
+          - cd aps-inventory-sales
           - '# 执行编译命令'
           - '# npm install && npm run build'
           - pwd
           - sh build.sh
+          - ''
         artifacts:
           - name: BUILD_ARTIFACT
             path:
@@ -33,6 +36,39 @@ stages:
         caches:
           - ~/.npm
           - ~/.yarn
+        notify: []
+        strategy:
+          retry: '0'
+  - name: stage-1ac138e8
+    displayName: 部署
+    strategy: naturally
+    trigger: auto
+    executor:
+      - slsplatform
+    steps:
+      - step: deploy@agent
+        name: deploy_agent
+        displayName: 主机部署
+        hostGroupID:
+          ID: web
+          hostID:
+            - 5c13be3c-d967-466c-8b63-d09bacf4b5dc
+        deployArtifact:
+          - source: artifact
+            name: output
+            target: ~/gitee_go/deploy
+            artifactRepository: release
+            artifactName: output
+            artifactVersion: latest
+        script:
+          - '# 功能：部署脚本会在部署主机组的每台机器上执行'
+          - '# 使用场景：先将制品包解压缩到指定目录中，再执行启动脚本deploy.sh，脚本示例地址：https://gitee.com/gitee-go/spring-boot-maven-deploy-case/blob/master/deploy.sh'
+          - '# mkdir -p /home/admin/app'
+          - '# tar zxvf ~/gitee_go/deploy/output.tar.gz -C /home/admin/app'
+          - '# sh /home/admin/app/deploy.sh restart'
+          - '# 如果你是php之类的无需制品包的制品方式，可以使用 git clone 或者 git pull 将源代码更新到服务器，再执行其他命令'
+          - '# git clone ***@***.git'
+          - echo 'Hello Gitee Go!'
         notify: []
         strategy:
           retry: '0'
