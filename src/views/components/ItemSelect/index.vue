@@ -34,7 +34,7 @@ export default {
         elementsByClassName[i].style.backgroundColor = '#fff'
       }
       elementsByClassName[index].style.backgroundColor = '#a8c1f5'
-      this.obj.groupId=this.itemList[index].id;
+      this.obj.postsGroupId=this.itemList[index].id;
       this.clickFun();
     }
   }

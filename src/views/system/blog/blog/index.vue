@@ -151,7 +151,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {
-          groupId: undefined
+          postsGroupId: undefined
         }
       },
       // 表单参数
