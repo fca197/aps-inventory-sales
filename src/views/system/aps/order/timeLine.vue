@@ -44,22 +44,22 @@
             <el-tooltip placement="top">
             <div slot="content">节点时间:
 
-<!--    private LocalDate expectMakeBeginTime;-->
-<!--    private LocalDate expectMakeEndTime;-->
-<!--    /***-->
-<!--     *  实际制造时间-->
-<!--     */-->
-<!--    private LocalDate actualMakeBeginTime;-->
-<!--    private LocalDate actualMakeEndTime;-->
-              <br/>预计开始时间: {{scope.row[item.fieldName+"_expectMakeBeginTime"]}}
-              <br/>实际开始时间: {{scope.row[item.fieldName+"_actualMakeBeginTime"]}}
+              <!--    private LocalDate expectMakeBeginTime;-->
+              <!--    private LocalDate expectMakeEndTime;-->
+              <!--    /***-->
+              <!--     *  实际制造时间-->
+              <!--     */-->
+              <!--    private LocalDate actualMakeBeginTime;-->
+              <!--    private LocalDate actualMakeEndTime;-->
+              <br/>预计开始时间: {{ scope.row[item.fieldName + '_expectMakeBeginTime'] }}
+              <br/>实际开始时间: {{ scope.row[item.fieldName + '_actualMakeBeginTime'] }}
             </div>
-            <span class="statusDelay"> {{ scope.row[item.fieldName] }}</span>
+            <span class="statusSpan statusDelay" > {{ scope.row[item.fieldName] }}</span>
           </el-tooltip>
           </span>
-          <span v-else-if='scope.row[item.fieldName+"_isDelay"]===false'>
+          <span  class="statusSpan" v-else-if='scope.row[item.fieldName+"_isDelay"]===false'>
             <span> {{ scope.row[item.fieldName] }}</span>
-          </span> <span v-else>
+          </span> <span class="statusSpan"  v-else-if="scope.row[item.fieldName]">
              {{ scope.row[item.fieldName] }}
           </span>
         </template>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { post } from '@/api/common'
+import { post, queryUrlPageList } from '@/api/common'
 
 export default {
   name: 'timeLine',
@@ -101,17 +101,28 @@ export default {
       multiple: true,
       single: true,
       ids: [],
-      open: false
+      open: false,
+      apsStatusList: {}
     }
   },
   created() {
-    const beginDate = new Date()
-    beginDate.setDate(beginDate.getDate() - 10)
-    this.queryParams.dateArr[0] = this.formatDates(beginDate, false).substring(0, 10)
-    const today = new Date()
-    today.setMonth(today.getMonth() + 1) // 设置为下个月
-    this.queryParams.dateArr[1] = this.formatDates(today, false).substring(0, 10)
-    this.getList()
+
+    queryUrlPageList('/apsStatus', { queryPage: false }).then(t => {
+      var dataList = t.data.dataList
+      dataList.forEach(r => {
+        r.backColor = '#' + r.id.substring(r.id.length - 6)
+        this.apsStatusList[r.id] = r
+      })
+    }).then(t3 => {
+      const beginDate = new Date()
+      beginDate.setDate(beginDate.getDate() - 10)
+      this.queryParams.dateArr[0] = this.formatDates(beginDate, false).substring(0, 10)
+      const today = new Date()
+      today.setMonth(today.getMonth() + 1) // 设置为下个月
+      this.queryParams.dateArr[1] = this.formatDates(today, false).substring(0, 10)
+      this.getList()
+    })
+
   },
   methods: {
     getList() {
@@ -126,6 +137,7 @@ export default {
             //
             r[rt.beginDate] = r[rt.beginDate] === undefined ? rt.statusName : r[rt.beginDate] + '/' + rt.statusName
             r[rt.beginDate + '_isDelay'] = rt.isDelay
+            r[rt.beginDate + '_statusId'] = rt.statusId
             r[rt.beginDate + '_actualMakeBeginTime'] = rt.actualMakeBeginTime
             r[rt.beginDate + '_expectMakeBeginTime'] = rt.expectMakeBeginTime
           })
@@ -147,6 +159,13 @@ export default {
 
 <style scoped lang="scss">
 .statusDelay {
-  color: red;
+  color: red !important;
+  border: 1px solid red !important;
+  padding: 2px 8px;
+}
+.statusSpan{
+  border: 1px solid #ccc;
+  padding: 2px 8px;
+  color: green;
 }
 </style>
