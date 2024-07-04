@@ -54,6 +54,9 @@
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="工艺路径编码" prop="processPathCode">
+          <el-input v-model="form.processPathCode" placeholder="请输入工艺路径编码"/>
+        </el-form-item>
         <el-form-item label="工艺路径名称" prop="processPathName">
           <el-input v-model="form.processPathName" placeholder="请输入工艺路径名称"/>
         </el-form-item>
