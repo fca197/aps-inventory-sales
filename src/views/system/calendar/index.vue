@@ -159,7 +159,7 @@ export default {
         defaultWorkDay: ["1", "2", "3", "4", "5"],
         workDayList: [{}],
         noWorkDayList: [{}],
-        workYear: new Date().getFullYear() + ""
+        workYear:[ new Date().getFullYear() + ""]
       },
       pickerOptions: {},
       factoryList: [],

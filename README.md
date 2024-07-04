@@ -1,10 +1,9 @@
 # 功能流程图
 
 ## aps 功能
-
-> ~~APS门户主页 [ https://fengnuanxiang.com/](https://fengnuanxiang.com/)   👈👈👈👈~~  
+ 
 > APS操作平台 [ https://aps.fengnuanxiang.com/](https://aps.fengnuanxiang.com/)  👈👈👈👈  
-> 如有疑问或需求,请联系  (微信: rpcjmeter ,备注: APS) (QQ: 2363745556)  👈👈👈👈
+> 如有疑问或需求,请联系  (微信: rpcjmeter ,备注: APS)    👈👈👈👈
 
 ### 使用范围
 
