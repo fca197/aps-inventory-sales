@@ -65,7 +65,7 @@
       <el-form ref="form" :model="openSettingDayForm" :rules="openSettingDayFormRules" label-width="100px">
 
         <el-form-item label="默认工作日" prop="workYear">
-          <el-select v-model.trim="openSettingDayForm.workYear" filterable filterable placeholder="请选择">
+          <el-select v-model.trim="openSettingDayForm.workYear" filterable filterable placeholder="请选择" multiple style="width: 90%">
             <el-option v-for="(item,index) in workYearList" :key="item" :label="item" :value="item">{{ item }}</el-option>
           </el-select>
         </el-form-item>

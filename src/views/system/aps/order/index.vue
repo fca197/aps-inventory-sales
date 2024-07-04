@@ -17,9 +17,9 @@
       <el-col :span="1.5">
         <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button icon="el-icon-plus"  plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>
+      </el-col>
       <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
@@ -437,15 +437,15 @@ export default {
       console.info('.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
     },
     saveBatch() {
-      // request({
-      //   url: '/apsOrder/batchInsert',
-      //   method: 'post',
-      //   data: {
-      //     createCount: 100
-      //   }
-      // }).then(response => {
-      //   this.$message.success('保存成功')
-      // })
+      request({
+        url: '/apsOrder/batchInsert',
+        method: 'post',
+        data: {
+          createCount: 100
+        }
+      }).then(response => {
+        this.$message.success('保存成功')
+      })
     },
     changeGM(gid, sid, value) {
       console.info('changeGM: ', gid, sid, value)
