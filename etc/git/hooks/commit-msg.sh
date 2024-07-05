@@ -8,8 +8,7 @@ commit_msg_reg="^(merge |Merge |update: |new: |fix: |docs: |refactor: |update:|n
 if [[ ! $commit_msg =~ $commit_msg_reg ]]
 then
     echo "\n不合法的 commit 消息提交格式，请使用正确的格式！\
-    \n格式：merge |Merge |update: |new: |fix: |docs: |refactor: |update:|new:|fix:|docs:|refactor: \
-    \n详情请查看 git commit 提交规范：https://thoughts.aliyun.com/workspaces/6257912025cd7c001ac34deb/docs/6257963ae87e0500019bd101"
+    \n格式：merge |Merge |update: |new: |fix: |docs: |refactor: |update:|new:|fix:|docs:|refactor:     \n详情请查看 "
 
     # 异常退出
     exit 1
