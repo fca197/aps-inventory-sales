@@ -145,6 +145,11 @@ export const constantRoutes = [{
     name: '文件管理',
     component: () => import('@/views/system/fileUpload/index'),
     meta: { title: '文件管理', icon: 'calendar', affix: false }
+  }, {
+    path: '/base/baseTableHeader/index',
+    name: '表格头管理',
+    component: () => import('@/views/system/baseTableHeader/BaseTableHeader.vue'),
+    meta: { title: '表格头管理', icon: '', affix: false }
   }]
 }, {
   path: '/aps/base-data/', component: Layout, // redirect: 'index',
@@ -452,23 +457,20 @@ export const constantRoutes = [{
       component: () => import('@/views/system/jcx/buyOrder/index'),
       meta: { title: '采购订单', icon: 'order-2', affix: false }
     }]
-  },
-  {
+  }, {
     path: '/blog/',
     component: Layout,
     redirect: 'index',
     meta: { title: '博客', icon: 'international', affix: false },
-    children: [
-      {
-        path: '/blog/group/index',
-        component: () => import('@/views/system/blog/blogGroup'),
-        meta: { title: '博客组', icon: 'international', affix: false }
-      }, {
-        path: '/blog/index',
-        component: () => import('@/views/system/blog/blog'),
-        meta: { title: '博客', icon: 'international', affix: false }
-      }
-    ]
+    children: [{
+      path: '/blog/group/index',
+      component: () => import('@/views/system/blog/blogGroup'),
+      meta: { title: '博客组', icon: 'international', affix: false }
+    }, {
+      path: '/blog/index',
+      component: () => import('@/views/system/blog/blog'),
+      meta: { title: '博客', icon: 'international', affix: false }
+    }]
   }
 
 ]
