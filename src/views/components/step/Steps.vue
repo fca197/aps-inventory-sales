@@ -1,6 +1,6 @@
 <template>
 
-  <div v-if="experienceData.length" style="width: 100%">
+  <div v-if="experienceData.length" style="width: 100%;margin-top: -80px">
     <div style="width: 100%; display: flex; position: relative; margin-top: 20px">
       <div style="width: 10%; margin-left: 30px;position: relative;left: 10px;">
         <div>
@@ -13,7 +13,7 @@
       <div style="width: 100%">
         <div style="display: flex" v-for="(item, index) in experienceData" :key="index">
           <div class="timeline" v-for="(v, i) in DisplayProcessing(experienceData, index + 1)" :key="i">
-            <div  class="border"></div>
+            <div class="border"></div>
             <div v-if="v.actualMakeTime" class="Nodes"></div>
             <div v-else class="Nodes_undone"></div>
             <div class="timeNodes">
@@ -26,7 +26,9 @@
               <div class="timeContentCCC" v-else>
                 <span>{{ v.goodsStatusName }}</span>
                 <br>
-                <span>{{ v.expectMakeTime }}(预)</span>
+                <span>起:{{ v.expectMakeBeginTime }}
+                  <br>
+                  结:{{ v.expectMakeEndTime }}</span>
               </div>
             </div>
           </div>
@@ -154,7 +156,7 @@ export default {
   position: absolute;
   text-align: center;
   left: 50%;
-  width: 110px;
+  width: 200px;
   margin-left: -60px;
   top: 60%;
   transform: translate(0, -50%);
@@ -175,6 +177,7 @@ export default {
   /* overflow-x: hidden; */
   margin-top: 30px;
   cursor: pointer;
+  margin-left: -90px;
 }
 
 .nodeTimelis {

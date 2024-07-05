@@ -177,7 +177,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="订单状态时间一览表" :visible.sync="orderGoodsStatusDateShow" width="600px" append-to-body>
+    <el-dialog title="订单状态时间一览表" :visible.sync="orderGoodsStatusDateShow" width="900px" append-to-body>
       <step :Index="3" :okRouteList="orderGoodsStatusDateList"/>
       <!--      <el-table :data="orderGoodsStatusDateList" style="width: 100%;">-->
       <!--        <el-table-column prop="goodsStatusName" label="状态名称"/>-->
