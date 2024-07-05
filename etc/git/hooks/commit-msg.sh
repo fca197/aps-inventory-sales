@@ -13,8 +13,6 @@ then
     # 异常退出
     exit 1
 fi
-
-
 test "" = "$(grep '^Signed-off-by: ' "$1" |
          sort | uniq -c | sed -e '/^[   ]*1[    ]/d')" || {
         echo >&2 Duplicate Signed-off-by lines.
