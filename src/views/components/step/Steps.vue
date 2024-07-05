@@ -14,14 +14,15 @@
         <div style="display: flex" v-for="(item, index) in experienceData" :key="index">
           <div class="timeline" v-for="(v, i) in DisplayProcessing(experienceData, index + 1)" :key="i">
             <div class="border"></div>
-            <div v-if="v.actualMakeTime" class="Nodes"></div>
+            <div v-if="v.actualMakeBeginTime" class="Nodes"></div>
             <div v-else class="Nodes_undone"></div>
             <div class="timeNodes">
               <div class="nodeTimes"></div>
-              <div class="timeContent" v-if="v.actualMakeTime">
+              <div class="timeContent" v-if="v.actualMakeBeginTime">
                 <span>{{ v.goodsStatusName }}</span>
                 <br>
-                <span>{{ v.actualMakeTime }}</span>
+                <span>起:{{ v.actualMakeBeginTime }}</span> <br>
+                <span>结:{{ v.actualMakeBeginTime }}</span>
               </div>
               <div class="timeContentCCC" v-else>
                 <span>{{ v.goodsStatusName }}</span>
