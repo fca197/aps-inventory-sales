@@ -103,6 +103,7 @@ export default {
   created() {
     document["pagePath"] = "/apsSchedulingVersion";
     this.form.schedulingVersionNo = "PC-" + this.formatDates(new Date(), true);
+    this.form.schedulingVersionName = "排产-" + this.formatDates(new Date(), true);
     getSchedulingConstraintsList({pageNum: 1, pageSize: 300}).then(t => {
       this.schedulingConstraintsList = t.data.dataList;
     });

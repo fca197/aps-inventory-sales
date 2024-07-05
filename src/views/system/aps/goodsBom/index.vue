@@ -180,7 +180,8 @@ export default {
         pwd: "",
         id: undefined,
         confirmPwd: undefined,
-        isFollow: false
+        isFollow: false,
+        bomUseExpression:"."
       },
       // 表单校验
       rules: {},
@@ -229,7 +230,8 @@ export default {
         tenantCode: "",
         id: undefined,
         tenantName: undefined,
-        isFollow: false
+        isFollow: false,
+        bomUseExpression:"."
       };
       this.resetForm("form");
     },
@@ -316,6 +318,7 @@ export default {
         this.form.bomName = t.bomName;
         this.form.bomCode = t.bomCode;
         this.form.bomCostPriceUnit = t.bomCostPriceUnit;
+        this.form.bomUnit = t.bomCostPriceUnit;
         this.form.bomCostPrice = t.bomCostPrice;
       })
     }
