@@ -57,7 +57,7 @@ const versionChangeData = [{
 }, {
   time: '2024-06-21', title: 'blog系统', content: '增加blog组, 博客列表,'
 }, {
-  time: '2024-07-05', title: 'APS系统', content: '增加表格管理'
+  time: '2024-07-05', title: 'APS系统', content: '增加表格标题管理'
 }
 
 ]
