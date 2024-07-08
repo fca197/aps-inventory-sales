@@ -3,7 +3,7 @@
 ## aps 功能
 
 > 后端代码 [https://gitee.com/slsplatform/peanut-end](https://gitee.com/slsplatform/peanut-end)  
-> APS操作平台 [ https://aps.fengnuanxiang.com/](https://aps.fengnuanxiang.com/)  👈👈👈👈  
+> APS操作平台 [ https://solveplan.cn/](https://solveplan.cn/)  👈👈👈👈  
 > 如有疑问或需求,请联系  (微信: rpcjmeter ,备注: APS)    👈👈👈👈
 
 ### 使用范围
