@@ -47,7 +47,7 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="1000px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="工厂" prop="factoryId">
