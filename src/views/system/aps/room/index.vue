@@ -171,16 +171,16 @@ export default {
     document["pagePath"] = "/apsRoom";
     // process.env.pagePath = "/tenant"
     this.getList();
-    getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+    getFactoryList({queryPage:false}).then(data => {
       this.factoryList = data.data.dataList;
     });
-    getSectionList({pageSize: 3000, pageNum: 1}).then(data => {
+    getSectionList({queryPage:false}).then(data => {
       this.sectionList = data.data.dataList;
     });
-    getStationList({pageSize: 3000, pageNum: 1}).then(data => {
+    getStationList({queryPage:false}).then(data => {
       this.stationList = data.data.dataList;
     });
-    getStatusList({pageSize: 3000, pageNum: 1}).then(data => {
+    getStatusList({queryPage:false}).then(data => {
       this.statusList = data.data.dataList;
     });
   },

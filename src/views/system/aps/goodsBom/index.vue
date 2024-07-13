@@ -192,15 +192,15 @@ export default {
     document["pagePath"] = "/apsGoodsBom";
     // process.env.pagePath = "/tenant"
     this.getList();
-    getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+    getFactoryList({queryPage:false}).then(data => {
       this.factoryList = data.data.dataList;
       // console.info("factoryList: ", this.factoryList);
     });
-    getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
+    getGoodsList({queryPage:false}).then(data => {
       this.goodsList = data.data.dataList;
       //console.info("goodsList: ", this.goodsList);
     });
-    getWorkStationList({pageSize: 3000, pageNum: 1}).then(data => {
+    getWorkStationList({queryPage:false}).then(data => {
       this.workStationList = data.data.dataList;
       //  console.info("workStationList: ", this.workStationList);
     });

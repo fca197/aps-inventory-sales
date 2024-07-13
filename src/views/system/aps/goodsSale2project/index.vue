@@ -110,7 +110,7 @@ export default {
   created() {
 
     document["pagePath"] = "/apsGoodsSaleItem";
-    getSaleConfigList({pageNum: 1, pageSize: 999})
+    getSaleConfigList({queryPage:false})
     .then(t => {
       this.apsSaleConfigList = t.data.dataList;
     }).then(() => {
@@ -141,7 +141,7 @@ export default {
   },
   methods: {
     getList() {
-      queryPageList({data: {goodsId: this.form.goodsId}, pageNum: 1, pageSize: 999})
+      queryPageList({data: {goodsId: this.form.goodsId}, queryPage:false})
       .then(t => {
         let d = {}
         let f = {}

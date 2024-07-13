@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     getGoodList() {
-      getGoodsList({pageSize: 3000, pageNum: 1}).then(data => {
+      getGoodsList({queryPage:false}).then(data => {
         this.goodsList = data.data.dataList;
         // console.info("goodsList: ", this.goodsList);
       });

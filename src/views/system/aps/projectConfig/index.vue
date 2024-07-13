@@ -97,7 +97,7 @@ export default {
   ,
   methods: {
     getList() {
-      return queryPageList({pageNum: 1, pageSize: 999})
+      return queryPageList({queryPage:false})
       .then(t => {
         this.saleConfigList = t.data.dataList;
       })

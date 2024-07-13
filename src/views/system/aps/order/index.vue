@@ -17,9 +17,9 @@
       <el-col :span="1.5">
         <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
@@ -30,7 +30,19 @@
 
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
 
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width" align="center"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width" align="center">
+        <template slot-scope="scope">
+        <span v-if="item.fieldName=='orderStatus'">
+          <el-select v-model="scope.row.orderStatus" @change="value=>{ updateOrderStatus(scope.row.id, value)}">
+            <el-option v-for="(s,i) in apsStatusList" :key="s.id" :value="s.id" :label="s.statusName"></el-option>
+          </el-select>
+
+        </span>
+          <span v-else>
+          {{ scope.row[item.fieldName] }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作" width="100" fixed="right">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
@@ -179,18 +191,13 @@
     </el-dialog>
     <el-dialog title="订单状态时间一览表" :visible.sync="orderGoodsStatusDateShow" width="900px" append-to-body>
       <step :Index="3" :okRouteList="orderGoodsStatusDateList"/>
-      <!--      <el-table :data="orderGoodsStatusDateList" style="width: 100%;">-->
-      <!--        <el-table-column prop="goodsStatusName" label="状态名称"/>-->
-      <!--        <el-table-column prop="expectMakeTime" label="预计时间"/>-->
-      <!--        <el-table-column prop="actualMakeTime" label="实际时间"/>-->
-      <!--      </el-table>-->
     </el-dialog>
   </div>
 </template>
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlPageList } from '@/api/common'
+import { add, deleteByIdList, getById, post, queryPageList, queryUrlPageList } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 import { getGoodsList } from '@/api/aps/goods'
 import { getRandomUser } from '@/api/tool/random'
@@ -265,25 +272,30 @@ export default {
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      apsStatusList: []
     }
   },
   created() {
     document['pagePath'] = '/apsOrder'
     // process.env.pagePath = "/tenant"
+    queryUrlPageList('/apsStatus', { queryPage: false }).then(t => {
+      this.apsStatusList = t.data.dataList
+    })
+
     this.getList()
-    getFactoryList({ pageSize: 3000, pageNum: 1 }).then(data => {
+    getFactoryList({ queryPage: false }).then(data => {
       this.factoryList = data.data.dataList
       // console.info("factoryList: ", this.factoryList);
     })
-    getGoodsList({ pageSize: 3000, pageNum: 1 }).then(data => {
+    getGoodsList({ queryPage: false }).then(data => {
       this.goodsList = data.data.dataList
       this.goodsList.forEach(item => {
         this.goodsMap[item.id] = item
       })
       // console.info("goodsList: ", this.goodsList);
     })
-    getSaleConfigList({ pageNum: 1, pageSize: 9990 }).then(res => {
+    getSaleConfigList({ queryPage: false }).then(res => {
       this.apsSaleConfigList = res.data.dataList
     })
   },
@@ -423,7 +435,7 @@ export default {
         this.$message.error(this.goodsMap[value].goodsName + '该商品已存在')
         this.form.goodsList[index].goodsId = undefined
       }
-      apsGoodsSaleItemQueryPageList({ data: { goodsId: value }, pageNum: 1, pageSize: 9990 }).then(res => {
+      apsGoodsSaleItemQueryPageList({ data: { goodsId: value }, queryPage: false0 }).then(res => {
         console.info('res: ', res)
       })
       this.goodsSaleConfigMap[value] = {}
@@ -464,6 +476,12 @@ export default {
         this.orderGoodsStatusDateList = res.data.dataList.reverse()
 
       })
+    }
+    , updateOrderStatus(orderId, sid) {
+      post('/apsOrder/updateOrderStatus', {
+        orderId: orderId,
+        goodsStatusId:sid
+      });
     }
   }
 }

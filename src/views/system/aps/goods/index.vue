@@ -132,11 +132,11 @@ export default {
     // process.env.pagePath = "/tenant"
     this.getList();
 
-    queryUrlPageList("/apsProcessPath", {pageSize: 3000, pageNum: 1}).then(t => {
+    queryUrlPageList("/apsProcessPath", {queryPage:false}).then(t => {
       this.processPathList = t.data.dataList
     })
 
-    getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+    getFactoryList({queryPage:false}).then(data => {
       this.factoryList = data.data.dataList;
     });
   },

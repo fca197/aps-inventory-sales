@@ -110,7 +110,7 @@ export default {
   },
   created() {
     document["pagePath"] = "/apsGoodsForecastMake";
-    getAllForecastMain({pageNum: 1, pageSize: 999}).then(t => {
+    getAllForecastMain({queryPage:false}).then(t => {
       this.forecastMainList = t.data.dataList
     })
     this.getList();

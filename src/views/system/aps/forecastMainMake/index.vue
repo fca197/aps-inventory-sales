@@ -70,7 +70,7 @@ export default {
   },
   created() {
     document["pagePath"] = "/apsGoodsForecastMainMake";
-    getGoodsList({pageNum: 1, pageSize: 999}).then(t => {
+    getGoodsList({queryPage:false}).then(t => {
       this.goodsList = t.data.dataList
       this.getList();
     })

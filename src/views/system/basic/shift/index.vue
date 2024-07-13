@@ -142,7 +142,7 @@ export default {
     document["pagePath"] = "/shift";
     // process.env.pagePath = "/tenant"
     this.getList();
-    getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+    getFactoryList({queryPage:false}).then(data => {
       this.factoryList = data.data.dataList;
       // console.info("factoryList: ", this.factoryList);
     });

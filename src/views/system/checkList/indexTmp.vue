@@ -168,7 +168,7 @@ export default {
       this.getRoomListTmp(this.queryParams.data.storeyId);
     },
     getRoomListTmp(storeyId) {
-      return getRoomList({pageSize: 3000, pageNum: 1, data: {storeyId: storeyId}}).then(t => {
+      return getRoomList({queryPage:false, data: {storeyId: storeyId}}).then(t => {
         this.roomList = t.data.dataList || []
         this.queryParams.data.roomId = undefined
         this.form.roomId = this.roomList[0].id
@@ -177,7 +177,7 @@ export default {
     getStoreyListTmp(factoryId) {
       this.storeyList = []
       this.roomList = []
-      return getStoreyList({pageSize: 3000, pageNum: 1, data: {factoryId: factoryId}}).then(t => {
+      return getStoreyList({queryPage:false, data: {factoryId: factoryId}}).then(t => {
         this.storeyList = t.data.dataList || []
         this.queryParams.data.storeyId = undefined
         this.queryParams.data.roomId = undefined
@@ -190,7 +190,7 @@ export default {
       this.handleQuery();
     },
     getFactoryList() {
-      return getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+      return getFactoryList({queryPage:false}).then(data => {
         this.factoryList = data.data.dataList;
       });
     },

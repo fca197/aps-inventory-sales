@@ -143,7 +143,7 @@ export default {
     // process.env.pagePath = "/tenant"
     this.getList();
 
-    getSaleConfigList({pageSize: 3000, pageNum: 1}).then(data => {
+    getSaleConfigList({queryPage:false}).then(data => {
       this.saleConfigList = data.data.dataList;
       // console.info("saleConfigList: ", this.saleConfigList);
     });

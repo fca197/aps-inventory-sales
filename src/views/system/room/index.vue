@@ -251,10 +251,10 @@ export default {
       this.handleQuery();
     },
     getFactoryListTmp() {
-      return getFactoryList({pageSize: 3000, pageNum: 1}).then(data => {
+      return getFactoryList({queryPage:false}).then(data => {
         this.factoryList = data.data.dataList || [];
         this.factoryList.forEach(t => this.factoryMap[t.id] = t.factoryName);
-        getStoreyList({pageSize: 3000, pageNum: 1}).then(tt => {
+        getStoreyList({queryPage:false}).then(tt => {
           this.storeyList = tt.data.dataList || [];
           this.storeyList.forEach(t => this.storeyMap[t.id] = t.storeyName)
 
