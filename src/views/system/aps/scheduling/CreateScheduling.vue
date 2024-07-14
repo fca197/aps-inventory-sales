@@ -126,7 +126,6 @@ export default {
       if (this.form.id) {
         updateById(this.form).then(t => {
           showMsg(t, "修改成功")
-
           this.useConstraints();
         });
       } else {

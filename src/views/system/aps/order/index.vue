@@ -6,6 +6,11 @@
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
+      <!-- 订单号 -->
+      <el-form-item label="订单编号" prop="orderNo">
+        <el-input v-model="queryParams.data.orderNo" placeholder="订单编号" clearable size="small" style="width: 200px"/>
+      </el-form-item>
+
 
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>

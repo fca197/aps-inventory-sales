@@ -5,7 +5,11 @@
       <el-form-item label="" prop="">
         <el-switch v-model="queryParams.isActualMakeTime" active-text="实际时间" inactive-text="预计时间" active-color="#13ce66" inactive-color="#ff4949"/>
       </el-form-item>
+      <el-form-item label="订单编号" prop="orderNo">
+        <el-input v-model="queryParams.orderNo" placeholder="订单编号" clearable size="small" style="width: 200px"/>
+      </el-form-item>
       <el-form-item label="时间范围" prop="">
+
         <el-date-picker
             v-model="queryParams.dateArr"
             type="daterange"
@@ -54,12 +58,12 @@
               <br/>预计开始时间: {{ scope.row[item.fieldName + '_expectMakeBeginTime'] }}
               <br/>实际开始时间: {{ scope.row[item.fieldName + '_actualMakeBeginTime'] }}
             </div>
-            <span class="statusSpan statusDelay" > {{ scope.row[item.fieldName] }}</span>
+            <span class="statusSpan statusDelay"> {{ scope.row[item.fieldName] }}</span>
           </el-tooltip>
           </span>
-          <span  class="statusSpan" v-else-if='scope.row[item.fieldName+"_isDelay"]===false'>
+          <span class="statusSpan" v-else-if='scope.row[item.fieldName+"_isDelay"]===false'>
             <span> {{ scope.row[item.fieldName] }}</span>
-          </span> <span class="statusSpan"  v-else-if="scope.row[item.fieldName]">
+          </span> <span class="statusSpan" v-else-if="scope.row[item.fieldName]">
              {{ scope.row[item.fieldName] }}
           </span>
         </template>
@@ -84,7 +88,7 @@ export default {
   name: 'timeLine',
   data: () => {
     return {
-      showSearch: false,
+      showSearch: true,
       queryParams: {
         isActualMakeTime: false,
         pageNum: 1,
@@ -107,6 +111,12 @@ export default {
   },
   created() {
 
+    const beginDate = new Date()
+    beginDate.setDate(beginDate.getDate() - 10)
+    this.queryParams.dateArr[0] = this.formatDates(beginDate, false).substring(0, 10)
+    const today = new Date()
+    today.setMonth(today.getMonth() + 1) // 设置为下个月
+    this.queryParams.dateArr[1] = this.formatDates(today, false).substring(0, 10)
     queryUrlPageList('/apsStatus', { queryPage: false }).then(t => {
       var dataList = t.data.dataList
       dataList.forEach(r => {
@@ -114,18 +124,16 @@ export default {
         this.apsStatusList[r.id] = r
       })
     }).then(t3 => {
-      const beginDate = new Date()
-      beginDate.setDate(beginDate.getDate() - 10)
-      this.queryParams.dateArr[0] = this.formatDates(beginDate, false).substring(0, 10)
-      const today = new Date()
-      today.setMonth(today.getMonth() + 1) // 设置为下个月
-      this.queryParams.dateArr[1] = this.formatDates(today, false).substring(0, 10)
       this.getList()
     })
 
   },
   methods: {
     getList() {
+      if (this.queryParams.dateArr == null || this.queryParams.dateArr.length !== 2) {
+        this.$message.error('请选择时间范围')
+        return
+      }
       this.queryParams.beginDate = this.queryParams.dateArr[0]
       this.queryParams.endDate = this.queryParams.dateArr[1]
       post('/apsOrder/timeLine', this.queryParams, false).then(t => {
@@ -143,7 +151,7 @@ export default {
           })
         })
         this.total = parseInt(t.data.total)
-        console.log(this.tableData)
+        // console.log(this.tableData)
       })
     },
     handleQuery() {
@@ -163,7 +171,8 @@ export default {
   border: 1px solid red !important;
   padding: 2px 8px;
 }
-.statusSpan{
+
+.statusSpan {
   border: 1px solid #ccc;
   padding: 2px 8px;
   color: green;
