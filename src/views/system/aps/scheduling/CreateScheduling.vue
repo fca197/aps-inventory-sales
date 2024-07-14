@@ -109,7 +109,7 @@ export default {
       this.schedulingConstraintsList = t.data.dataList;
     });
     if (this.$route.query.id) {
-      queryPageList({data: {id: this.$route.query.id}, pageNum: 1, pageSize: 300})
+      queryPageList({data: {id: this.$route.query.id}, queryPage:false})
       .then(t => {
         this.form = t.data.dataList[0];
         this.isShow = this.form.versionStep === 100;
