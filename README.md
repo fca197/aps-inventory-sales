@@ -1,3 +1,6 @@
+# 安装手册
+[前端安装手册](install.md)
+[后端安装手册](https://gitee.com/slsplatform/peanut-end/blob/master/install.md)
 # 功能流程图
 
 ## aps 功能
