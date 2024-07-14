@@ -1,18 +1,22 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="唯一编码" prop="rollCode">
-        <el-input v-model="queryParams.data.rollCode" clearable placeholder="请输入唯一编码" @keyup.enter.native="handleQuery"/>
+      <el-form-item label="工厂ID" prop="factoryId">
+        <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>-->
+        <el-select v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID">
+          <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
+        </el-select>
       </el-form-item>
-      <el-form-item label="名称" prop="rollName">
-        <el-input v-model="queryParams.data.rollName" clearable placeholder="请输入名称" @keyup.enter.native="handleQuery"/>
+      <el-form-item label="年份" prop="year">
+        <el-input v-model="queryParams.data.year" clearable placeholder="请输入年份" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="开始时间" prop="beginTime">
-        <el-input v-model="queryParams.data.beginTime" clearable placeholder="请输入开始时间" @keyup.enter.native="handleQuery"/>
+      <el-form-item label="月份" prop="month">
+        <el-select v-model="queryParams.data.month" clearable placeholder="请输入月份">
+          <el-option v-for="item in 12" :key="item" :label="item" :value="item"/>
+        </el-select>
+        <!--        <el-input v-model="queryParams.data.month" clearable placeholder="请输入月份" @keyup.enter.native="handleQuery"/>-->
       </el-form-item>
-      <el-form-item label="结束时间" prop="endTime">
-        <el-input v-model="queryParams.data.endTime" clearable placeholder="请输入结束时间" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
+
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -25,7 +29,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="apsOrderRollingForecastList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="apsRollingForecastFactoryCapacityList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
@@ -36,42 +40,24 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
+    <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum"
+                :total="total" @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="900px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-
-        <el-form-item label="唯一编码" prop="rollCode">
-          <el-input v-model="form.rollCode" clearable placeholder="请输入唯一编码" />
+        <el-form-item label="工厂ID" prop="factoryId">
+          <el-select v-model="form.factoryId" clearable placeholder="请输入工厂ID" style="width: 700px">
+            <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
+          </el-select>
         </el-form-item>
-        <el-form-item label="名称" prop="rollName">
-          <el-input v-model="form.rollName" clearable placeholder="请输入名称" />
+        <el-form-item label="产能" prop="capacityList" v-for="(c,i) in form.capacityList" :key="i">
+          <el-date-picker v-model="c.timeRange" type="daterange" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 400px"/>
+          <el-input v-model="c.capacity" clearable placeholder="请输入产能" style="width: 150px;margin: 0 5px 0"/>
+          <el-button type="primary" size="small" class="el-icon-plus" @click="addCapacity()"></el-button>
+          <el-button type="danger" size="small" class="el-icon-minus" @click="deleteCapacity(i)"></el-button>
         </el-form-item>
-        <el-form-item label="开始时间" prop="beginTime">
-<!--          <el-input v-model="form.beginTime" clearable placeholder="请输入开始时间" />-->
-          <el-date-picker
-              v-model="form.beginTime"
-              type="date"
-              value-format="yyyy-MM-dd"
-              placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="结束时间" prop="endTime">
-          <el-date-picker
-              v-model="form.endTime"
-              type="date"
-              value-format="yyyy-MM-dd"
-              placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -84,8 +70,8 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
-import {getFactoryList} from '@/api/factory'
+import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { getFactoryList } from '@/api/factory'
 
 export default {
   name: 'tenantName',
@@ -104,7 +90,7 @@ export default {
       showSearch: false,
       // 总条数
       total: 0,
-      apsOrderRollingForecastList: [],
+      apsRollingForecastFactoryCapacityList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -117,19 +103,27 @@ export default {
       },
       // 表单参数
       form: {
-        rollCode: undefined,
-        rollName: undefined,
-        beginTime: undefined,
-        endTime: undefined,
-        id: undefined
+        factoryId: undefined,
+        id: undefined,
+        capacityList: [
+          {
+            timeRange: undefined,
+            capacity: undefined
+          }
+        ]
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      factoryList: []
     }
   },
   created() {
-    document['pagePath'] = '/apsRollingForecastOrder'
+    document['pagePath'] = '/apsRollingForecastFactoryCapacity'
+
+    getFactoryList({ queryPage: false }).then(t => {
+      this.factoryList = t.data.dataList
+    })
     this.getList()
   },
   methods: {
@@ -139,7 +133,7 @@ export default {
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
-        this.apsOrderRollingForecastList = response.dataList
+        this.apsRollingForecastFactoryCapacityList = response.dataList
         this.total = parseInt(response.total)
         this.loading = false
       })
@@ -152,10 +146,13 @@ export default {
     reset() {
       let fid = this.form.id
       this.form = {
-        rollCode: undefined,
-        rollName: undefined,
-        beginTime: undefined,
-        endTime: undefined,
+        factoryId: undefined,
+        capacityList: [
+          {
+            timeRange: undefined,
+            capacity: undefined
+          }
+        ],
         id: fid
       }
       this.resetForm('form')
@@ -178,19 +175,14 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.reset()
       this.title = '添加滚动预测'
-      var code = this.formatDates(new Date(),true)
-      this.form.rollCode="RF-"+code;
-      this.form.rollName="GDYC-"+ code
-      this.form.beginTime=this.formatDates(new Date()).substring(0,10)
-      this.form.endTime=this.formatDates(new Date(new Date().getTime()+96*26*60*60*1000)).substring(0,10)
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1}
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改滚动预测'
@@ -200,7 +192,24 @@ export default {
     },
 
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
+
+      let list = this.form.capacityList
+
+      for (let i = 0; i < list.length; i++) {
+        let t = list[i]
+        if (t.timeRange === undefined || t.timeRange.length !== 2) {
+          this.$modal.msgError('请选择时间范围')
+          return
+        }
+        if (t.capacity === undefined || t.capacity === '') {
+          this.$modal.msgError('请输入产能')
+          return
+        }
+        t.beginTime=t.timeRange[0];
+        t.endTime=t.timeRange[1];
+      }
+
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -222,7 +231,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
@@ -232,6 +241,19 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    addCapacity() {
+      this.form.capacityList.push({
+        timeRange: undefined,
+        capacity: undefined
+      })
+    },
+    deleteCapacity(i) {
+      if (this.form.capacityList.length <= 1) {
+        this.$modal.msgError('至少保留一个')
+        return
+      }
+      this.form.capacityList.splice(i, 1)
     }
   }
 
