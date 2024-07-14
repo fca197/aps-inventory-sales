@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="工厂ID" prop="factoryId">
+      <el-form-item label="工厂" prop="factoryId">
         <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>-->
         <el-select v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID">
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
@@ -31,8 +31,13 @@
 
     <el-table v-loading="loading" :data="apsRollingForecastFactoryCapacityList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'">
+        <template slot-scope="scope">
+          <span v-if="scope.row[item.fieldName]">{{ scope.row[item.fieldName] }}</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
@@ -87,7 +92,7 @@ export default {
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
-      showSearch: false,
+      showSearch: true,
       // 总条数
       total: 0,
       apsRollingForecastFactoryCapacityList: [],
@@ -206,8 +211,8 @@ export default {
           this.$modal.msgError('请输入产能')
           return
         }
-        t.beginTime=t.timeRange[0];
-        t.endTime=t.timeRange[1];
+        t.beginTime = t.timeRange[0]
+        t.endTime = t.timeRange[1]
       }
 
       this.$refs['form'].validate(valid => {
