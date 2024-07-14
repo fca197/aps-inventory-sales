@@ -280,6 +280,11 @@ export const constantRoutes = [{
       name: '订单进度',
       component: () => import('@/views/system/aps/order/timeLine.vue'),
       meta: { title: '订单进度', icon: 'order-1', affix: false }
+    }, {
+      path: '/aps/order/roll/index',
+      name: '滚动预测',
+      component: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue'),
+      meta: { title: '滚动预测', icon: 'order-1', affix: false }
     }]
   }, {
     path: '/aps/make/q/index', name: 'APS工厂产能管理', component: ParentView, // component: () => import('@/views/system/aps/order/index'),
