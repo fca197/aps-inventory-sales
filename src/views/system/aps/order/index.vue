@@ -41,8 +41,11 @@
           <el-select v-model="scope.row.orderStatus" @change="value=>{ updateOrderStatus(scope.row.id, value)}">
             <el-option v-for="(s,i) in apsStatusList" :key="s.id" :value="s.id" :label="s.statusName"></el-option>
           </el-select>
-
         </span>
+          <span v-else-if="item.fieldName==='schedulingDate'">
+            <el-date-picker v-model="scope.row.schedulingDate" value-format="yyyy-MM-dd" @change="value=>{updateSchedulingDate(scope.row,value)}" style="width: 140px"
+            ></el-date-picker>
+          </span>
           <span v-else>
           {{ scope.row[item.fieldName] }}
           </span>
@@ -485,8 +488,15 @@ export default {
     , updateOrderStatus(orderId, sid) {
       post('/apsOrder/updateOrderStatus', {
         orderId: orderId,
-        goodsStatusId:sid
-      });
+        goodsStatusId: sid
+      })
+    },
+    updateSchedulingDate(row, val) {
+
+      console.info('updateSchedulingDate: ', row, val)
+      this.$modal.confirm('订单号:[' + row.orderNo + '],排产日期修改为: [' + (val == null ? '空' : val) + '] ?', '修改提示').then(function() {
+        post('/apsOrder/updateSchedulingDate', { id: row.id, schedulingDate: val }, true);
+      })
     }
   }
 }

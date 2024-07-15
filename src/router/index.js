@@ -283,11 +283,13 @@ export const constantRoutes = [{
     }, {
       path: '/aps/order/roll/factory/index',
       name: '工厂预测产能管理',
+      hidden: true,
       component: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue'),
       meta: { title: '工厂预测产能管理', icon: 'order-1', affix: false }
     }, {
       path: '/aps/order/roll/index',
       name: '滚动预测',
+      hidden: true,
       component: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue'),
       meta: { title: '滚动预测', icon: 'order-1', affix: false }
     }
