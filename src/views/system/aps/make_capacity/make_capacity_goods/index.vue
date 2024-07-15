@@ -26,7 +26,7 @@
     <el-table v-loading="loading" id="dataTable" :data="brandNameList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width" align="center"/>
-      <el-table-column v-for="(item,index) in  31" :key="index" :label="item+'日'" :prop="item" width="80" align="center">
+      <el-table-column v-for="(item,index) in  31" :key="index+''+item" :label="item+'日'" :prop="item+''+index" width="80" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row["dayMin" + item] }} / {{ scope.row["dayMax" + item] }}</span>
         </template>
