@@ -15,7 +15,7 @@
       <el-table-column align="center" label="商品毛利" prop="goodsGrossProfit"/>
       <el-table-column align="center" label="商品净利润" prop="goodsNetProfit"/>
       <el-table-column align="center" label="商品总销售价" prop="goodsTotalSalePrice"/>
-      <el-table-column align="center" label="操作" prop="id">
+      <el-table-column align="center" label="操作" prop="id"  fixed="right" width="140px">
         <template slot-scope="scope">
           <el-select v-model="scope.row.goodsStatus" @change="value=>{updateOrderItem(value,scope.row.id)}">
             <el-option :value="1" label="退款/退货"/>

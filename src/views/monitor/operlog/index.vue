@@ -132,7 +132,7 @@
           <span>{{ scope.row.costTime }}毫秒</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button
               v-hasPermi="['monitor:operlog:query']"

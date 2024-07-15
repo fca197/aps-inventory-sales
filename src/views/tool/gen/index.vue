@@ -114,7 +114,7 @@
       />
       <el-table-column align="center" label="创建时间" prop="createTime" width="160"/>
       <el-table-column align="center" label="更新时间" prop="updateTime" width="160"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button
               v-hasPermi="['tool:gen:preview']"

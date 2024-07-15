@@ -27,7 +27,7 @@
             <el-input v-if="scope.row.isTmp!=='1'" v-model="scope.row.goodsBuyCount" width="100px" @change="totalPrice"/>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" fixed="right" width="140px">
           <template slot-scope="scope">
             <el-button v-if="scope.row.isTmp!=='1'" size="mini" type="warning" @click="handleDelete(scope.$index)">删除</el-button>
           </template>

@@ -38,7 +38,7 @@
           <span v-else>组</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button v-if="scope.row.isValue === 0" icon="el-icon-plus" plain size="mini" type="text" @click="handleAdd(scope.row)"></el-button>
           <el-button icon="el-icon-delete" plain size="mini" type="text" @click="handleDelete(scope.row)"></el-button>

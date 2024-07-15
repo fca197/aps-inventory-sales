@@ -29,7 +29,7 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName" :width="item.width"
                        align="center"/>
 
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
           <el-button icon="el-icon-download" size="mini" type="text" @click="handleDownLoad(scope.row)"></el-button>

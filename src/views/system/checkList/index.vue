@@ -38,7 +38,7 @@
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"
                        align="center"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button icon="el-icon-s-data" size="mini" title="查看统计" type="text" @click="handleQueryData(scope.row)"></el-button>
           <el-button icon="el-icon-edit" size="mini" title="修改" type="text" @click="handleUpdate(scope.row)"></el-button>
@@ -97,7 +97,7 @@
             <el-button v-else circle type="danger"></el-button>
           </template>
         </el-table-column>
-        <el-table-column :show-overflow-tooltip="true" label="操作">
+        <el-table-column :show-overflow-tooltip="true" label="操作" fixed="right" width="140px">
           <template slot-scope="scope">
             <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleQueryInfoRoomData()"></el-button>
           </template>

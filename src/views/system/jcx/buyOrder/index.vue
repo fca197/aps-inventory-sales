@@ -44,7 +44,7 @@
           <el-tag v-else-if="scope.row.orderStatus===99" size="mini" type="danger">驳回</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleData(scope.row)"></el-button>
 

@@ -42,7 +42,7 @@
           <span v-else>{{ scope.row[item.fieldName] }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button icon="el-icon-setting" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
         </template>
