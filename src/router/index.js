@@ -282,14 +282,14 @@ export const constantRoutes = [{
       meta: { title: '订单进度', icon: 'order-1', affix: false }
     }, {
       path: '/aps/order/roll/factory/index',
-      name: '工厂预测产能管理',
-      hidden: true,
+      name: '工厂滚动预测产能',
+      // hidden: true,
       component: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue'),
-      meta: { title: '工厂预测产能管理', icon: 'order-1', affix: false }
+      meta: { title: '工厂滚动预测产能', icon: 'order-1', affix: false }
     }, {
       path: '/aps/order/roll/index',
       name: '滚动预测',
-      hidden: true,
+      // hidden: true,
       component: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue'),
       meta: { title: '滚动预测', icon: 'order-1', affix: false }
     }
