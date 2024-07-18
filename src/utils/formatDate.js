@@ -32,3 +32,19 @@ export function padLeftZero(str) {
   return str <= 9 ? '0' + str : str;
 }
 
+
+export  function groupBy(array, key) {
+  return array.reduce((result, currentItem) => {
+    // 使用 key 函数如果提供的话
+    const groupKey = typeof key === 'function' ? key(currentItem) : currentItem[key];
+
+    // 初始化分组数组
+    if (!result[groupKey]) {
+      result[groupKey] = [];
+    }
+    // 将当前项添加到分组数组
+    result[groupKey].push(currentItem);
+
+    return result;
+  }, {});
+}

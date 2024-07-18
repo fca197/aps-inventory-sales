@@ -47,13 +47,14 @@ import VueMeta from 'vue-meta'
 import DictData from '@/components/DictData'
 
 import JsBarcode from "@/components/JsBarcode/index.vue";
-import {formatDateNo, formatDates} from "@/utils/formatDate";
+import { formatDateNo, formatDates, groupBy } from '@/utils/formatDate'
 // import htmlTableToExcel from 'html-table-to-excel';
 import watermark from 'watermark-dom'
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.formatDates = formatDates
 Vue.prototype.formatDateNo = formatDateNo
+Vue.prototype.groupBy = groupBy
 Vue.prototype.getConfigKey = getConfigKey
 Vue.prototype.parseTime = parseTime
 Vue.prototype.resetForm = resetForm

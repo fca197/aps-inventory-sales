@@ -193,7 +193,15 @@ export const constantRoutes = [{
       name: '工艺路径',
       component: () => import('@/views/system/aps/processPath/index'),
       meta: { title: '工艺路径管理', icon: 'process-setting', affix: false }
-    }]
+    }
+    , {
+      path: '/aps/apsLogistics/path/index',
+      name: '物流路径',
+      component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
+      meta: { title: '物流路径', icon: 'process-setting', affix: false }
+    }
+
+    ]
   }, {
     path: '/aps/goods/main/index',
     name: 'APS商品管理',
