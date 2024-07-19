@@ -194,12 +194,12 @@ export const constantRoutes = [{
       component: () => import('@/views/system/aps/processPath/index'),
       meta: { title: '工艺路径管理', icon: 'process-setting', affix: false }
     }
-    , {
-      path: '/aps/apsLogistics/path/index',
-      name: '物流路径',
-      component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
-      meta: { title: '物流路径', icon: 'process-setting', affix: false }
-    }
+      , {
+        path: '/aps/apsLogistics/path/index',
+        name: '物流路径',
+        component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
+        meta: { title: '物流路径', icon: 'process-setting', affix: false }
+      }
 
     ]
   }, {
@@ -319,29 +319,39 @@ export const constantRoutes = [{
       name: '商品产能',
       component: () => import('@/views/system/aps/make_capacity/make_capacity_goods'),
       meta: { title: '商品产能', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/make/constraint/index',
-      name: '排产约束',
-      component: () => import('@/views/system/aps/make_capacity/constraint'),
-      meta: { title: '排产约束', icon: 'order-1', affix: false }
     }]
   }, {
     path: '/aps/scheduling/main/index',
-    name: '排产管理',
+    name: '排产排程',
     component: ParentView,
-    meta: { title: '排产管理', icon: 'order-1', affix: false },
-    children: [{
-      path: '/aps/scheduling/index',
-      name: '排产版本管理',
-      component: () => import('@/views/system/aps/scheduling'),
-      meta: { title: '排产管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/scheduling/bom/index',
-      name: '排产零件',
-      hidden: true,
-      component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
-      meta: { title: '排产零件', icon: 'order-1', affix: false }
-    }]
+    meta: { title: '排产排程', icon: 'order-1', affix: false },
+    children: [
+      {
+        path: '/aps/make/constraint/index',
+        name: '排产约束',
+        component: () => import('@/views/system/aps/make_capacity/constraint'),
+        meta: { title: '排产约束', icon: 'order-1', affix: false }
+      }, {
+        path: '/aps/scheduling/index',
+        name: '排产版本管理',
+        component: () => import('@/views/system/aps/scheduling'),
+        meta: { title: '排产管理', icon: 'order-1', affix: false }
+      }, {
+        path: '/aps/scheduling/bom/index',
+        name: '排产零件',
+        hidden: true,
+        component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
+        meta: { title: '排产零件', icon: 'order-1', affix: false }
+      }
+      , {
+        path: '/aps/scheduling/day/index',
+        name: '排程配置',
+        hidden: false,
+        component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
+        meta: { title: '排程配置', icon: 'order-1', affix: false }
+      }
+
+    ]
   }]
 }, {
   path: '/base/index',
