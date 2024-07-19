@@ -67,10 +67,10 @@
         <el-form-item label="排程版本名称" prop="schedulingDayName">
           <el-input v-model="form.schedulingDayName" clearable placeholder="请输入排程版本名称"/>
         </el-form-item>
-        <el-form-item label="排程步骤" prop="schedulingDayConfigItemDtoList">
+        <el-form-item label="排程步骤" prop="schedulingDayConfigItemList">
 
 
-          <el-table :data="form.schedulingDayConfigItemDtoList">
+          <el-table :data="form.schedulingDayConfigItemList">
             <el-table-column label="车间" prop="roomName" width="140"/>
             <el-table-column label="状态" prop="statusName" width="140"/>
             <el-table-column label="排程配置" prop="configList">
@@ -172,7 +172,7 @@ export default {
       },
       // 表单参数
       form: {
-        schedulingDayConfigItemDtoList: [],
+        schedulingDayConfigItemList: [],
         factoryId: undefined,
         processId: undefined,
         schedulingDayNo: undefined,
@@ -263,7 +263,7 @@ export default {
       let fid = this.form.id
       let factoryId = this.factoryList[0].id
       this.form = {
-        schedulingDayConfigItemDtoList: [],
+        schedulingDayConfigItemList: [],
         factoryId: factoryId,
         processId: this.processList[0].id,
         schedulingDayNo: undefined,
@@ -294,7 +294,7 @@ export default {
           tmp.push(t)
         })
       })
-      this.form.schedulingDayConfigItemDtoList = tmp
+      this.form.schedulingDayConfigItemList = tmp
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -327,7 +327,7 @@ export default {
         let list = this.form.schedulingDayConfigItemDtoList
 
         this.setItemList(this.form.processId)
-        let configItemDtoList = this.form.schedulingDayConfigItemDtoList
+        let configItemDtoList = this.form.schedulingDayConfigItemList
         let groupBy = this.groupBy(list, 'statusId')
         configItemDtoList.forEach(t => {
           var tl = groupBy[t.statusId]
@@ -354,7 +354,7 @@ export default {
     /** 提交按钮 */
     submitForm: function() {
 
-      let itemDtoList = this.form.schedulingDayConfigItemDtoList
+      let itemDtoList = this.form.schedulingDayConfigItemList
       let subList = []
       itemDtoList.forEach(t => {
         if (t.configList) {
