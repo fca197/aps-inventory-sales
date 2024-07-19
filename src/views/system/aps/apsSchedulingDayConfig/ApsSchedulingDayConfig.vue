@@ -324,6 +324,27 @@ export default {
       let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
+        let list = this.form.schedulingDayConfigItemDtoList
+
+        this.setItemList(this.form.processId)
+        let configItemDtoList = this.form.schedulingDayConfigItemDtoList
+        let groupBy = this.groupBy(list, 'statusId')
+        configItemDtoList.forEach(t => {
+          var tl = groupBy[t.statusId]
+          if (tl) {
+            t.configList = tl
+            tl.forEach(p => {
+              if (p.configBizType === 'sale') {
+                p.configBizNameList = this.saleConfigList
+              } else if (p.configBizType === 'project') {
+                p.configBizNameList = this.projectList
+              } else if (p.configBizType === 'bom') {
+                p.configBizNameList = this.bomList
+              }
+            })
+          }
+
+        })
         this.title = '修改排程版本表'
         this.open = true
       })
@@ -336,19 +357,21 @@ export default {
       let itemDtoList = this.form.schedulingDayConfigItemDtoList
       let subList = []
       itemDtoList.forEach(t => {
-        t.configList.forEach(p => {
-          subList.push({
-            roomId: t.roomId,
-            roomName: t.roomName,
-            statusId: t.statusId,
-            statusName: this.statusMap[t.statusId],
-            configBizTime: t.configBizTime,
-            configBizType: t.configBizType,
-            configBizId: p.configBizId,
-            configBizName: p.configBizName,
-            configBizNum: p.configBizNum
+        if (t.configList) {
+          t.configList.forEach(p => {
+            subList.push({
+              roomId: t.roomId,
+              roomName: t.roomName,
+              statusId: t.statusId,
+              statusName: this.statusMap[t.statusId],
+              configBizTime: t.configBizTime,
+              configBizType: p.configBizType,
+              configBizId: p.configBizId,
+              configBizName: p.configBizName,
+              configBizNum: p.configBizNum
+            })
           })
-        })
+        }
       })
 
       this.form.schedulingDayConfigItemDtoList = subList
