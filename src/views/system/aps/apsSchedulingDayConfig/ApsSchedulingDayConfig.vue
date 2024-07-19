@@ -334,21 +334,19 @@ export default {
     submitForm: function() {
 
       let itemDtoList = this.form.schedulingDayConfigItemDtoList
-      let subList = [];
-      itemDtoList.forEach(t=>{
-        t.configList.forEach(p=>{
+      let subList = []
+      itemDtoList.forEach(t => {
+        t.configList.forEach(p => {
           subList.push({
             roomId: t.roomId,
             roomName: t.roomName,
             statusId: t.statusId,
             statusName: this.statusMap[t.statusId],
             configBizTime: t.configBizTime,
-            configBizType:t.configBizType,
-            configBizTypeName:t.configBizTypeName,
-            configBizNo:p.configBizNo,
-            configBizName:p.configBizName,
-            configBizRemark:p.configBizRemark,
-            configBizValue:p.configBizValue,
+            configBizType: t.configBizType,
+            configBizId: p.configBizId,
+            configBizName: p.configBizName,
+            configBizNum: p.configBizNum
           })
         })
       })
