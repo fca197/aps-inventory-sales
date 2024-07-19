@@ -61,6 +61,8 @@ const versionChangeData = [{
 }
 , {
   time: '2024-07-14', title: 'APS系统', content: '增加滚动预测中需要的工厂产能管理'
+}, {
+  time: '2024-07-19', title: 'APS系统', content: '增加滚动预测物流路径'
 }
 
 ]
