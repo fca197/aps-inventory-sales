@@ -7,9 +7,9 @@
         </el-select>
         <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>-->
       </el-form-item>
-      <el-form-item label="排程版本号" prop="schedulingDayVersionNo">
-        <el-input v-model="queryParams.data.schedulingDayVersionNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
+<!--      <el-form-item label="排程版本号" prop="schedulingDayVersionNo">-->
+<!--        <el-input v-model="queryParams.data.schedulingDayVersionNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>-->
+<!--      </el-form-item>-->
       <el-form-item label="排程日期" prop="schedulingDay">
         <!--        <el-input v-model="queryParams.data.schedulingDay" clearable placeholder="请输入排程日期" @keyup.enter.native="handleQuery"/>-->
         <el-date-picker v-model="queryParams.data.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"/>
@@ -46,12 +46,12 @@
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="600px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="工厂ID" prop="factoryId">
-          <el-select v-model="form.factoryId" filterable placeholder="请选择工厂ID">
-            <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
+        <el-form-item label="排程配置" prop="schedulingDayConfigId">
+          <el-select v-model="form.schedulingDayConfigId" filterable placeholder="请选择排程配置" @change="selectConfig"   style="width: 100%"/>
+            <el-option v-for="item in apsSchedulingDayConfigList" :key="item.id" :label="item.schedulingDayName" :value="item.id"/>
           </el-select>
         </el-form-item>
         <el-form-item label="排程版本号" prop="schedulingDayVersionNo">
@@ -59,7 +59,7 @@
         </el-form-item>
         <el-form-item label="排程日期" prop="schedulingDay">
           <!--          <el-input v-model="form.schedulingDay" clearable placeholder="请输入排程日期"/>-->
-          <el-date-picker v-model="form.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"/>
+          <el-date-picker v-model="form.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"  style="width: 100%"/>
         </el-form-item>
 
 
@@ -75,7 +75,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 
 export default {
@@ -109,6 +109,8 @@ export default {
       // 表单参数
       form: {
         factoryId: undefined,
+        schedulingDayConfigId: undefined,
+        processId: undefined,
         schedulingDayVersionNo: undefined,
         schedulingDay: undefined,
         isIssuedThird: 0,
@@ -117,10 +119,23 @@ export default {
       // 表单校验
       rules: {},
       tableHeaderList: [],
-      factoryList: []
+      factoryList: [],
+      processList: [],
+      processMap: {},
+      apsSchedulingDayConfigList:[],
     }
   },
   created() {
+    queryUrlPageList('/apsSchedulingDayConfig', { queryPage: false }).then(t => {
+      this.apsSchedulingDayConfigList = t.data.dataList
+      this.apsSchedulingDayConfigList.forEach(p => {
+        p.schedulingDayName = p.factoryName+"-"+ p.schedulingDayName + '(' + p.schedulingDayNo + ')'
+      })
+    })
+    queryUrlPageList('/apsProcessPath', { queryPage: false }).then(t => {
+      this.processList = t.data.dataList
+      this.processMap=this.groupBy(this.processList, 'factoryId')
+    })
     document['pagePath'] = '/apsSchedulingDayConfigVersion'
     getFactoryList({ queryPage: false }).then(t => {
       this.factoryList = t.data.dataList
@@ -148,6 +163,8 @@ export default {
       let fid = this.form.id
       this.form = {
         factoryId: undefined,
+        schedulingDayConfigId: undefined,
+        processId: undefined,
         schedulingDayVersionNo: undefined,
         schedulingDay: undefined,
         isIssuedThird: 0,
@@ -174,6 +191,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
+      this.form.schedulingDayVersionNo="PC-"+ this.formatDates(new Date(), true);
       this.title = '添加排程版本'
       this.open = true
     },
@@ -222,6 +240,12 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    selectConfig(id){
+      this.apsSchedulingDayConfigList.filter(t=>t.id===id).forEach(t=>{
+        this.form.factoryId=t.factoryId
+        this.form.processId=t.processId
+      })
     }
   }
 
