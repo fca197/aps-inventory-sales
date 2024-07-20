@@ -88,7 +88,9 @@
                     <el-table-column label="名称" prop="configBizName" width="200">
                       <template slot-scope="scopeSub">
                         <el-select v-model="scopeSub.row.configBizId" placeholder="请选择名称">
-                          <el-option v-for="item in scopeSub.row.configBizNameList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                          <el-option-group v-for="item in scopeSub.row.configBizNameList" :key="item.id" :label="item.name" >
+                            <el-option v-for="itemSub in item.children" :key="itemSub.id" :label="itemSub.name" :value="itemSub.id"></el-option>
+                          </el-option-group>
                         </el-select>
                       </template>
                     </el-table-column>
@@ -225,20 +227,31 @@ export default {
     ]).then(response => {
       this.getList()
     })
-    queryUrlPageList('/apsSaleConfig', { queryPage: false, data: { isValue: 1 } }).then(t => {
+    queryUrlPageList('/apsSaleConfig', { queryPage: false, data: {} }).then(t => {
       t.data.dataList.forEach(p => {
-        this.saleConfigList.push({ id: p.id, name: p.saleName })
+        let t = { id: p.id, name: p.saleName, children: [] }
+        p.children.forEach(c => {
+            t.children.push({ id: c.id, name: c.saleName })
+        })
+        this.saleConfigList.push(t)
       })
     })
-    queryUrlPageList('/apsProjectConfig', { queryPage: false, data: { isValue: 1 } }).then(t => {
+    queryUrlPageList('/apsProjectConfig', { queryPage: false, data: {} }).then(t => {
       t.data.dataList.forEach(p => {
-        this.projectList.push({ id: p.id, name: p.saleName })
+        let t = { id: p.id, name: p.saleName, children: [] }
+        p.children.forEach(c => {
+            t.children.push({ id: c.id, name: c.saleName })
+        })
+        this.projectList.push(t)
       })
     })
     queryUrlPageList('/apsBom', { queryPage: false, data: { isValue: 1 } }).then(t => {
+
+      let tt=[];
       t.data.dataList.forEach(p => {
-        this.bomList.push({ id: p.id, name: p.bomName })
+         tt.push({ id: p.id, name: p.bomName });
       })
+      this.bomList.push({id:'bom',name:'零件',children:tt})
     })
 
   },
@@ -396,7 +409,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const idList = row.id ? [row.id] : this.ids
+        const idList = row.id ? [row.id] : this.ids
       this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
@@ -426,14 +439,13 @@ export default {
       row.configList.splice(index, 1)
     },
     selectConfigBizType(item, value) {
-      console.info(item, value)
       item.configBizId = undefined
       if (value === 'bom') {
         item.configBizNameList = this.bomList
       } else if (value === 'sale') {
         item.configBizNameList = this.saleConfigList
       } else if (value === 'project') {
-        item.configBizNameList = this.projectConfigList
+        item.configBizNameList = this.projectList
       }
     }
   }
