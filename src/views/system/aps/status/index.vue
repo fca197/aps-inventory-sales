@@ -33,7 +33,7 @@
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" >
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
