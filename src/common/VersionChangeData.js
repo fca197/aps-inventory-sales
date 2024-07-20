@@ -59,11 +59,13 @@ const versionChangeData = [{
 }, {
   time: '2024-07-05', title: 'APS系统', content: '增加表格标题管理'
 }
-, {
-  time: '2024-07-14', title: 'APS系统', content: '增加滚动预测中需要的工厂产能管理'
-}, {
-  time: '2024-07-19', title: 'APS系统', content: '增加滚动预测物流路径'
-}
+  , {
+    time: '2024-07-14', title: 'APS系统', content: '增加滚动预测中需要的工厂产能管理'
+  }, {
+    time: '2024-07-19', title: 'APS系统', content: '增加滚动预测物流路径'
+  }, {
+    time: '2024-07-20', title: 'APS系统', content: '增加排产发布订单列表,增加排程版本创建'
+  }
 
 ]
 

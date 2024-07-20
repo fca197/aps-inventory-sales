@@ -64,7 +64,7 @@
 
 <script>
 import {getSchedulingConstraintsList} from "@/api/aps/schedulingConstraints";
-import {add, queryPageList, showMsg, updateById} from "@/api/common";
+import { add, post, queryPageList, showMsg, updateById } from '@/api/common'
 import useConstraintsResult from "@/views/system/aps/scheduling/useConstraintsResult.vue";
 import useMakeCapacityResult from "@/views/system/aps/scheduling/useMakeCapacityResult.vue"
 import bomTotalResult from "@/views/system/aps/scheduling/bomTotalResult.vue";
@@ -152,8 +152,12 @@ export default {
         this.$message.error("请选择排产日期");
         return
       }
-
-      showMsg({code: 200}, dateList + "发布完成");
+      post("apsSchedulingIssueItem/insert", {
+        schedulingVersionId: this.form.id,
+        scheduledDayList: dateList
+      })
+      //
+      // showMsg({code: 200}, dateList + "发布完成");
     },
 
     finish() {
