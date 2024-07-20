@@ -2,16 +2,17 @@
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="工厂ID" prop="factoryId">
-        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>
+        <el-select v-model="queryParams.data.factoryId" filterable placeholder="请选择工厂ID">
+          <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
+        </el-select>
+        <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>-->
       </el-form-item>
       <el-form-item label="排程版本号" prop="schedulingDayVersionNo">
         <el-input v-model="queryParams.data.schedulingDayVersionNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="排程日期" prop="schedulingDay">
-        <el-input v-model="queryParams.data.schedulingDay" clearable placeholder="请输入排程日期" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="是否默认 0 否,1 是" prop="isDefault">
-        <el-input v-model="queryParams.data.isDefault" clearable placeholder="请输入是否默认 0 否,1 是" @keyup.enter.native="handleQuery"/>
+        <!--        <el-input v-model="queryParams.data.schedulingDay" clearable placeholder="请输入排程日期" @keyup.enter.native="handleQuery"/>-->
+        <el-date-picker v-model="queryParams.data.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"/>
       </el-form-item>
     </el-form>
 
@@ -49,17 +50,18 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="工厂ID" prop="factoryId">
-          <el-input v-model="form.factoryId" clearable placeholder="请输入工厂ID"/>
+          <el-select v-model="form.factoryId" filterable placeholder="请选择工厂ID">
+            <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="排程版本号" prop="schedulingDayVersionNo">
           <el-input v-model="form.schedulingDayVersionNo" clearable placeholder="请输入排程版本号"/>
         </el-form-item>
         <el-form-item label="排程日期" prop="schedulingDay">
-          <el-input v-model="form.schedulingDay" clearable placeholder="请输入排程日期"/>
+          <!--          <el-input v-model="form.schedulingDay" clearable placeholder="请输入排程日期"/>-->
+          <el-date-picker v-model="form.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"/>
         </el-form-item>
-        <el-form-item label="是否默认 0 否,1 是" prop="isDefault">
-          <el-input v-model="form.isDefault" clearable placeholder="请输入是否默认 0 否,1 是"/>
-        </el-form-item>
+
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -73,8 +75,8 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
-import {getFactoryList} from '@/api/factory'
+import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { getFactoryList } from '@/api/factory'
 
 export default {
   name: 'tenantName',
@@ -109,17 +111,21 @@ export default {
         factoryId: undefined,
         schedulingDayVersionNo: undefined,
         schedulingDay: undefined,
-        isDefault: undefined,
+        isIssuedThird: 0,
         id: undefined
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      factoryList: []
     }
   },
   created() {
     document['pagePath'] = '/apsSchedulingDayConfigVersion'
-    this.getList()
+    getFactoryList({ queryPage: false }).then(t => {
+      this.factoryList = t.data.dataList
+      this.getList()
+    })
   },
   methods: {
     /** 查询公告列表 */
@@ -144,7 +150,7 @@ export default {
         factoryId: undefined,
         schedulingDayVersionNo: undefined,
         schedulingDay: undefined,
-        isDefault: undefined,
+        isIssuedThird: 0,
         id: fid
       }
       this.resetForm('form')
@@ -167,14 +173,14 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.reset()
       this.title = '添加排程版本'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1}
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改排程版本'
@@ -184,7 +190,7 @@ export default {
     },
 
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -206,7 +212,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }

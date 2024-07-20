@@ -350,6 +350,13 @@ export const constantRoutes = [{
         component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
         meta: { title: '排程配置', icon: 'order-1', affix: false }
       }
+ , {
+        path: '/aps/scheduling/day/config/index',
+        name: '排程管理',
+        hidden: false,
+        component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue'),
+        meta: { title: '排程管理', icon: 'order-1', affix: false }
+      }
 
     ]
   }]
