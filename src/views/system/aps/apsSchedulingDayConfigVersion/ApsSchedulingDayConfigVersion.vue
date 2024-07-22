@@ -31,7 +31,7 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleInfo(scope.row)">详情</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -50,7 +50,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="排程配置" prop="schedulingDayConfigId">
-          <el-select v-model="form.schedulingDayConfigId" filterable placeholder="请选择排程配置" @change="selectConfig"   style="width: 100%"/>
+          <el-select v-model="form.schedulingDayConfigId" filterable placeholder="请选择排程配置" @change="selectConfig"   style="width: 100%">
             <el-option v-for="item in apsSchedulingDayConfigList" :key="item.id" :label="item.schedulingDayName" :value="item.id"/>
           </el-select>
         </el-form-item>
@@ -246,6 +246,10 @@ export default {
         this.form.factoryId=t.factoryId
         this.form.processId=t.processId
       })
+    },
+    handleInfo(row) {
+
+      this.$router.push({ path: '/apsSchedulingDayConfigVersion/detailList', query: { id: row.id } })
     }
   }
 
