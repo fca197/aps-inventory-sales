@@ -1,15 +1,41 @@
 <template>
   <div class="app-container">
-    <div class="orderDivMain">
-      <div class="orderDivSub" v-for="(item,index) in data.headerList" :key="index">
-        <div class="orderDivSubTitle"><span>{{ item.showName }}</span></div>
+
+    <div class="orderDivMain" v-for="(item,index) in data.headerList" :key="index">
+      <div class="orderDivTitle">
+        <div class="value">{{ item.showName }}</div>
+      </div>
+      <div class="orderDivSingleton">
         {{ void (orderList = data.versionDetailMap[item.fieldName]) }}
         <div class="orderDiv" v-for="(order ,index ) in orderList" :key="index">
-          <div class="sortIndex">序号:<span>{{ order.sortIndex }}</span></div>
-          <div class="configBizType">匹配类型:<span>{{ order.configBizTypeStr }}</span></div>
-          <div class="orderNo">单号:<span>{{ order.orderNo }}</span></div>
-          <div class="isMatch">匹配:<span>{{ order.isMatchStr }}</span></div>
-          <div class="loopEnough">满足:<span>{{ order.loopEnoughStr }}</span></div>
+          <div class="sortIndex">
+            <div class="title">制造序号:</div>
+            <div class="value">{{ order.sortIndex }}</div>
+          </div>
+          <div class="orderNo">
+            <div class="title">单号:</div>
+            <div class="value"> {{ order.orderNo }} 112345678765432</div>
+          </div>
+          <div class="configBizType">
+            <div class="title">匹配类型:</div>
+            <div class="value">{{ order.configBizType }}</div>
+          </div>
+          <div class="configBizType">
+            <div class="title">匹配名称:</div>
+            <div class="value">{{ order.configBizName }}</div>
+          </div>
+          <div class="isMatch">
+            <div class="title">匹配:</div>
+            <div class="value"> {{ order.isMatch }}</div>
+          </div>
+          <div class="loopEnough">
+            <div class="title">满足:</div>
+            <div class="value"> {{ order.loopEnough }}</div>
+          </div>
+          <div class="匹配层数">
+            <div class="title">满足:</div>
+            <div class="value"> {{ order.loopIndex }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -49,22 +75,64 @@ export default {
 
 <style scoped lang="scss">
 
-.el-table tbody tr:hover > td {
-
-  background-color: #101d3f !important
-
-}
-
 .orderDivMain {
   width: 100%;
+  margin: 10px 0;
 }
 
-.orderDivSub {
-  display: inline-table;
-  margin: 0 10px;
+.orderDivSingleton {
+  overflow-x: scroll;
+  display: -webkit-box;
 }
+
+.orderDivTitle {
+  font-size: 20px;
+  width: 200px;
+  padding: 0 0 10px 0;
+}
+
+.orderDivTitle > div.value {
+  font-weight: bold;
+  color: #d23131;
+}
+
 
 .orderDiv {
-  margin: 10px 0;
+  margin: 0 10px 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 300px;
+  scroll-behavior: smooth;
+}
+
+.orderDiv > div {
+  line-height: 25px;
+  display: -webkit-box;
+}
+
+.orderDiv > div > div.title {
+  width: 100px;
+  display: ruby-text;
+}
+
+.orderDiv > div > div.value {
+  color: #d23131;
+}
+
+.orderDiv > div.sortIndex > div.title {
+//color: red;
+}
+
+.orderDiv > div.sortIndex > div.value {
+  color: red;
+}
+
+.orderDiv > div > div.title::after {
+  width: 10px;
+}
+
+.orderDiv > div > div.title {
+//color: #000;
+
 }
 </style>
