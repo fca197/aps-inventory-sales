@@ -251,7 +251,7 @@ export default {
     },
 
     handleUpdateContent(data) {
-      this.title = "修改约束"
+      this.title = "修改约束(约束字段可后端配置)"
 
       this.form.id = data.id
       // console.info("data.constraintsContext", data.constraintsContext)
