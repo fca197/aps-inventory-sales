@@ -36,7 +36,6 @@
     "url": "https://gitee.com/y_project/RuoYi-Vue.git"
   },
   "dependencies": {
-
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@riophae/vue-treeselect": "0.4.0",
     "@zxing/library": "^0.20.0",
@@ -67,7 +66,7 @@
     "vue-cropper": "0.5.5",
     "vue-meta": "2.4.0",
     "vue-router": "3.4.9",
-    "vuedraggable": "2.24.3",
+    "vuedraggable": "^2.24.3",
     "vuex": "3.6.0",
     "watermark-dom": "^2.3.0",
     "xlsx": "^0.18.5"
