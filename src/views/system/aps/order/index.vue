@@ -22,9 +22,9 @@
       <el-col :span="1.5">
         <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
-      <!--      <el-col :span="1.5">-->
-      <!--        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>-->
-      <!--      </el-col>-->
+<!--            <el-col :span="1.5">-->
+<!--              <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>-->
+<!--            </el-col>-->
       <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>

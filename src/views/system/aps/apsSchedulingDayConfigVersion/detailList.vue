@@ -15,7 +15,7 @@
         <draggable @start="drag=true" @end="drag=false" :id="item.fieldName+index">
           <div v-for="(order,index) in orderList" class="orderDiv" :key="index" :ref="item.fieldName" v-bind:id="order.id">
             <div class="sortIndex">
-              <div class="title">排程制造:</div>
+              <div class="title">排程制造ID:</div>
               <div class="value">{{ order.id }}</div>
             </div>
             <div class="sortIndex">
@@ -141,18 +141,18 @@ export default {
   margin: 0 10px 10px 0;
   padding: 10px;
   border: 1px solid #ccc;
-  width: 300px;
+  width: 350px;
   scroll-behavior: smooth;
   cursor: move;
 }
 
 .orderDiv > div {
-  line-height: 25px;
+  line-height: 20px;
   display: -webkit-box;
 }
 
 .orderDiv > div > div.title {
-  width: 80px;
+  width: 100px;
   padding-right: 10px;
   text-align: right;
 }

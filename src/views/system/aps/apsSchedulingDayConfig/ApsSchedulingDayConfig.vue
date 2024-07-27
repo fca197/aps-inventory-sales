@@ -11,7 +11,7 @@
         </el-select>
 
       </el-form-item>
-      <el-form-item label="排程版本号" prop="schedulingDayNo">
+      <el-form-item label="排程配置版本号" prop="schedulingDayNo">
         <el-input v-model="queryParams.data.schedulingDayNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>
       </el-form-item>
     </el-form>
@@ -47,7 +47,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="1300px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
 
         <el-form-item label="工厂ID" prop="factoryId">
           <!--          <el-input v-model="form.factoryId" clearable placeholder="请输入工厂ID"/>-->
@@ -61,10 +61,10 @@
             <el-option v-for="item in processList" :key="item.id" :label="item.processPathName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排程版本号" prop="schedulingDayNo">
+        <el-form-item label="排程版配置本号" prop="schedulingDayNo">
           <el-input v-model="form.schedulingDayNo" clearable placeholder="请输入排程版本号"/>
         </el-form-item>
-        <el-form-item label="排程版本名称" prop="schedulingDayName">
+        <el-form-item label="排程配置名称" prop="schedulingDayName">
           <el-input v-model="form.schedulingDayName" clearable placeholder="请输入排程版本名称"/>
         </el-form-item>
         <el-form-item label="排程步骤" prop="schedulingDayConfigItemList">
@@ -297,7 +297,7 @@ export default {
       process.pathRoomList.forEach(room => {
         room.apsRoomConfigList.forEach(roomConfig => {
           let t = {
-            roomId: room.id,
+            roomId: room.roomId,
             roomName: roomConfig.roomName,
             statusId: roomConfig.statusId,
             statusName: this.statusMap[roomConfig.statusId],
