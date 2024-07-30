@@ -87,8 +87,8 @@
                     </el-table-column>
                     <el-table-column label="名称" prop="configBizName" width="200">
                       <template slot-scope="scopeSub">
-                        <el-select v-model="scopeSub.row.configBizId" placeholder="请选择名称">
-                          <el-option-group v-for="item in scopeSub.row.configBizNameList" :key="item.id" :label="item.name" >
+                        <el-select v-model="scopeSub.row.configBizId" placeholder="请选择名称" @change="value=>{selectConfigBizValue(scopeSub.row,value)}">
+                          <el-option-group v-for="item in scopeSub.row.configBizNameList" :key="item.id" :label="item.name">
                             <el-option v-for="itemSub in item.children" :key="itemSub.id" :label="itemSub.name" :value="itemSub.id"></el-option>
                           </el-option-group>
                         </el-select>
@@ -231,7 +231,7 @@ export default {
       t.data.dataList.forEach(p => {
         let t = { id: p.id, name: p.saleName, children: [] }
         p.children.forEach(c => {
-            t.children.push({ id: c.id, name: c.saleName })
+          t.children.push({ id: c.id, name: c.saleName })
         })
         this.saleConfigList.push(t)
       })
@@ -240,18 +240,18 @@ export default {
       t.data.dataList.forEach(p => {
         let t = { id: p.id, name: p.saleName, children: [] }
         p.children.forEach(c => {
-            t.children.push({ id: c.id, name: c.saleName })
+          t.children.push({ id: c.id, name: c.saleName })
         })
         this.projectList.push(t)
       })
     })
     queryUrlPageList('/apsBom', { queryPage: false, data: { isValue: 1 } }).then(t => {
 
-      let tt=[];
+      let tt = []
       t.data.dataList.forEach(p => {
-         tt.push({ id: p.id, name: p.bomName });
+        tt.push({ id: p.id, name: p.bomName })
       })
-      this.bomList.push({id:'bom',name:'零件',children:tt})
+      this.bomList.push({ id: 'bom', name: '零件', children: tt })
     })
 
   },
@@ -409,7 +409,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-        const idList = row.id ? [row.id] : this.ids
+      const idList = row.id ? [row.id] : this.ids
       this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
@@ -447,6 +447,20 @@ export default {
       } else if (value === 'project') {
         item.configBizNameList = this.projectList
       }
+    },
+    selectConfigBizValue(item, value) {
+      // debugger
+      item.configBizNameList.forEach(t => {
+        for (let tt in t.children) {
+          let ttt=t.children[tt];
+          if (ttt.id === value) {
+            item.configBizName = ttt.name
+            break
+          }
+
+        }
+      })
+
     }
   }
 
