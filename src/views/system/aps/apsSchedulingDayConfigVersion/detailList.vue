@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
 
+    <div v-if="data.versionDetailMap==null" >暂无记录</div>
+
     <div class="orderDivMain" v-for="(item,index) in data.headerList" :key="index">
 
 
@@ -78,7 +80,7 @@ export default {
     getList() {
 
       post('/apsSchedulingDayConfigVersion/detailList', { id: this.id }, false).then(t => {
-        console.info(t)
+        // console.info(t)
         this.data = t.data
         this.dataList = [{}]
       })
