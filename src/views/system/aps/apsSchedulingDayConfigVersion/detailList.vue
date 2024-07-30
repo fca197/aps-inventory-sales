@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <div v-if="data.versionDetailMap==null" >暂无记录</div>
+    <div v-if="data.versionDetailMap==null">暂无记录</div>
 
     <div class="orderDivMain" v-for="(item,index) in data.headerList" :key="index">
 
@@ -16,38 +16,45 @@
       <div class="orderDivSingleton">
         <draggable @start="drag=true" @end="drag=false" :id="item.fieldName+index">
           <div v-for="(order,index) in orderList" class="orderDiv" :key="index" :ref="item.fieldName" v-bind:id="order.id">
-            <div class="sortIndex">
-              <div class="title">排程制造ID:</div>
-              <div class="value">{{ order.id }}</div>
-            </div>
-            <div class="sortIndex">
-              <div class="title">制造序号:</div>
-              <div class="value">{{ order.sortIndex }}</div>
-            </div>
-            <div class="orderNo">
-              <div class="title">单号:</div>
-              <div class="value"> {{ order.orderNo + '-' + index }}</div>
-            </div>
-            <div class="configBizType">
-              <div class="title">匹配类型:</div>
-              <div class="value">{{ order.configBizType }}</div>
-            </div>
-            <div class="configBizType">
-              <div class="title">匹配名称:</div>
-              <div class="value">{{ order.configBizName }}</div>
-            </div>
-            <div class="isMatch">
-              <div class="title">匹配:</div>
-              <div class="value"> {{ order.isMatch }}</div>
-            </div>
-            <div class="loopEnough">
-              <div class="title">满足:</div>
-              <div class="value"> {{ order.loopEnough }}</div>
-            </div>
-            <div class="匹配层数">
-              <div class="title">循环:</div>
-              <div class="value"> {{ order.loopIndex }}</div>
-            </div>
+
+            <table cellpadding="1px" cellspacing="2px">
+              <tr>
+                <td class="title">制造序号:</td>
+                <td class="value">{{ order.sortIndex }}</td>
+              </tr>
+
+              <tr>
+                <td class="title">排程制造ID:</td>
+                <td class="value">{{ order.id }}</td>
+              </tr>
+
+              <tr>
+                <td class="title">单号:</td>
+                <td class="value">{{ order.orderNo }}</td>
+              </tr>
+              <tr>
+                <td class="title">匹配类型:</td>
+                <td class="value">{{ order.configBizType }}</td>
+              </tr>
+
+              <tr>
+                <td class="title">匹配名称:</td>
+                <td class="value">{{ order.configBizName }}</td>
+              </tr>
+              <tr>
+                <td class="title">匹配:</td>
+                <td class="value">{{ order.isMatch }}</td>
+              </tr>
+              <tr>
+                <td class="title">满足:</td>
+                <td class="value">{{ order.loopEnough }}</td>
+              </tr>
+              <tr>
+                <td class="title">循环:</td>
+                <td class="value">{{ order.loopIndex }}</td>
+              </tr>
+            </table>
+
           </div>
         </draggable>
       </div>
@@ -88,7 +95,7 @@ export default {
     confirmSortIndex(gId) {
       var elList = document.getElementById(gId).children
       // console.info(gId, elList)
-      let tl=[];
+      let tl = []
       for (let t = 0; t < elList.length; t++) {
         // console.info(t, elList[t].id)
         tl.push({
@@ -97,10 +104,10 @@ export default {
         })
       }
       console.info(tl)
-      post("/apsSchedulingDayConfigVersion/updateOrderSortIndex",{
+      post('/apsSchedulingDayConfigVersion/updateOrderSortIndex', {
         orderList: tl,
         id: this.id
-      }).then(t=>this.getList());
+      }).then(t => this.getList())
     }
   }
 }
@@ -153,31 +160,16 @@ export default {
   display: -webkit-box;
 }
 
-.orderDiv > div > div.title {
-  width: 100px;
-  padding-right: 10px;
-  text-align: right;
-}
 
-
-.orderDiv > div > div.value {
-  color: #d23131;
-}
-
-.orderDiv > div.sortIndex > div.title {
-//color: red;
-}
-
-.orderDiv > div.sortIndex > div.value {
-  color: red;
-}
-
-.orderDiv > div > div.title::after {
+.orderDiv > table > tr > td.title::after {
   width: 10px;
 }
 
-.orderDiv > div > div.title {
-//color: #000;
+.orderDiv > table > tr > td {
+  margin-left: 30px;
+}
 
+.orderDiv > table > tr > td.title {
+  text-align: right;
 }
 </style>
