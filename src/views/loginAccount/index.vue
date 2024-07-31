@@ -23,10 +23,11 @@
     <el-table v-loading="loading" :data="loginPhoneList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50px"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName" align="center"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="240px">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-button icon="el-icon-setting" size="mini" type="text" @click="handleRole(scope.row)"></el-button>
           <el-button icon="el-icon-refresh" size="mini" type="text" @click="handleResetPwd(scope.row)"></el-button>
         </template>
       </el-table-column>
@@ -58,12 +59,41 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :title="title" :visible.sync="roleOpen" append-to-body width="700px">
+
+      <el-tabs v-model="activeName" style="margin:  -30px 5%">
+        <el-tab-pane label="角色设置" name="role">
+          <el-transfer style="width: 100%"
+                       :titles="['可选', '已选']"
+                       v-model="selectRoleList"
+                       :data="roleList"
+          >
+          </el-transfer>
+        </el-tab-pane>
+        <el-tab-pane label="角色组设置" name="roleGroup">
+          <el-transfer
+              :titles="['可选', '已选']"
+              v-model="selectRoleGroupList"
+              :data="roleGroupList"
+          >
+          </el-transfer>
+        </el-tab-pane>
+
+      </el-tabs>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitRoleForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { addAccount, getById, queryPageList, removeAccount, resetPwd, updateById } from '@/api/account/loginAccount'
 import md5 from 'js-md5'
+import { post, queryUrlNoPageList } from '@/api/common'
 
 export default {
   name: 'loginPhone',
@@ -78,7 +108,7 @@ export default {
       }
     }
     return {
-
+      activeName: 'role',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -97,6 +127,7 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
+      roleOpen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -148,10 +179,26 @@ export default {
         {
           showName: '修改时间',
           columnName: 'updateTime'
-        }]
+        }],
+      roleList: [],
+      selectRoleList: [],
+      roleGroupList: [],
+      selectRoleGroupList: [],
+      userId: undefined
     }
   },
   created() {
+    queryUrlNoPageList('/baseRole').then(t => this.roleList = t.data.dataList.map(t => {
+      t.key = t.id
+      t.label = t.roleName
+      return t
+    }))
+    queryUrlNoPageList('/baseRoleGroup').then(t => this.roleGroupList = t.data.dataList.map(t => {
+      t.key = t.id
+      t.label = t.roleGroupName
+
+      return t
+    }))
     this.getList()
   },
   methods: {
@@ -171,6 +218,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
+      this.roleOpen = false
       this.reset()
     },
     // 表单重置
@@ -263,6 +311,17 @@ export default {
           _this.$modal.alert('您的密码为：<span style="color:red">' + res.data.newPwd + '</span> 仅提示一次，请妥善保存', '密码提示')
         })
       })
+    },
+    handleRole(row) {
+      this.title = '修改角色'
+      this.userId = row.id
+      this.selectRoleGroupList = row.baseRoleGroupIds
+      this.selectRoleList = row.baseRoleIds
+      // console.log(this.roleGroupList, this.roleList)
+      this.roleOpen = true
+    },
+    submitRoleForm() {
+      post('/loginAccount/updateRole', { userId: this.userId, roleGroupIds: this.selectRoleGroupList, roleIds: this.selectRoleList })
     }
   }
 }
