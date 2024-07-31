@@ -150,7 +150,19 @@ export const constantRoutes = [{
     name: '表格头管理',
     component: () => import('@/views/system/baseTableHeader/BaseTableHeader.vue'),
     meta: { title: '表格头管理', icon: '', affix: false }
-  }]
+  }, {
+    path: '/base/role/group/index',
+    name: '角色组管理',
+    component: () => import('@/views/system/base/baseRoleGroup/BaseRoleGroup.vue'),
+    meta: { title: '角色组管理', icon: '', affix: false }
+  }, {
+    path: '/base/role/index',
+    name: '角色管理',
+    component: () => import('@/views/system/base/baseRole/BaseRole.vue'),
+    meta: { title: '角色管理', icon: '', affix: false }
+  }
+
+  ]
 }, {
   path: '/aps/base-data/', component: Layout, // redirect: 'index',
   meta: { title: 'Aps系统', icon: 'android-system', affix: false }, children: [{
@@ -350,14 +362,14 @@ export const constantRoutes = [{
         component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
         meta: { title: '排程配置', icon: 'order-1', affix: false }
       }
- , {
+      , {
         path: '/aps/scheduling/day/config/index',
         name: '排程管理',
         hidden: false,
         component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue'),
         meta: { title: '排程管理', icon: 'order-1', affix: false }
       }
- , {
+      , {
         path: '/apsSchedulingDayConfigVersion/detailList',
         name: '排程结果',
         hidden: true,
