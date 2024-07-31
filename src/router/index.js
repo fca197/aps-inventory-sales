@@ -205,13 +205,12 @@ export const constantRoutes = [{
       name: '工艺路径',
       component: () => import('@/views/system/aps/processPath/index'),
       meta: { title: '工艺路径管理', icon: 'process-setting', affix: false }
+    }, {
+      path: '/aps/apsLogistics/path/index',
+      name: '物流路径',
+      component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
+      meta: { title: '物流路径', icon: 'process-setting', affix: false }
     }
-      , {
-        path: '/aps/apsLogistics/path/index',
-        name: '物流路径',
-        component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
-        meta: { title: '物流路径', icon: 'process-setting', affix: false }
-      }
 
     ]
   }, {
@@ -302,18 +301,15 @@ export const constantRoutes = [{
       meta: { title: '订单进度', icon: 'order-1', affix: false }
     }, {
       path: '/aps/order/roll/factory/index',
-      name: '工厂滚动预测产能',
-      // hidden: true,
+      name: '工厂滚动预测产能', // hidden: true,
       component: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue'),
       meta: { title: '工厂滚动预测产能', icon: 'order-1', affix: false }
     }, {
       path: '/aps/order/roll/index',
-      name: '滚动预测',
-      // hidden: true,
+      name: '滚动预测', // hidden: true,
       component: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue'),
       meta: { title: '滚动预测', icon: 'order-1', affix: false }
-    }
-    ]
+    }]
   }, {
     path: '/aps/make/q/index', name: 'APS工厂产能管理', component: ParentView, // component: () => import('@/views/system/aps/order/index'),
     meta: { title: '产能管理', icon: 'order-1', affix: false }, children: [{
@@ -337,45 +333,41 @@ export const constantRoutes = [{
     name: '排产排程',
     component: ParentView,
     meta: { title: '排产排程', icon: 'order-1', affix: false },
-    children: [
-      {
-        path: '/aps/make/constraint/index',
-        name: '排产约束',
-        component: () => import('@/views/system/aps/make_capacity/constraint'),
-        meta: { title: '排产约束', icon: 'order-1', affix: false }
-      }, {
-        path: '/aps/scheduling/index',
-        name: '排产版本管理',
-        component: () => import('@/views/system/aps/scheduling'),
-        meta: { title: '排产管理', icon: 'order-1', affix: false }
-      }, {
-        path: '/aps/scheduling/bom/index',
-        name: '排产零件',
-        hidden: true,
-        component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
-        meta: { title: '排产零件', icon: 'order-1', affix: false }
-      }
-      , {
-        path: '/aps/scheduling/day/index',
-        name: '排程配置',
-        hidden: false,
-        component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
-        meta: { title: '排程配置', icon: 'order-1', affix: false }
-      }
-      , {
-        path: '/aps/scheduling/day/config/index',
-        name: '排程管理',
-        hidden: false,
-        component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue'),
-        meta: { title: '排程管理', icon: 'order-1', affix: false }
-      }
-      , {
-        path: '/apsSchedulingDayConfigVersion/detailList',
-        name: '排程结果',
-        hidden: true,
-        component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue'),
-        meta: { title: '排程结果', icon: 'order-1', affix: false }
-      }
+    children: [{
+      path: '/aps/make/constraint/index',
+      name: '排产约束',
+      component: () => import('@/views/system/aps/make_capacity/constraint'),
+      meta: { title: '排产约束', icon: 'order-1', affix: false }
+    }, {
+      path: '/aps/scheduling/index',
+      name: '排产版本管理',
+      component: () => import('@/views/system/aps/scheduling'),
+      meta: { title: '排产管理', icon: 'order-1', affix: false }
+    }, {
+      path: '/aps/scheduling/bom/index',
+      name: '排产零件',
+      hidden: true,
+      component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
+      meta: { title: '排产零件', icon: 'order-1', affix: false }
+    }, {
+      path: '/aps/scheduling/day/index',
+      name: '排程配置',
+      hidden: false,
+      component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
+      meta: { title: '排程配置', icon: 'order-1', affix: false }
+    }, {
+      path: '/aps/scheduling/day/config/index',
+      name: '排程管理',
+      hidden: false,
+      component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue'),
+      meta: { title: '排程管理', icon: 'order-1', affix: false }
+    }, {
+      path: '/apsSchedulingDayConfigVersion/detailList',
+      name: '排程结果',
+      hidden: true,
+      component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue'),
+      meta: { title: '排程结果', icon: 'order-1', affix: false }
+    }
 
     ]
   }]
@@ -388,9 +380,10 @@ export const constantRoutes = [{
     path: '/login/account/index',
     component: () => import('@/views/loginAccount/index'),
     name: '账户管理',
-    hidden: true,
+    hidden: false,
     meta: { title: '账户管理', icon: 'peoples', affix: false }
-  }, {
+  }
+  , {
     path: '/supplier/index',
     name: '供应管理',
     component: () => import('@/views/system/supplier/index'),
