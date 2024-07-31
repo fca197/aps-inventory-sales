@@ -22,12 +22,13 @@
 
     <el-table v-loading="loading" :data="loginPhoneList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50px"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName" align="center"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.columnName" width="180px" align="center"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="240px">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
-          <el-button icon="el-icon-setting" size="mini" type="text" @click="handleRole(scope.row)"></el-button>
+          <el-button icon="el-icon-setting" size="mini" type="text" @click="handleRole(scope.row)">角色</el-button>
+          <el-button icon="el-icon-setting" size="mini" type="text" @click="handleDept(scope.row)">部门</el-button>
           <el-button icon="el-icon-refresh" size="mini" type="text" @click="handleResetPwd(scope.row)"></el-button>
         </template>
       </el-table-column>
@@ -60,6 +61,19 @@
       </div>
     </el-dialog>
 
+    <el-dialog :title="title" :visible.sync="deptOpen" append-to-body width="700px">
+
+      <el-transfer style="width: 100%"
+                   :titles="['可选', '已选']"
+                   v-model="selectDeptList"
+                   :data="deptList"
+      >
+      </el-transfer>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitDeptForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
     <el-dialog :title="title" :visible.sync="roleOpen" append-to-body width="700px">
 
       <el-tabs v-model="activeName" style="margin:  -30px 5%">
@@ -128,6 +142,7 @@ export default {
       // 是否显示弹出层
       open: false,
       roleOpen: false,
+      deptOpen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -167,6 +182,9 @@ export default {
         showName: '登录手机号',
         columnName: 'loginPhone'
       }, {
+        showName: '部门',
+        columnName: 'deptName'
+      }, {
         showName: '角色',
         columnName: 'baseRoleName'
       }, {
@@ -184,10 +202,17 @@ export default {
       selectRoleList: [],
       roleGroupList: [],
       selectRoleGroupList: [],
+      deptList: [],
+      selectDeptList: [],
       userId: undefined
     }
   },
   created() {
+    queryUrlNoPageList('/baseDept').then(t => this.deptList = t.data.dataList.map(t => {
+      t.key = t.id
+      t.label = t.deptName
+      return t
+    }))
     queryUrlNoPageList('/baseRole').then(t => this.roleList = t.data.dataList.map(t => {
       t.key = t.id
       t.label = t.roleName
@@ -219,6 +244,7 @@ export default {
     cancel() {
       this.open = false
       this.roleOpen = false
+      this.deptOpen = false
       this.reset()
     },
     // 表单重置
@@ -321,7 +347,22 @@ export default {
       this.roleOpen = true
     },
     submitRoleForm() {
-      post('/loginAccount/updateRole', { userId: this.userId, roleGroupIds: this.selectRoleGroupList, roleIds: this.selectRoleList })
+      post('/loginAccount/updateRole', { userId: this.userId, roleGroupIds: this.selectRoleGroupList, roleIds: this.selectRoleList }).then(t=>{
+        this.cancel()
+        this.getList();
+      })
+    },
+    submitDeptForm() {
+      post('/loginAccount/updateDept', { userId: this.userId, deptList: this.selectDeptList }).then(t=>{
+        this.cancel()
+        this.getList();
+      })
+    },
+    handleDept(row) {
+      this.userId = row.id
+      this.title = '修改部门'
+      this.selectDeptList=row.baseRoleIds;
+      this.deptOpen = true
     }
   }
 }
