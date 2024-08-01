@@ -383,12 +383,12 @@ export const constantRoutes = [{
     hidden: false,
     meta: { title: '账户管理', icon: 'peoples', affix: false }
   }
-  , {
-    path: '/supplier/index',
-    name: '供应管理',
-    component: () => import('@/views/system/supplier/index'),
-    meta: { title: '供应管理', icon: 'pastebin', affix: false }
-  }]
+    , {
+      path: '/supplier/index',
+      name: '供应管理',
+      component: () => import('@/views/system/supplier/index'),
+      meta: { title: '供应管理', icon: 'pastebin', affix: false }
+    }]
 }, {
   path: '/store',
   hidden: true,
@@ -506,7 +506,36 @@ export const constantRoutes = [{
       name: '采购订单',
       component: () => import('@/views/system/jcx/buyOrder/index'),
       meta: { title: '采购订单', icon: 'order-2', affix: false }
-    }]
+    }
+    ]
+  }, {
+    path: '/flow/',
+    component: Layout,
+    redirect: 'index',
+    meta: { title: '工作流', icon: 'international', affix: false },
+    children: [
+      {
+        path: '/flow/start',
+        name: "流程发起",
+        component: () => import('@/views/flow/start.vue'),
+        meta: { title: '流程发起', icon: 'international', affix: false }
+      }, {
+        path: '/flow/todo',
+        name: "流程待办",
+        component: () => import('@/views/flow/start.vue'),
+        meta: { title: '流程待办', icon: 'international', affix: false }
+      }, {
+        path: '/flow/done',
+        name: "流程已办",
+        component: () => import('@/views/flow/start.vue'),
+        meta: { title: '流程已办', icon: 'international', affix: false }
+      }, {
+        path: '/flow/todo-flow-qj',
+        name: "请假流程待办",
+        component: () => import('@/views/flow/qj-todo.vue'),
+        meta: { title: '请假流程待办', icon: 'international', affix: false }
+      },
+    ]
   }
 
 ]
