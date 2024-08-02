@@ -11,16 +11,29 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right">
         <template slot-scope="scope">
           <!--          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>-->
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button icon="el-icon-setting" size="mini" type="text" @click="handleInfo(scope.row)">处理</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum"
-                :total="total" @pagination="getList"
-    />
+    <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total" @pagination="list"/>
+
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="900px">
+      <div>
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item label="天数">
+            <el-input v-model="form.dayCount" placeholder="天数" clearable/>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="danger" @click="rejectTask">驳回</el-button>
+        <el-button type="primary" @click="passTask">通过</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -52,21 +65,42 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        flowKey: 'flow-qj',
         data: {}
       },
+      form: {},
       undoneList: [],
-      headerList: []
+      headerList: [],
+      id: undefined
     }
   }, created() {
     this.list()
   },
   methods: {
     list() {
-      post('/flow/task/undone', {flowKey:"flow-qj"}, false).then(t => {
+      post('/flow/task/undone', this.queryParams, false).then(t => {
         this.undoneList = t.data.dataList
         this.headerList = t.data.headerList
         this.total = parseInt(t.data.total)
         this.loading = false
+      })
+    },
+    handleInfo(row) {
+      this.id = row.id
+      this.title = row.name
+      this.open = true
+    },
+    cancel() {
+      this.open = false
+    }, passTask() {
+      post('/flow/task/complete', { taskId: this.id, message: '通过' }).then(t => {
+        this.list()
+        this.cancel()
+      })
+    }, rejectTask() {
+      post('/flow/task/reject', { taskId: this.id, message: '驳回' }).then(t => {
+        this.cancel()
+        this.list()
       })
     }
   }

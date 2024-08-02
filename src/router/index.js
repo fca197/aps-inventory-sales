@@ -515,6 +515,12 @@ export const constantRoutes = [{
     meta: { title: '工作流', icon: 'international', affix: false },
     children: [
       {
+        path: '/flow/form',
+        name: "流程表单",
+        component: () => import('@/views/flow/flowForm/FlowForm.vue'),
+        meta: { title: '流程表单', icon: 'international', affix: false }
+      },
+      {
         path: '/flow/start',
         name: "流程发起",
         component: () => import('@/views/flow/start.vue'),
