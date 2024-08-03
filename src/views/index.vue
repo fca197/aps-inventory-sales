@@ -14,7 +14,7 @@
           <el-table-column label="任务创建时间" prop="createTime"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="goTarget(scope.row.url)">查看</el-button>
+              <el-button type="primary" size="mini" @click="showTask(scope.row)">查看</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -37,6 +37,9 @@
       <h3>版本变更记录</h3>
       <version-change></version-change>
     </el-row>
+    <el-dialog :visible="taskOpen" @close="taskCancel" title="流程详情" width="900px">
+      <flow-detail :setting="taskSetting" :key="taskSetting.id"></flow-detail>
+    </el-dialog>
   </div>
 </template>
 
@@ -45,16 +48,22 @@ import ECharts from 'events'
 import * as echarts from 'echarts'
 import versionChange from '@/views/version/index.vue'
 import { post } from '@/api/common'
+import flowDetail from '@/views/flow/flowForm/FlowDetail.vue'
 
 export default {
   name: 'VersionChangeIndex',
   components: {
-    ECharts, versionChange
+    ECharts, versionChange, flowDetail
   },
   data() {
-    let  cl=[5, 10, 30, 50];
+    let cl = [5, 10, 30, 50]
+    let taskOpen = false
     return {
-      unDonTaskCountList: cl ,
+      taskSetting: {
+        open: taskOpen
+      },
+      taskOpen: taskOpen,
+      unDonTaskCountList: cl,
       unDonTaskCount: cl[0],
       undoneTaskList: [],
       // 版本号
@@ -130,13 +139,22 @@ export default {
     this.getUndoneTask()
   },
   methods: {
-    goTarget(href) {
-      window.open(href, '_blank')
+    showTask(task) {
+      this.taskOpen = true
+      task.id = new Date().getTime()
+      for (let taskKey in task) {
+        this.taskSetting[taskKey] = task[taskKey]
+      }
+      this.taskSetting.cancel = this.taskCancel
+      this.taskSetting.showCompleteBtn = true
+
     },
     getUndoneTask() {
       post('/flow/task/undone/home', { flowKey: 'flowKey', pageNum: 1, pageSize: this.unDonTaskCount }, false).then(t => {
         this.undoneTaskList = t.data.dataList
       })
+    }, taskCancel() {
+      this.taskOpen = false
     }
   }
 }
