@@ -26,6 +26,7 @@
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button icon="el-icon-view" size="mini" type="text" @click="handleInfo(scope.row)">预览</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -273,6 +274,9 @@ export default {
       this.formItem.formItemValue = JSON.stringify(this.valueList)
       this.valueTypeOpen = false
     },
+    handleInfo(row){
+      this.$router.push({ path: '/flow/form/detail', query: { flowCode: row.formCode } })
+    }
 
   }
 

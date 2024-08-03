@@ -12,17 +12,36 @@
         </el-col>
       </el-row>
     </div>
+    <el-dialog :visible.sync="open" title="填写信息" width="80%" :close-on-click-modal="false" :close-on-press-escape="false">
+      <flowDetail :form-id="flowFormId" :setting="{
+        processInstanceId: processInstanceId,
+        flowKey: flowKey,
+        open: open,
+        showCompleteBtn: true,
+        showRejectBtn: false,
+        flowFormId: flowFormId,
+        cancel: () => {this.open = false}}"
+      ></flowDetail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { post, queryUrlNoPageList } from '@/api/common'
+import flowDetail from '@/views/flow/flowForm/FlowDetail.vue'
 
 export default {
   name: 'start.vue',
+  components: {
+    flowDetail
+  },
   data() {
     return {
-      flowGroupList: []
+      open: false,
+      flowGroupList: [],
+      flowFormId: 0,
+      processInstanceId: undefined,
+      flowKey: undefined
     }
   },
   created() {
@@ -34,8 +53,15 @@ export default {
     },
     startFlow(flow) {
       console.log(flow)
+      let _t = this
       this.$modal.confirm('是否发起' + flow.flowName + '？', '发起提示').then(function() {
-        return post("/flow/repository/start",flow);
+        return post('/flow/repository/start', flow, false).then(t => {
+          // console.log(t,t.data, t.data.flowFormId, _t.flowFormId)
+          _t.flowFormId = t.data.flowFormId
+          _t.flowKey = t.data.flowKey
+          _t.processInstanceId = t.data.processInstanceId
+          _t.open = true
+        })
       }).then(() => {
       })
     }

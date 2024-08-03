@@ -519,6 +519,12 @@ export const constantRoutes = [{
         name: "流程表单",
         component: () => import('@/views/flow/flowForm/FlowForm.vue'),
         meta: { title: '流程表单', icon: 'international', affix: false }
+      },  {
+        path: '/flow/form/detail',
+        name: "流程表预览",
+        hidden: true,
+        component: () => import('@/views/flow/flowForm/FlowDetail.vue'),
+        meta: { title: '流程表预览', icon: 'international', affix: false }
       },
       {
         path: '/flow/start',
