@@ -1,6 +1,30 @@
 <template>
   <div class="app-container home">
-    <el-row :gutter="20">
+    <el-row>
+
+      <el-col :span="12">
+        <h3>最近
+          <el-select v-model="unDonTaskCount" @change="getUndoneTask" size="small" style="width: 75px">
+            <el-option v-for="(option,index) in  unDonTaskCountList " :key="'select'+index+option" :label="''+option" :value="option"></el-option>
+          </el-select>
+          条待办
+        </h3>
+        <el-table :data="undoneTaskList" style="width: 100%">
+          <el-table-column label="任务名称" prop="name"></el-table-column>
+          <el-table-column label="任务创建时间" prop="createTime"></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="goTarget(scope.row.url)">查看</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="12">
+        xx
+      </el-col>
+    </el-row>
+    <el-divider/>
+    <el-row>
       <el-col :span="12">
         <div id="mainDiv" style="width: 100%;height: 200px"></div>
       </el-col>
@@ -20,6 +44,7 @@
 import ECharts from 'events'
 import * as echarts from 'echarts'
 import versionChange from '@/views/version/index.vue'
+import { post } from '@/api/common'
 
 export default {
   name: 'VersionChangeIndex',
@@ -27,14 +52,11 @@ export default {
     ECharts, versionChange
   },
   data() {
+    let  cl=[5, 10, 30, 50];
     return {
-
-      projectTimeLineList: [
-        { time: '2024-03-17 19:01', title: '项目初始化', content: '整合从上班到目前现有项目经验' },
-        { time: '2024-03-17 22:50', title: '资产盘点项目', content: '包含工厂, 楼层,房间, 资产录入管理, 资产扫码盘点' },
-        { time: '2024-03-19 18:00', title: '进存销项目', content: '包含商品管理, 订单生成, 商品盘点,采购计划,采购单 等功能' },
-        { time: '2024-03-29 13:00', title: 'APS', content: '包含商品,销售配置,预测,工厂配置,工艺流程等功能', color: '#409EFF' }
-      ].reverse(),
+      unDonTaskCountList: cl ,
+      unDonTaskCount: cl[0],
+      undoneTaskList: [],
       // 版本号
       version: '3.8.6'
     }
@@ -104,9 +126,17 @@ export default {
       }]
     })
   },
+  created() {
+    this.getUndoneTask()
+  },
   methods: {
     goTarget(href) {
       window.open(href, '_blank')
+    },
+    getUndoneTask() {
+      post('/flow/task/undone/home', { flowKey: 'flowKey', pageNum: 1, pageSize: this.unDonTaskCount }, false).then(t => {
+        this.undoneTaskList = t.data.dataList
+      })
     }
   }
 }
@@ -146,14 +176,12 @@ export default {
     list-style-type: none;
   }
 
-  h4 {
-    margin-top: 0px;
-  }
 
-  h2 {
-    margin-top: 10px;
-    font-size: 26px;
-    font-weight: 100;
+  h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    line-height: 1.1;
+    font-weight: 800;
   }
 
   p {
