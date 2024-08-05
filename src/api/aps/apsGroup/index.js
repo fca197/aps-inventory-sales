@@ -39,6 +39,3 @@ function translator  (parents, children)  {
   });
 };
 
-function list2Tree(dataList, retTree) {
-
-}

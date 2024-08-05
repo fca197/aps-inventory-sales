@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
-import ParentView from '@/components/ParentView'
+import ParentView from '@/components/ParentView/index.vue'
 
 Vue.use(Router)
 
@@ -110,8 +110,13 @@ export const constantRoutes = [{
     name: 'Index',
     meta: { title: '首页', icon: 'dashboard', affix: false }
   }]
-}, {
-  path: '/baseConfig/',
+}
+
+]
+
+// 动态路由，基于用户权限动态去加载
+export const dynamicRoutes = [{
+  path: '/base/config',
   component: Layout,
   redirect: 'index',
   meta: { title: '基础配置', icon: 'setting', affix: false },
@@ -164,213 +169,211 @@ export const constantRoutes = [{
 
   ]
 }, {
-  path: '/aps/base-data/', component: Layout, // redirect: 'index',
-  meta: { title: 'Aps系统', icon: 'android-system', affix: false }, children: [{
-    path: '/aps/basic/config/index',
-    name: '基础配置',
-    component: ParentView,
-    meta: { title: '基础配置', icon: 'setting', affix: false },
-    children: [{
-      path: '/aps/sale/index',
-      name: '销售配置管理',
-      component: () => import('@/views/system/aps/saleConfig/index'),
-      meta: { title: '销售配置管理', icon: 'group', affix: false }
-    }, {
-      path: '/aps/project/index',
-      name: '工程配置管理',
-      component: () => import('@/views/system/aps/projectConfig/index'),
-      meta: { title: '工程配置管理', icon: 'group', affix: false }
-    }, {
-      path: '/aps/status/index',
-      name: '状态',
-      component: () => import('@/views/system/aps/status/index'),
-      meta: { title: '状态管理', icon: 'status', affix: false }
-    }, {
-      path: '/aps/section/index',
-      name: '工段管理',
-      component: () => import('@/views/system/aps/section/index'),
-      meta: { title: '工段管理', icon: 'section', affix: false }
-    }, {
-      path: '/aps/station/index',
-      name: '工位管理',
-      component: () => import('@/views/system/aps/station/index'),
-      meta: { title: '工位管理', icon: 'workstation', affix: false }
-    }, {
-      path: '/aps/room/index',
-      name: '车间管理',
-      component: () => import('@/views/system/aps/room/index'),
-      meta: { title: '车间', icon: 'room', affix: false }
-    }, {
-      path: '/aps/process/path/index',
-      name: '工艺路径',
-      component: () => import('@/views/system/aps/processPath/index'),
-      meta: { title: '工艺路径管理', icon: 'process-setting', affix: false }
-    }, {
-      path: '/aps/apsLogistics/path/index',
-      name: '物流路径',
-      component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
-      meta: { title: '物流路径', icon: 'process-setting', affix: false }
-    }
-
-    ]
+  path: '/aps/basic/config/index',
+  name: '基础配置',
+  component: ParentView,
+  meta: { title: '基础配置', icon: 'setting', affix: false },
+  children: [{
+    path: '/aps/sale/index',
+    name: '销售配置管理',
+    component: () => import('@/views/system/aps/saleConfig/index'),
+    meta: { title: '销售配置管理', icon: 'group', affix: false }
   }, {
-    path: '/aps/goods/main/index',
-    name: 'APS商品管理',
-    component: ParentView,
-    meta: { title: '商品管理', icon: 'order-1', affix: false },
-    children: [{
-      path: '/aps/bomGroup/index',
-      name: '零件组配置',
-      component: () => import('@/views/system/aps/bomGroup/index'),
-      meta: { title: '零件组配置', icon: 'setting', affix: false }
-    }, {
-      path: '/aps/bom/index',
-      name: '零件配置',
-      component: () => import('@/views/system/aps/bom/index'),
-      meta: { title: '零件配置', icon: 'setting', affix: false }
-    }, {
-      path: '/aps/goodsBom/index',
-      name: '商品零件配置',
-      component: () => import('@/views/system/aps/goodsBom/index'),
-      meta: { title: '商品零件配置', icon: 'setting', affix: false }
-    }, {
-      path: '/aps/bomBuyPlan/index',
-      name: '零件购买计划',
-      component: () => import('@/views/system/aps/bomBuyPlan/index'),
-      meta: { title: '零件购买计划', icon: 'setting', affix: false }
-    }, {
-      path: '/aps/goods/index',
-      name: '商品管理',
-      component: () => import('@/views/system/aps/goods/index'),
-      meta: { title: '商品管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/goods/sale/index',
-      name: '商品销售特征绑定',
-      component: () => import('@/views/system/aps/goodsSaleConfig/index'),
-      meta: { title: '商品销售特征绑定', icon: 'setting', affix: false }
-    }, {
-      path: '/aps/goods/sale/project/index',
-      name: '商品销售特转规划',
-      component: () => import('@/views/system/aps/goodsSale2project/index'),
-      meta: { title: '商品销售特转规划', icon: 'setting', affix: false }
-    }
-
-    ]
+    path: '/aps/project/index',
+    name: '工程配置管理',
+    component: () => import('@/views/system/aps/projectConfig/index'),
+    meta: { title: '工程配置管理', icon: 'group', affix: false }
   }, {
+    path: '/aps/status/index',
+    name: '状态',
+    component: () => import('@/views/system/aps/status/index'),
+    meta: { title: '状态管理', icon: 'status', affix: false }
+  }, {
+    path: '/aps/section/index',
+    name: '工段管理',
+    component: () => import('@/views/system/aps/section/index'),
+    meta: { title: '工段管理', icon: 'section', affix: false }
+  }, {
+    path: '/aps/station/index',
+    name: '工位管理',
+    component: () => import('@/views/system/aps/station/index'),
+    meta: { title: '工位管理', icon: 'workstation', affix: false }
+  }, {
+    path: '/aps/room/index',
+    name: '车间管理',
+    component: () => import('@/views/system/aps/room/index'),
+    meta: { title: '车间', icon: 'room', affix: false }
+  }, {
+    path: '/aps/process/path/index',
+    name: '工艺路径',
+    component: () => import('@/views/system/aps/processPath/index'),
+    meta: { title: '工艺路径管理', icon: 'process-setting', affix: false }
+  }, {
+    path: '/aps/apsLogistics/path/index',
+    name: '物流路径',
+    component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
+    meta: { title: '物流路径', icon: 'process-setting', affix: false }
+  }
+
+  ]
+}, {
+  path: '/aps/goods/main/index',
+  name: 'APS商品管理',
+  component: ParentView,
+  meta: { title: '商品管理', icon: 'order-1', affix: false },
+  children: [{
+    path: '/aps/bomGroup/index',
+    name: '零件组配置',
+    component: () => import('@/views/system/aps/bomGroup/index'),
+    meta: { title: '零件组配置', icon: 'setting', affix: false }
+  }, {
+    path: '/aps/bom/index',
+    name: '零件配置',
+    component: () => import('@/views/system/aps/bom/index'),
+    meta: { title: '零件配置', icon: 'setting', affix: false }
+  }, {
+    path: '/aps/goodsBom/index',
+    name: '商品零件配置',
+    component: () => import('@/views/system/aps/goodsBom/index'),
+    meta: { title: '商品零件配置', icon: 'setting', affix: false }
+  }, {
+    path: '/aps/bomBuyPlan/index',
+    name: '零件购买计划',
+    component: () => import('@/views/system/aps/bomBuyPlan/index'),
+    meta: { title: '零件购买计划', icon: 'setting', affix: false }
+  }, {
+    path: '/aps/goods/index',
+    name: '商品管理',
+    component: () => import('@/views/system/aps/goods/index'),
+    meta: { title: '商品管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/goods/sale/index',
+    name: '商品销售特征绑定',
+    component: () => import('@/views/system/aps/goodsSaleConfig/index'),
+    meta: { title: '商品销售特征绑定', icon: 'setting', affix: false }
+  }, {
+    path: '/aps/goods/sale/project/index',
+    name: '商品销售特转规划',
+    component: () => import('@/views/system/aps/goodsSale2project/index'),
+    meta: { title: '商品销售特转规划', icon: 'setting', affix: false }
+  }
+
+  ]
+}, {
+  path: '/aps/goods/forecast/index',
+  name: '预测管理',
+  component: ParentView,
+  meta: { title: '预测管理', icon: 'eye-open', affix: false },
+
+  children: [{
     path: '/aps/goods/forecast/index',
-    name: '预测管理',
-    component: ParentView,
-    meta: { title: '预测管理', icon: 'eye-open', affix: false },
-
-    children: [{
-      path: '/aps/goods/forecast/index',
-      name: '商品预测',
-      component: () => import('@/views/system/aps/forecast/index'),
-      meta: { title: '商品预测', icon: 'eye-open', affix: false }
-    }, {
-      path: '/aps/goods/forecast/main/index',
-      name: '预测主版本',
-      component: () => import('@/views/system/aps/forecastMain/index'),
-      meta: { title: '预测主版本', icon: 'main', affix: false }
-
-    }, {
-      path: '/aps/goods/forecast/make/week/index',
-      name: '(预)生产数据',
-      component: () => import('@/views/system/aps/forecastMakeWeek/index'),
-      meta: { title: '(预)周生产管理', icon: 'eye-open', affix: false }
-    }, {
-      path: '/aps/goods/forecast/make/weekMain/index',
-      name: '(预)生产数据主版本',
-      component: () => import('@/views/system/aps/forecastMainMake/index'),
-      meta: { title: '(预)生产数据主版本', icon: 'eye-open', affix: false }
-    }]
+    name: '商品预测',
+    component: () => import('@/views/system/aps/forecast/index'),
+    meta: { title: '商品预测', icon: 'eye-open', affix: false }
   }, {
-    path: '/aps/order/main/index',
-    name: '订单管理',
-    component: ParentView,
-    meta: { title: '订单管理', icon: 'order-1', affix: false },
-    children: [{
-      path: '/aps/order/index',
-      name: '订单管理',
-      component: () => import('@/views/system/aps/order/index'),
-      meta: { title: '订单管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/order/timeline/index',
-      name: '订单进度',
-      component: () => import('@/views/system/aps/order/timeLine.vue'),
-      meta: { title: '订单进度', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/order/roll/factory/index',
-      name: '工厂滚动预测产能', // hidden: true,
-      component: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue'),
-      meta: { title: '工厂滚动预测产能', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/order/roll/index',
-      name: '滚动预测', // hidden: true,
-      component: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue'),
-      meta: { title: '滚动预测', icon: 'order-1', affix: false }
-    }]
-  }, {
-    path: '/aps/make/q/index', name: 'APS工厂产能管理', component: ParentView, // component: () => import('@/views/system/aps/order/index'),
-    meta: { title: '产能管理', icon: 'order-1', affix: false }, children: [{
-      path: '/aps/make_capacity_factory/index',
-      name: '工厂产能管理',
-      component: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue'),
-      meta: { title: '工厂产能管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/make/make_capacity_sale_config/index',
-      name: '销售特征产能管理',
-      component: () => import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue'),
-      meta: { title: '销售特征产能管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/make/make_capacity_goods/index',
-      name: '商品产能',
-      component: () => import('@/views/system/aps/make_capacity/make_capacity_goods'),
-      meta: { title: '商品产能', icon: 'order-1', affix: false }
-    }]
-  }, {
-    path: '/aps/scheduling/main/index',
-    name: '排产排程',
-    component: ParentView,
-    meta: { title: '排产排程', icon: 'order-1', affix: false },
-    children: [{
-      path: '/aps/make/constraint/index',
-      name: '排产约束',
-      component: () => import('@/views/system/aps/make_capacity/constraint'),
-      meta: { title: '排产约束', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/scheduling/index',
-      name: '排产版本管理',
-      component: () => import('@/views/system/aps/scheduling'),
-      meta: { title: '排产管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/scheduling/bom/index',
-      name: '排产零件',
-      hidden: true,
-      component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
-      meta: { title: '排产零件', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/scheduling/day/index',
-      name: '排程配置',
-      hidden: false,
-      component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
-      meta: { title: '排程配置', icon: 'order-1', affix: false }
-    }, {
-      path: '/aps/scheduling/day/config/index',
-      name: '排程管理',
-      hidden: false,
-      component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue'),
-      meta: { title: '排程管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/apsSchedulingDayConfigVersion/detailList',
-      name: '排程结果',
-      hidden: true,
-      component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue'),
-      meta: { title: '排程结果', icon: 'order-1', affix: false }
-    }
+    path: '/aps/goods/forecast/main/index',
+    name: '预测主版本',
+    component: () => import('@/views/system/aps/forecastMain/index'),
+    meta: { title: '预测主版本', icon: 'main', affix: false }
 
-    ]
+  }, {
+    path: '/aps/goods/forecast/make/week/index',
+    name: '(预)生产数据',
+    component: () => import('@/views/system/aps/forecastMakeWeek/index'),
+    meta: { title: '(预)周生产管理', icon: 'eye-open', affix: false }
+  }, {
+    path: '/aps/goods/forecast/make/weekMain/index',
+    name: '(预)生产数据主版本',
+    component: () => import('@/views/system/aps/forecastMainMake/index'),
+    meta: { title: '(预)生产数据主版本', icon: 'eye-open', affix: false }
   }]
+}, {
+  path: '/aps/order/main/index',
+  name: '订单管理',
+  component: ParentView,
+  meta: { title: '订单管理', icon: 'order-1', affix: false },
+  children: [{
+    path: '/aps/order/index',
+    name: '订单管理',
+    component: () => import('@/views/system/aps/order/index'),
+    meta: { title: '订单管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/order/timeline/index',
+    name: '订单进度',
+    component: () => import('@/views/system/aps/order/timeLine.vue'),
+    meta: { title: '订单进度', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/order/roll/factory/index',
+    name: '工厂滚动预测产能', // hidden: true,
+    component: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue'),
+    meta: { title: '工厂滚动预测产能', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/order/roll/index',
+    name: '滚动预测', // hidden: true,
+    component: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue'),
+    meta: { title: '滚动预测', icon: 'order-1', affix: false }
+  }]
+}, {
+  path: '/aps/make/q/index', name: 'APS工厂产能管理', component: ParentView, // component: () => import('@/views/system/aps/order/index'),
+  meta: { title: '产能管理', icon: 'order-1', affix: false }, children: [{
+    path: '/aps/make_capacity_factory/index',
+    name: '工厂产能管理',
+    component: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue'),
+    meta: { title: '工厂产能管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/make/make_capacity_sale_config/index',
+    name: '销售特征产能管理',
+    component: () => import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue'),
+    meta: { title: '销售特征产能管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/make/make_capacity_goods/index',
+    name: '商品产能',
+    component: () => import('@/views/system/aps/make_capacity/make_capacity_goods'),
+    meta: { title: '商品产能', icon: 'order-1', affix: false }
+  }]
+}, {
+  path: '/aps/scheduling/main/index',
+  name: '排产排程',
+  component: ParentView,
+  meta: { title: '排产排程', icon: 'order-1', affix: false },
+  children: [{
+    path: '/aps/make/constraint/index',
+    name: '排产约束',
+    component: () => import('@/views/system/aps/make_capacity/constraint'),
+    meta: { title: '排产约束', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/scheduling/index',
+    name: '排产版本管理',
+    component: () => import('@/views/system/aps/scheduling'),
+    meta: { title: '排产管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/scheduling/bom/index',
+    name: '排产零件',
+    hidden: true,
+    component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
+    meta: { title: '排产零件', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/scheduling/day/index',
+    name: '排程配置',
+    hidden: false,
+    component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
+    meta: { title: '排程配置', icon: 'order-1', affix: false }
+  }, {
+    path: '/aps/scheduling/day/config/index',
+    name: '排程管理',
+    hidden: false,
+    component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue'),
+    meta: { title: '排程管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/apsSchedulingDayConfigVersion/detailList',
+    name: '排程结果',
+    hidden: true,
+    component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue'),
+    meta: { title: '排程结果', icon: 'order-1', affix: false }
+  }
+
+  ]
+
 }, {
   path: '/base/index',
   component: Layout,
@@ -382,13 +385,12 @@ export const constantRoutes = [{
     name: '账户管理',
     hidden: false,
     meta: { title: '账户管理', icon: 'peoples', affix: false }
-  }
-    , {
-      path: '/supplier/index',
-      name: '供应管理',
-      component: () => import('@/views/system/supplier/index'),
-      meta: { title: '供应管理', icon: 'pastebin', affix: false }
-    }]
+  }, {
+    path: '/supplier/index',
+    name: '供应管理',
+    component: () => import('@/views/system/supplier/index'),
+    meta: { title: '供应管理', icon: 'pastebin', affix: false }
+  }]
 }, {
   path: '/store',
   hidden: true,
@@ -506,54 +508,45 @@ export const constantRoutes = [{
       name: '采购订单',
       component: () => import('@/views/system/jcx/buyOrder/index'),
       meta: { title: '采购订单', icon: 'order-2', affix: false }
-    }
-    ]
+    }]
   }, {
     path: '/flow/',
     component: Layout,
     redirect: 'index',
     meta: { title: '工作流', icon: 'international', affix: false },
-    children: [
-      {
-        path: '/flow/form',
-        name: "流程表单",
-        component: () => import('@/views/flow/flowForm/FlowForm.vue'),
-        meta: { title: '流程表单', icon: 'international', affix: false }
-      },  {
-        path: '/flow/form/detail',
-        name: "流程表预览",
-        hidden: true,
-        component: () => import('@/views/flow/flowForm/FlowDetail.vue'),
-        meta: { title: '流程表预览', icon: 'international', affix: false }
-      },
-      {
-        path: '/flow/start',
-        name: "流程发起",
-        component: () => import('@/views/flow/start.vue'),
-        meta: { title: '流程发起', icon: 'international', affix: false }
-      }, {
-        path: '/flow/todo',
-        name: "流程待办",
-        component: () => import('@/views/flow/start.vue'),
-        meta: { title: '流程待办', icon: 'international', affix: false }
-      }, {
-        path: '/flow/done',
-        name: "流程已办",
-        component: () => import('@/views/flow/start.vue'),
-        meta: { title: '流程已办', icon: 'international', affix: false }
-      }, {
-        path: '/flow/todo-flow-qj',
-        name: "请假流程待办",
-        component: () => import('@/views/flow/qj-todo.vue'),
-        meta: { title: '请假流程待办', icon: 'international', affix: false }
-      },
-    ]
-  }
-
-]
-
-// 动态路由，基于用户权限动态去加载
-export const dynamicRoutes = []
+    children: [{
+      path: '/flow/form',
+      name: '流程表单',
+      component: () => import('@/views/flow/flowForm/FlowForm.vue'),
+      meta: { title: '流程表单', icon: 'international', affix: false }
+    }, {
+      path: '/flow/form/detail',
+      name: '流程表预览',
+      hidden: true,
+      component: () => import('@/views/flow/flowForm/FlowDetail.vue'),
+      meta: { title: '流程表预览', icon: 'international', affix: false }
+    }, {
+      path: '/flow/start',
+      name: '流程发起',
+      component: () => import('@/views/flow/start.vue'),
+      meta: { title: '流程发起', icon: 'international', affix: false }
+    }, {
+      path: '/flow/todo',
+      name: '流程待办',
+      component: () => import('@/views/flow/start.vue'),
+      meta: { title: '流程待办', icon: 'international', affix: false }
+    }, {
+      path: '/flow/done',
+      name: '流程已办',
+      component: () => import('@/views/flow/start.vue'),
+      meta: { title: '流程已办', icon: 'international', affix: false }
+    }, {
+      path: '/flow/todo-flow-qj',
+      name: '请假流程待办',
+      component: () => import('@/views/flow/qj-todo.vue'),
+      meta: { title: '请假流程待办', icon: 'international', affix: false }
+    }]
+  }]
 
 // 防止连续点击多次路由报错
 let routerPush = Router.prototype.push

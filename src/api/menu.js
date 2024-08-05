@@ -1,10 +1,9 @@
 // 公共路由
 // 获取路由
-export const getRouters = () => {
-  // return request({
-  //   url: '/getRouters',
-  //   method: 'get'
-  // })
+import { queryUrlNoPageList } from '@/api/common'
 
-  return Promise.resolve({data: []})
+export const getRouters = () => {
+  return queryUrlNoPageList('/baseAppResource')
+
+  // return Promise.resolve({ data: [] })
 }
