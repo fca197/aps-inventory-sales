@@ -35,10 +35,10 @@ const permission = {
             ({ resourceUrl }) => resourceUrl)
           resourceUrlArray.splice(0, 0, '----')
           // resourceUrlArray.push("");
-          console.log(resourceUrlArray)
+          // console.log(resourceUrlArray)
           const asyncRoutes = filterDynamicRoutes(dynamicRoutes,
             resourceUrlArray)
-          console.log(asyncRoutes)
+          // console.log(asyncRoutes)
           commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
           resolve(asyncRoutes)
         })
@@ -56,8 +56,11 @@ export function filterDynamicRoutes(routes, resourceUrlArray) {
     // if (route.children) {
     //   // rt.children =filterDynamicRoutes(route.children, resourceUrlArray);
     // }
-    if (resourceUrlArray.indexOf(route.path) > 0  ) {
+    if (resourceUrlArray.indexOf(route.path) > -1 ) {
       res.push(rt)
+      if (route.children) {
+        rt.children = filterDynamicRoutes(route.children, resourceUrlArray)
+      }
     }
   })
   // console.log(res)
