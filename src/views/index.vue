@@ -1,6 +1,6 @@
 <template>
   <div class="app-container home">
-    <el-row>
+    <el-row  :gutter="20" style="height: 300px">
 
       <el-col :span="12">
         <h3>最近
@@ -9,7 +9,7 @@
           </el-select>
           条待办
         </h3>
-        <el-table :data="undoneTaskList" style="width: 100%">
+        <el-table :data="undoneTaskList" style="width: 100% ;">
           <el-table-column label="任务名称" prop="name"></el-table-column>
           <el-table-column label="任务创建时间" prop="createTime"></el-table-column>
           <el-table-column label="操作">
@@ -20,11 +20,18 @@
         </el-table>
       </el-col>
       <el-col :span="12">
-        xx
+        <h3>
+          流程发起
+        </h3>
+        <el-row :gutter="40">
+          <el-col :span="2">
+            asd,sdas
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
     <el-divider/>
-    <el-row>
+    <el-row :gutter="20">
       <el-col :span="12">
         <div id="mainDiv" style="width: 100%;height: 200px"></div>
       </el-col>

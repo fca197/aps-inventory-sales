@@ -7,25 +7,7 @@
       <el-form-item label="菜单名称" prop="resourceName">
         <el-input v-model="queryParams.data.resourceName" clearable placeholder="请输入菜单名称" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="菜单URL" prop="resourceUrl">
-        <el-input v-model="queryParams.data.resourceUrl" clearable placeholder="请输入菜单URL" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="菜单图标" prop="resourceIcon">
-        <el-input v-model="queryParams.data.resourceIcon" clearable placeholder="请输入菜单图标" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="菜单类型" prop="resourceType">
-        <el-input v-model="queryParams.data.resourceType" clearable placeholder="请输入菜单类型" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="是否按钮 0 否,1 是" prop="isButton">
-        <el-input v-model="queryParams.data.isButton" clearable placeholder="请输入是否按钮 0 否,1 是" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="父菜单ID" prop="parentId">
-        <el-input v-model="queryParams.data.parentId" clearable placeholder="请输入父菜单ID" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="菜单路径" prop="path">
-        <el-input v-model="queryParams.data.path" clearable placeholder="请输入菜单路径" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-    </el-form>
+       </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -37,24 +19,49 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="baseResourceList" @selection-change="handleSelectionChange">
-      <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
-        <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
 
-    <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
-    />
+    <el-tabs>
+      <el-tab-pane label="表格显示">
+        <el-table v-loading="loading" :data="baseResourceList" @selection-change="handleSelectionChange">
+          <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
+          <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
+          <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+            <template slot-scope="scope">
+              <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
+              <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+            v-show="total>0"
+            :limit.sync="queryParams.pageSize"
+            :page.sync="queryParams.pageNum"
+            :total="total"
+            @pagination="getList"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="树形显示">
+        <el-input
+            placeholder="输入关键字进行过滤"
+            v-model="appNameFilterText"
+        >
+        </el-input>
+        <el-tree
+            :data="baseAppResourceTree"
+            node-key="id"
+            default-expand-all
+            :props="{
+            label: 'treeName',
+            children: 'children'
+            } "
+            :filter-node-method="filterNode"
+            ref="tree">
+        </el-tree>
+
+
+      </el-tab-pane>
+    </el-tabs>
+
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
@@ -99,12 +106,19 @@
 
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import {getFactoryList} from '@/api/factory'
+import { handleTree } from '@/utils/ruoyi'
 
 export default {
   name: 'tenantName',
+  watch: {
+    appNameFilterText(val) {
+      this.$refs.tree.filter(val);
+    }
+  },
   data() {
 
     return {
+      appNameFilterText:"",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -118,12 +132,14 @@ export default {
       // 总条数
       total: 0,
       baseResourceList: [],
+      baseAppResourceTree: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
       queryParams: {
+        queryPage:false,
         pageNum: 1,
         pageSize: 10,
         data: {}
@@ -158,6 +174,13 @@ export default {
         this.tableHeaderList = response.headerList
         this.baseResourceList = response.dataList
         this.total = parseInt(response.total)
+
+        this.baseResourceList.forEach(item => {
+          item.treeName = item.resourceName + '(' + item.resourceCode + ')' + item.id
+        })
+        this.baseAppResourceTree = handleTree(this.baseResourceList, 'id', 'parentId')
+        this.total = parseInt(response.total)
+
         this.loading = false
       })
     },
@@ -248,6 +271,10 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.treeName.indexOf(value) !== -1;
     }
   }
 

@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="应用ID" prop="appId">
-        <!--        <el-input v-model="queryParams.data.appId" clearable placeholder="请输入应用ID" @keyup.enter.native="handleQuery"/>-->
-        <el-select v-model="queryParams.data.appId" placeholder="请选择应用ID" @change="handleQuery">
-          <el-option v-for="item in appList" :key="item.id" :label="item.appName" :value="item.id"></el-option>
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="应用ID" prop="appId">-->
+<!--        &lt;!&ndash;        <el-input v-model="queryParams.data.appId" clearable placeholder="请输入应用ID" @keyup.enter.native="handleQuery"/>&ndash;&gt;-->
+<!--        <el-select v-model="queryParams.data.appId" placeholder="请选择应用ID" @change="handleQuery">-->
+<!--          <el-option v-for="item in appList" :key="item.id" :label="item.appName" :value="item.id"></el-option>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
 
     </el-form>
 
@@ -67,12 +67,12 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
 
-        <el-form-item label="应用ID" prop="appId">
-          <!--          <el-input v-model="form.appId" clearable placeholder="请输入应用ID"/>-->
-          <el-select v-model="form.appId" placeholder="请选择应用ID">
-            <el-option v-for="item in appList" :key="item.id" :label="item.appName" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="应用ID" prop="appId">-->
+<!--          &lt;!&ndash;          <el-input v-model="form.appId" clearable placeholder="请输入应用ID"/>&ndash;&gt;-->
+<!--          <el-select v-model="form.appId" placeholder="请选择应用ID">-->
+<!--            <el-option v-for="item in appList" :key="item.id" :label="item.appName" :value="item.id"></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <!--        <el-form-item label="应用编码" prop="appCode">-->
         <!--          <el-input v-model="form.appCode" clearable placeholder="请输入应用编码"/>-->
         <!--        </el-form-item>-->

@@ -109,7 +109,15 @@ export const constantRoutes = [{
     component: () => import('@/views/index'),
     name: 'Index',
     meta: { title: '首页', icon: 'dashboard', affix: false }
-  }]
+  }
+  ,{
+    path: '/baseResource',
+    component: () => import('@/views/system/base/baseResource/BaseResource.vue'),
+    name: 'baseResource',
+    meta: { title: 'baseResource', icon: 'dashboard', affix: false }
+    }
+
+  ]
 }]
 
 // 动态路由，基于用户权限动态去加载
@@ -554,8 +562,8 @@ export function dynamicFlowRoutes(flowGroup) {
     }]
 
     flowChildren.push({
-      path: '/flow/flow/' + flow.flowKey,
-      name: flow.flowName + '待办',
+      path: '/flow/task/' + flow.flowKey,
+      name: flow.flowName + '相关',
       component: Layout,
       meta: { title: flow.flowName + '待办', affix: false },
       children: flowChildrenChildren

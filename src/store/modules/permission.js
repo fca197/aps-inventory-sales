@@ -1,6 +1,6 @@
 import { constantRoutes, dynamicFlowRoutes, dynamicRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
-import { queryUrlNoPageList } from '@/api/common'
+import { queryUrlNoPageList, queryUrlPageList } from '@/api/common'
 
 const permission = {
   state: {
@@ -31,7 +31,17 @@ const permission = {
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
         // 向后端请求路由数据
-        getRouters().then(res => {
+        let appCode=undefined;
+        var url = window.document.URL.split("?")[0]
+        if (url.indexOf("aps")>0){
+          appCode='aps';
+        }else  if (url.indexOf("oa")>0){
+          appCode='oa';
+        }else  if (url.indexOf("property")>0){
+          appCode='propertyCheck';
+        }
+        console.log("appKey",appCode)
+        getRouters({queryPage:false,data:{appCode:appCode}}).then(res => {
           let resourceUrlArray = Array.from(res.data.dataList,
             ({ resourceUrl }) => resourceUrl)
           resourceUrlArray.splice(0, 0, '----')
@@ -44,7 +54,8 @@ const permission = {
           commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
           // resolve(asyncRoutes)
 
-          queryUrlNoPageList('/flowGroup').then(t => {
+          // console.log(JSON.stringify(dynamicRoutes))
+          queryUrlPageList('/flowGroup',{queryPage:false} ).then(t => {
             let fl = t.data.dataList
             if (fl.length > 0) {
               fl.forEach(r => {
@@ -53,7 +64,7 @@ const permission = {
               // asyncRoutes.push(dynamicFlowRoutes(fl[0]))
             }
             commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
-            console.log(asyncRoutes)
+            // console.log(asyncRoutes)
             resolve(asyncRoutes)
           })
         })
