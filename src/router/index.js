@@ -110,9 +110,7 @@ export const constantRoutes = [{
     name: 'Index',
     meta: { title: '首页', icon: 'dashboard', affix: false }
   }]
-}
-
-]
+}]
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [{
@@ -121,6 +119,16 @@ export const dynamicRoutes = [{
   redirect: 'index',
   meta: { title: '基础配置', icon: 'setting', affix: false },
   children: [{
+    path: '/baseApp/index',
+    component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
+    name: 'APP管理',
+    meta: { title: 'APP管理', affix: false }
+  }, {
+    path: '/baseAppResource/index',
+    component: () => import('@/views/system/base/baseAppResource/BaseAppResource.vue'),
+    name: 'APP资源管理',
+    meta: { title: 'APP资源管理', affix: false }
+  }, {
     path: '/views/tenant/index',
     component: () => import('@/views/system/tenant/index'),
     name: '租户管理',
@@ -166,14 +174,7 @@ export const dynamicRoutes = [{
     component: () => import('@/views/system/base/baseRole/BaseRole.vue'),
     meta: { title: '角色管理', icon: '', affix: false }
   }
-
-  ]
-}, {
-  path: '/aps/basic/config/index',
-  name: '基础配置',
-  component: Layout,
-  meta: { title: '基础配置', icon: 'setting', affix: false },
-  children: [{
+ ,{
     path: '/aps/sale/index',
     name: '销售配置管理',
     component: () => import('@/views/system/aps/saleConfig/index'),
@@ -515,36 +516,15 @@ export const dynamicRoutes = [{
     redirect: 'index',
     meta: { title: '工作流', affix: false },
     children: [{
+      path: '/flow/def',
+      name: '流程定义',
+      component: () => import('@/views/flow/flowForm/FlowForm.vue'),
+      meta: { title: '流程定义', affix: false }
+    }, {
       path: '/flow/form',
       name: '流程表单',
       component: () => import('@/views/flow/flowForm/FlowForm.vue'),
       meta: { title: '流程表单', affix: false }
-    }, {
-      path: '/flow/form/detail',
-      name: '流程表预览',
-      hidden: true,
-      component: () => import('@/views/flow/flowForm/FlowDetail.vue'),
-      meta: { title: '流程表预览', affix: false }
-    }, {
-      path: '/flow/start',
-      name: '流程发起',
-      component: () => import('@/views/flow/start.vue'),
-      meta: { title: '流程发起', affix: false }
-    }, {
-      path: '/flow/todo/:flowKey(.*)',
-      name: '流程待办',
-      component: () => import('@/views/flow/todo.vue'),
-      meta: { title: '流程待办', affix: false }
-    }, {
-      path: '/flow/done',
-      name: '流程已办',
-      component: () => import('@/views/flow/start.vue'),
-      meta: { title: '流程已办', affix: false }
-    }, {
-      path: '/flow/todo-flow-qj',
-      name: '请假流程待办',
-      component: () => import('@/views/flow/qj-todo.vue'),
-      meta: { title: '请假流程待办', affix: false }
     }]
   }]
 
