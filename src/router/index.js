@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
-import ParentView from '@/components/ParentView/index.vue'
+import ParentView from '@/components/ParentView'
 
 Vue.use(Router)
 
@@ -171,7 +171,7 @@ export const dynamicRoutes = [{
 }, {
   path: '/aps/basic/config/index',
   name: '基础配置',
-  component: ParentView,
+  component: Layout,
   meta: { title: '基础配置', icon: 'setting', affix: false },
   children: [{
     path: '/aps/sale/index',
@@ -219,7 +219,7 @@ export const dynamicRoutes = [{
 }, {
   path: '/aps/goods/main/index',
   name: 'APS商品管理',
-  component: ParentView,
+  component: Layout,
   meta: { title: '商品管理', icon: 'order-1', affix: false },
   children: [{
     path: '/aps/bomGroup/index',
@@ -262,7 +262,7 @@ export const dynamicRoutes = [{
 }, {
   path: '/aps/goods/forecast/index',
   name: '预测管理',
-  component: ParentView,
+  component: Layout,
   meta: { title: '预测管理', icon: 'eye-open', affix: false },
 
   children: [{
@@ -290,7 +290,7 @@ export const dynamicRoutes = [{
 }, {
   path: '/aps/order/main/index',
   name: '订单管理',
-  component: ParentView,
+  component: Layout,
   meta: { title: '订单管理', icon: 'order-1', affix: false },
   children: [{
     path: '/aps/order/index',
@@ -314,7 +314,7 @@ export const dynamicRoutes = [{
     meta: { title: '滚动预测', icon: 'order-1', affix: false }
   }]
 }, {
-  path: '/aps/make/q/index', name: 'APS工厂产能管理', component: ParentView, // component: () => import('@/views/system/aps/order/index'),
+  path: '/aps/make/q/index', name: 'APS工厂产能管理', component: Layout, // component: () => import('@/views/system/aps/order/index'),
   meta: { title: '产能管理', icon: 'order-1', affix: false }, children: [{
     path: '/aps/make_capacity_factory/index',
     name: '工厂产能管理',
@@ -334,7 +334,7 @@ export const dynamicRoutes = [{
 }, {
   path: '/aps/scheduling/main/index',
   name: '排产排程',
-  component: ParentView,
+  component: Layout,
   meta: { title: '排产排程', icon: 'order-1', affix: false },
   children: [{
     path: '/aps/make/constraint/index',
@@ -513,40 +513,89 @@ export const dynamicRoutes = [{
     path: '/flow/',
     component: Layout,
     redirect: 'index',
-    meta: { title: '工作流', icon: 'international', affix: false },
+    meta: { title: '工作流', affix: false },
     children: [{
       path: '/flow/form',
       name: '流程表单',
       component: () => import('@/views/flow/flowForm/FlowForm.vue'),
-      meta: { title: '流程表单', icon: 'international', affix: false }
+      meta: { title: '流程表单', affix: false }
     }, {
       path: '/flow/form/detail',
       name: '流程表预览',
       hidden: true,
       component: () => import('@/views/flow/flowForm/FlowDetail.vue'),
-      meta: { title: '流程表预览', icon: 'international', affix: false }
+      meta: { title: '流程表预览', affix: false }
     }, {
       path: '/flow/start',
       name: '流程发起',
       component: () => import('@/views/flow/start.vue'),
-      meta: { title: '流程发起', icon: 'international', affix: false }
+      meta: { title: '流程发起', affix: false }
     }, {
-      path: '/flow/todo',
+      path: '/flow/todo/:flowKey(.*)',
       name: '流程待办',
-      component: () => import('@/views/flow/start.vue'),
-      meta: { title: '流程待办', icon: 'international', affix: false }
+      component: () => import('@/views/flow/todo.vue'),
+      meta: { title: '流程待办', affix: false }
     }, {
       path: '/flow/done',
       name: '流程已办',
       component: () => import('@/views/flow/start.vue'),
-      meta: { title: '流程已办', icon: 'international', affix: false }
+      meta: { title: '流程已办', affix: false }
     }, {
       path: '/flow/todo-flow-qj',
       name: '请假流程待办',
       component: () => import('@/views/flow/qj-todo.vue'),
-      meta: { title: '请假流程待办', icon: 'international', affix: false }
+      meta: { title: '请假流程待办', affix: false }
     }]
   }]
+
+export function dynamicFlowRoutes(flowGroup) {
+
+  let flowList = flowGroup.flowList
+
+  const flowChildren = []
+  flowList.forEach(flow => {
+
+    let flowName = flow.flowName
+    // let flowNameEn = encodeURIComponent(flowName)
+    let flowChildrenChildren = [{
+      path: '/flow/todo/' + flow.flowKey,
+      name: flowName + '待办',
+      component: () => import('@/views/flow/todo.vue'),
+      meta: {
+        title: flowName + '待办', affix: false, flowKey: flow.flowKey
+      }
+    }, {
+      path: '/flow/flow/' + flow.flowKey + '/done',
+      name: flowName + '已办',
+      component: () => import('@/views/flow/start.vue'),
+      meta: {
+        title: flowName + '已办', affix: false, flowKey: flow.flowKey
+      }
+    }]
+
+    flowChildren.push({
+      path: '/flow/flow/' + flow.flowKey,
+      name: flow.flowName + '待办',
+      component: Layout,
+      meta: { title: flow.flowName + '待办', affix: false },
+      children: flowChildrenChildren
+    })
+  })
+
+  return {
+    path: '/flow/' + flowGroup.flowGroupCode,
+    name: flowGroup.flowGroupName + '审批',
+    component: ParentView,
+    meta: {
+      title: flowGroup.flowGroupName + '审批',
+
+      affix: false
+    },
+
+    children: flowChildren
+  }
+
+}
 
 // 防止连续点击多次路由报错
 let routerPush = Router.prototype.push

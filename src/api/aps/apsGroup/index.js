@@ -8,7 +8,6 @@ export function queryBomGroupTree(addRoot) {
     if (addRoot) {
       dataList.push({ parentId: '0', groupName: '根节点', id: '0' })
     }
-
     let parents = dataList.filter(value => value.parentId === "0" );
     let children = dataList.filter(value => value.parentId !== "0");
     dataList.forEach(t => t.name = t.groupName)

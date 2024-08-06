@@ -169,3 +169,18 @@ export function translator(parents, children,parentKey, childrenKey) {
   })
 }
 
+
+
+
+export  function getUrlParam(paramName) {
+  const query = window.document.location.href.substring(1);
+  const vars = query.split("&");
+  console.log("query",query)
+  for (let i = 0; i < vars.length; i++) {
+    const pair = vars[i].split("=");
+    if (pair[0] == paramName) {
+      return pair[1];
+    }
+  }
+  return "";
+}

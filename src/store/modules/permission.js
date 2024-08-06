@@ -1,5 +1,6 @@
-import { constantRoutes, dynamicRoutes } from '@/router'
+import { constantRoutes, dynamicFlowRoutes, dynamicRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
+import { queryUrlNoPageList } from '@/api/common'
 
 const permission = {
   state: {
@@ -39,8 +40,22 @@ const permission = {
           const asyncRoutes = filterDynamicRoutes(dynamicRoutes,
             resourceUrlArray)
           // console.log(asyncRoutes)
+
           commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
-          resolve(asyncRoutes)
+          // resolve(asyncRoutes)
+
+          queryUrlNoPageList('/flowGroup').then(t => {
+            let fl = t.data.dataList
+            if (fl.length > 0) {
+              fl.forEach(r => {
+                asyncRoutes.push(dynamicFlowRoutes(r))
+              })
+              // asyncRoutes.push(dynamicFlowRoutes(fl[0]))
+            }
+            commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
+            console.log(asyncRoutes)
+            resolve(asyncRoutes)
+          })
         })
       })
     }
@@ -56,7 +71,7 @@ export function filterDynamicRoutes(routes, resourceUrlArray) {
     // if (route.children) {
     //   // rt.children =filterDynamicRoutes(route.children, resourceUrlArray);
     // }
-    if (resourceUrlArray.indexOf(route.path) > -1 ) {
+    if (resourceUrlArray.indexOf(route.path) > -1) {
       res.push(rt)
       if (route.children) {
         rt.children = filterDynamicRoutes(route.children, resourceUrlArray)
