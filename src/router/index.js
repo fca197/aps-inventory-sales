@@ -520,7 +520,7 @@ export function dynamicFlowRoutes(flowGroup) {
     }, {
       path: '/flow/flow/' + flow.flowKey + '/done',
       name: flowName + '已办',
-      component: () => import('@/views/flow/start.vue'),
+      component: () => import('@/views/flow/task-done.vue'),
       meta: {
         title: flowName + '已办', affix: false, flowKey: flow.flowKey,flow:flow
       }
