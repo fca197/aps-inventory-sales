@@ -1,6 +1,6 @@
 import { constantRoutes, dynamicFlowRoutes, dynamicRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
-import { queryUrlNoPageList, queryUrlPageList } from '@/api/common'
+import { queryUrlPageList } from '@/api/common'
 
 const permission = {
   state: {
@@ -31,43 +31,38 @@ const permission = {
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
         // 向后端请求路由数据
-        let appCode=undefined;
-        var url = window.document.URL.split("?")[0]
-        if (url.indexOf("aps")>0){
-          appCode='aps';
-        }else  if (url.indexOf("oa")>0){
-          appCode='oa';
-        }else  if (url.indexOf("property")>0){
-          appCode='propertyCheck';
-        }
-        console.log("appKey",appCode)
-        getRouters({queryPage:false,data:{appCode:appCode}}).then(res => {
-          let resourceUrlArray = Array.from(res.data.dataList,
-            ({ resourceUrl }) => resourceUrl)
-          resourceUrlArray.splice(0, 0, '----')
-          // resourceUrlArray.push("");
-          // console.log(resourceUrlArray)
-          const asyncRoutes = filterDynamicRoutes(dynamicRoutes,
-            resourceUrlArray)
-          // console.log(asyncRoutes)
 
-          commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
-          // resolve(asyncRoutes)
-
-          // console.log(JSON.stringify(dynamicRoutes))
-          queryUrlPageList('/flowGroup',{queryPage:false} ).then(t => {
-            let fl = t.data.dataList
-            if (fl.length > 0) {
-              fl.forEach(r => {
-                asyncRoutes.push(dynamicFlowRoutes(r))
-              })
-              // asyncRoutes.push(dynamicFlowRoutes(fl[0]))
-            }
-            commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
+        let appCode = window.document.URL.split('?')[0]
+        .split('//')[1].split('.')[0]
+        console.log('appKey', appCode)
+        getRouters({ queryPage: false, data: { appCode: appCode } }).then(
+          res => {
+            let resourceUrlArray = Array.from(res.data.dataList,
+              ({ resourceUrl }) => resourceUrl)
+            resourceUrlArray.splice(0, 0, '----')
+            // resourceUrlArray.push("");
+            console.log(resourceUrlArray)
+            const asyncRoutes = filterDynamicRoutes(dynamicRoutes,
+              resourceUrlArray)
             // console.log(asyncRoutes)
-            resolve(asyncRoutes)
+
+            commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
+            // resolve(asyncRoutes)
+
+            // console.log(JSON.stringify(dynamicRoutes))
+            queryUrlPageList('/flowGroup', { queryPage: false }).then(t => {
+              let fl = t.data.dataList
+              if (fl.length > 0) {
+                fl.forEach(r => {
+                  asyncRoutes.push(dynamicFlowRoutes(r))
+                })
+                // asyncRoutes.push(dynamicFlowRoutes(fl[0]))
+              }
+              commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
+              // console.log(asyncRoutes)
+              resolve(asyncRoutes)
+            })
           })
-        })
       })
     }
   }

@@ -109,25 +109,7 @@ export const constantRoutes = [{
     component: () => import('@/views/index'),
     name: 'Index',
     meta: { title: '首页', icon: 'dashboard', affix: false }
-  }, {
-    path: '/baseResource',
-    component: () => import('@/views/system/base/baseResource/BaseResource.vue'),
-    name: 'baseResource',
-    meta: { title: 'baseResource', icon: 'dashboard', affix: false }
   }
-  ,{
-      path: '/baseApp/index',
-      component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
-      name: 'APP管理',
-      meta: { title: 'APP管理', affix: false }
-    }, {
-      path: '/baseAppResource/index',
-      component: () => import('@/views/system/base/baseAppResource/BaseAppResource.vue'),
-      name: 'APP资源管理',
-      meta: { title: 'APP资源管理', affix: false }
-    },
-
-
   ]
 }]
 
@@ -137,7 +119,7 @@ export const dynamicRoutes = [{
   component: Layout,
   redirect: 'index',
   meta: { title: '基础配置', icon: 'setting', affix: false },
-  children: [ {
+  children: [{
     path: '/views/tenant/index',
     component: () => import('@/views/system/tenant/index'),
     name: '租户管理',
@@ -496,7 +478,28 @@ export const dynamicRoutes = [{
     component: () => import('@/views/flow/flowForm/FlowForm.vue'),
     meta: { title: '流程表单', affix: false }
   }]
-}]
+},
+  {
+    path: '/setting',
+    name: '系统配置',
+    component: Layout,
+    meta: { title: '系统配置', icon: 'setting' },
+    children: [{
+      path: '/setting/baseResource',
+      component: () => import('@/views/system/base/baseResource/BaseResource.vue'),
+      name: '菜单管理',
+      meta: { title: '菜单管理', affix: false }
+    }
+      , {
+        path: '/setting/baseApp/index',
+        component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
+        name: 'APP管理',
+        meta: { title: 'APP管理', affix: false }
+      }]
+  }
+
+//
+]
 
 export function dynamicFlowRoutes(flowGroup) {
 
