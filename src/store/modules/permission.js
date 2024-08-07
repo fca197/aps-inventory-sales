@@ -47,7 +47,10 @@ const permission = {
             // console.log(asyncRoutes)
 
             commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
-            // resolve(asyncRoutes)
+            if (appCode.toLowerCase() !== 'oa') {
+              resolve(asyncRoutes)
+              return
+            }
 
             // console.log(JSON.stringify(dynamicRoutes))
             queryUrlPageList('/flowGroup', { queryPage: false }).then(t => {

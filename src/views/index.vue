@@ -9,7 +9,7 @@
           </el-select>
           条待办
         </h3>
-        <el-table :data="undoneTaskList" style="width: 100% ;">
+        <el-table :data="undoneTaskList" v-loading="taskLoading"  style="width: 100% ;">
           <el-table-column label="任务名称" prop="name"></el-table-column>
           <el-table-column label="任务创建时间" prop="createTime"></el-table-column>
           <el-table-column label="操作">
@@ -66,6 +66,7 @@ export default {
     let cl = [5, 10, 30, 50]
     let taskOpen = false
     return {
+      taskLoading:true,
       taskSetting: {
         open: taskOpen
       },
@@ -157,8 +158,10 @@ export default {
 
     },
     getUndoneTask() {
+      this.taskLoading=true;
       post('/flow/task/undone/home', { flowKey: 'flowKey', pageNum: 1, pageSize: this.unDonTaskCount }, false).then(t => {
         this.undoneTaskList = t.data.dataList
+        this.taskLoading=false;
       })
     }, taskCancel() {
       this.taskOpen = false
