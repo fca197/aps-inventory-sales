@@ -34,7 +34,9 @@ const permission = {
 
         let appCode = window.document.URL.split('?')[0]
         .split('//')[1].split('.')[0]
-        console.log('appKey', appCode)
+        // console.log('appKey', appCode)
+        // 当 appCode=undefined 即可获取所有菜单,不区分app
+        // appCode=undefined
         getRouters({ queryPage: false, data: { appCode: appCode } }).then(
           res => {
             let resourceUrlArray = Array.from(res.data.dataList,
