@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
+
+
     <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAddTask">发起</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="list"></right-toolbar>
     </el-row>
     <el-table v-loading="loading" :data="undoneList">
@@ -21,28 +26,31 @@
     <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total" @pagination="list"/>
 
     <el-dialog :title="title" :visible.sync="open" append-to-body width="900px">
-      <div>
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="天数">
-            <el-input v-model="form.dayCount" placeholder="天数" clearable/>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="rejectTask">驳回</el-button>
-        <el-button type="primary" @click="passTask">通过</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
+      <flow-detail :key="flowFormId" :flowForm="form" :setting="{
+        processInstanceId: processInstanceId,
+        flowKey: queryParams.flowKey,
+        open: open,
+        taskId:taskId,
+        isFirstTask:isFirstTask,
+        showCompleteBtn: true,
+        showRejectBtn: false,
+        flowFormId: flowFormId,
+        cancel:cancel}"
+      ></flow-detail>
     </el-dialog>
+
   </div>
 </template>
 
 <script>
 import { post } from '@/api/common'
+import flowDetail from '@/views/flow/flowForm/TaskFlowDetail.vue'
 
 export default {
   name: 'qj-todo.vue',
-
+  components: {
+    flowDetail
+  },
   data() {
     return {
       // 遮罩层
@@ -51,6 +59,7 @@ export default {
       ids: [],
       // 非单个禁用
       single: true,
+      isFirstTask: true,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
@@ -66,16 +75,23 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        flowKey: 'flow-qj',
+        flowKey: 'flow-qj'
       },
-      form: {},
+      form: {
+        flowFormItemDtoList: []
+      },
       undoneList: [],
       headerList: [],
-      id: undefined
+      id: undefined,
+      processInstanceId: undefined,
+      flowFormId: undefined,
+      taskId: undefined,
+      flow: {}
     }
   }, created() {
-    this.queryParams.flowKey= this.$route.meta.flowKey
-    console.log(this.$route.params,this.$route.query ,this.queryParams.flowKey)
+    this.queryParams.flowKey = this.$route.meta.flowKey
+    this.flow = this.$route.meta.flow
+    console.log(this.$route.params, this.$route.query, this.queryParams.flowKey, this.flow)
     this.list()
   },
   methods: {
@@ -88,22 +104,38 @@ export default {
       })
     },
     handleInfo(row) {
+
+      this.flowFormId = row.flowFormId
+      this.processInstanceId = row.processInstanceId
+      this.taskId = row.taskId
       this.id = row.id
       this.title = row.name
       this.open = true
+
     },
     cancel() {
       this.open = false
-    }, passTask() {
-      post('/flow/task/complete', { taskId: this.id, message: '通过' }).then(t => {
-        this.list()
-        this.cancel()
+      this.list()
+    },
+    handleAddTask() {
+      let _t = this
+      this.$modal.confirm('是否发起' + this.flow.flowName + '？', '发起提示').then(function() {
+        return post('/flow/repository/start', _t.flow, false).then(t => {
+          // console.log(t,t.data, t.data.flowFormId, _t.flowFormId)
+          _t.flowFormId = t.data.flowFormId
+          _t.flowKey = t.data.flowKey
+          _t.processInstanceId = t.data.processInstanceId
+          _t.open = true
+        })
+      }).then((it) => {
+        this.flowFormId = it.data.flowFormId
+        this.processInstanceId = it.data.processInstanceId
+        this.taskId = it.data.taskId
+        this.open = true
+        this.isFirstTask = true
+
       })
-    }, rejectTask() {
-      post('/flow/task/reject', { taskId: this.id, message: '驳回' }).then(t => {
-        this.cancel()
-        this.list()
-      })
+
     }
   }
 }

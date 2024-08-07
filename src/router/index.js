@@ -467,16 +467,16 @@ export const dynamicRoutes = [{
   component: Layout,
   redirect: 'index',
   meta: { title: '工作流', affix: false },
-  children: [{
-    path: '/flow/def',
-    name: '流程定义',
-    component: () => import('@/views/flow/flowForm/FlowForm.vue'),
-    meta: { title: '流程定义', affix: false }
-  }, {
+  children: [ {
     path: '/flow/form',
     name: '流程表单',
     component: () => import('@/views/flow/flowForm/FlowForm.vue'),
     meta: { title: '流程表单', affix: false }
+  }, {
+    path: '/flow/form/detail',
+    name: '流程表单预览',
+    component: () => import('@/views/flow/flowForm/FlowDetail.vue'),
+    meta: { title: '流程表单预览', affix: false }
   }]
 },
   {
@@ -515,14 +515,14 @@ export function dynamicFlowRoutes(flowGroup) {
       name: flowName + '待办',
       component: () => import('@/views/flow/todo.vue'),
       meta: {
-        title: flowName + '待办', affix: false, flowKey: flow.flowKey
+        title: flowName + '待办', affix: false, flowKey: flow.flowKey,flow:flow
       }
     }, {
       path: '/flow/flow/' + flow.flowKey + '/done',
       name: flowName + '已办',
       component: () => import('@/views/flow/start.vue'),
       meta: {
-        title: flowName + '已办', affix: false, flowKey: flow.flowKey
+        title: flowName + '已办', affix: false, flowKey: flow.flowKey,flow:flow
       }
     }]
 
