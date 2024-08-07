@@ -109,13 +109,24 @@ export const constantRoutes = [{
     component: () => import('@/views/index'),
     name: 'Index',
     meta: { title: '首页', icon: 'dashboard', affix: false }
-  }
-  ,{
+  }, {
     path: '/baseResource',
     component: () => import('@/views/system/base/baseResource/BaseResource.vue'),
     name: 'baseResource',
     meta: { title: 'baseResource', icon: 'dashboard', affix: false }
-    }
+  }
+  ,{
+      path: '/baseApp/index',
+      component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
+      name: 'APP管理',
+      meta: { title: 'APP管理', affix: false }
+    }, {
+      path: '/baseAppResource/index',
+      component: () => import('@/views/system/base/baseAppResource/BaseAppResource.vue'),
+      name: 'APP资源管理',
+      meta: { title: 'APP资源管理', affix: false }
+    },
+
 
   ]
 }]
@@ -126,17 +137,7 @@ export const dynamicRoutes = [{
   component: Layout,
   redirect: 'index',
   meta: { title: '基础配置', icon: 'setting', affix: false },
-  children: [{
-    path: '/baseApp/index',
-    component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
-    name: 'APP管理',
-    meta: { title: 'APP管理', affix: false }
-  }, {
-    path: '/baseAppResource/index',
-    component: () => import('@/views/system/base/baseAppResource/BaseAppResource.vue'),
-    name: 'APP资源管理',
-    meta: { title: 'APP资源管理', affix: false }
-  }, {
+  children: [ {
     path: '/views/tenant/index',
     component: () => import('@/views/system/tenant/index'),
     name: '租户管理',
@@ -181,8 +182,7 @@ export const dynamicRoutes = [{
     name: '角色管理',
     component: () => import('@/views/system/base/baseRole/BaseRole.vue'),
     meta: { title: '角色管理', icon: '', affix: false }
-  }
- ,{
+  }, {
     path: '/aps/sale/index',
     name: '销售配置管理',
     component: () => import('@/views/system/aps/saleConfig/index'),
@@ -222,6 +222,17 @@ export const dynamicRoutes = [{
     name: '物流路径',
     component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
     meta: { title: '物流路径', icon: 'process-setting', affix: false }
+  }, {
+    path: '/login/account/index',
+    component: () => import('@/views/loginAccount/index'),
+    name: '账户管理',
+    hidden: false,
+    meta: { title: '账户管理', icon: 'peoples', affix: false }
+  }, {
+    path: '/supplier/index',
+    name: '供应管理',
+    component: () => import('@/views/system/supplier/index'),
+    meta: { title: '供应管理', icon: 'pastebin', affix: false }
   }
 
   ]
@@ -384,157 +395,108 @@ export const dynamicRoutes = [{
   ]
 
 }, {
-  path: '/base/index',
+  path: '/map/',
   component: Layout,
   redirect: 'index',
-  meta: { title: '账户管理', icon: 'user', affix: false },
+  meta: { title: '地图', icon: 'international', affix: false },
   children: [{
-    path: '/login/account/index',
-    component: () => import('@/views/loginAccount/index'),
-    name: '账户管理',
-    hidden: false,
-    meta: { title: '账户管理', icon: 'peoples', affix: false }
+    path: '/map/store/index',
+    name: '高德门店地图',
+    component: () => import('@/views/system/storeGaode/index'),
+    meta: { title: '高德门店地图', icon: 'international', affix: false }
   }, {
-    path: '/supplier/index',
-    name: '供应管理',
-    component: () => import('@/views/system/supplier/index'),
-    meta: { title: '供应管理', icon: 'pastebin', affix: false }
+    path: '/map/store/fence',
+    name: '高德电子围栏',
+    component: () => import('@/views/system/storeGaode/fence'),
+    meta: { title: '高德电子围栏', icon: 'lock', affix: false }
   }]
 }, {
-  path: '/store',
-  hidden: true,
+  path: '/property/',
   component: Layout,
   redirect: 'index',
-  meta: { title: '门店管理', icon: 'shop', affix: false },
+  meta: { title: '资产管理', icon: 'tools', affix: false },
   children: [{
-    path: '/store/manage/index',
-    component: () => import('@/views/system/store/index'),
-    name: '门店管理',
-    meta: { title: '门店管理', icon: '', affix: false }
-  }
-
-  ]
-},
-
-  {
-    path: '/food/index',
-    component: Layout,
-    hidden: true,
-    redirect: 'index',
-    meta: { title: '菜品管理', icon: 'skill', affix: false },
-    children: [{
-      path: 'index',
-      component: () => import('@/views/system/food/index'),
-      name: '',
-      meta: { title: '菜品管理', icon: 'redis', affix: false }
-    }, {
-      path: '1index',
-      component: () => import('@/views/system/food/index'),
-      meta: { title: '售卖趋势', icon: 'redis', affix: false }
-    }]
+    path: '/prop/storey/index',
+    name: '楼层管理',
+    component: () => import('@/views/system/storey/index'),
+    meta: { title: '楼层管理', icon: 'storey', affix: false }
   }, {
-    path: '/map/',
-    component: Layout,
-    redirect: 'index',
-    meta: { title: '地图', icon: 'international', affix: false },
-    children: [{
-      path: '/map/store/index',
-      name: '高德门店地图',
-      component: () => import('@/views/system/storeGaode/index'),
-      meta: { title: '高德门店地图', icon: 'international', affix: false }
-    }, {
-      path: '/map/store/fence',
-      name: '高德电子围栏',
-      component: () => import('@/views/system/storeGaode/fence'),
-      meta: { title: '高德电子围栏', icon: 'lock', affix: false }
-    }]
+    path: '/prop/room/index',
+    name: '房间管理',
+    component: () => import('@/views/system/room/index'),
+    meta: { title: '房间管理', icon: 'room', affix: false }
   }, {
-    path: '/property/',
-    component: Layout,
-    redirect: 'index',
-    meta: { title: '资产管理', icon: 'tools', affix: false },
-    children: [{
-      path: '/prop/storey/index',
-      name: '楼层管理',
-      component: () => import('@/views/system/storey/index'),
-      meta: { title: '楼层管理', icon: 'storey', affix: false }
-    }, {
-      path: '/prop/room/index',
-      name: '房间管理',
-      component: () => import('@/views/system/room/index'),
-      meta: { title: '房间管理', icon: 'room', affix: false }
-    }, {
-      path: '/prop/property/index',
-      name: '资产管理',
-      component: () => import('@/views/system/property/index'),
-      meta: { title: '资产管理', icon: 'construction', affix: false }
-    }, {
-
-      path: '/prop/property/propertyScanQr',
-      name: '扫码盘点',
-      component: () => import('@/views/system/property/porpertyScanQr.vue'),
-      meta: { title: '扫码盘点', icon: 'scan-qr-code', affix: false }
-    }, {
-
-      path: '/prop/property/propertyScanQrTest',
-      name: '扫码盘点(测试)',
-      component: () => import('@/views/system/property/porpertyScanQrTest.vue'),
-      meta: { title: '扫码盘点(测试)', icon: 'scan-qr-code', affix: false }
-    }, {
-
-      path: '/prop/property/checkList',
-      component: () => import('@/views/system/checkList'),
-      name: '盘点管理',
-      meta: { title: '盘点管理', icon: 'check-list', affix: false }
-    }]
+    path: '/prop/property/index',
+    name: '资产管理',
+    component: () => import('@/views/system/property/index'),
+    meta: { title: '资产管理', icon: 'construction', affix: false }
   }, {
-    path: '/jxc/',
-    component: Layout,
-    redirect: 'index',
-    meta: { title: '进存销', icon: 'international', affix: false },
-    children: [{
-      path: '/jcx/goods/index',
-      name: '进存销-商品管理',
-      component: () => import('@/views/system/jcx/goods/index'),
-      meta: { title: '商品管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/order/index',
-      name: '进存销-订单管理',
-      component: () => import('@/views/system/jcx/order/index'),
-      meta: { title: '进存销-订单管理', icon: 'order-1', affix: false }
-    }, {
-      path: '/goods/waring/index',
-      name: '预警管理',
-      component: () => import('@/views/system/jcx/orderWaring/index'),
-      meta: { title: '预警管理', icon: 'warning', affix: false }
-    }, {
-      path: '/buy/plan/index',
-      name: '购买计划',
-      component: () => import('@/views/system/jcx/buyPlan/index'),
-      meta: { title: '购买计划', icon: 'buy-car', affix: false }
-    }, {
-      path: '/buy/order/index',
-      name: '采购订单',
-      component: () => import('@/views/system/jcx/buyOrder/index'),
-      meta: { title: '采购订单', icon: 'order-2', affix: false }
-    }]
+
+    path: '/prop/property/propertyScanQr',
+    name: '扫码盘点',
+    component: () => import('@/views/system/property/porpertyScanQr.vue'),
+    meta: { title: '扫码盘点', icon: 'scan-qr-code', affix: false }
   }, {
-    path: '/flow/',
-    component: Layout,
-    redirect: 'index',
-    meta: { title: '工作流', affix: false },
-    children: [{
-      path: '/flow/def',
-      name: '流程定义',
-      component: () => import('@/views/flow/flowForm/FlowForm.vue'),
-      meta: { title: '流程定义', affix: false }
-    }, {
-      path: '/flow/form',
-      name: '流程表单',
-      component: () => import('@/views/flow/flowForm/FlowForm.vue'),
-      meta: { title: '流程表单', affix: false }
-    }]
+
+    path: '/prop/property/propertyScanQrTest',
+    name: '扫码盘点(测试)',
+    component: () => import('@/views/system/property/porpertyScanQrTest.vue'),
+    meta: { title: '扫码盘点(测试)', icon: 'scan-qr-code', affix: false }
+  }, {
+
+    path: '/prop/property/checkList',
+    component: () => import('@/views/system/checkList'),
+    name: '盘点管理',
+    meta: { title: '盘点管理', icon: 'check-list', affix: false }
   }]
+}, {
+  path: '/jxc/',
+  component: Layout,
+  redirect: 'index',
+  meta: { title: '进存销', icon: 'international', affix: false },
+  children: [{
+    path: '/jcx/goods/index',
+    name: '进存销-商品管理',
+    component: () => import('@/views/system/jcx/goods/index'),
+    meta: { title: '商品管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/order/index',
+    name: '进存销-订单管理',
+    component: () => import('@/views/system/jcx/order/index'),
+    meta: { title: '进存销-订单管理', icon: 'order-1', affix: false }
+  }, {
+    path: '/goods/waring/index',
+    name: '预警管理',
+    component: () => import('@/views/system/jcx/orderWaring/index'),
+    meta: { title: '预警管理', icon: 'warning', affix: false }
+  }, {
+    path: '/buy/plan/index',
+    name: '购买计划',
+    component: () => import('@/views/system/jcx/buyPlan/index'),
+    meta: { title: '购买计划', icon: 'buy-car', affix: false }
+  }, {
+    path: '/buy/order/index',
+    name: '采购订单',
+    component: () => import('@/views/system/jcx/buyOrder/index'),
+    meta: { title: '采购订单', icon: 'order-2', affix: false }
+  }]
+}, {
+  path: '/flow/',
+  component: Layout,
+  redirect: 'index',
+  meta: { title: '工作流', affix: false },
+  children: [{
+    path: '/flow/def',
+    name: '流程定义',
+    component: () => import('@/views/flow/flowForm/FlowForm.vue'),
+    meta: { title: '流程定义', affix: false }
+  }, {
+    path: '/flow/form',
+    name: '流程表单',
+    component: () => import('@/views/flow/flowForm/FlowForm.vue'),
+    meta: { title: '流程表单', affix: false }
+  }]
+}]
 
 export function dynamicFlowRoutes(flowGroup) {
 

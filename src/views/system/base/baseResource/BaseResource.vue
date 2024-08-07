@@ -7,7 +7,7 @@
       <el-form-item label="菜单名称" prop="resourceName">
         <el-input v-model="queryParams.data.resourceName" clearable placeholder="请输入菜单名称" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-       </el-form>
+    </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -55,7 +55,8 @@
             children: 'children'
             } "
             :filter-node-method="filterNode"
-            ref="tree">
+            ref="tree"
+        >
         </el-tree>
 
 
@@ -76,21 +77,27 @@
         <el-form-item label="菜单URL" prop="resourceUrl">
           <el-input v-model="form.resourceUrl" clearable placeholder="请输入菜单URL"/>
         </el-form-item>
-        <el-form-item label="菜单图标" prop="resourceIcon">
-          <el-input v-model="form.resourceIcon" clearable placeholder="请输入菜单图标"/>
+        <el-form-item label="是否按钮" prop="isButton">
+        <el-select v-model="form.isButton" placeholder="请选择">
+          <el-option
+            v-for="item in [{id:false,name:'否'},{id:true,name:'是'}]"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
         </el-form-item>
-        <el-form-item label="菜单类型" prop="resourceType">
-          <el-input v-model="form.resourceType" clearable placeholder="请输入菜单类型"/>
+        <el-form-item label="父菜单" prop="parentId">
+           <el-select v-model="form.parentId" placeholder="请选择" filterable>
+            <el-option
+              v-for="item in baseResourceList"
+              :key="item.id"
+              :label="item.resourceName"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="是否按钮 0 否,1 是" prop="isButton">
-          <el-input v-model="form.isButton" clearable placeholder="请输入是否按钮 0 否,1 是"/>
-        </el-form-item>
-        <el-form-item label="父菜单ID" prop="parentId">
-          <el-input v-model="form.parentId" clearable placeholder="请输入父菜单ID"/>
-        </el-form-item>
-        <el-form-item label="菜单路径" prop="path">
-          <el-input v-model="form.path" clearable placeholder="请输入菜单路径"/>
-        </el-form-item>
+
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -104,21 +111,20 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
-import {getFactoryList} from '@/api/factory'
+import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
 import { handleTree } from '@/utils/ruoyi'
 
 export default {
   name: 'tenantName',
   watch: {
     appNameFilterText(val) {
-      this.$refs.tree.filter(val);
+      this.$refs.tree.filter(val)
     }
   },
   data() {
 
     return {
-      appNameFilterText:"",
+      appNameFilterText: '',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -139,7 +145,7 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        queryPage:false,
+        queryPage: false,
         pageNum: 1,
         pageSize: 10,
         data: {}
@@ -222,14 +228,14 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.reset()
       this.title = '添加资源'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1}
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改资源'
@@ -239,7 +245,7 @@ export default {
     },
 
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -261,7 +267,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
@@ -273,8 +279,8 @@ export default {
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
     },
     filterNode(value, data) {
-      if (!value) return true;
-      return data.treeName.indexOf(value) !== -1;
+      if (!value) return true
+      return data.treeName.indexOf(value) !== -1
     }
   }
 
