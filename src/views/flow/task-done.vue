@@ -3,15 +3,13 @@
 
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAddTask">发起</el-button>
-      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="list"></right-toolbar>
     </el-row>
     <el-table v-loading="loading" :data="doneList">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column align="center" label="节点名称" prop="name"  />
-      <el-table-column align="center" label="过期时间" prop="dueDate"  />
+      <el-table-column align="center" label="节点名称" prop="name"/>
+      <el-table-column align="center" label="过期时间" prop="dueDate"/>
 
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right">
         <template slot-scope="scope">
@@ -22,17 +20,30 @@
     <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total" @pagination="list"/>
 
     <el-dialog :title="title" :visible.sync="open" append-to-body width="900px">
-      <flow-detail :key="flowFormId" :flowForm="form" :setting="{
+      <div :key="processInstanceId">
+        <flow-detail :flowForm="form" :setting="{
         processInstanceId: processInstanceId,
         flowKey: queryParams.flowKey,
         open: open,
         taskId:taskId,
         isFirstTask:isFirstTask,
-        showCompleteBtn: true,
+        showCompleteBtn: false,
         showRejectBtn: false,
         flowFormId: flowFormId,
+        showCancel: false,
+        showMessage: false,
+        canEdit:false,
         cancel:cancel}"
-      ></flow-detail>
+        ></flow-detail>
+
+        <!-- 审批记录 -->
+
+        <el-table :data="historyList">
+          <el-table-column align="center" label="任务名称" prop="name"/>
+          <el-table-column align="center" label="审批意见" prop="message"/>
+        </el-table>
+      </div>
+
     </el-dialog>
 
   </div>
@@ -82,6 +93,7 @@ export default {
       processInstanceId: undefined,
       flowFormId: undefined,
       taskId: undefined,
+      historyList: undefined,
       flow: {}
     }
   }, created() {
@@ -92,7 +104,7 @@ export default {
   },
   methods: {
     list() {
-      post('/flow/task/done', this.queryParams, false).then(t => {
+      post(this.$route.meta.taskUrl, this.queryParams, false).then(t => {
         this.doneList = t.data.dataList
 
         this.total = parseInt(t.data.total)
@@ -106,13 +118,17 @@ export default {
       this.taskId = row.taskId
       this.id = row.id
       this.title = row.name
+
+      post('/flow/task/historyList', { processInstanceId: row.processInstanceId }, false).then(t => {
+        this.historyList = t.data
+      })
       this.open = true
 
     },
     cancel() {
       this.open = false
       this.list()
-    },
+    }
   }
 }
 </script>

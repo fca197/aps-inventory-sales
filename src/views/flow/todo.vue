@@ -26,15 +26,16 @@
     <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum" :total="total" @pagination="list"/>
 
     <el-dialog :title="title" :visible.sync="open" append-to-body width="900px">
-      <flow-detail :key="flowFormId" :flowForm="form" :setting="{
+      <flow-detail :key="processInstanceId" :flowForm="form" :setting="{
         processInstanceId: processInstanceId,
         flowKey: queryParams.flowKey,
         open: open,
         taskId:taskId,
+        businessKey:businessKey,
         isFirstTask:isFirstTask,
         showCompleteBtn: true,
-        showRejectBtn: false,
-        flowFormId: flowFormId,
+
+        afterFun:list,
         cancel:cancel}"
       ></flow-detail>
     </el-dialog>
@@ -86,6 +87,7 @@ export default {
       processInstanceId: undefined,
       flowFormId: undefined,
       taskId: undefined,
+      businessKey: undefined,
       flow: {}
     }
   }, created() {
@@ -124,16 +126,14 @@ export default {
           // console.log(t,t.data, t.data.flowFormId, _t.flowFormId)
           _t.flowFormId = t.data.flowFormId
           _t.flowKey = t.data.flowKey
+          _t.businessKey = t.data.businessKey
           _t.processInstanceId = t.data.processInstanceId
+          _t.taskId = t.data.taskId
           _t.open = true
         })
       }).then((it) => {
-        this.flowFormId = it.data.flowFormId
-        this.processInstanceId = it.data.processInstanceId
-        this.taskId = it.data.taskId
         this.open = true
         this.isFirstTask = true
-
       })
 
     }

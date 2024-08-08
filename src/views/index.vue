@@ -1,10 +1,10 @@
 <template>
   <div class="app-container home">
-    <el-row  :gutter="20" style="height: 300px">
+    <el-row  :gutter="20" >
 
-      <el-col :span="12">
+      <el-col :span="12" style="height: 300px;overflow-y: scroll">
         <h3>最近
-          <el-select v-model="unDonTaskCount" @change="getUndoneTask" size="small" style="width: 75px">
+          <el-select v-model="unDonTaskCount" @change="getUndoneTask" size="small" style="width: 75px;">
             <el-option v-for="(option,index) in  unDonTaskCountList " :key="'select'+index+option" :label="''+option" :value="option"></el-option>
           </el-select>
           条待办
@@ -19,15 +19,11 @@
           </el-table-column>
         </el-table>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="12" style="height: 300px;overflow-y: scroll">
         <h3>
           流程发起
         </h3>
-        <el-row :gutter="40">
-          <el-col :span="2">
-            asd,sdas
-          </el-col>
-        </el-row>
+
       </el-col>
     </el-row>
     <el-divider/>
