@@ -65,6 +65,8 @@ const versionChangeData = [{
     time: '2024-07-19', title: 'APS系统', content: '增加滚动预测物流路径'
   }, {
     time: '2024-07-20', title: 'APS系统', content: '增加排产发布订单列表,增加排程版本创建'
+  }, {
+    time: '2024-07-31', title: 'base系统', content: '增加角色角色组'
   }
 
 ]

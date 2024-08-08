@@ -19,6 +19,7 @@
 ### 安装步骤
 
 0. 镜像
+
 ```shell
 
 // 查询源
@@ -151,3 +152,14 @@ npm config delete registry
 ```shell
      nginx -s reload
 ```
+
+8. 配置域名DNS及功能
+   如: 主域名: solveplan.cn
+
+| 域名                   | 说明             |
+|----------------------|----------------|
+| aps.solveplan.cn     | 排产排程相关         |
+| oa.solveplan.cn      | 工作流相关          |
+| manager.solveplan.cn | 管理平台,给 app分派菜单 |
+ 
+   不需要配置域名,直接访问: src/store/modules/permission.js 中设置 appCode=undefined 即可访问所有菜单

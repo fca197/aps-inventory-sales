@@ -38,6 +38,9 @@
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
+
+            <el-dropdown-item>姓名:{{userName}}</el-dropdown-item>
+
           <router-link to="/user/profile">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
@@ -95,7 +98,8 @@ export default {
       showDrawerMsg: false,
       showHelpDrawer: false,
       showDrawerMsgIndex: '',
-      messageCount: 0
+      messageCount: 0,
+      // userName: "",
     }
   },
   components: {
@@ -136,6 +140,7 @@ export default {
   created() {
     this.queryUnReadCountFun()
     this.addMark()
+    // this.userName=Cookies.get('username')
   },
   updated() {
   },
