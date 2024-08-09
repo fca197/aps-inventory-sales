@@ -1,17 +1,11 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="角色编码" prop="roleCode">
-        <el-input v-model="queryParams.data.roleCode" clearable placeholder="请输入角色编码" @keyup.enter.native="handleQuery"/>
+      <el-form-item label="角色ID" prop="roleGroupId">
+        <el-input v-model="queryParams.data.roleGroupId" clearable placeholder="请输入角色ID" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="角色名称" prop="roleName">
-        <el-input v-model="queryParams.data.roleName" clearable placeholder="请输入角色名称" @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="角色组" prop="roleGroupId">
-        <!--        <el-input v-model="queryParams.data.roleGroupId" clearable placeholder="请输入角色组" @keyup.enter.native="handleQuery"/>-->
-        <el-select v-model="queryParams.data.roleGroupId" placeholder="请选择角色组" clearable>
-          <el-option v-for="item in roleGroupList" :key="item.id" :label="item.roleGroupName" :value="item.id"></el-option>
-        </el-select>
+      <el-form-item label="资源ID" prop="resourceId">
+        <el-input v-model="queryParams.data.resourceId" clearable placeholder="请输入资源ID" @keyup.enter.native="handleQuery"/>
       </el-form-item>
     </el-form>
 
@@ -25,14 +19,13 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="baseRoleList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="baseRoleGroupResourceList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button icon="el-icon-menu" size="mini" type="text" @click="handleMenu(scope.row)">菜单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,17 +42,11 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="角色编码" prop="roleCode">
-          <el-input v-model="form.roleCode" clearable placeholder="请输入角色编码"/>
+        <el-form-item label="角色ID" prop="roleGroupId">
+          <el-input v-model="form.roleGroupId" clearable placeholder="请输入角色ID"/>
         </el-form-item>
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="form.roleName" clearable placeholder="请输入角色名称"/>
-        </el-form-item>
-        <el-form-item label="角色组" prop="roleGroupId">
-          <!--          <el-input v-model="form.roleGroupId" clearable placeholder="请输入角色组"/>-->
-          <el-select v-model="form.roleGroupId" placeholder="请选择角色组" clearable>
-            <el-option v-for="item in roleGroupList" :key="item.id" :label="item.roleGroupName" :value="item.id"></el-option>
-          </el-select>
+        <el-form-item label="资源ID" prop="resourceId">
+          <el-input v-model="form.resourceId" clearable placeholder="请输入资源ID"/>
         </el-form-item>
 
       </el-form>
@@ -68,37 +55,17 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="角色权限修改" :visible.sync="menuOpen" width="700px">
-      <select-resource
-          save-url="/baseRoleResource"
-          :base-config="{
-          cancel: cancel,
-          menuOpen: menuOpen
-        }"
-          :target-id="ids[0]"
-          save-object-field="roleId"
-          save-resource-field="resourceIdList"
-          :query-config="{
-          roleId: this.ids[0]
-        }"
-          query-url="/baseRoleResource"
-      ></select-resource>
-
-    </el-dialog>
   </div>
 </template>
 
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common'
-import SelectResource from '@/views/system/base/baseResource/SelectResource.vue'
+import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import {getFactoryList} from '@/api/factory'
 
 export default {
   name: 'tenantName',
-  components: {
-    SelectResource
-  },
   data() {
 
     return {
@@ -112,10 +79,9 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: false,
-      menuOpen: false,
       // 总条数
       total: 0,
-      baseRoleList: [],
+      baseRoleGroupResourceList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -128,20 +94,17 @@ export default {
       },
       // 表单参数
       form: {
-        roleCode: undefined,
-        roleName: undefined,
         roleGroupId: undefined,
+        resourceId: undefined,
         id: undefined
       },
       // 表单校验
       rules: {},
-      tableHeaderList: [],
-      roleGroupList: []
+      tableHeaderList: []
     }
   },
   created() {
-    document['pagePath'] = '/baseRole'
-    queryUrlPageList('baseRoleGroup', { queryPage: false }).then(t => this.roleGroupList = t.data.dataList)
+    document['pagePath'] = '/baseRoleGroupResource'
     this.getList()
   },
   methods: {
@@ -151,24 +114,21 @@ export default {
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
-        this.baseRoleList = response.dataList
+        this.baseRoleGroupResourceList = response.dataList
         this.total = parseInt(response.total)
         this.loading = false
       })
     },
     cancel() {
-      console.info('cancel')
       this.open = false
-      this.menuOpen = false
       this.reset()
     },
     // 表单重置
     reset() {
       let fid = this.form.id
       this.form = {
-        roleCode: undefined,
-        roleName: undefined,
         roleGroupId: undefined,
+        resourceId: undefined,
         id: fid
       }
       this.resetForm('form')
@@ -191,28 +151,24 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset()
-      this.title = '添加角色表'
+      this.reset();
+      this.title = '添加角色组资源表'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      let req = {idList: [row.id], pageSize: 1, pageNum: 1}
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.title = '修改角色表'
+        this.title = '修改角色组资源表'
         this.open = true
       })
 
     },
-    handleMenu(row) {
-      this.ids = [row.id]
-      this.menuOpen = true
-    },
 
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -234,7 +190,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function () {
         let req = {
           idList: idList
         }
