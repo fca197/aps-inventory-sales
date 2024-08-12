@@ -26,6 +26,7 @@
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button icon="el-icon-menu" size="mini" type="text" @click="handleMenu(scope.row)">菜单</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -55,6 +56,25 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="角色权限修改" :visible.sync="menuOpen" width="700px">
+
+      <select-resource :key="ids[0]"
+                       save-url="/baseRoleGroupResource"
+                       :base-config="{
+          cancel: cancel,
+          menuOpen: menuOpen
+        }"
+                       :target-id="ids[0]"
+                       save-object-field="roleGroupId"
+                       save-resource-field="resourceIdList"
+                       :query-config="{
+          roleId: this.ids[0]
+        }"
+                       query-url="/baseRoleGroupResource"
+      ></select-resource>
+
+    </el-dialog>
   </div>
 </template>
 
@@ -63,14 +83,17 @@
 
 import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
 import {getFactoryList} from '@/api/factory'
+import SelectResource from '@/views/system/base/baseResource/SelectResource.vue'
 
 export default {
   name: 'tenantName',
+  components: { SelectResource },
   data() {
 
     return {
       // 遮罩层
       loading: true,
+      menuOpen: false,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -121,6 +144,7 @@ export default {
     },
     cancel() {
       this.open = false
+      this.menuOpen =false
       this.reset()
     },
     // 表单重置
@@ -200,6 +224,10 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    handleMenu(row){
+      this.ids[0]=row.id;
+      this.menuOpen=true;
     }
   }
 
