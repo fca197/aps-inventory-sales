@@ -69,7 +69,8 @@
       </div>
     </el-dialog>
     <el-dialog title="角色权限修改" :visible.sync="menuOpen" width="700px">
-      <select-resource
+
+      <select-resource :key="ids[0]"
           save-url="/baseRoleResource"
           :base-config="{
           cancel: cancel,
