@@ -18,7 +18,7 @@
 
     <el-table :data="forecastList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center"  />
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleData(scope.row)"></el-button>
