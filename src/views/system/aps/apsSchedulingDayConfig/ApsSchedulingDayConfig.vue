@@ -28,7 +28,7 @@
 
     <el-table v-loading="loading" :data="apsSchedulingDayConfigList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" />
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
@@ -124,8 +124,8 @@
 
         <el-form-item label="是否默认" prop="isDefault">
           <el-select v-model="form.isDefault" placeholder="请选择是否默认" style="width: 100%">
-            <el-option label="否" :value="0"></el-option>
-            <el-option label="是" :value="1"></el-option>
+            <el-option label="否" :value="false"></el-option>
+            <el-option label="是" :value="true"></el-option>
           </el-select>
         </el-form-item>
 
