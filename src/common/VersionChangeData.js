@@ -71,6 +71,8 @@ const versionChangeData = [{
     time: '2024-08-09', title: 'base系统', content: '增加工作流OA审批,工作流待办、已办及抄送'
   }, {
     time: '2024-08-12', title: 'base系统', content: '增加角色和角色组与菜单关系'
+  }, {
+    time: '2024-08-27', title: 'aps系统', content: '增加排程后，所有车间+状态订单生产顺序都显示'
   }
 
 ]
