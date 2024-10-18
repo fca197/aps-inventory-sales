@@ -200,7 +200,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加文件";
+      this.title = "添加品牌";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -209,7 +209,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改文件";
+        this.title = "修改品牌";
       });
 
     },
