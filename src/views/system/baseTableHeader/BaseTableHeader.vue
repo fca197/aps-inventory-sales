@@ -15,7 +15,7 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
+<!--        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>-->
       </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>-->
@@ -31,12 +31,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
-        <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column align="center" class-name="small-padding fixed-width" label="操作"   width="140px">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>-->
+<!--          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
