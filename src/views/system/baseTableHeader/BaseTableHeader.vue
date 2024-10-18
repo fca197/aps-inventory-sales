@@ -25,7 +25,7 @@
 
     <el-table v-loading="loading" :data="baseTableHeaderList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"  :width="item.width+'px'">
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" >
         <template slot-scope="scope">
           {{ scope.row[item.fieldName] }}
         </template>
