@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
 
-      <el-form-item label="状态名称" prop="brandName">
-        <el-input v-model="queryParams.data.statusName" clearable placeholder="请输入状态名称" @keyup.enter.native="handleQuery"/>
+      <el-form-item label="订单商品默认状态" prop="brandName">
+        <el-input v-model="queryParams.data.statusName" clearable placeholder="请输入订单商品默认状态" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
@@ -56,10 +56,10 @@
         <el-form-item label="状态编号" prop="statusCode">
           <el-input v-model="form.statusCode" placeholder="请输入编号"/>
         </el-form-item>
-        <el-form-item label="状态名称" prop="statusName">
-          <el-input v-model="form.statusName" placeholder="请输入状态名称"/>
+        <el-form-item label="订单商品默认状态" prop="statusName">
+          <el-input v-model="form.statusName" placeholder="请输入订单商品默认状态"/>
         </el-form-item>
-        <el-form-item label="状态名称" prop="isOrderGoodsInit">
+        <el-form-item label="订单商品默认状态" prop="isOrderGoodsInit">
           <el-radio-group v-model="form.isOrderGoodsInit">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
