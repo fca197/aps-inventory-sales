@@ -168,7 +168,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.title = '添加部门表'
+      this.title = '添加部门'
       this.open = true
     },
     /** 修改按钮操作 */
@@ -177,7 +177,7 @@ export default {
       let req = {idList: [row.id], pageSize: 1, pageNum: 1}
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.title = '修改部门表'
+        this.title = '修改部门'
         this.open = true
       })
 
