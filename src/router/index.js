@@ -189,6 +189,11 @@ export const dynamicRoutes = [{
     name: '工位管理',
     component: () => import('@/views/system/aps/station/index'),
     meta: { title: '工位管理', icon: 'workstation', affix: false }
+  },{
+    path: '/aps/machine/index',
+    name: '机器管理',
+    component: () => import('@/views/system/aps/apsMachine/ApsMachine.vue'),
+    meta: { title: '机器管理', icon: 'workstation', affix: false }
   }, {
     path: '/aps/room/index',
     name: '车间管理',
@@ -204,7 +209,12 @@ export const dynamicRoutes = [{
     name: '物流路径',
     component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
     meta: { title: '物流路径', icon: 'process-setting', affix: false }
-  }, {
+  },{
+    path: '/aps/apsProduceProcess/path/index',
+    name: '制造路径',
+    component: () => import('@/views/system/aps/apsProduceProcess/ApsProduceProcess.vue'),
+    meta: { title: '制造路径', icon: 'process-setting', affix: false }
+  },  {
     path: '/login/account/index',
     component: () => import('@/views/loginAccount/index'),
     name: '账户管理',
