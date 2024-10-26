@@ -3,11 +3,13 @@
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="生产路径编码" prop="produceProcessNo">
         <el-input v-model="queryParams.data.produceProcessNo" clearable placeholder="请输入生产路径编码"
-                  @keyup.enter.native="handleQuery"/>
+                  @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="生产路径名称" prop="produceProcessName">
         <el-input v-model="queryParams.data.produceProcessName" clearable placeholder="请输入生产路径名称"
-                  @keyup.enter.native="handleQuery"/>
+                  @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
     </el-form>
 
@@ -17,7 +19,8 @@
       </el-col>
       <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger"
-                   @click="handleDelete"></el-button>
+                   @click="handleDelete"
+        ></el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -25,7 +28,8 @@
     <el-table v-loading="loading" :data="apsProduceProcessList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName"
-                       :prop="item.fieldName" :width="item.width+'px'" align="center"/>
+                       :prop="item.fieldName" :width="item.width+'px'" align="center"
+      />
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
@@ -35,15 +39,15 @@
     </el-table>
 
     <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
+      v-show="total>0"
+      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.pageNum"
+      :total="total"
+      @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="生产路径编码" prop="produceProcessNo">
@@ -52,6 +56,33 @@
         <el-form-item label="生产路径名称" prop="produceProcessName">
           <el-input v-model="form.produceProcessName" clearable placeholder="请输入生产路径名称"/>
         </el-form-item>
+        <el-form-item v-for="(f,i) in form.produceProcessItemDtoList" :label="'机器配置'+(i+1)">
+          <el-row>
+            <el-col :span="18">
+              <el-select v-model="f.machineId" style="width: 30%">
+                <el-option v-for="(m,j) in apsMachineList" :value="m.id" :label="m.machineName"></el-option>
+              </el-select>
+              <el-select v-model="f.statusId" style="width: 30%">
+                <el-option v-for="(s,j) in apsStatusList" :value="s.id" :label="s.statusName"></el-option>
+              </el-select>
+              <el-input v-model="f.machineUseTimeSecond" style="width: 30%"></el-input>
+
+            </el-col>
+            <el-col :span="6">
+              <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAddItem"></el-button>
+              <el-button icon="el-icon-delete" plain size="mini" type="danger" @click="handleDeleteItem(i)"></el-button>
+            </el-col>
+
+          </el-row>
+        </el-form-item>
+        <!-- isDefault -->
+        <el-form-item label="是否默认">
+          <el-select v-model="form.isDefault">
+            <el-option :value="true"  label="是">是</el-option>
+            <el-option :value="false" label="否">否</el-option>
+          </el-select>
+        </el-form-item>
+
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -65,8 +96,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
-import {getFactoryList} from '@/api/factory'
+import { add, deleteByIdList, getById, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
 
 export default {
   name: 'tenantName',
@@ -100,16 +130,26 @@ export default {
       form: {
         produceProcessNo: undefined,
         produceProcessName: undefined,
-        id: undefined
+        id: undefined,
+        produceProcessItemDtoList: [{}, {}]
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      apsMachineList: [],
+      apsStatusList: []
     }
   },
   created() {
     document['pagePath'] = '/apsProduceProcess'
     this.getList()
+    queryUrlNoPageList('/apsMachine').then((r) => {
+      this.apsMachineList = r.data.dataList
+    })
+    queryUrlNoPageList('/apsStatus').then((r) => {
+      this.apsStatusList = r.data.dataList
+    })
+
   },
   methods: {
     /** 查询公告列表 */
@@ -133,7 +173,8 @@ export default {
       this.form = {
         produceProcessNo: undefined,
         produceProcessName: undefined,
-        id: fid
+        id: fid,
+        produceProcessItemDtoList: [{}]
       }
       this.resetForm('form')
     },
@@ -155,24 +196,24 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.title = '添加aps 生产路径'
+      this.reset()
+      this.title = '添加生产路径'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1}
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.title = '修改aps 生产路径'
+        this.title = '修改生产路径'
         this.open = true
       })
 
     },
 
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm: function() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -194,7 +235,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
@@ -204,6 +245,12 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    handleAddItem() {
+      this.form.produceProcessItemDtoList.push({})
+    },
+    handleDeleteItem(index) {
+      this.form.produceProcessItemDtoList.splice(index, 1)
     }
   }
 

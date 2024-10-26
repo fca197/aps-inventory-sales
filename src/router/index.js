@@ -210,7 +210,7 @@ export const dynamicRoutes = [{
     component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
     meta: { title: '物流路径', icon: 'process-setting', affix: false }
   },{
-    path: '/aps/apsProduceProcess/path/index',
+    path: '/aps/produceProcess/path/index',
     name: '制造路径',
     component: () => import('@/views/system/aps/apsProduceProcess/ApsProduceProcess.vue'),
     meta: { title: '制造路径', icon: 'process-setting', affix: false }

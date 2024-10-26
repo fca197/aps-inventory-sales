@@ -156,7 +156,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.title = '添加aps 生产机器'
+      this.title = '添加生产机器'
       this.open = true
     },
     /** 修改按钮操作 */
@@ -165,7 +165,7 @@ export default {
       let req = {idList: [row.id], pageSize: 1, pageNum: 1}
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.title = '修改aps 生产机器'
+        this.title = '修改生产机器'
         this.open = true
       })
 
