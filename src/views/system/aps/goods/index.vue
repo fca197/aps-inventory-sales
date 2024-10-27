@@ -69,6 +69,13 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item label="制造路径">
+          <el-select v-model="form.produceProcessId">
+            <el-option v-for="item in apsProduceProcessList" :key="item.id" :label="item.produceProcessName" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -80,7 +87,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, queryPageList, queryUrlNoPageList, queryUrlPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
@@ -124,7 +131,8 @@ export default {
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      apsProduceProcessList:[]
     };
   },
   created() {
@@ -139,6 +147,9 @@ export default {
     getFactoryList({queryPage:false}).then(data => {
       this.factoryList = data.data.dataList;
     });
+    queryUrlNoPageList("apsProduceProcess").then(r=>{
+      this.apsProduceProcessList=r.data.dataList;
+    })
   },
   methods: {
     /** 查询公告列表 */
