@@ -4,13 +4,13 @@ export function formatDate(val) {
   var Y = date.getFullYear() + "-";
   var M = (date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1)
       : date.getMonth() + 1) + "-";
-  var D = date.getDate() + " ";
-  var h = date.getHours() + ":";
-  var m = date.getMinutes() + ":";
-  var s = (date.getSeconds() < 10 ? "0" + (date.getSeconds())
-      : date.getSeconds());
+  var D =padLeftZero( date.getDate()) + " ";
+  var h = padLeftZero( date.getHours()) + ":";
+  var m = padLeftZero(date.getMinutes() )+ ":";
+  var s = padLeftZero( date.getSeconds());
   return Y + M + D + h + m + s;
 }
+
 
 //方法二
 export function formatDates(date, b) {
