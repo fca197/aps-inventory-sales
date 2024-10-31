@@ -4,9 +4,10 @@
     <el-form :inline="true" size="small">
       <el-form-item label="开始时间:" >{{beginDateTime}}</el-form-item>
       <el-form-item label="结束时间时间:" >{{endDateTime}}</el-form-item>
-      <el-form-item label="开始索引:" >{{zzljStart}}</el-form-item>
-      <el-form-item label="结束索引:" >{{zzljEnd}}</el-form-item>
+<!--      <el-form-item label="开始索引:" >{{zzljStart}}</el-form-item>-->
+<!--      <el-form-item label="结束索引:" >{{zzljEnd}}</el-form-item>-->
       <el-form-item label="时间段数量:" >{{zzljEnd-zzljStart}}</el-form-item>
+      <el-form-item label="总耗时:" >{{ (zzljEnd - zzljStart)*timeInterval}} 秒</el-form-item>
     </el-form>
     <div :style="{'width':((zzljEnd-zzljStart)*130+100 )+'px'}" :key="reloadZZLJKey">
       <div class="headerItem " style="width: 100px"> 机器名称</div>

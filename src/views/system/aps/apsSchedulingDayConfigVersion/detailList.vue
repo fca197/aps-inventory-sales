@@ -99,7 +99,7 @@ export default {
   name: 'detailList',
   data() {
     return {
-      showTable: 'zzlj',
+      showTable: 'gylz',
       id: this.$route.query.id,
       drag: false,
       data: {},
@@ -117,11 +117,11 @@ export default {
 
     getList() {
 
-      // post('/apsSchedulingDayConfigVersion/detailList', { id: this.id }, false).then(t => {
-      //   // console.info(t)
-      //   this.data = t.data
-      //   this.dataList = [{}]
-      // })
+      post('/apsSchedulingDayConfigVersion/detailList', { id: this.id }, false).then(t => {
+        // console.info(t)
+        this.data = t.data
+        this.dataList = [{}]
+      })
     },
 
 
