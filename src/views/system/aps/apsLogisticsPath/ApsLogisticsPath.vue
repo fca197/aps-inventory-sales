@@ -252,7 +252,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.title = '添加物流路径表'
+      this.title = '添加物流路径'
       this.open = true
     },
     /** 修改按钮操作 */
@@ -288,7 +288,7 @@ export default {
           }
         }
         this.form.apsLogisticsPathItemList = tmpList
-        this.title = '修改物流路径表'
+        this.title = '修改物流路径'
         this.open = true
       })
 

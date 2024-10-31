@@ -73,6 +73,8 @@ const versionChangeData = [{
     time: '2024-08-12', title: 'base系统', content: '增加角色和角色组与菜单关系'
   }, {
     time: '2024-08-27', title: 'aps系统', content: '增加排程后，所有车间+状态订单生产顺序都显示'
+  }, {
+    time: '2024-10-31', title: 'aps系统', content: '排程结果显示制造路径订单顺序'
   }
 
 ]

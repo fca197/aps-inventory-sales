@@ -494,7 +494,7 @@ export default {
     updateSchedulingDate(row, val) {
 
       console.info('updateSchedulingDate: ', row, val)
-      this.$modal.confirm('订单号:[' + row.orderNo + '],排产日期修改为: [' + (val == null ? '空' : val) + '] ?', '修改提示').then(function() {
+      this.$modal.confirm('订单号:[<span style="color:red">' + row.orderNo + '</span>],排产日期修改为:[<span style="color:red">' + (val == null ? '空' : val) + '</span>] ', '修改提示').then(function() {
         post('/apsOrder/updateSchedulingDate', { id: row.id, schedulingDate: val }, true);
       })
     }

@@ -1,89 +1,120 @@
 <template>
   <div class="app-container">
+    <el-tabs v-model="showTable">
+      <el-tab-pane label="工艺路径排程" name="gylz">
 
-    <div v-if="data.versionDetailMap==null">暂无记录</div>
+        <div v-if="data.versionDetailMap==null">暂无记录</div>
 
-    <div class="orderDivMain" v-for="(item,index) in data.headerList" :key="index">
+        <div class="orderDivMain" v-for="(item,index) in data.headerList" :key="index">
 
-
-      {{ void (orderList = data.versionDetailMap[item.fieldName]) }}
-      <div class="orderDivTitle">
-        <div class="value">{{ item.showName }}</div>
-        <div class="operation">
-          <el-button type="primary" size="mini" @click="confirmSortIndex(item.fieldName+index)">确认序列</el-button>
-        </div>
-      </div>
-      <div class="orderDivSingleton">
-        <draggable @start="drag=true" @end="drag=false" :id="item.fieldName+index">
-          <div v-for="(order,index) in orderList" class="orderDiv" :key="index" :ref="item.fieldName" v-bind:id="order.id">
-
-            <table cellpadding="1px" cellspacing="2px">
-              <tr>
-                <td class="title">制造序号:</td>
-                <td class="value">{{ order.sortIndex }}</td>
-              </tr>
-
-              <tr>
-                <td class="title">排程制造ID:</td>
-                <td class="value">{{ order.id }}</td>
-              </tr>
-
-              <tr>
-                <td class="title">单号:</td>
-                <td class="value">{{ order.orderNo }}</td>
-              </tr>
-              <tr>
-                <td class="title">匹配类型:</td>
-                <td class="value">{{ order.configBizType }}</td>
-              </tr>
-
-              <tr>
-                <td class="title">匹配名称:</td>
-                <td class="value">{{ order.configBizName }}</td>
-              </tr>
-              <tr>
-                <td class="title">匹配:</td>
-                <td class="value">{{ order.isMatch }}</td>
-              </tr>
-              <tr>
-                <td class="title">满足:</td>
-                <td class="value">{{ order.loopEnough }}</td>
-              </tr>
-              <tr>
-                <td class="title">循环:</td>
-                <td class="value">{{ order.loopIndex }}</td>
-              </tr>
-            </table>
-
+          {{ void (orderList = data.versionDetailMap[item.fieldName]) }}
+          <div class="orderDivTitle">
+            <div class="value">{{ item.showName }}</div>
+            <div class="operation">
+              <el-button type="primary" size="mini" @click="confirmSortIndex(item.fieldName+index)">确认序列</el-button>
+            </div>
           </div>
-        </draggable>
-      </div>
-    </div>
+          <div class="orderDivSingleton">
+            <draggable @start="drag=true" @end="drag=false" :id="item.fieldName+index">
+              <div v-for="(order,index) in orderList" class="orderDiv" :key="index" :ref="item.fieldName" v-bind:id="order.id">
+
+                <table cellpadding="1px" cellspacing="2px">
+                  <tr>
+                    <td class="title">制造序号:</td>
+                    <td class="value">{{ order.sortIndex }}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="title">排程制造ID:</td>
+                    <td class="value">{{ order.id }}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="title">单号:</td>
+                    <td class="value">{{ order.orderNo }}</td>
+                  </tr>
+                  <tr>
+                    <td class="title">匹配类型:</td>
+                    <td class="value">{{ order.configBizType }}</td>
+                  </tr>
+
+                  <tr>
+                    <td class="title">匹配名称:</td>
+                    <td class="value">{{ order.configBizName }}</td>
+                  </tr>
+                  <tr>
+                    <td class="title">匹配:</td>
+                    <td class="value">{{ order.isMatch }}</td>
+                  </tr>
+                  <tr>
+                    <td class="title">满足:</td>
+                    <td class="value">{{ order.loopEnough }}</td>
+                  </tr>
+                  <tr>
+                    <td class="title">循环:</td>
+                    <td class="value">{{ order.loopIndex }}</td>
+                  </tr>
+                </table>
+              </div>
+            </draggable>
+          </div>
+        </div>
+
+      </el-tab-pane>
+      <el-tab-pane name="zzlj" label="制造路径">
+
+        <el-form :inline="true" size="small">
+          <el-form-item label="时间间隔">
+            <el-select v-model="timeSpan" @change="timeSpanChange">
+              <el-option :value="60" label="1分钟">1分钟</el-option>
+              <el-option :value="300" label="5分钟">5分钟</el-option>
+              <el-option :value="600" label="10分钟">10分钟</el-option>
+              <el-option :value="1800" label="30分钟">30分钟</el-option>
+              <el-option :value="3600" label="1小时">1小时</el-option>
+              <el-option :value="21600" label="6小时">6小时</el-option>
+              <el-option :value="43200" label="12小时">12小时</el-option>
+            </el-select>
+          </el-form-item>
+
+        </el-form>
+
+        <machine-result :key="timeSpanChangeKey" :id="id" :timeInterval="timeSpan"></machine-result>
+      </el-tab-pane>
+
+    </el-tabs>
   </div>
 </template>
 
 <script>
 import { post } from '@/api/common'
 import draggable from 'vuedraggable'
+import { formatDate } from '@/utils/formatDate'
+import MachineResult from '@/views/system/aps/apsSchedulingDayConfigVersion/MachineResult.vue'
 
 export default {
   components: {
-    draggable
+    draggable,
+    MachineResult
   },
   name: 'detailList',
   data() {
     return {
+      showTable: 'gylz',
       id: this.$route.query.id,
       drag: false,
       data: {},
-      dataList: []
+      dataList: [],
+      timeSpan:60*5,
+      timeSpanChangeKey:""
     }
   },
   created() {
-
     this.getList()
   },
+  watch: {},
   methods: {
+    formatDate,
+
     getList() {
 
       post('/apsSchedulingDayConfigVersion/detailList', { id: this.id }, false).then(t => {
@@ -92,6 +123,8 @@ export default {
         this.dataList = [{}]
       })
     },
+
+
     confirmSortIndex(gId) {
       var elList = document.getElementById(gId).children
       // console.info(gId, elList)
@@ -102,13 +135,19 @@ export default {
           id: elList[t].id,
           sortIndex: t + 1
         })
+
       }
       console.info(tl)
       post('/apsSchedulingDayConfigVersion/updateOrderSortIndex', {
         orderList: tl,
         id: this.id
       }).then(t => this.getList())
+    },
+    timeSpanChange(){
+      this.timeSpanChangeKey=Math.random()+"";
     }
+
+
   }
 }
 
@@ -172,4 +211,5 @@ export default {
 .orderDiv > table > tr > td.title {
   text-align: right;
 }
+
 </style>

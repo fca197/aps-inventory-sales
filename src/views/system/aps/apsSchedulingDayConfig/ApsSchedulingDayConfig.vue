@@ -328,7 +328,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.title = '添加排程版本表'
+      this.title = '添加排程版本'
       this.open = true
     },
     /** 修改按钮操作 */
@@ -358,7 +358,7 @@ export default {
           }
 
         })
-        this.title = '修改排程版本表'
+        this.title = '修改排程版本'
         this.open = true
       })
 

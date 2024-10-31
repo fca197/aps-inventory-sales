@@ -15,7 +15,7 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
+<!--        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>-->
       </el-col>
 <!--      <el-col :span="1.5">-->
 <!--        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>-->
@@ -25,18 +25,18 @@
 
     <el-table v-loading="loading" :data="baseTableHeaderList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName"  :width="item.width+'px'">
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" >
         <template slot-scope="scope">
           {{ scope.row[item.fieldName] }}
         </template>
       </el-table-column>
 
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
-        <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column align="center" class-name="small-padding fixed-width" label="操作"   width="140px">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>-->
+<!--          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -185,7 +185,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.title = '添加表头配置表'
+      this.title = '添加表头配置'
       this.open = true
     },
     /** 修改按钮操作 */
@@ -194,7 +194,7 @@ export default {
       let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.title = '修改表头配置表'
+        this.title = '修改表头配置'
         this.open = true
       })
 

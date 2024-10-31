@@ -51,7 +51,7 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="商品" prop="goodsId">
-          <el-select v-model="form.goodsId" clearable placeholder="请选择工厂">
+          <el-select v-model="form.goodsId" clearable placeholder="请选择商品">
             <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
