@@ -1,6 +1,6 @@
 <template>
   <div class="app-container home">
-    <el-row  :gutter="20" >
+    <el-row  :gutter="20" style="display: none" >
 
       <el-col :span="12" style="height: 300px;overflow-y: scroll">
         <h3>最近

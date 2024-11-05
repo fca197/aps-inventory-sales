@@ -51,7 +51,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
 
         <el-form-item label="状态编号" prop="statusCode">
           <el-input v-model="form.statusCode" placeholder="请输入编号"/>
