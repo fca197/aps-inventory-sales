@@ -63,20 +63,29 @@
       </el-tab-pane>
       <el-tab-pane name="zzlj" label="制造路径">
 
-        <el-form :inline="true" size="small">
-          <el-form-item label="时间间隔">
-            <el-select v-model="timeSpan" @change="timeSpanChange">
-              <el-option :value="60" label="1分钟">1分钟</el-option>
-              <el-option :value="300" label="5分钟">5分钟</el-option>
-              <el-option :value="600" label="10分钟">10分钟</el-option>
-              <el-option :value="1800" label="30分钟">30分钟</el-option>
-              <el-option :value="3600" label="1小时">1小时</el-option>
-              <el-option :value="21600" label="6小时">6小时</el-option>
-              <el-option :value="43200" label="12小时">12小时</el-option>
-            </el-select>
-          </el-form-item>
+        <el-row>
 
-        </el-form>
+          <el-col :span="20">
+            <el-form :inline="true" size="small">
+              <el-form-item label="时间间隔">
+                <el-select v-model="timeSpan" @change="timeSpanChange">
+                  <el-option :value="60" label="1分钟">1分钟</el-option>
+                  <el-option :value="300" label="5分钟">5分钟</el-option>
+                  <el-option :value="600" label="10分钟">10分钟</el-option>
+                  <el-option :value="1800" label="30分钟">30分钟</el-option>
+                  <el-option :value="3600" label="1小时">1小时</el-option>
+                  <el-option :value="21600" label="6小时">6小时</el-option>
+                  <el-option :value="43200" label="12小时">12小时</el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </el-col>
+          <el-col :span="4">
+            <el-button icon="el-icon-download" size="mini" @click="downLoadMachineResult"></el-button>
+          </el-col>
+
+        </el-row>
+
 
         <machine-result :key="timeSpanChangeKey" :id="id" :timeInterval="timeSpan"></machine-result>
       </el-tab-pane>
@@ -90,6 +99,7 @@ import { post } from '@/api/common'
 import draggable from 'vuedraggable'
 import { formatDate } from '@/utils/formatDate'
 import MachineResult from '@/views/system/aps/apsSchedulingDayConfigVersion/MachineResult.vue'
+import { downloadForm } from '@/utils/request'
 
 export default {
   components: {
@@ -104,8 +114,8 @@ export default {
       drag: false,
       data: {},
       dataList: [],
-      timeSpan:60*5,
-      timeSpanChangeKey:""
+      timeSpan: 60 * 5,
+      timeSpanChangeKey: ''
     }
   },
   created() {
@@ -123,7 +133,6 @@ export default {
         this.dataList = [{}]
       })
     },
-
 
     confirmSortIndex(gId) {
       var elList = document.getElementById(gId).children
@@ -143,11 +152,18 @@ export default {
         id: this.id
       }).then(t => this.getList())
     },
-    timeSpanChange(){
-      this.timeSpanChangeKey=Math.random()+"";
+    timeSpanChange() {
+      this.timeSpanChangeKey = Math.random() + ''
+    },
+    downLoadMachineResult(){
+      downloadForm('/apsSchedulingDayConfigVersionDetailMachine/exportQueryPageList',
+        {
+          "timeSpan":this.timeSpan,
+          "data":{
+            "schedulingDayId":this.id
+          }
+        },"排程结果.xlsx",{})
     }
-
-
   }
 }
 

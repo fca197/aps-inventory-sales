@@ -2,12 +2,12 @@
   <div class="zzljDiv">
 
     <el-form :inline="true" size="small">
-      <el-form-item label="开始时间:" >{{beginDateTime}}</el-form-item>
-      <el-form-item label="结束时间时间:" >{{endDateTime}}</el-form-item>
-<!--      <el-form-item label="开始索引:" >{{zzljStart}}</el-form-item>-->
-<!--      <el-form-item label="结束索引:" >{{zzljEnd}}</el-form-item>-->
-      <el-form-item label="时间段数量:" >{{zzljEnd-zzljStart}}</el-form-item>
-      <el-form-item label="总耗时:" >{{ (zzljEnd - zzljStart)*timeInterval}} 秒</el-form-item>
+      <el-form-item label="开始时间:">{{ beginDateTime }}</el-form-item>
+      <el-form-item label="结束时间时间:">{{ endDateTime }}</el-form-item>
+      <!--      <el-form-item label="开始索引:" >{{zzljStart}}</el-form-item>-->
+      <!--      <el-form-item label="结束索引:" >{{zzljEnd}}</el-form-item>-->
+      <el-form-item label="时间段数量:">{{ zzljEnd - zzljStart }}</el-form-item>
+      <el-form-item label="总耗时:">{{ (zzljEnd - zzljStart) * timeInterval }} 秒</el-form-item>
     </el-form>
     <div :style="{'width':((zzljEnd-zzljStart)*130+100 )+'px'}" :key="reloadZZLJKey">
       <div class="headerItem " style="width: 100px"> 机器名称</div>
@@ -21,7 +21,7 @@
         <div class="headerItem  orderNoDiv" style="width: 100px">{{ m.machineName }}</div>
         <div class="headerItem orderNoDiv" :id="m.machineId+'_'+i" v-for="(index,i) in zzljEnd-zzljStart" style="width: 130px;text-align: left">
           <div v-if="orderNoTimeMap[m.machineId + '_' + index] && orderNoTimeMap[m.machineId + '_' + index].length>0">
-          <div class="orderNoInfo" :style="{'z-index': index,'width': o.colSpan*130 +'px','backgroundColor':colorMap[o.orderNo]}"
+            <div class="orderNoInfo" :style="{'z-index': index,'width': o.colSpan*130 +'px','backgroundColor':colorMap[o.orderNo]}"
                  v-for="(o,i) in  ( orderNoTimeMap[m.machineId + '_' + index])"
             >{{
                 o.orderNo
@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import { post } from '@/api/common'
+import { post, queryUrlNoPageList } from '@/api/common'
 import { formatDate, groupBy } from '@/utils/formatDate'
 
 export default {
@@ -45,17 +45,15 @@ export default {
     id: {},
     timeInterval: {}
   },
-  watch:{
-    timeInterval:{
-
-    }
+  watch: {
+    timeInterval: {}
   },
   data() {
     return {
       // apsSchedulingDayConfigVersionDetailMachineList: [],
       machineList: [{
-        machineId:"",
-        machineName:"",
+        machineId: '',
+        machineName: ''
       }],
       beginDateTime: null,
       endDateTime: null,
@@ -64,6 +62,7 @@ export default {
       orderNoTimeMap: {},
       reloadZZLJKey: Math.random() + '',
       colorMap: {}
+
     }
   },
 
@@ -74,16 +73,26 @@ export default {
   methods: {
     formatDate,
     reloadZZLJ() {
-      for (let k in this.orderNoTimeMap) {
-        this.$delete(this.orderNoTimeMap, k)
-      }
+      // for (let k in this.orderNoTimeMap) {
+      //   this.$delete(this.orderNoTimeMap, k)
+      // }
       this.machineList.splice(0, this.machineList.length)
       this.zzljStart = 0
       this.zzljEnd = 0
-      this.$forceUpdate()
+
+      queryUrlNoPageList('/apsMachine').then(t => {
+        let tl = t.data.dataList
+        tl = tl.sort((o1, o2) => o1.sortIndex - o2.sortIndex)
+        for (const tlKey in tl) {
+          let tt = tl[tlKey]
+          tt.machineId = tt.id
+          this.machineList.push(tl[tlKey])
+        }
+      })
+
       post('/apsSchedulingDayConfigVersionDetailMachine/queryList', { data: { schedulingDayId: this.id } }, false).then(r => {
         // console.info(r)
-        let ll = r.data.dataList
+        let ll = r.data.dataList.sort((a,b)=>a.beginDateTime.localeCompare(b.beginDateTime))
         if (ll) {
           ll.forEach(o => {
             let t = this.colorMap[o.orderNo]
@@ -92,37 +101,41 @@ export default {
             }
             // console.info(o.machineName, o.orderNo, o.beginDateTime, o.endDateTime)
           })
-          let  apsSchedulingDayConfigVersionDetailMachineList = groupBy(ll, 'machineName')
+          let apsSchedulingDayConfigVersionDetailMachineList = groupBy(ll, 'machineName')
           this.beginDateTime = ll.map(t => t.beginDateTime).sort()[0]
           this.endDateTime = ll.map(t => t.endDateTime).sort()[ll.length - 1]
-          this.zzljStart = this.getTimeInterval(this.beginDateTime)-1
+          this.zzljStart = this.getTimeInterval(this.beginDateTime) - 1
           this.zzljEnd = this.getTimeInterval(this.endDateTime)
           for (let k in apsSchedulingDayConfigVersionDetailMachineList) {
             let orderList = apsSchedulingDayConfigVersionDetailMachineList[k]
-            this.machineList.push(orderList[0])
+            // this.machineList.push(orderList[0])
             // this.$forceUpdate()
+            let tm = {}
             orderList.forEach(o => {
               let obI = this.getTimeInterval(o.beginDateTime)
               let ebI = this.getTimeInterval(o.endDateTime)
-              var elementId = o.machineId + '_' + (obI - this.zzljStart)
-              let t = this.orderNoTimeMap[elementId]
+              let elementId = o.machineId + '_' + (obI - this.zzljStart)
+              let t = tm[elementId]
               o.colSpan = ebI - obI + 1
               if (t) {
-                this.orderNoTimeMap[elementId].push(o)
+                tm[elementId].push(o)
               } else {
-                this.orderNoTimeMap[elementId] = [o]
+                tm[elementId] = [o]
               }
-              this.$forceUpdate()
-              // this.$set( this.orderNoTimeMap,,'设置的属性值')
+              // this.orderNoTimeMap [elementId]=  this.orderNoTimeMap [elementId].sort(function(o1, o2) {return  o1.beginDateTime > o2.beginDateTime})
             })
-            //
+            for (const tmKey in tm) {
+              console.info(tmKey, tm[tmKey]);
+              // console.info(tm[tmKey].sort((a, b) => {
+              //   console.info(a.beginDateTime,b.beginDateTime)
+              //   return a.id < b.id
+              // }))
+              this.orderNoTimeMap[tmKey] = tm[tmKey]
+            }
           }
-          console.info(this.beginDateTime, this.endDateTime, this.zzljStart, this.zzljEnd, this.zzljEnd - this.zzljStart, this.machineList, this.orderNoTimeMap)
         }
         this.reloadZZLJKey = Math.random() + ''
-        for (var k in this.orderNoTimeMap) {
-          console.info(this.orderNoTimeMap[k][0].machineName, k, this.orderNoTimeMap[k])
-        }
+
       })
 
     },
@@ -136,6 +149,7 @@ export default {
       const randomValue = () => Math.random() * shallowValue + shallowValue / 2 // 生成位于半明度和最大值之间的随机数
       return `rgb(${randomValue()}, ${randomValue()}, ${randomValue()})`
     }
+
   }
 }
 </script>
