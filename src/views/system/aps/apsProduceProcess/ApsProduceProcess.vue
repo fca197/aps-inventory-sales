@@ -60,7 +60,7 @@
           <el-row>
             <el-col :span="18">
               <el-select v-model="f.machineId" style="width: 30%">
-                <el-option v-for="(m,j) in apsMachineList" :value="m.id" :label="m.machineName"></el-option>
+                <el-option v-for="(m,j) in apsMachineList" :key="j" :value="m.id" :label="m.machineName"></el-option>
               </el-select>
               <el-select v-model="f.statusId" style="width: 30%">
                 <el-option :key="j" v-for="(s,j) in apsStatusList" :value="s.id" :label="s.statusName"></el-option>
