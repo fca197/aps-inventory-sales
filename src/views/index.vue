@@ -1,31 +1,55 @@
 <template>
   <div class="app-container home">
-    <el-row  :gutter="20" style="display: none" >
 
-      <el-col :span="12" style="height: 300px;overflow-y: scroll">
-        <h3>最近
-          <el-select v-model="unDonTaskCount" @change="getUndoneTask" size="small" style="width: 75px;">
-            <el-option v-for="(option,index) in  unDonTaskCountList " :key="'select'+index+option" :label="''+option" :value="option"></el-option>
-          </el-select>
-          条待办
-        </h3>
-        <el-table :data="undoneTaskList" v-loading="taskLoading"  style="width: 100% ;">
-          <el-table-column label="任务名称" prop="name"></el-table-column>
-          <el-table-column label="任务创建时间" prop="createTime"></el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="showTask(scope.row)">查看</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-col>
-      <el-col :span="12" style="height: 300px;overflow-y: scroll">
-        <h3>
-          流程发起
-        </h3>
+    <el-dialog :visible.sync="machineOpen" title="机器在制详情" width="900px">
+      <machine-info></machine-info>
+    </el-dialog>
+    <el-dialog :visible.sync="orderCreateOpen" title="订单下单数量" width="900px">
+      <order-create></order-create>
+    </el-dialog>
+    <el-dialog :visible.sync="orderCreateForecastProcessOpen" title="订单下单数量" width="900px">
+      <order-create-forecast-process/>
+    </el-dialog>
+    <el-dialog :visible.sync="apsSystemPreview" title="工厂信息" width="900px">
+      <aps-system-preview/>
+    </el-dialog>
 
+    <el-row>
+      <el-col :span="12">
+        <el-button type="primary" @click="orderCreateOpen=true">查看订单下单数量（日历热力图）</el-button>
+        <el-button type="primary" @click="machineOpen=true">查看机器在制数量（日历饼图）</el-button>
+        <el-button type="primary" @click="orderCreateForecastProcessOpen=true">预测订单车间制造数量（主状图）</el-button>
+        <el-button type="primary" @click="apsSystemPreview=true">工厂信息图</el-button>
       </el-col>
+
     </el-row>
+
+    <!--    <el-row :gutter="20" style="display: none">-->
+
+    <!--      <el-col :span="12" style="height: 300px;overflow-y: scroll">-->
+    <!--        <h3>最近-->
+    <!--          <el-select v-model="unDonTaskCount" @change="getUndoneTask" size="small" style="width: 75px;">-->
+    <!--            <el-option v-for="(option,index) in  unDonTaskCountList " :key="'select'+index+option" :label="''+option" :value="option"></el-option>-->
+    <!--          </el-select>-->
+    <!--          条待办-->
+    <!--        </h3>-->
+    <!--        <el-table :data="undoneTaskList" v-loading="taskLoading" style="width: 100% ;">-->
+    <!--          <el-table-column label="任务名称" prop="name"></el-table-column>-->
+    <!--          <el-table-column label="任务创建时间" prop="createTime"></el-table-column>-->
+    <!--          <el-table-column label="操作">-->
+    <!--            <template slot-scope="scope">-->
+    <!--              <el-button type="primary" size="mini" @click="showTask(scope.row)">查看</el-button>-->
+    <!--            </template>-->
+    <!--          </el-table-column>-->
+    <!--        </el-table>-->
+    <!--      </el-col>-->
+    <!--      <el-col :span="12" style="height: 300px;overflow-y: scroll">-->
+    <!--        <h3>-->
+    <!--          流程发起-->
+    <!--        </h3>-->
+
+    <!--      </el-col>-->
+    <!--    </el-row>-->
     <el-divider/>
     <el-row :gutter="20">
       <el-col :span="12">
@@ -40,9 +64,10 @@
       <h3>版本变更记录</h3>
       <version-change></version-change>
     </el-row>
-    <el-dialog :visible="taskOpen" @close="taskCancel" title="流程详情" width="900px">
-      <flow-detail :setting="taskSetting" :key="taskSetting.id"></flow-detail>
-    </el-dialog>
+    <!--    <el-dialog :visible="taskOpen" @close="taskCancel" title="流程详情" width="900px">-->
+    <!--      <flow-detail :setting="taskSetting" :key="taskSetting.id"></flow-detail>-->
+    <!--    </el-dialog>-->
+
   </div>
 </template>
 
@@ -52,21 +77,30 @@ import * as echarts from 'echarts'
 import versionChange from '@/views/version/index.vue'
 import { post } from '@/api/common'
 import flowDetail from '@/views/flow/flowForm/FlowDetail.vue'
+import OrderCreate from '@/views/dashboard/calendar/OrderCreate.vue'
+import MachineInfo from '@/views/dashboard/calendar/MachineInfo.vue'
+import ApsSystemPreview from '@/views/dashboard/calendar/ApsSystemPreview.vue'
+import OrderCreateForecastProcess from '@/views/dashboard/calendar/OrderCreateForecastProcess.vue'
 
 export default {
   name: 'VersionChangeIndex',
   components: {
-    ECharts, versionChange, flowDetail
+    ECharts, versionChange, flowDetail, OrderCreate, MachineInfo, OrderCreateForecastProcess,
+    ApsSystemPreview
   },
   data() {
     let cl = [5, 10, 30, 50]
     let taskOpen = false
     return {
-      taskLoading:true,
+      taskLoading: true,
       taskSetting: {
         open: taskOpen
       },
       taskOpen: taskOpen,
+      machineOpen: false,
+      orderCreateOpen: false,
+      apsSystemPreview: false,
+      orderCreateForecastProcessOpen: false,
       unDonTaskCountList: cl,
       unDonTaskCount: cl[0],
       undoneTaskList: [],
@@ -154,10 +188,10 @@ export default {
 
     },
     getUndoneTask() {
-      this.taskLoading=true;
+      this.taskLoading = true
       post('/flow/task/undone/home', { flowKey: 'flowKey', pageNum: 1, pageSize: this.unDonTaskCount }, false).then(t => {
         this.undoneTaskList = t.data.dataList
-        this.taskLoading=false;
+        this.taskLoading = false
       })
     }, taskCancel() {
       this.taskOpen = false

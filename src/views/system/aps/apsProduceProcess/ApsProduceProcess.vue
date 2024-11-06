@@ -56,14 +56,14 @@
         <el-form-item label="生产路径名称" prop="produceProcessName">
           <el-input v-model="form.produceProcessName" clearable placeholder="请输入生产路径名称"/>
         </el-form-item>
-        <el-form-item v-for="(f,i) in form.produceProcessItemDtoList" :label="'机器配置'+(i+1)">
+        <el-form-item :key="i" v-for="(f,i) in form.produceProcessItemDtoList" :label="'机器配置'+(i+1)">
           <el-row>
             <el-col :span="18">
               <el-select v-model="f.machineId" style="width: 30%">
                 <el-option v-for="(m,j) in apsMachineList" :value="m.id" :label="m.machineName"></el-option>
               </el-select>
               <el-select v-model="f.statusId" style="width: 30%">
-                <el-option v-for="(s,j) in apsStatusList" :value="s.id" :label="s.statusName"></el-option>
+                <el-option :key="j" v-for="(s,j) in apsStatusList" :value="s.id" :label="s.statusName"></el-option>
               </el-select>
               <el-input v-model="f.machineUseTimeSecond" style="width: 30%"></el-input>
 
