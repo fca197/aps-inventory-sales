@@ -16,6 +16,9 @@
     <el-dialog :visible.sync="machineProduceBomOpen" title="制造路径中商品零件清单" width="900px">
       <machine-produce-bom/>
     </el-dialog>
+    <el-dialog :visible.sync="machineUseTimeOpen" title="机器使用时长" width="900px">
+      <machine-use-time/>
+    </el-dialog>
 
     <el-row>
       <el-col :span="24">
@@ -24,6 +27,7 @@
         <el-button type="primary" @click="orderCreateForecastProcessOpen=true">预测订单车间制造数量（主状图）</el-button>
         <el-button type="primary" @click="apsSystemPreviewOpen=true">工厂信息图（矩阵图）</el-button>
         <el-button type="primary" @click="machineProduceBomOpen=true">制造路径中商品零件清单（树图）</el-button>
+        <el-button type="primary" @click="machineUseTimeOpen=true">机器使用时长（雷达图）</el-button>
       </el-col>
 
     </el-row>
@@ -86,12 +90,13 @@ import MachineInfo from '@/views/dashboard/calendar/MachineInfo.vue'
 import ApsSystemPreview from '@/views/dashboard/calendar/ApsSystemPreview.vue'
 import OrderCreateForecastProcess from '@/views/dashboard/calendar/OrderCreateForecastProcess.vue'
 import MachineProduceBom from '@/views/dashboard/calendar/MachineProduceBom.vue'
+import MachineUseTime from '@/views/dashboard/calendar/MachineUseTime.vue'
 
 export default {
   name: 'VersionChangeIndex',
   components: {
     ECharts, versionChange, flowDetail, OrderCreate, MachineInfo, OrderCreateForecastProcess,
-    ApsSystemPreview,MachineProduceBom
+    ApsSystemPreview, MachineProduceBom, MachineUseTime
   },
   data() {
     let cl = [5, 10, 30, 50]
@@ -106,6 +111,7 @@ export default {
       orderCreateOpen: false,
       apsSystemPreviewOpen: false,
       machineProduceBomOpen: false,
+      machineUseTimeOpen: false,
       orderCreateForecastProcessOpen: false,
       unDonTaskCountList: cl,
       unDonTaskCount: cl[0],
