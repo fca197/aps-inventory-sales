@@ -7,7 +7,7 @@
     <el-dialog :visible.sync="orderCreateOpen" title="订单下单数量" width="900px">
       <order-create></order-create>
     </el-dialog>
-    <el-dialog :visible.sync="orderCreateForecastProcessOpen" title="订单下单数量" width="900px">
+    <el-dialog :visible.sync="orderCreateForecastProcessOpen" title="预测订单车间制造数量" width="900px">
       <order-create-forecast-process/>
     </el-dialog>
     <el-dialog :visible.sync="apsSystemPreviewOpen" title="工厂信息" width="900px">
