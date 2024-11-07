@@ -28,7 +28,7 @@
         <el-button type="primary" size="small" @click="orderCreateOpen=true">查看订单下单数量</el-button>
         <el-button type="primary" size="small" @click="machineOpen=true">查看机器在制数量（日历饼图）</el-button>
         <el-button type="primary" size="small" @click="orderCreateForecastProcessOpen=true">预测订单车间制造数量（主状图）</el-button>
-        <el-button type="primary" size="small" @click="apsSystemPreviewOpen=true">工厂信息图（矩阵图）</el-button>
+        <el-button type="primary" size="small" @click="apsSystemPreviewOpen=true">工厂信息图</el-button>
         <el-button type="primary" size="small" @click="machineProduceBomOpen=true">制造路径中商品零件清单（树图）</el-button>
         <el-button type="primary" size="small" @click="machineUseTimeOpen=true">机器使用时长（雷达图）</el-button>
         <el-button type="primary" size="small" @click="orderCreateAndMakeOpen=true">下单量与制造量对比（雨量流量关系图）</el-button>
