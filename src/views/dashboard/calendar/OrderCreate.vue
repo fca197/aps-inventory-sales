@@ -6,6 +6,7 @@
 </template>
 <script>
 import * as echarts from 'echarts'
+import { post } from '@/api/common'
 
 export default {
   name: 'OrderCreate',
@@ -21,37 +22,24 @@ export default {
     }
   },
   mounted() {
-    this.loadOrderOption()
 
     this.myChart = echarts.init(document.getElementById('orderCreateDiv3'))
 
-    this.myChart.setOption(this.option)
-    console.info('option ', this.myChart, this.option)
-    // this.$forceUpdate()
+    post('/apsOrder/orderCreateDayCount', { year: this.fullYear }, false).then(t => {
+      let data = t.data.dataList.map(tt => [tt.date, parseInt(tt.count)])
 
-  },
-  methods: {
-    getVirtualData(year) {
-      const date = +echarts.time.parse(year + '-01-01')
-      const end = +echarts.time.parse(+year + 1 + '-01-01')
-      const dayTime = 3600 * 24 * 1000
-      const data = []
-      for (let time = date; time < end; time += dayTime) {
-        data.push([echarts.time.format(time, '{yyyy}-{MM}-{dd}', false), Math.floor(Math.random() * 10000)])
-      }
-      return data
-    },
-    loadOrderOption() {
+      let max = Math.max.apply(null, data.map(tt => tt[1]))
+      max = Math.floor((parseInt(max / 10 + '') + 1) * 10)
+
       this.option = {
         title: {
-          top: 30,
           left: 'center',
           text: this.fullYear + '年下单热力图'
         },
         tooltip: {},
         visualMap: {
           min: 0,
-          max: 10000,
+          max: max,
           type: 'piecewise',
           orient: 'horizontal',
           left: 'center',
@@ -61,7 +49,7 @@ export default {
           top: 120,
           left: 30,
           right: 30,
-          cellSize: ['auto', 13],
+          cellSize: ['auto', 15],
           range: this.fullYear + '',
           itemStyle: {
             borderWidth: 0.5
@@ -71,12 +59,17 @@ export default {
         series: {
           type: 'heatmap',
           coordinateSystem: 'calendar',
-          data: this.getVirtualData(this.fullYear)
+          data: data
         }
       }
+      this.myChart.setOption(this.option)
+    })
 
-    }
-  }
+    // console.info('option ', this.myChart, this.option)
+    // this.$forceUpdate()
+
+  },
+  methods: {}
 }
 </script>
 

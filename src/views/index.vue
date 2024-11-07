@@ -24,7 +24,7 @@
     </el-dialog>
 
     <el-row>
-      <el-col span="24" style="line-height: 40px;">
+      <el-col :span="24" style="line-height: 40px;">
         <el-button type="primary" size="small" @click="orderCreateOpen=true">查看订单下单数量（日历热力图）</el-button>
         <el-button type="primary" size="small" @click="machineOpen=true">查看机器在制数量（日历饼图）</el-button>
         <el-button type="primary" size="small" @click="orderCreateForecastProcessOpen=true">预测订单车间制造数量（主状图）</el-button>
