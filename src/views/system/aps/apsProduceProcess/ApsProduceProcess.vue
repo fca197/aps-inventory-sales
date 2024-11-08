@@ -1,6 +1,12 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
+
+      <el-form-item  label="工厂">
+        <el-select v-model="form.factoryId">
+          <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="生产路径编码" prop="produceProcessNo">
         <el-input v-model="queryParams.data.produceProcessNo" clearable placeholder="请输入生产路径编码"
                   @keyup.enter.native="handleQuery"
@@ -50,6 +56,11 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
+        <el-form-item  label="工厂">
+          <el-select v-model="form.factoryId">
+            <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="生产路径编码" prop="produceProcessNo">
           <el-input v-model="form.produceProcessNo" clearable placeholder="请输入生产路径编码"/>
         </el-form-item>
@@ -97,6 +108,7 @@
 <script>
 
 import { add, deleteByIdList, getById, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
+import { getFactoryList } from '@/api/factory'
 
 export default {
   name: 'tenantName',
@@ -136,6 +148,7 @@ export default {
       // 表单校验
       rules: {},
       tableHeaderList: [],
+      factoryList: [],
       apsMachineList: [],
       apsStatusList: []
     }
@@ -149,6 +162,7 @@ export default {
     queryUrlNoPageList('/apsStatus').then((r) => {
       this.apsStatusList = r.data.dataList
     })
+    getFactoryList({}).then(t=>this.factoryList=t.data.dataList)
 
   },
   methods: {

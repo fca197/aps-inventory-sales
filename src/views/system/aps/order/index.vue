@@ -162,7 +162,7 @@
                   </el-select>
                 </el-col>
                 <el-col :span="10">
-                  <el-input v-model="it.goodsNum" placeholder="请输入商品数量"/>
+                  <el-input disabled v-model="it.goodsNum" placeholder="请输入商品数量" />
                 </el-col>
               </el-col>
               <el-col :span="7" :offset="1">
@@ -172,8 +172,7 @@
             </el-col>
           </el-tab-pane>
           <el-tab-pane label="销售配置">
-            <el-collapse accordion value="0">
-              <el-collapse-item title="销售配置" v-for="(it ,i) in  form.goodsList" :name="i" :key="i">
+              <el-row title="销售配置" v-for="(it ,i) in  form.goodsList" :name="i" :key="i">
                 <div v-if="goodsMap[it.goodsId]"> {{ goodsMap[it.goodsId].goodsName }}/ <span>{{ it.goodsNum }} /{{ goodsMap[it.goodsId].goodsRemark }}</span></div>
                 <el-col :span="24" v-for="(sa ,index) in apsSaleConfigList" :key="index">
                   <el-divider/>
@@ -182,14 +181,14 @@
                   </el-col>
                   <el-col :span="18">
                     <el-radio-group v-model="goodsSaleConfigMap[it.goodsId][sa.id]" @change="value=>changeGM(it.goodsId, sa.id,value)">
-                      <el-radio v-for=" (ss ,j) in sa.children" :label="ss.id" :key="j">{{ ss.saleName }}/{{ ss.saleCode }}/{{ ss.id }}</el-radio>
+                      <el-radio v-for=" (ss ,j) in sa.children" :label="ss.id" :key="j">{{ ss.saleName }}/{{ ss.saleCode }}</el-radio>
                     </el-radio-group>
                   </el-col>
                 </el-col>
-              </el-collapse-item>
-            </el-collapse>
+              </el-row>
           </el-tab-pane>
           <el-tab-pane label="工程配置">工程配置</el-tab-pane>
+          <el-tab-pane label="零件">零件</el-tab-pane>
         </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -198,14 +197,14 @@
       </div>
     </el-dialog>
     <el-dialog title="订单状态时间一览表" :visible.sync="orderGoodsStatusDateShow" width="900px" append-to-body>
-      <step :Index="3" :okRouteList="orderGoodsStatusDateList"/>
+      <step :Index="3"  :okRouteList="orderGoodsStatusDateList"/>
     </el-dialog>
   </div>
 </template>
 
 <script>
 
-import { add, deleteByIdList, getById, post, queryPageList, queryUrlPageList } from '@/api/common'
+import { add, deleteByIdList, getById, log, post, queryPageList, queryUrlPageList } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 import { getGoodsList } from '@/api/aps/goods'
 import { getRandomUser } from '@/api/tool/random'
@@ -443,9 +442,9 @@ export default {
         this.$message.error(this.goodsMap[value].goodsName + '该商品已存在')
         this.form.goodsList[index].goodsId = undefined
       }
-      apsGoodsSaleItemQueryPageList({ data: { goodsId: value }, queryPage: false0 }).then(res => {
-        console.info('res: ', res)
-      })
+      // apsGoodsSaleItemQueryPageList({ data: { goodsId: value }, queryPage: false }).then(res => {
+      //   // console.info('res: ', res)
+      // })
       this.goodsSaleConfigMap[value] = {}
       this.apsSaleConfigList.forEach(t => {
         this.goodsSaleConfigMap[value][t.id] = undefined
@@ -454,7 +453,7 @@ export default {
         })
       })
       this.goodsSaleConfigMap = { ...this.goodsSaleConfigMap }
-      console.info('.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
+      // console.info('.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
     },
     saveBatch() {
       request({
@@ -468,10 +467,10 @@ export default {
       })
     },
     changeGM(gid, sid, value) {
-      console.info('changeGM: ', gid, sid, value)
-      console.info('this.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
+      // console.info('changeGM: ', gid, sid, value)
+      // console.info('this.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
       this.goodsSaleConfigMap[gid][sid] = value
-      console.info('this.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
+      // console.info('this.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
       this.$forceUpdate()
     },
     handleStatusInfo(row) {
@@ -480,9 +479,9 @@ export default {
           orderId: row.id
         }
       }).then(res => {
-        this.orderGoodsStatusDateShow = true
+        this.id=row.id
         this.orderGoodsStatusDateList = res.data.dataList.reverse()
-
+        this.orderGoodsStatusDateShow = true
       })
     }
     , updateOrderStatus(orderId, sid) {
@@ -492,8 +491,7 @@ export default {
       })
     },
     updateSchedulingDate(row, val) {
-
-      console.info('updateSchedulingDate: ', row, val)
+      log('updateSchedulingDate: ', row, val)
       this.$modal.confirm('订单号:[<span style="color:red">' + row.orderNo + '</span>],排产日期修改为:[<span style="color:red">' + (val == null ? '空' : val) + '</span>] ', '修改提示').then(function() {
         post('/apsOrder/updateSchedulingDate', { id: row.id, schedulingDate: val }, true);
       })
@@ -502,3 +500,13 @@ export default {
 }
 
 </script>
+
+<style>
+/deep/ input[aria-hidden="true"] {
+  display: none !important;
+}
+
+/deep/.el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
+  box-shadow: none !important;
+}
+</style>

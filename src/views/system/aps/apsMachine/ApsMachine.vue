@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
+      <el-form-item  label="工厂">
+        <el-select v-model="form.factoryId">
+          <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="机器编号" prop="machineNo">
         <el-input v-model="queryParams.data.machineNo" clearable placeholder="请输入机器编号"
                   @keyup.enter.native="handleQuery"/>
@@ -45,6 +50,12 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+
+        <el-form-item  label="工厂">
+          <el-select v-model="form.factoryId">
+            <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
+          </el-select>
+        </el-form-item>
 
         <el-form-item label="机器编号" prop="machineNo">
           <el-input v-model="form.machineNo" clearable placeholder="请输入机器编号"/>
@@ -104,12 +115,14 @@ export default {
       },
       // 表单校验
       rules: {},
+      factoryList:[],
       tableHeaderList: []
     }
   },
-  created() {
+  created: function() {
     document['pagePath'] = '/apsMachine'
     this.getList()
+    getFactoryList({}).then(t=>this.factoryList=t.data.dataList);
   },
   methods: {
     /** 查询公告列表 */

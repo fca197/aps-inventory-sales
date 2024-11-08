@@ -147,7 +147,7 @@ export function randomNum(maxNum) {
   return list.map(item => chars[item]).join('')
 }
 
-export function translator(parents, children,parentKey, childrenKey) {
+export function translator(parents, children, parentKey, childrenKey) {
   // 遍历父节点数据
   parents.forEach(parent => {
     // 遍历子节点数据
@@ -169,18 +169,19 @@ export function translator(parents, children,parentKey, childrenKey) {
   })
 }
 
-
-
-
-export  function getUrlParam(paramName) {
-  const query = window.document.location.href.substring(1);
-  const vars = query.split("&");
-  console.log("query",query)
+export function getUrlParam(paramName) {
+  const query = window.document.location.href.substring(1)
+  const vars = query.split('&')
+  console.log('query', query)
   for (let i = 0; i < vars.length; i++) {
-    const pair = vars[i].split("=");
+    const pair = vars[i].split('=')
     if (pair[0] == paramName) {
-      return pair[1];
+      return pair[1]
     }
   }
-  return "";
+  return ''
+}
+
+export function log(...data) {
+  console.info(data)
 }
