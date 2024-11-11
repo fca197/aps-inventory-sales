@@ -1,42 +1,64 @@
 <template>
-  <div class="zzljDiv">
+  <div>
+    <h2>机器生产顺序</h2>
+    <div class="zzljDiv">
 
-    <el-form :inline="true" size="small">
-      <el-form-item label="开始时间:">{{ beginDateTime }}</el-form-item>
-      <el-form-item label="结束时间时间:">{{ endDateTime }}</el-form-item>
-      <!--      <el-form-item label="开始索引:" >{{zzljStart}}</el-form-item>-->
-      <!--      <el-form-item label="结束索引:" >{{zzljEnd}}</el-form-item>-->
-      <el-form-item label="时间段数量:">{{ zzljEnd - zzljStart }}</el-form-item>
-      <el-form-item label="总耗时:">{{ (zzljEnd - zzljStart) * timeInterval }} 秒</el-form-item>
-    </el-form>
-    <div :style="{'width':((zzljEnd-zzljStart)*130+100 )+'px'}" :key="reloadZZLJKey">
-      <div class="headerItem " style="width: 100px"> 机器名称</div>
-      <span class="headerItem  header" v-for="(index,i) in zzljEnd-zzljStart" style="width: 130px;text-align: center">
+      <el-form :inline="true" size="small">
+        <el-form-item label="开始时间:">{{ beginDateTime }}</el-form-item>
+        <el-form-item label="结束时间时间:">{{ endDateTime }}</el-form-item>
+        <!--      <el-form-item label="开始索引:" >{{zzljStart}}</el-form-item>-->
+        <!--      <el-form-item label="结束索引:" >{{zzljEnd}}</el-form-item>-->
+        <el-form-item label="时间段数量:">{{ zzljEnd - zzljStart }}</el-form-item>
+        <el-form-item label="总耗时:">{{ (zzljEnd - zzljStart) * timeInterval }} 秒</el-form-item>
+      </el-form>
+      <div :style="{'width':((zzljEnd-zzljStart)*130+100 )+'px'}" :key="reloadZZLJKey">
+        <div class="headerItem " style="width: 100px"> 机器名称</div>
+        <span class="headerItem  header" v-for="(index,i) in zzljEnd-zzljStart" style="width: 130px;text-align: center">
         {{ formatDate(new Date((zzljStart * 1000 * timeInterval) + index * 1000 * timeInterval)).substr(0, 10) }}
         <br/>
         {{ formatDate(new Date((zzljStart * 1000 * timeInterval) + index * 1000 * timeInterval)).substr(11) }}
       </span>
 
-      <div v-for="(m,i) in machineList">
-        <div class="headerItem  orderNoDiv" style="width: 100px">{{ m.machineName }}</div>
-        <div class="headerItem orderNoDiv" :id="m.machineId+'_'+i" v-for="(index,i) in zzljEnd-zzljStart" style="width: 130px;text-align: left">
-          <div v-if="orderNoTimeMap[m.machineId + '_' + index] && orderNoTimeMap[m.machineId + '_' + index].length>0">
-            <div class="orderNoInfo" :style="{'z-index': index,'width': o.colSpan*130 +'px','backgroundColor':colorMap[o.orderNo]}"
-                 v-for="(o,i) in  ( orderNoTimeMap[m.machineId + '_' + index])"
-            >{{
-                o.orderNo
-              }}
+        <div v-for="(m,i) in machineList">
+          <div class="headerItem  orderNoDiv" style="width: 100px">{{ m.machineName }}</div>
+          <div class="headerItem orderNoDiv" :id="m.machineId+'_'+i" v-for="(index,i) in zzljEnd-zzljStart" style="width: 130px;text-align: left">
+            <div v-if="orderNoTimeMap[m.machineId + '_' + index] && orderNoTimeMap[m.machineId + '_' + index].length>0">
+              <div class="orderNoInfo" :style="{'z-index': index,'width': o.colSpan*130 +'px','backgroundColor':colorMap[o.orderNo]}"
+                   v-for="(o,i) in  ( orderNoTimeMap[m.machineId + '_' + index])"
+              >{{
+                  o.orderNo
+                }}
+              </div>
             </div>
           </div>
+          <hr/>
         </div>
-        <hr/>
       </div>
-
     </div>
+    <h2>机器使用率</h2>
+    <el-table :data="machineList" >
+      <el-table-column label="机器名称" prop="machineName"></el-table-column>
+      <el-table-column label="制造数量"  >
+        <template scope="scope">
+          {{machineUseRate[scope.row.id]["makeProduceCount"]}}
+        </template>
+      </el-table-column>
+      <el-table-column label="制造耗时"  >
+        <template scope="scope">
+          {{machineUseRate[scope.row.id]["useTime"]}}
+        </template>
+      </el-table-column>
+      <el-table-column label="使用率"  >
+        <template scope="scope">
+          {{machineUseRate[scope.row.id]["useUsageRate"]}}%
+        </template>
+      </el-table-column>
+
+    </el-table>
   </div>
 </template>
 <script>
-import { post, queryUrlNoPageList } from '@/api/common'
+import { log, post, queryUrlNoPageList } from '@/api/common'
 import { formatDate, groupBy } from '@/utils/formatDate'
 
 export default {
@@ -61,7 +83,8 @@ export default {
       zzljEnd: 0,
       orderNoTimeMap: {},
       reloadZZLJKey: Math.random() + '',
-      colorMap: {}
+      colorMap: {},
+      machineUseRate:{}
 
     }
   },
@@ -92,7 +115,7 @@ export default {
 
       post('/apsSchedulingDayConfigVersionDetailMachine/queryList', { data: { schedulingDayId: this.id } }, false).then(r => {
         // console.info(r)
-        let ll = r.data.dataList.sort((a,b)=>a.beginDateTime.localeCompare(b.beginDateTime))
+        let ll = r.data.dataList.sort((a, b) => a.beginDateTime.localeCompare(b.beginDateTime))
         if (ll) {
           ll.forEach(o => {
             let t = this.colorMap[o.orderNo]
@@ -125,7 +148,7 @@ export default {
               // this.orderNoTimeMap [elementId]=  this.orderNoTimeMap [elementId].sort(function(o1, o2) {return  o1.beginDateTime > o2.beginDateTime})
             })
             for (const tmKey in tm) {
-              console.info(tmKey, tm[tmKey]);
+              // console.info(tmKey, tm[tmKey])
               // console.info(tm[tmKey].sort((a, b) => {
               //   console.info(a.beginDateTime,b.beginDateTime)
               //   return a.id < b.id
@@ -137,6 +160,17 @@ export default {
         this.reloadZZLJKey = Math.random() + ''
 
       })
+
+
+      // 机器使用率
+
+      post("/apsSchedulingDayConfigVersionDetailMachineUseTime/queryList",{data:{schedulingDayId:this.id}})
+      .then(t=>{
+        // log(t)
+        t.data.dataList.forEach(tt=>{
+          this.machineUseRate[tt.machineId]=tt
+;        })
+      });
 
     },
     getTimeInterval(time) {
