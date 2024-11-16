@@ -225,6 +225,11 @@ export const dynamicRoutes = [{
     name: '供应管理',
     component: () => import('@/views/system/supplier/index'),
     meta: { title: '供应管理', icon: 'pastebin', affix: false }
+  }, {
+    path: '/seller/index',
+    name: '销售方管理',
+    component: () => import('@/views/system/aps/apsSellerStore/ApsSellerStore.vue'),
+    meta: { title: '销售方管理', icon: '', affix: false }
   }
 
   ]

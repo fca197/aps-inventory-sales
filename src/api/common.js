@@ -183,5 +183,16 @@ export function getUrlParam(paramName) {
 }
 
 export function log(...data) {
-  console.info(data)
+  if (data) {
+    data.forEach(t => console.info(t))
+  }
+  // console.info(data)
+}
+
+export function getDistrictByParentCode(data) {
+  return request({
+    url: '/districtCode/queryList',
+    'method': 'POST',
+    data: { data: { parentCode: data } }
+  })
 }
