@@ -1,15 +1,17 @@
 <template>
   <div class="login">
     <div v-if="loginType===2" class="dingLoginDiv">
-      <div class="usePwdLogin" @click="loginType=1"></div>
+      <div class="usePwdLogin" @click="loginType=1"/>
       <h3 class="title"> 后台管理系统</h3>
-
+       <div id="self_defined_element"  style="
+    margin-left: 50px;
+    margin-top: -25px;"></div>
       <div>
       </div>
     </div>
     <div v-if="loginType===1">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-        <div class="useOtherLogin" @click="loginType=2"></div>
+        <div class="useOtherLogin" @click="dingLogin"></div>
         <h3 class="title"> 后台管理系统</h3>
         <el-form-item prop="username">
           <el-input
@@ -82,6 +84,7 @@ import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
 import { decrypt, encrypt } from '@/utils/jsencrypt'
 import versionChange from '@/views/version/index.vue'
+import { addJs } from '@/api/common'
 
 export default {
   name: 'Login',
@@ -126,9 +129,9 @@ export default {
     }
   },
   created() {
+    addJs("https://g.alicdn.com/dingding/h5-dingtalk-login/0.21.0/ddlogin.js")
     this.getCode()
     this.getCookie()
-    const h = this.$createElement
   },
   methods: {
     getCode() {
@@ -177,6 +180,37 @@ export default {
           })
         }
       })
+    },
+    dingLogin(){
+      this.loginType=2
+      this.$nextTick(()=>{
+        window.DTFrameLogin(
+          {
+            id: 'self_defined_element',
+            width: 250,
+            height: 250,
+          },
+          {
+            redirect_uri: encodeURIComponent('https://aps.solveplan.cn/api/peanut/ding/auth'),
+            client_id: '',
+            scope: 'openid',
+            response_type: 'code',
+            state: '',
+            prompt: 'consent',
+          },
+          (loginResult) => {
+            const {redirectUrl, authCode, state} = loginResult;
+            // 这里可以直接进行重定向
+            window.location.href = redirectUrl;
+            // 也可以在不跳转页面的情况下，使用code进行授权
+            console.log(authCode);
+          },
+          (errorMsg) => {
+            // 这里一般需要展示登录失败的具体原因,可以使用toast等轻提示
+            console.error(`errorMsg of errorCbk: ${errorMsg}`);
+          },
+        );
+      })
     }
   }
 }
@@ -199,7 +233,7 @@ export default {
 }
 
 .login-form {
-  border-radius: 6px;
+  border-radius: 10px;
   background: #ffffff;
   width: 400px;
   padding: 25px 25px 5px 25px;
@@ -277,7 +311,7 @@ export default {
 }
 
 .dingLoginDiv {
-  border-radius: 6px;
+  border-radius: 10px;
   width: 400px;
   height: 350px;
   background: #ffffff;

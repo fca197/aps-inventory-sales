@@ -196,3 +196,12 @@ export function getDistrictByParentCode(data) {
     data: { data: { parentCode: data } }
   })
 }
+
+
+export function addJs(js) {
+  let hm = document.createElement('script')
+  hm.src = js
+  let s = document.getElementsByTagName('script')[0]
+  s.parentNode.insertBefore(hm, s)
+
+}
