@@ -5,7 +5,11 @@
       <h3 class="title"> 后台管理系统</h3>
        <div id="self_defined_element"  style="
     margin-left: 50px;
-    margin-top: -25px;"></div>
+    margin-top: -25px;">
+         <div  style="font-size: 100px;
+    color: #987987;
+    font-family: cursive;">敬请等待</div>
+       </div>
       <div>
       </div>
     </div>
