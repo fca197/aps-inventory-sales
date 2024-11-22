@@ -88,7 +88,8 @@ import { getCodeImg } from '@/api/login'
 import Cookies from 'js-cookie'
 import { decrypt, encrypt } from '@/utils/jsencrypt'
 import versionChange from '@/views/version/index.vue'
-import { addJs } from '@/api/common'
+import { addJs, log } from '@/api/common'
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   name: 'Login',
@@ -133,6 +134,9 @@ export default {
     }
   },
   created() {
+    var item = localStorage.getItem("deviceId")|| uuidv4()
+    log(item)
+    localStorage.setItem("deviceId",item)
     addJs("https://g.alicdn.com/dingding/h5-dingtalk-login/0.21.0/ddlogin.js")
     this.getCode()
     this.getCookie()

@@ -5,6 +5,11 @@
       <el-form-item label="零件名称" prop="brandName">
         <el-input v-model="queryParams.data.bomName" clearable placeholder="请输入零件名称" @keyup.enter.native="handleQuery"/>
       </el-form-item>
+      <el-form-item label="购买方式" prop="supplyMode">
+        <el-select v-model="queryParams.data.supplyMode">
+          <el-option v-for="(sm) in supplyModeList" :value="sm.val" :label="sm.name"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -24,13 +29,13 @@
     <el-row>
       <el-col :span="3" style="border: 1px solid #ccc;">
         <el-tree
-            style="margin: 10px 5px;height: 600px"
-            class="filter-tree"
-            :data="groupData"
-            default-expand-all
-            @node-click="bomGroupClick"
-            :props="{ children: 'children',label: 'groupName'}"
-            ref="tree"
+          style="margin: 10px 5px;height: 600px"
+          class="filter-tree"
+          :data="groupData"
+          default-expand-all
+          @node-click="bomGroupClick"
+          :props="{ children: 'children',label: 'groupName'}"
+          ref="tree"
         >
         </el-tree>
 
@@ -50,11 +55,11 @@
         </el-table>
 
         <pagination
-            v-show="total>0"
-            :limit.sync="queryParams.pageSize"
-            :page.sync="queryParams.pageNum"
-            :total="total"
-            @pagination="getList"
+          v-show="total>0"
+          :limit.sync="queryParams.pageSize"
+          :page.sync="queryParams.pageNum"
+          :total="total"
+          @pagination="getList"
         />
 
       </el-col>
@@ -74,14 +79,26 @@
           <el-input v-model="form.bomCostPrice" placeholder="请输入价格"/>
         </el-form-item>
         <el-form-item label="零件价格" prop="bomCostPriceUnit">
-          <el-input v-model="form.bomCostPriceUnit" placeholder="请输入价格单位"/>
+          <el-input v-model="form.bomCostPriceUnit" placeholder="请输入价格规格"/>
         </el-form-item>
 
-        <el-form-item label="请输入库存" prop="bomInventory">
+        <el-form-item label="库存" prop="bomInventory">
           <el-input v-model="form.bomInventory" placeholder="请输入库存"/>
         </el-form-item>
+        <el-form-item label="购买方式" prop="supplyMode">
+          <el-select v-model="form.supplyMode">
+            <el-option v-for="(sm) in supplyModeList" :value="sm.val" :label="sm.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="规格" prop="bomUnit">
+          <el-input v-model="form.bomUnit" placeholder="请输入库存"/>
+        </el-form-item>
+        <el-form-item label="使用规格" prop="useUnit">
+          <el-input v-model="form.useUnit" placeholder="请输入使用规格"/>
+        </el-form-item>
         <el-form-item label="零件组" prop="groupId">
-          <tree-select ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"></tree-select>
+          <tree-select ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"
+          ></tree-select>
         </el-form-item>
 
       </el-form>
@@ -153,7 +170,11 @@ export default {
       },
       // 表单校验
       rules: {},
-      tableHeaderList: []
+      tableHeaderList: [],
+      supplyModeList: [
+        { val: 'buy', name: '购买' },
+        { val: 'make', name: '自制' }
+      ]
     }
   },
   created() {
