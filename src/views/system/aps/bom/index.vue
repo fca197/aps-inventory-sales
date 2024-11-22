@@ -7,7 +7,7 @@
       </el-form-item>
       <el-form-item label="购买方式" prop="supplyMode">
         <el-select v-model="queryParams.data.supplyMode">
-          <el-option v-for="(sm) in supplyModeList" :value="sm.val" :label="sm.name"></el-option>
+          <el-option v-for="(sm) in supplyModeList" :value="sm.val" :key="sm.name" :label="sm.name"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -46,7 +46,7 @@
           <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
 
           <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
-          <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right">
+          <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="150">
             <template slot-scope="scope">
               <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
               <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
@@ -87,7 +87,7 @@
         </el-form-item>
         <el-form-item label="购买方式" prop="supplyMode">
           <el-select v-model="form.supplyMode">
-            <el-option v-for="(sm) in supplyModeList" :value="sm.val" :label="sm.name"></el-option>
+            <el-option v-for="(sm) in supplyModeList" :value="sm.val" :key="sm.val" :label="sm.name"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="规格" prop="bomUnit">
