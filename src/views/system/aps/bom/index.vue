@@ -6,7 +6,7 @@
         <el-input v-model="queryParams.data.bomName" clearable placeholder="请输入零件名称" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="购买方式" prop="supplyMode">
-        <el-select v-model="queryParams.data.supplyMode">
+        <el-select v-model="queryParams.data.supplyMode" clearable>
           <el-option v-for="(sm) in supplyModeList" :value="sm.val" :key="sm.name" :label="sm.name"></el-option>
         </el-select>
       </el-form-item>
