@@ -93,8 +93,8 @@
             <el-form-item label="售卖价(分):" prop="goodsMaxPrice">
               <el-input v-model="form.salesPrice" placeholder="请输入商品最高价"/>
             </el-form-item>
-            <el-form-item label="单位" prop="goodsUnit">
-              <el-input v-model="form.goodsUnit" placeholder="请输入商品单位 (个/瓶/箱/件...)"/>
+            <el-form-item label="规格" prop="goodsUnit">
+              <el-input v-model="form.goodsUnit" placeholder="请输入商品规格 (个/瓶/箱/件...)"/>
             </el-form-item>
             <el-form-item label="毛利" prop="goodsGrossProfit">
               <el-input v-model="form.goodsGrossProfit" placeholder="10"/>

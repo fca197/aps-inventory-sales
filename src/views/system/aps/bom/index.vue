@@ -21,6 +21,9 @@
         <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
+        <el-button icon="el-icon-upload" plain size="mini" type="primary" @click="uploadBomOpen=true"></el-button>
+      </el-col>
+      <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -107,6 +110,14 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog  title="上传零件" :visible.sync="uploadBomOpen" append-to-body  width="500px">
+
+
+      <file-upload :fileType="['xlsx']" :file-upload-success="fileUploadSuccess"  upload-url="/apsBom/importData" :value="form.fileId"></file-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -116,10 +127,11 @@ import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/c
 import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import bomGroup from '@/views/system/aps/bomGroup/index.vue'
 import treeSelect from '@/views/components/treeSelect/index.vue'
+import FileUpload from '@/components/FileUpload/index.vue'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: 'tenantName',
-  components: { treeSelect },
+  components: { treeSelect ,FileUpload},
   computed: {
     bomGroup() {
       return bomGroup
@@ -134,6 +146,7 @@ export default {
       },
       // 遮罩层
       loading: true,
+      uploadBomOpen: false,
       // 选中数组
       ids: [],
       groupData: [],
@@ -218,6 +231,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
+      this.uploadBomOpen = false
       this.reset()
     },
     // 表单重置
@@ -300,6 +314,9 @@ export default {
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
+    },
+    fileUploadSuccess(){
+
     }
   }
 }

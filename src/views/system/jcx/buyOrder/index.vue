@@ -102,7 +102,7 @@
         <el-table-column label="价格" prop="goodsCostPrice"/>
         <el-table-column label="购买数量" prop="goodsBuyCount"/>
         <el-table-column label="总价" prop="goodsCostPriceTotal"/>
-        <el-table-column label="单位" prop="goodsUnit"/>
+        <el-table-column label="规格" prop="goodsUnit"/>
         <el-table-column label="供应商" prop="supplierName"/>
       </el-table>
       <div slot="footer" class="dialog-footer">

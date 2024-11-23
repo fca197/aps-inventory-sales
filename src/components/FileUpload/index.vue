@@ -40,6 +40,7 @@
 
 <script>
 import {getToken} from "@/utils/auth";
+import { log } from '@/api/common'
 
 export default {
   name: "FileUpload",
@@ -67,7 +68,9 @@ export default {
       type: Boolean,
       default: true
     },
-    uploadUrl: {}
+    uploadUrl: {
+      type: String,
+    }
   },
   data() {
     return {
@@ -189,7 +192,7 @@ export default {
       return strs !== '' ? strs.substr(0, strs.length - 1) : '';
     },
     handleSuccess(res) {
-      console.log("xxx", res)
+      log("file upload handleSuccess", res)
       this.fileUploadSuccess()
       // this.value = [res.data.id];
       this.fileList = [];

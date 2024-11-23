@@ -94,8 +94,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用量单位" prop="单价单位">
-            <el-input v-model="form.bomCostPriceUnit" placeholder="请输入单价单位" readonly disabled/>
+          <el-form-item label="用量规格" prop="单价规格">
+            <el-input v-model="form.bomCostPriceUnit" placeholder="请输入单价规格" readonly disabled/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -104,8 +104,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用量单位" prop="bomUnit">
-            <el-input v-model="form.bomUnit" placeholder="请输入用量单位"/>
+          <el-form-item label="用量规格" prop="bomUnit">
+            <el-input v-model="form.bomUnit" placeholder="请输入用量规格"/>
           </el-form-item>
         </el-col>
         <el-col :span="24">
