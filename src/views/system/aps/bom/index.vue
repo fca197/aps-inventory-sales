@@ -110,10 +110,15 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog  title="上传零件" :visible.sync="uploadBomOpen" append-to-body  width="500px">
-
-
-      <file-upload :fileType="['xlsx']" :file-upload-success="fileUploadSuccess"  upload-url="/apsBom/importData" :value="form.fileId"></file-upload>
+    <el-dialog title="上传零件" :visible.sync="uploadBomOpen" append-to-body width="500px">
+      <el-form>
+        <el-form-item label="模板下载">
+          <el-button icon="el-icon-download" size="mini" @click="downloadUploadTemplate"> 下载</el-button>
+        </el-form-item>
+        <el-form-item label="文件上传">
+          <file-upload :fileType="['xlsx']" :file-upload-success="fileUploadSuccess" upload-url="/apsBom/importData" :value="form.fileId"></file-upload>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -128,10 +133,11 @@ import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import bomGroup from '@/views/system/aps/bomGroup/index.vue'
 import treeSelect from '@/views/components/treeSelect/index.vue'
 import FileUpload from '@/components/FileUpload/index.vue'
+import { downloadForm } from '@/utils/request'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: 'tenantName',
-  components: { treeSelect ,FileUpload},
+  components: { treeSelect, FileUpload },
   computed: {
     bomGroup() {
       return bomGroup
@@ -315,8 +321,11 @@ export default {
       if (!value) return true
       return data.label.indexOf(value) !== -1
     },
-    fileUploadSuccess(){
-
+    fileUploadSuccess() {
+      this.cancel();
+    },
+    downloadUploadTemplate(){
+      downloadForm("/apsBom/exportQueryPageList",{data:{id:-1}},"文件下载模板.xlsx",{})
     }
   }
 }
