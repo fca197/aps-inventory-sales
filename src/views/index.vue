@@ -207,10 +207,10 @@ export default {
     },
     getUndoneTask() {
       this.taskLoading = true
-      post('/flow/task/undone/home', { flowKey: 'flowKey', pageNum: 1, pageSize: this.unDonTaskCount }, false).then(t => {
-        this.undoneTaskList = t.data.dataList
-        this.taskLoading = false
-      })
+      // post('/flow/task/undone/home', { flowKey: 'flowKey', pageNum: 1, pageSize: this.unDonTaskCount }, false).then(t => {
+      //   this.undoneTaskList = t.data.dataList
+      //   this.taskLoading = false
+      // })
     }, taskCancel() {
       this.taskOpen = false
     }
