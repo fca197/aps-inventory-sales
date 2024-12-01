@@ -510,7 +510,14 @@ export const dynamicRoutes = [{
         component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
         name: 'APP管理',
         meta: { title: 'APP管理', affix: false }
-      }]
+      } , {
+        path: '/setting/oplog/index',
+        component: () => import('@/views/system/base/oplog/BaseOplog.vue'),
+        name: '操作日志',
+        meta: { title: '操作日志', affix: false }
+      }
+
+      ]
   }
 
 //
