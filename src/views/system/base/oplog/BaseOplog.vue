@@ -2,19 +2,19 @@
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="操作内容" prop="content">
-        <el-input v-model="queryParams.data.content" clearable placeholder="请输入操作内容"
+        <el-input v-model="queryParams.data.content" clearable placeholder="请输入操作内容" @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="业务类型" prop="businessType">
-        <el-input v-model="queryParams.data.businessType" clearable placeholder="请输入业务类型"
+        <el-input v-model="queryParams.data.businessType" clearable placeholder="请输入业务类型" @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="业务Key" prop="businessKey">
-        <el-input v-model="queryParams.data.businessKey" clearable placeholder="请输入业务Key"
+        <el-input v-model="queryParams.data.businessKey" clearable placeholder="请输入业务Key" @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="请求地址" prop="url">
-        <el-input v-model="queryParams.data.url" clearable placeholder="请输入请求地址"
+        <el-input v-model="queryParams.data.url" clearable placeholder="请输入请求地址"  @keyup.enter.native="handleQuery"
         />
       </el-form-item>
     </el-form>

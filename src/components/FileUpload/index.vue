@@ -1,17 +1,17 @@
 <template>
   <div class="upload-file">
     <el-upload
-        ref="fileUpload"
-        :action="uploadUrl!==undefined?(baseUrl+uploadUrl): uploadFileUrl"
-        :before-upload="handleBeforeUpload"
-        :file-list="fileList"
-        :headers="headers"
-        :limit="limit"
-        :on-error="handleUploadError"
-        :on-exceed="handleExceed"
-        :on-success="handleSuccess"
-        :show-file-list="false"
-        class="upload-file-uploader"
+      ref="fileUpload"
+      :action="uploadUrl!==undefined?(baseUrl+uploadUrl): uploadFileUrl"
+      :before-upload="handleBeforeUpload"
+      :file-list="fileList"
+      :headers="headers"
+      :limit="limit"
+      :on-error="handleUploadError"
+      :on-exceed="handleExceed"
+      :on-success="handleSuccess"
+      :show-file-list="false"
+      class="upload-file-uploader"
     >
       <!-- 上传按钮 -->
       <el-button size="mini" type="primary">选取文件</el-button>
@@ -19,7 +19,7 @@
       <div v-if="showTip" slot="tip" class="el-upload__tip">
         请上传
         <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b></template>
-        <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b></template>
+        <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join('/') }}</b></template>
         的文件
       </div>
     </el-upload>
@@ -35,15 +35,30 @@
         </div>
       </li>
     </transition-group>
+
+
+    <el-dialog title="错误信息" :visible.sync="showErrorData">
+      <el-table :data="errorData">
+        <el-table-column prop="rowIndex" label="行号" width="60px"/>
+        <el-table-column prop="columnIndex" label="索引" width="60px"/>
+        <el-table-column prop="columnStr" label="列号" width="60px"/>
+        <el-table-column prop="columnName" label="列名" width="150px"/>
+        <el-table-column prop="errMsg" label="错误消息"/>
+      </el-table>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showErrorData=false">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getToken} from "@/utils/auth";
+import { getToken } from '@/utils/auth'
 import { log } from '@/api/common'
 
 export default {
-  name: "FileUpload",
+  name: 'FileUpload',
   props: {
     fileUploadSuccess: {},
     // 值
@@ -51,17 +66,17 @@ export default {
     // 数量限制
     limit: {
       type: Number,
-      default: 5,
+      default: 5
     },
     // 大小限制(MB)
     fileSize: {
       type: Number,
-      default: 5,
+      default: 5
     },
     // 文件类型, 例如['png', 'jpg', 'jpeg']
     fileType: {
       type: Array,
-      default: () => ["docx", "xlsx", "pptx", "txt", "pdf"],
+      default: () => ['docx', 'xlsx', 'pptx', 'txt', 'pdf']
     },
     // 是否显示提示
     isShowTip: {
@@ -69,37 +84,46 @@ export default {
       default: true
     },
     uploadUrl: {
-      type: String,
+      type: String
     }
   },
   data() {
     return {
       number: 0,
+      showErrorData: false,
       uploadList: [],
       baseUrl: process.env.VUE_APP_BASE_API,
-      uploadFileUrl: process.env.VUE_APP_BASE_API + "/fileUpload/insert", // 上传文件服务器地址
-      headers: {'j-token': getToken()},
+      uploadFileUrl: process.env.VUE_APP_BASE_API + '/fileUpload/insert', // 上传文件服务器地址
+      headers: { 'j-token': getToken() },
       fileList: [],
-    };
+      errorData: [
+        {
+          columnIndex: null,
+          columnName: '未知',
+          columnStr: '',
+          errMsg: '库存不能为空',
+          rowIndex: 1
+        }]
+    }
   },
   watch: {
     value: {
       handler(val) {
         if (val) {
-          let temp = 1;
+          let temp = 1
           // 首先将值转为数组
-          const list = Array.isArray(val) ? val : this.value.split(',');
+          const list = Array.isArray(val) ? val : this.value.split(',')
           // 然后将数组转为对象数组
           this.fileList = list.map(item => {
-            if (typeof item === "string") {
-              item = {name: item, url: item};
+            if (typeof item === 'string') {
+              item = { name: item, url: item }
             }
-            item.uid = item.uid || new Date().getTime() + temp++;
-            return item;
-          });
+            item.uid = item.uid || new Date().getTime() + temp++
+            return item
+          })
         } else {
-          this.fileList = [];
-          return [];
+          this.fileList = []
+          return []
         }
       },
       deep: true,
@@ -109,97 +133,107 @@ export default {
   computed: {
     // 是否显示提示
     showTip() {
-      return this.isShowTip && (this.fileType || this.fileSize);
-    },
+      return this.isShowTip && (this.fileType || this.fileSize)
+    }
   },
   methods: {
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
       // 校检文件类型
       if (this.fileType) {
-        const fileName = file.name.split('.');
-        const fileExt = fileName[fileName.length - 1];
-        const isTypeOk = this.fileType.indexOf(fileExt) >= 0;
+        const fileName = file.name.split('.')
+        const fileExt = fileName[fileName.length - 1]
+        const isTypeOk = this.fileType.indexOf(fileExt) >= 0
         if (!isTypeOk) {
-          this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join("/")}格式文件!`);
-          return false;
+          this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join('/')}格式文件!`)
+          return false
         }
       }
       // 校检文件大小
       if (this.fileSize) {
-        const isLt = file.size / 1024 / 1024 < this.fileSize;
+        const isLt = file.size / 1024 / 1024 < this.fileSize
         if (!isLt) {
-          this.$modal.msgError(`上传文件大小不能超过 ${this.fileSize} MB!`);
-          return false;
+          this.$modal.msgError(`上传文件大小不能超过 ${this.fileSize} MB!`)
+          return false
         }
       }
-      this.$modal.loading("正在上传文件，请稍候...");
-      this.number++;
-      return true;
+      this.$modal.loading('正在上传文件，请稍候...')
+      this.number++
+      return true
     },
     // 文件个数超出
     handleExceed() {
-      this.$modal.msgError(`上传文件数量不能超过 ${this.limit} 个!`);
+      this.$modal.msgError(`上传文件数量不能超过 ${this.limit} 个!`)
     },
     // 上传失败
     handleUploadError(err) {
-      this.$modal.msgError("上传文件失败，请重试");
+      this.$modal.msgError('上传文件失败，请重试')
       this.$modal.closeLoading()
     },
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        this.uploadList.push({name: res.fileName, url: res.fileName});
-        this.uploadedSuccessfully();
+        this.uploadList.push({ name: res.fileName, url: res.fileName })
+        this.uploadedSuccessfully()
       } else {
-        this.number--;
-        this.$modal.closeLoading();
-        this.$modal.msgError(res.msg);
-        this.$refs.fileUpload.handleRemove(file);
-        this.uploadedSuccessfully();
+        this.number--
+        this.$modal.closeLoading()
+        this.$modal.msgError(res.msg)
+        this.$refs.fileUpload.handleRemove(file)
+        this.uploadedSuccessfully()
       }
     },
     // 删除文件
     handleDelete(index) {
-      this.fileList.splice(index, 1);
-      this.$emit("input", this.listToString(this.fileList));
+      this.fileList.splice(index, 1)
+      this.$emit('input', this.listToString(this.fileList))
     },
     // 上传结束处理
     uploadedSuccessfully() {
       if (this.number > 0 && this.uploadList.length === this.number) {
-        this.fileList = this.fileList.concat(this.uploadList);
-        this.uploadList = [];
-        this.number = 0;
-        this.$emit("input", this.listToString(this.fileList));
-        this.$modal.closeLoading();
+        this.fileList = this.fileList.concat(this.uploadList)
+        this.uploadList = []
+        this.number = 0
+        this.$emit('input', this.listToString(this.fileList))
+        this.$modal.closeLoading()
       }
     },
     // 获取文件名称
     getFileName(name) {
-      if (name.lastIndexOf("/") > -1) {
-        return name.slice(name.lastIndexOf("/") + 1);
+      if (name.lastIndexOf('/') > -1) {
+        return name.slice(name.lastIndexOf('/') + 1)
       } else {
-        return "";
+        return ''
       }
     },
     // 对象转成指定字符串分隔
     listToString(list, separator) {
-      let strs = "";
-      separator = separator || ",";
+      let strs = ''
+      separator = separator || ','
       for (let i in list) {
-        strs += list[i].url + separator;
+        strs += list[i].url + separator
       }
-      return strs !== '' ? strs.substr(0, strs.length - 1) : '';
+      return strs !== '' ? strs.substr(0, strs.length - 1) : ''
     },
     handleSuccess(res) {
-      log("file upload handleSuccess", res)
-      this.fileUploadSuccess()
-      // this.value = [res.data.id];
-      this.fileList = [];
-      this.$modal.closeLoading();
+      log('file upload handleSuccess', res)
+      if (res.errorData) {
+        this.errorData = res.errorData
+        this.showErrorData = true
+        this.$modal.closeLoading()
+
+      } else {
+
+        this.fileUploadSuccess(res)
+        // this.value = [res.data.id];
+        this.fileList = []
+        this.$modal.closeLoading()
+
+      }
+
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

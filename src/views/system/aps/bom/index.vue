@@ -128,7 +128,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, log, queryPageList, updateById } from '@/api/common'
 import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import bomGroup from '@/views/system/aps/bomGroup/index.vue'
 import treeSelect from '@/views/components/treeSelect/index.vue'
@@ -321,11 +321,12 @@ export default {
       if (!value) return true
       return data.label.indexOf(value) !== -1
     },
-    fileUploadSuccess() {
+    fileUploadSuccess(res) {
+      log(res)
       this.cancel();
     },
     downloadUploadTemplate(){
-      downloadForm("/apsBom/exportQueryPageList",{data:{id:-1}},"文件下载模板.xlsx",{})
+      downloadForm("/apsBom/exportQueryPageList",{data:{id:-1}},"零件模板.xlsx",{})
     }
   }
 }
