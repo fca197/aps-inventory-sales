@@ -69,7 +69,7 @@
 
     </el-row>
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="零件编号" prop="bomCode">
@@ -98,6 +98,11 @@
         </el-form-item>
         <el-form-item label="使用规格" prop="useUnit">
           <el-input v-model="form.useUnit" placeholder="请输入使用规格"/>
+        </el-form-item>
+        <el-form-item label="制造路径" v-show="form.supplyMode==='make'">
+          <el-select v-model="form.produceProcessId">
+            <el-option v-for="(p,i) in produceProcessList"  :value="p.id" :label="p.produceProcessName"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="零件组" prop="groupId">
           <tree-select ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"
@@ -128,7 +133,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, log, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, log, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
 import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import bomGroup from '@/views/system/aps/bomGroup/index.vue'
 import treeSelect from '@/views/components/treeSelect/index.vue'
@@ -166,6 +171,7 @@ export default {
       total: 0,
       filterGroupName: '',
       brandNameList: [],
+      produceProcessList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -180,6 +186,7 @@ export default {
       },
       // 表单参数
       form: {
+        supplyMode: '',
         bomCode: '',
         remark: '',
         brandName: '',
@@ -198,6 +205,7 @@ export default {
   },
   created() {
     document['pagePath'] = '/apsBom'
+    queryUrlNoPageList('apsProduceProcess').then(t=>this.produceProcessList=t.data.dataList)
     // process.env.pagePath = "/tenant"
     queryBomGroupTree(false).then(t => {
       this.groupData = []
@@ -243,6 +251,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        supplyMode: '',
         remark: '',
         tenantCode: '',
         id: undefined,
