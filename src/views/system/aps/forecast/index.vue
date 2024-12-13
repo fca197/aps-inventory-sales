@@ -3,7 +3,7 @@
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
       <el-form-item label="预测产品" prop="goodsId">
         <el-select v-model="queryParams.data.goodsId" placeholder="请选择预测产品" @change="getList">
-          <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
+          <el-option v-for="item in goodsList" :key="item.goodsName" :label="item.goodsName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="预测版本名称" prop="brandName">
@@ -53,7 +53,7 @@
     <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum"
                 :total="total" @pagination="getList"/>
     <el-dialog :title="title" :visible.sync="open" width="1000px" @close="cancel">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="预测产品" prop="goodsId">
           <el-select v-model="form.goodsId" clearable placeholder="请选择预测产品">
             <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
@@ -106,16 +106,27 @@ export default {
       forecastList: [],
       tableHeaderList: [],
       form: {
-        fileId: "",
-        forecastNo: "",
-        forecastBeginDate: "",
-        forecastEndDate: ""
+        goodsId :undefined,
+        forecastNo :undefined,
+        forecastName :undefined,
+        forecastBeginDate :undefined,
+        forecastEndDate :undefined,
+        month :undefined,
+        months :undefined,
+        forecastStatus :undefined,
+        id: undefined
       },
       queryParams: {
         data: {
-          goodsId: null,
-          forecastCode: "",
-          forecastName: ""
+          goodsId :undefined,
+          forecastNo :undefined,
+          forecastName :undefined,
+          forecastBeginDate :undefined,
+          forecastEndDate :undefined,
+          month :undefined,
+          months :undefined,
+          forecastStatus :undefined,
+          id: undefined
         },
         pageNum: 1,
         pageSize: 10,
@@ -126,6 +137,18 @@ export default {
       multiple: false,
       showSearch: true,
       total: 0,
+      rules:{
+
+        goodsId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastNo :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastBeginDate :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastEndDate :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        month :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        months :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastStatus :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+
+      }
     }
   },
   created() {

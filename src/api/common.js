@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import ElementUI from 'element-ui'
+import { ElementUI,  MessageBox ,Message} from 'element-ui'
 
 export function add(data, options) {
   const urlPrefix = getPathPrefix()
@@ -67,6 +67,49 @@ export function updateById(data) {
     'method': 'POST',
     data: data
   })
+}
+
+
+export function  insetOrUpdate(_t){
+
+  _t.$refs["form"].validate(valid => {
+    if (valid) {
+      if (_t.form.id !== undefined) {
+        updateById(_t.form).then(response => {
+          _t.$modal.msgSuccess("修改成功");
+          _t.open = false;
+          _t.getList();
+        });
+      } else {
+        add(_t.form).then(response => {
+          _t.$modal.msgSuccess("新增成功");
+          _t.open = false;
+          _t.getList();
+        });
+      }
+    }
+  });
+}
+
+export function deleteList(row,ids, getList) {
+  const idList = row.id ? [row.id] : ids
+  MessageBox.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？',  "删除提示", {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: "warning",
+    dangerouslyUseHTMLString: true
+  }).then(()=>{
+    let req = {
+      idList: idList
+    }
+    return deleteByIdList(req)
+  }).then(() => {
+    if (getList) {
+      getList()
+    }
+    Message.success("删除成功");
+  })
+  document.getElementsByClassName('el-message-box')[0].style.width = '520px'
 }
 
 export function deleteByIdList(data) {
@@ -196,7 +239,6 @@ export function getDistrictByParentCode(data) {
     data: { data: { parentCode: data } }
   })
 }
-
 
 export function addJs(js) {
   let hm = document.createElement('script')

@@ -13,16 +13,16 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-link icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd">新增</el-link>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd">新增</el-button>
       </el-col>
       <el-col :span="1.5" hidden="hidden">
-        <el-link :disabled="single" icon="el-icon-edit" plain size="mini" type="success" @click="handleUpdate">修改
-        </el-link>
+        <el-button :disabled="single" icon="el-icon-edit" plain size="mini" type="success" @click="handleUpdate">修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-link :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
+        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete">
           删除
-        </el-link>
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -202,13 +202,16 @@ export default {
       // 表单校验
       rules: {
         factoryId: [
-          {required: true, message: "工厂", trigger: "blur"}
+          {required: true, message: "不能为空", trigger: "blur"}
+        ],
+        calendarDisabled: [
+          {required: true, message: "不能为空", trigger: "blur"}
         ],
         calendarName: [
-          {required: true, message: "日历名称", trigger: "blur"}
+          {required: true, message: "不能为空", trigger: "blur"}
         ],
         calendarCode: [
-          {required: true, message: "日历编码不能为空", trigger: "blur"},
+          {required: true, message: "不能为空", trigger: "blur"},
           {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"}
         ]
       },

@@ -277,7 +277,7 @@ export const dynamicRoutes = [{
 
   ]
 }, {
-  path: '/aps/goods/forecast/index',
+  path: '/aps/goods/forecast/index/home',
   name: '预测管理',
   component: Layout,
   meta: { title: '预测管理', icon: 'eye-open', affix: false },

@@ -43,7 +43,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="工厂" prop="factoryId">
           <el-select v-model="form.factoryId" placeholder="请选择工厂">
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
@@ -117,25 +117,30 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        data: {}
+        data: {
+          shiftCode :undefined,
+          shiftName :undefined,
+          factoryId :undefined,
+          id: undefined
+        }
       },
       // 表单参数
       form: {
         shiftItemList: [{
           timeRange: []
         }],
-        goodsId: undefined,
-        factoryId: undefined,
-        goodsRemark: "",
-        remark: "",
-        brandName: "",
-        pwd: "",
-        id: undefined,
-        confirmPwd: undefined
+        shiftCode :undefined,
+        shiftName :undefined,
+        factoryId :undefined,
+        id: undefined
       },
       shiftItemList: [],
       // 表单校验
-      rules: {},
+      rules: {
+        shiftCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        shiftName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        factoryId :[{required: true, message: "不能为空", trigger: "change"}],
+      },
       tableHeaderList: []
     };
   },

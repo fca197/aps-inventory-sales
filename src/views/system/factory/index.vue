@@ -81,7 +81,7 @@
 <script>
 
 
-import {add, deleteByIdList, getById, queryPageList, updateById, updateStatus} from '@/api/common'
+import { add, deleteByIdList,  getById, insetOrUpdate,deleteList, queryPageList, updateById, updateStatus } from '@/api/common'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   data() {
@@ -128,13 +128,9 @@ export default {
       },
       // 表单校验
       rules: {
-        factoryName: [
-          {required: true, message: "工厂名称", trigger: "blur"}
-        ],
-        factoryCode: [
-          {required: true, message: "工厂编码不能为空", trigger: "blur"},
-          {min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur"}
-        ]
+        factoryName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        factoryCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        factoryStatus :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
       },
       tableHeaderList: [{
         columnName: "id",
@@ -216,37 +212,11 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
+      insetOrUpdate(this);
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
-        let req = {
-          idList: idList
-        }
-        return deleteByIdList(req);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      });
-      document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+      deleteList(row,this.ids,this.getList())
     },
     factoryStatusChange(row, val) {
 

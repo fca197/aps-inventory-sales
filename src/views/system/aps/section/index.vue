@@ -65,7 +65,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, insetOrUpdate, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
@@ -96,19 +96,30 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        data: {}
+        data: {
+          factoryId :undefined,
+          sectionName :undefined,
+          sectionCode :undefined,
+          sectionType :undefined,
+          sectionStatus :undefined,
+          id: undefined
+        }
       },
       // 表单参数
       form: {
-        sectionCode: "",
-        remark: "",
-        brandName: "",
-        pwd: "",
-        id: undefined,
-        confirmPwd: undefined
+        factoryId :undefined,
+        sectionName :undefined,
+        sectionCode :undefined,
+        sectionType :undefined,
+        sectionStatus :undefined,
+        id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        // factoryId :[{required: true, message: "不能为空", trigger: "blur"}],
+        sectionName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sectionCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+      },
       tableHeaderList: []
     };
   },
@@ -140,10 +151,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        tenantCode: "",
-        id: undefined,
-        tenantName: undefined
+        factoryId :undefined,
+        sectionName :undefined,
+        sectionCode :undefined,
+        sectionType :undefined,
+        sectionStatus :undefined,
+        id: undefined
       };
       this.resetForm("form");
     },
@@ -182,23 +195,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
+     insetOrUpdate(this)
     },
     /** 删除按钮操作 */
     handleDelete(row) {

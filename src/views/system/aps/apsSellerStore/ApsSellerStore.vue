@@ -1,38 +1,38 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="128px" size="small">
-      <el-form-item label="销售门店编码" prop="sellerStoreCode">
-        <el-input v-model="queryParams.data.sellerStoreCode" clearable placeholder="请输入销售门店"
+      <el-form-item label="编码" prop="sellerStoreCode">
+        <el-input v-model="queryParams.data.sellerStoreCode" clearable placeholder="请输入"
                   @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="销售门店名称" prop="sellerStoreName">
-        <el-input v-model="queryParams.data.sellerStoreName" clearable placeholder="请输入销售门店名称"
+      <el-form-item label="名称" prop="sellerStoreName">
+        <el-input v-model="queryParams.data.sellerStoreName" clearable placeholder="请输入名称"
                   @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="销售门店手机号" prop="sellerStorePhone">
-        <el-input v-model="queryParams.data.sellerStorePhone" clearable placeholder="请输入销售门店手机号"
+      <el-form-item label="手机号" prop="sellerStorePhone">
+        <el-input v-model="queryParams.data.sellerStorePhone" clearable placeholder="请输入手机号"
                   @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="销售门店省" prop="sellerStoreProvinceCode">
-        <el-select clearable filterable v-model="queryParams.data.sellerStoreProvinceCode" @change="value=>changeRegCode(value,'p')">
+      <el-form-item label="省" prop="sellerStoreProvinceCode">
+        <el-select clearable filterable v-model.lazy="queryParams.data.sellerStoreProvinceCode" @change="(value)=>{changeRegCode(value,'p')}">
           <el-option v-for="(p,i) in provinceCodeList" :label="p.name" :value="p.code"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="销售门店市" prop="sellerStoreCityCode">
-        <el-select clearable filterable v-model="queryParams.data.sellerStoreCityCode" @change="value=>changeRegCode(value,'c')" >
+      <el-form-item label="市" prop="sellerStoreCityCode">
+        <el-select clearable filterable v-model.lazy="queryParams.data.sellerStoreCityCode" @change="value=>changeRegCode(value,'c')" >
           <el-option v-for="(p,i) in cityCodeList" :label="p.name" :value="p.code"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="销售门店区" prop="sellerStoreAreaCode">
-        <el-select clearable filterable v-model="queryParams.data.sellerStoreAreaCode"  @change="value=>changeRegCode(value,'a')" >
+      <el-form-item label="区" prop="sellerStoreAreaCode">
+        <el-select clearable filterable v-model.lazy="queryParams.data.sellerStoreAreaCode"  @change="value=>changeRegCode(value,'a')" >
           <el-option v-for="(p,i) in areaCodeList" :label="p.name" :value="p.code"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="销售门店地址" prop="sellerStoreAddr">
-        <el-input v-model="queryParams.data.sellerStoreAddr" clearable placeholder="请输入销售门店地址"
+      <el-form-item label="地址" prop="sellerStoreAddr">
+        <el-input v-model="queryParams.data.sellerStoreAddr" clearable placeholder="请输入地址"
                   @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -76,29 +76,29 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="140px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="销售门店编码" prop="sellerStoreCode">
-          <el-input v-model="form.sellerStoreCode" clearable placeholder="请输入销售门店"/>
+        <el-form-item label="编码" prop="sellerStoreCode">
+          <el-input v-model="form.sellerStoreCode" clearable placeholder="请输入"/>
         </el-form-item>
-        <el-form-item label="销售门店名称" prop="sellerStoreName">
-          <el-input v-model="form.sellerStoreName" clearable placeholder="请输入销售门店名称"/>
+        <el-form-item label="名称" prop="sellerStoreName">
+          <el-input v-model="form.sellerStoreName" clearable placeholder="请输入名称"/>
         </el-form-item>
-        <el-form-item label="销售门店手机号" prop="sellerStorePhone">
-          <el-input v-model="form.sellerStorePhone" clearable placeholder="请输入销售门店手机号"/>
+        <el-form-item label="手机号" prop="sellerStorePhone">
+          <el-input v-model="form.sellerStorePhone" clearable placeholder="请输入手机号"/>
         </el-form-item>
-        <el-form-item label="销售门店省" prop="sellerStoreProvinceCode">
-          <el-select clearable filterable v-model="form.sellerStoreProvinceCode">
+        <el-form-item label="省" prop="sellerStoreProvinceCode">
+          <el-select clearable filterable v-model="form.sellerStoreProvinceCode"  @change="(value)=>{changeRegCode(value,'p')}">
             <el-option v-for="(p,i) in provinceCodeList" :label="p.name" :value="p.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="销售门店市" prop="sellerStoreCityCode">
-          <el-select clearable filterable v-model="form.sellerStoreCityCode">
+        <el-form-item label="市" prop="sellerStoreCityCode">
+          <el-select clearable filterable v-model="form.sellerStoreCityCode"  @change="(value)=>{changeRegCode(value,'c')}">
             <el-option v-for="(p,i) in cityCodeList" :label="p.name" :value="p.code"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="销售门店区" prop="sellerStoreAreaCode">
-          <el-select clearable filterable v-model="form.sellerStoreAreaCode">
+        <el-form-item label="区" prop="sellerStoreAreaCode">
+          <el-select clearable filterable v-model="form.sellerStoreAreaCode"  @change="(value)=>{changeRegCode(value,'a')}">
             <el-option v-for="(p,i) in areaCodeList" :label="p.name" :value="p.code"></el-option>
           </el-select>
         </el-form-item>
@@ -106,8 +106,8 @@
           <el-input id="sellerStoreAddrInput" v-model="form.sellerStoreAddrInput" :placeholder="form.sellerStoreAddr"></el-input>
           <div id="sellerStoreAddrInputDiv"></div>
         </el-form-item>
-        <el-form-item label="销售门店地址" prop="sellerStoreAddr">
-          <el-input v-model="form.sellerStoreAddr" clearable placeholder="请输入销售门店地址"/>
+        <el-form-item label="地址" prop="sellerStoreAddr">
+          <el-input v-model="form.sellerStoreAddr" clearable placeholder="请输入地址"/>
         </el-form-item>
 
       </el-form>
@@ -172,7 +172,18 @@ export default {
         id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        sellerStoreCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStoreName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStorePhone :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStoreProvinceCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStoreCityCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStoreAreaCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStoreAddr :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStoreGdLon :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sellerStoreGdLat :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+
+      },
       tableHeaderList: [],
       mapMark: undefined,
       districtSearch: undefined,
@@ -220,10 +231,11 @@ export default {
       this.reset()
     },
     changeRegCode(n, type) {
+      console.info("xxxxx",n,type)
       if ('p' === type) {
-        this.getDistrict(n, this.cityCodeList)
         this.form.sellerStoreCityCode = ''
         this.form.sellerStoreAreaCode = ''
+        this.getDistrict(n, this.cityCodeList)
         this.resetMapCenter('province', n)
       } else if ('c' === type) {
         this.getDistrict(n, this.areaCodeList)
@@ -233,6 +245,7 @@ export default {
       } else if ('a' === type) {
         this.resetMapCenter('district', n)
       }
+
     },
     // 表单重置
     reset() {
@@ -270,7 +283,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.title = '添加销售门店'
+      this.title = '添加'
       this.open = true
       this.loadGdMap()
 

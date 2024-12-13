@@ -44,19 +44,19 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="供应商编码" prop="tenantCode">
+        <el-form-item label="供应商编码" prop="supplierCode">
           <el-input v-model="form.supplierCode" placeholder="请输入供应商编码"/>
         </el-form-item>
-        <el-form-item label="供应商名称" prop="tenantName">
+        <el-form-item label="供应商名称" prop="supplierName">
           <el-input v-model="form.supplierName" placeholder="请输入供应商名称"/>
         </el-form-item>
-        <el-form-item label="供应商手机" prop="tenantPhone">
+        <el-form-item label="供应商手机" prop="supplierPhone">
           <el-input v-model="form.supplierPhone" placeholder="请输入手机号"/>
         </el-form-item>
         <el-form-item label="供应商邮箱" prop="supplierEmail">
           <el-input v-model="form.supplierEmail" placeholder="请输入邮件"/>
         </el-form-item>
-        <el-form-item label="供应商地址" prop="tenantAddr">
+        <el-form-item label="供应商地址" prop="supplierAddr">
           <el-input v-model="form.supplierAddr" placeholder="请输入供应商地址"/>
         </el-form-item>
       </el-form>
@@ -99,19 +99,40 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {
-          supplierName: undefined
+
+          supplierName :undefined,
+          supplierCode :undefined,
+          supplierPhone :undefined,
+          supplierEmail :undefined,
+          supplierAddr :undefined,
+          supplierRemark :undefined,
+          supplierStatus :undefined,
+          id: undefined
         }
       },
       // 表单参数
       form: {
-        remark: "",
-        supplier: "",
-        pwd: "",
-        id: undefined,
-        confirmPwd: undefined
+
+        supplierName :undefined,
+        supplierCode :undefined,
+        supplierPhone :undefined,
+        supplierEmail :undefined,
+        supplierAddr :undefined,
+        supplierRemark :undefined,
+        supplierStatus :undefined,
+        id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        supplierName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        supplierCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        supplierPhone :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        supplierEmail :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        supplierAddr :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        supplierRemark :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 120, message: '长度在 5 到 120 个字符', trigger: 'blur' }],
+        // supplierStatus :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+
+      },
       tableHeaderList: []
     };
   },
@@ -140,10 +161,14 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        tenantCode: "",
-        id: undefined,
-        tenantName: undefined
+        supplierName :undefined,
+        supplierCode :undefined,
+        supplierPhone :undefined,
+        supplierEmail :undefined,
+        supplierAddr :undefined,
+        supplierRemark :undefined,
+        supplierStatus :undefined,
+        id: undefined
       };
       this.resetForm("form");
     },

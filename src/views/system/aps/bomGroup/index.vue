@@ -49,7 +49,7 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="零件组编号" prop="bomCode">
+        <el-form-item label="零件组编号" prop="groupCode">
           <el-input v-model="form.groupCode" placeholder="请输入编号"/>
         </el-form-item>
         <el-form-item label="零件组名称" prop="groupName">
@@ -113,15 +113,18 @@ export default {
       },
       // 表单参数
       form: {
-        bomCode: '',
-        remark: '',
-        brandName: '',
-        pwd: '',
-        id: undefined,
-        confirmPwd: undefined
+        groupCode :undefined,
+        groupName :undefined,
+        parentId :undefined,
+        pathId :undefined,
+        id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        groupCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }],
+        groupName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        parentId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }]
+      },
       tableHeaderList: [],
       bomGroupList: []
     }
@@ -156,10 +159,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: '',
-        tenantCode: '',
-        id: undefined,
-        tenantName: undefined
+        groupCode :undefined,
+        groupName :undefined,
+        parentId :undefined,
+        pathId :undefined,
+        id: undefined
       }
       this.resetForm('form')
     },

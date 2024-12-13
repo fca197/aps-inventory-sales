@@ -51,7 +51,7 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item  label="工厂">
+        <el-form-item  label="工厂" prop="factoryId">
           <el-select v-model="form.factoryId">
             <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
           </el-select>
@@ -62,6 +62,9 @@
         </el-form-item>
         <el-form-item label="机器名称" prop="machineName">
           <el-input v-model="form.machineName" clearable placeholder="请输入机器名称"/>
+        </el-form-item>
+        <el-form-item label="排序索引" prop="sortIndex">
+          <el-input v-model="form.sortIndex" type="number" clearable placeholder="请输入排序索引"/>
         </el-form-item>
 
       </el-form>
@@ -114,7 +117,13 @@ export default {
         id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        machineNo :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        machineName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        factoryId :[{required: true, message: "不能为空", trigger: "change"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        sortIndex :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+
+      },
       factoryList:[],
       tableHeaderList: []
     }

@@ -47,7 +47,7 @@
       </el-table-column>
     </el-table>
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="组编码" prop="saleCode">
           <el-input v-model="form.saleCode" placeholder="请输入组编码"/>
         </el-form-item>
@@ -64,95 +64,87 @@
 </template>
 
 <script>
-import {add, deleteByIdList, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, insetOrUpdate, queryPageList, updateById } from '@/api/common'
 
 export default {
-  name: "index",
+  name: 'index',
   data() {
     return {
       parentData: null,
-      title: "",
+      title: '',
       open: false,
       multiple: false,
       form: {
-        saleCode: "",
-        saleName: "",
+        saleCode: '',
+        saleName: '',
         isValue: 0
       },
       initForm: {
-        saleCode: "",
-        saleName: "",
+        saleCode: '',
+        saleName: '',
         isValue: 0
       },
       showSearch: false,
       id: 1,
       saleConfigList: [],
-      rules: []
+      rules: {
+        saleCode: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
+        saleName: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }]
+
+      }
     }
   },
   created() {
-    document["pagePath"] = "/apsSaleConfig";
+    document['pagePath'] = '/apsSaleConfig'
     this.getList()
   }
   ,
   methods: {
     getList() {
-      return queryPageList({queryPage:false})
+      return queryPageList({ queryPage: false })
       .then(t => {
-        this.saleConfigList = t.data.dataList;
+        this.saleConfigList = t.data.dataList
       })
     },
 
     handleAdd(row) {
-      this.resetForm();
-      this.open = true;
+      this.resetForm()
+      this.open = true
       if (row) {
-        this.title = "添加销售值"
-        this.form.id = undefined;
+        this.title = '添加销售值'
+        this.form.id = undefined
         this.form.isValue = 1
         this.form.parentId = row.id
       } else {
-        this.title = "添加销售组"
+        this.title = '添加销售组'
         this.form.isValue = 0
-        this.form.parentId = "0"
+        this.form.parentId = '0'
       }
     },
 
     resetForm() {
-      this.form = {...this.initForm};
+      this.form = { ...this.initForm }
     },
     cancel() {
-      this.resetForm();
-      this.open = false;
+      this.resetForm()
+      this.open = false
     }, submitForm() {
-      if (this.form.id === undefined) {
-        add(this.form).then(t => {
-          this.$message.success("增加成功")
-          this.getList()
-          this.open = false;
-        })
-      } else {
-        updateById(this.form).then(t => {
-          this.$message.success("修改成功")
-          this.getList()
-          this.open = false;
-        })
-      }
+      insetOrUpdate(this)
     }, handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
-        return deleteByIdList(req);
+        return deleteByIdList(req)
       }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      });
+        this.getList()
+        this.$modal.msgSuccess('删除成功')
+      })
     },
     handleEdit(data) {
-      this.form = data;
-      this.title = "修改销售特征" + (data.isValue == 1 ? "值" : "")
+      this.form = data
+      this.title = '修改销售特征' + (data.isValue == 1 ? '值' : '')
       this.open = true
     }
   }
