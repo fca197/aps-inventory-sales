@@ -52,23 +52,23 @@
 
     <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum"
                 :total="total" @pagination="getList"/>
-    <el-dialog :title="title" :visible.sync="open" width="1000px" @close="cancel">
+    <el-dialog :title="title" :visible.sync="open" width="600px" @close="cancel">
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
-        <el-form-item label="预测产品" prop="goodsId">
+        <el-form-item label="产品" prop="goodsId">
           <el-select v-model="form.goodsId" clearable placeholder="请选择预测产品">
             <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="预测版本编码" prop="forecastNo">
+        <el-form-item label="版本编码" prop="forecastNo">
           <el-input v-model="form.forecastNo" clearable placeholder="请输入预测编码"/>
         </el-form-item>
-        <el-form-item label="预测版本名称" prop="forecastName">
+        <el-form-item label="版本名称" prop="forecastName">
           <el-input v-model="form.forecastName" clearable placeholder="请输入预测名称"/>
         </el-form-item>
-        <el-form-item label="预测开始时间" prop="forecastBeginDate">
+        <el-form-item label="开始时间" prop="forecastBeginDate">
           <el-date-picker v-model="form.forecastBeginDate" clearable format="yyyy-MM" placeholder="请选择预测开始时间" type="month" value-format="yyyy-MM"/>
         </el-form-item>
-        <el-form-item label="预测结束时间" prop="forecastEndDate">
+        <el-form-item label="结束时间" prop="forecastEndDate">
           <el-date-picker v-model="form.forecastEndDate" clearable format="yyyy-MM" placeholder="请选择预测结束时间" type="month" value-format="yyyy-MM"/>
         </el-form-item>
 
@@ -91,7 +91,7 @@
 
 <script>
 import {getGoodsList} from "@/api/aps/goods";
-import {add, deleteByIdList, queryPageList, updateById} from "@/api/common";
+import { add, deleteByIdList, insetOrUpdate, queryPageList, updateById } from '@/api/common'
 import {downloadForm} from "@/utils/request";
 import {compute, forecastDeploy} from "@/api/aps/forecast";
 
@@ -195,19 +195,7 @@ export default {
     }, cancel() {
       this.open = false;
     }, submitForm() {
-      if (this.form.id) {
-        updateById(this.form).then(t => {
-          this.$modal.msgSuccess("修改成功")
-          this.getList();
-          this.cancel();
-        })
-      } else {
-        add(this.form).then(t => {
-          this.$modal.msgSuccess("新增成功")
-          this.getList();
-          this.cancel();
-        })
-      }
+     insetOrUpdate(this)
     }, handleUpdate(data) {
       this.form = data;
       this.title = "修改预测版本";

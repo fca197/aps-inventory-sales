@@ -8,38 +8,42 @@
       <el-step title="结束"></el-step>
     </el-steps>
     <div style="height: 20px"></div>
-    <el-form :model="form" label-width="130px">
+    <el-form  ref="form" :model="form" label-width="130px" :rules="rules">
       <div v-if="active===1">
-        <el-form-item label="版本号">
+        <el-form-item label="版本号" prop="schedulingVersionNo">
           <el-input v-model="form.schedulingVersionNo" placeholder="请输入版本号"></el-input>
         </el-form-item>
-        <el-form-item label="版本名称">
+        <el-form-item label="版本名称" prop="schedulingVersionName">
           <el-input v-model="form.schedulingVersionName" placeholder="请输入版本名称"></el-input>
         </el-form-item>
-        <el-form-item label="约束条件">
+        <el-form-item label="约束条件" prop="schedulingConstraintsId">
           <el-select v-model="form.schedulingConstraintsId" placeholder="请选择约束条件">
             <el-option
-                v-for="item in schedulingConstraintsList"
-                :key="item.id"
-                :label="item.constraintsName"
-                :value="item.id">
+              v-for="item in schedulingConstraintsList"
+              :key="item.id"
+              :label="item.constraintsName"
+              :value="item.id"
+            >
             </el-option>
           </el-select>
 
         </el-form-item>
 
-        <el-form-item label="排产天数">
-          <el-input v-model="form.schedulingDayCount" placeholder="请输入排产天数"></el-input>
+        <el-form-item label="开始日期" prop="startDate">
+          <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="form.startDate" placeholder="开始日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="排产天数" prop="schedulingDayCount">
+          <el-input v-model.number="form.schedulingDayCount" placeholder="请输入排产天数"></el-input>
         </el-form-item>
 
-<!--        <el-form-item label="零件汇总结束日期">-->
-<!--          <el-date-picker-->
-<!--              v-model="form.bomTotalEndDate"-->
-<!--              type="date"-->
-<!--              placeholder="选择日期"-->
-<!--              value-format="yyyy-MM-dd">-->
-<!--          </el-date-picker>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="零件汇总结束日期">-->
+        <!--          <el-date-picker-->
+        <!--              v-model="form.bomTotalEndDate"-->
+        <!--              type="date"-->
+        <!--              placeholder="选择日期"-->
+        <!--              value-format="yyyy-MM-dd">-->
+        <!--          </el-date-picker>-->
+        <!--        </el-form-item>-->
         <el-button style="margin-top: 12px;" @click="saveOrUpdate">下一步</el-button>
       </div>
       <div v-if="active===2">
@@ -63,16 +67,17 @@
 </template>
 
 <script>
-import {getSchedulingConstraintsList} from "@/api/aps/schedulingConstraints";
+import { getSchedulingConstraintsList } from '@/api/aps/schedulingConstraints'
 import { add, post, queryPageList, showMsg, updateById } from '@/api/common'
-import useConstraintsResult from "@/views/system/aps/scheduling/useConstraintsResult.vue";
-import useMakeCapacityResult from "@/views/system/aps/scheduling/useMakeCapacityResult.vue"
-import bomTotalResult from "@/views/system/aps/scheduling/bomTotalResult.vue";
-import request from "@/utils/request";
-import scheduling from "@/views/system/aps/scheduling/index.vue";
+import useConstraintsResult from '@/views/system/aps/scheduling/useConstraintsResult.vue'
+import useMakeCapacityResult from '@/views/system/aps/scheduling/useMakeCapacityResult.vue'
+import bomTotalResult from '@/views/system/aps/scheduling/bomTotalResult.vue'
+import request from '@/utils/request'
+import scheduling from '@/views/system/aps/scheduling/index.vue'
+import { formatDates } from '@/utils/formatDate'
 
 export default {
-  name: "CreateScheduling",
+  name: 'CreateScheduling',
   computed: {
     scheduling() {
       return scheduling
@@ -92,67 +97,82 @@ export default {
       isShow: false,
       schedulingConstraintsList: [],
       form: {
+        startDate: formatDates(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)),
         schedulingDayCount: 94,
-        schedulingVersionNo: "",
-        schedulingVersionName: "",
-        schedulingConstraintsId: "",
-        schedulingConstraintsName: ""
+        schedulingVersionNo: '',
+        schedulingVersionName: '',
+        schedulingConstraintsId: '',
+        schedulingConstraintsName: ''
+      }
+      ,rules:{
+        schedulingDayCount:[  { required: true, message: '不能为空'},
+          { type: 'number', message: '必须为数字值'}],
+        schedulingVersionNo:[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        schedulingVersionName:[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        schedulingConstraintsId:[{required: true, message: "不能为空", trigger: "blur"}],
+        startDate:[{required: true, message: "不能为空", trigger: "blur"}],
+
       }
     }
 
   },
   created() {
-    document["pagePath"] = "/apsSchedulingVersion";
-    this.form.schedulingVersionNo = "PC-" + this.formatDates(new Date(), true);
-    this.form.schedulingVersionName = "排产-" + this.formatDates(new Date(), true);
-    getSchedulingConstraintsList({pageNum: 1, pageSize: 300}).then(t => {
-      this.schedulingConstraintsList = t.data.dataList;
-    });
+    document['pagePath'] = '/apsSchedulingVersion'
+    this.form.schedulingVersionNo = 'PC-' + this.formatDates(new Date(), true)
+    this.form.schedulingVersionName = '排产-' + this.formatDates(new Date(), true)
+    getSchedulingConstraintsList({ pageNum: 1, pageSize: 300 }).then(t => {
+      this.schedulingConstraintsList = t.data.dataList
+    })
     if (this.$route.query.id) {
-      queryPageList({data: {id: this.$route.query.id}, queryPage:false})
+      queryPageList({ data: { id: this.$route.query.id }, queryPage: false })
       .then(t => {
-        this.form = t.data.dataList[0];
-        this.isShow = this.form.versionStep === 100;
-      });
+        this.form = t.data.dataList[0]
+        this.isShow = this.form.versionStep === 100
+      })
     }
   },
   methods: {
 
     saveOrUpdate() {
       if (this.isShow) {
-        this.next();
-        return;
+        this.next()
+        return
       }
-      if (this.form.id) {
-        updateById(this.form).then(t => {
-          showMsg(t, "修改成功")
-          this.useConstraints();
-        });
-      } else {
-        add(this.form).then(t => {
-          showMsg(t, "保存成功")
-          this.form.id = t.data.id;
-          this.useConstraints();
-        });
-      }
+      this.$refs["form"].validate(res=>{
+        if (res){
+          if (this.form.id) {
+            updateById(this.form).then(t => {
+              showMsg(t, '修改成功')
+              this.useConstraints()
+            })
+          } else {
+            add(this.form).then(t => {
+              showMsg(t, '保存成功')
+              this.form.id = t.data.id
+              this.useConstraints()
+            })
+          }
+        }
+      })
+
     },
     next() {
       if (this.active++ > 2) {
-        this.active = 0;
+        this.active = 0
       }
     },
     pre() {
       if (this.active-- < 0) {
-        this.active = 2;
+        this.active = 2
       }
     },
     deploy() {
-      var dateList = this.$refs.makeResult.queryParams.currentDate;
+      var dateList = this.$refs.makeResult.queryParams.currentDate
       if (dateList.length === 0) {
-        this.$message.error("请选择排产日期");
+        this.$message.error('请选择排产日期')
         return
       }
-      post("apsSchedulingIssueItem/insert", {
+      post('apsSchedulingIssueItem/insert', {
         schedulingVersionId: this.form.id,
         scheduledDayList: dateList
       })
@@ -162,52 +182,52 @@ export default {
 
     finish() {
       if (this.isShow) {
-        this.$tab.closeOpenPage("/aps/scheduling/index")
-        return;
+        this.$tab.closeOpenPage('/aps/scheduling/index')
+        return
       }
       request({
-        url: "/apsSchedulingVersion/finish",
-        method: "post",
+        url: '/apsSchedulingVersion/finish',
+        method: 'post',
         data: {
           id: this.form.id
         }
       }).then(() => {
-        showMsg({code: 200, msg: "完成"})
-        this.active = 4;
-        this.$tab.closeOpenPage("/aps/scheduling/index")
+        showMsg({ code: 200, msg: '完成' })
+        this.active = 4
+        this.$tab.closeOpenPage('/aps/scheduling/index')
       })
     },
 
     useConstraints() {
       if (this.isShow) {
-        this.next();
-        return;
+        this.next()
+        return
       }
       request({
-        url: "/apsSchedulingVersion/useConstraints",
-        method: "post",
+        url: '/apsSchedulingVersion/useConstraints',
+        method: 'post',
         data: {
           id: this.form.id
         }
       }).then((() => {
         this.next()
-        this.useMakeCapacityDisable = false;
+        this.useMakeCapacityDisable = false
       }))
       // this.next();
     },
     useMakeCapacity() {
       if (this.isShow) {
-        this.next();
-        return;
+        this.next()
+        return
       }
       request({
-        url: "/apsSchedulingVersion/useMakeCapacity",
-        method: "post",
+        url: '/apsSchedulingVersion/useMakeCapacity',
+        method: 'post',
         data: {
           id: this.form.id
         }
       }).then(t => {
-        this.next();
+        this.next()
       })
       // this.next();
 
@@ -216,8 +236,8 @@ export default {
 
     },
     showBomTotal() {
-      this.schedulingVersionId = this.form.id;
-      this.showBomTotalShow = true;
+      this.schedulingVersionId = this.form.id
+      this.showBomTotalShow = true
     }
   }
 }

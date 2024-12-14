@@ -1,5 +1,6 @@
 import request from '@/utils/request'
-import { ElementUI,  MessageBox ,Message} from 'element-ui'
+import {   MessageBox ,Message} from 'element-ui'
+import * as ElementUI from 'element-ui'
 
 export function add(data, options) {
   const urlPrefix = getPathPrefix()
