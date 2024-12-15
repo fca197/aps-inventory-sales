@@ -99,9 +99,17 @@
         <el-form-item label="使用规格" prop="useUnit">
           <el-input v-model="form.useUnit" placeholder="请输入使用规格"/>
         </el-form-item>
-        <el-form-item label="制造路径" v-show="form.supplyMode==='make'">
+        <el-form-item label="供货周期" prop="deliveryCycleDay">
+          <el-input v-model.number="form.deliveryCycleDay" placeholder="请输入供货周期"/>
+        </el-form-item>
+        <el-form-item label="制造路径" v-show="form.supplyMode==='make'" prop="apsBomSupplierId">
           <el-select v-model="form.produceProcessId">
             <el-option v-for="(p,i) in produceProcessList"  :value="p.id" :label="p.produceProcessName"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="供应商" v-show="form.supplyMode==='buy'" prop="apsBomSupplierId">
+          <el-select v-model="form.apsBomSupplierId">
+            <el-option v-for="(p,i) in apsBomSupplierList"  :value="p.id" :label="p.bomSupplierName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="零件组" prop="groupId">
@@ -172,6 +180,7 @@ export default {
       filterGroupName: '',
       brandNameList: [],
       produceProcessList: [],
+      apsBomSupplierList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -186,6 +195,8 @@ export default {
       },
       // 表单参数
       form: {
+        deliveryCycleDay: '',
+        apsBomSupplierId: '',
         supplyMode: '',
         bomCode: '',
         remark: '',
@@ -218,6 +229,7 @@ export default {
   created() {
     document['pagePath'] = '/apsBom'
     queryUrlNoPageList('apsProduceProcess').then(t=>this.produceProcessList=t.data.dataList)
+    queryUrlNoPageList('apsBomSupplier').then(t=>this.apsBomSupplierList=t.data.dataList)
     // process.env.pagePath = "/tenant"
     queryBomGroupTree(false).then(t => {
       this.groupData = []
