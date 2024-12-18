@@ -44,7 +44,7 @@ const permission = {
               ({ resourceUrl }) => resourceUrl)
             resourceUrlArray.splice(0, 0, '----')
             // resourceUrlArray.push("");
-            // console.log(resourceUrlArray)
+            console.log(resourceUrlArray)
             const asyncRoutes = filterDynamicRoutes(dynamicRoutes,
               resourceUrlArray)
             // console.log(asyncRoutes)

@@ -48,19 +48,29 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="title" :visible.sync="openItemShow" width="900px" append-to-body>
+    <el-dialog :title="title" :visible.sync="openItemShow" width="1200px" append-to-body>
+
+      <el-form inline>
+        <el-form-item label="开始时间">
+          <el-date-picker v-model="mailForm.beginDate"/>
+        </el-form-item>
+        <el-form-item label="开始时间">
+          <el-date-picker v-model="mailForm.endDate"/>
+        </el-form-item>
+        <el-button type="primary" size="medium" ref="sendMailBtn" @click="sendMail" :disabled="mailBtnIsDisabled">发送经销商</el-button>
+      </el-form>
       <el-table :data="apsGoodsBomBuyPlanItemDataItem" height="600px">
-        <el-table-column v-for="(item,index) in  apsGoodsBomBuyPlanItemHeaderItem" :key="index" align="center" :prop="item.fieldName" :label="item.showName"/>
+        <el-table-column v-for="(item,index) in  apsGoodsBomBuyPlanItemHeaderItem" :key="index" align="center" :width="item.width" :prop="item.fieldName" :label="item.showName"/>
         <el-table-column v-for="(item ,index) in JSON.parse(buyPlan.bomUseDate) " :key="index+100" width="190px" :label="item.date">
           <template scope="scope">
             <span v-if=" scope.row['bomUseDay'+item.day]">
-               <el-popover placement="top-start" width="200" trigger="hover">
-                  <el-form>
-                    <el-form-item label="类型"> {{ scope.row['bomUseDay' + item.day]['lack'] ? '购买' : '存量' }}</el-form-item>
-                    <el-form-item label="使用量"> {{ scope.row['bomUseDay' + item.day]['need_use'] }}</el-form-item>
-                    <el-form-item label="库存"> {{ scope.row['bomUseDay' + item.day]['bom_inv'] }}</el-form-item>
-                    <el-form-item label="缺少量"> {{ scope.row['bomUseDay' + item.day]['buy_inv'] }}</el-form-item>
-                  </el-form>
+               <el-popover placement="top-start" width="270" trigger="hover">
+                 <div style="width: 230px">
+                   <kv :label="'类型'" :value="scope.row['bomUseDay' + item.day]['lack'] ? '购买' : '存量' "></kv>
+                 <kv :label="'使用量'" :value="scope.row['bomUseDay' + item.day]['need_use'] "></kv>
+                 <kv :label="'库存'" :value="scope.row['bomUseDay' + item.day]['bom_inv']"></kv>
+                 <kv :label="'缺少量'" :value="scope.row['bomUseDay' + item.day]['buy_inv']"></kv>
+                 </div>
                   <el-button slot="reference">{{ scope.row['bomUseDay' + item.day]['buy_inv'] }}</el-button>
                 </el-popover>
 
@@ -75,10 +85,13 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common' // console.info("xxx: ",uc.urlPrefix)
+import { add, deleteByIdList, getById, post, queryPageList, queryUrlPageList, updateById } from '@/api/common' // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
+import kv from '@/layout/components/kv.vue'
+
 export default {
   name: 'tenantName',
+  components: { kv },
   data() {
 
     return {
@@ -91,6 +104,7 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      mailBtnIsDisabled: false,
       // 显示搜索条件
       showSearch: false,
       // 总条数
@@ -109,6 +123,10 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {}
+      },
+      mailForm: {
+        beginDate: undefined,
+        endDate: undefined
       },
       // 表单参数
       form: {
@@ -241,6 +259,15 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    sendMail() {
+      if (this.mailForm.beginDate === undefined || this.mailForm.endDate === undefined) {
+        this.$message.error("开始或结束日期不能为空");
+        return;
+      }
+      this.mailForm.buyPlanId=this.buyPlan.id;
+      this.mailBtnIsDisabled=true
+      post("/apsGoodsBomBuyPlanItem/sendMail2supplier",this.mailForm,true).then(t=>this.mailBtnIsDisabled=false)
     }
   }
 }

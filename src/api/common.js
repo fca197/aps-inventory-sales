@@ -237,8 +237,16 @@ export function getDistrictByParentCode(data) {
   return request({
     url: '/districtCode/queryList',
     'method': 'POST',
-    data: { data: { parentCode: data } }
+    data: { data: { parentCode: data||'0' } }
   })
+}
+
+export function getDistrictByParentCode2List(data,list) {
+  return request({
+    url: '/districtCode/queryList',
+    'method': 'POST',
+    data: { data: { parentCode: data } }
+  }).then(r=>list=r.data.dataList)
 }
 
 export function addJs(js) {

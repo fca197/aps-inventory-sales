@@ -2,18 +2,21 @@
 .header-div {
   margin-bottom: 5px;
   margin-left: 20px;
+  border-bottom: #cccccc 1px solid;
 }
 
 .header-title {
   font-size: 15px;
   color: #409EFF;
   margin: 2px 0;
+  width: 100px;
 }
 
 .header-value {
   font-size: 15px;
   color: #000;
   margin: 2px 0;
+  text-align: left;
 }
 
 .setting-footer {
