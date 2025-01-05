@@ -32,6 +32,18 @@
         <el-form-item label="开始日期" prop="startDate">
           <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="form.startDate" placeholder="开始日期"></el-date-picker>
         </el-form-item>
+        <el-form-item label="排产限制约束">
+            <el-checkbox-group v-model="form.useFactoryMakeCapacity" >
+              <el-checkbox :value="true" label="工厂产能"></el-checkbox>
+            </el-checkbox-group>
+          <el-checkbox-group v-model="form.useGoodsMakeCapacity" >
+              <el-checkbox :value="true" label="商品产能"></el-checkbox>
+            </el-checkbox-group>
+          <el-checkbox-group v-model="form.useSaleConfigMakeCapacity" >
+              <el-checkbox :value="true" label="销售配置产能"></el-checkbox>
+            </el-checkbox-group>
+        </el-form-item>
+
         <el-form-item label="排产天数" prop="schedulingDayCount">
           <el-input v-model.number="form.schedulingDayCount" placeholder="请输入排产天数"></el-input>
         </el-form-item>
@@ -102,7 +114,11 @@ export default {
         schedulingVersionNo: '',
         schedulingVersionName: '',
         schedulingConstraintsId: '',
-        schedulingConstraintsName: ''
+        schedulingConstraintsName: '',
+        useFactoryMakeCapacity: false,
+        useGoodsMakeCapacity: false,
+        useSaleConfigMakeCapacity: false,
+        useProjectConfigMakeCapacity: false
       }
       ,rules:{
         schedulingDayCount:[  { required: true, message: '不能为空'},
