@@ -48,7 +48,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-col :span="8">
           <el-form-item label="工厂" prop="factoryId">
             <el-select v-model="form.factoryId" placeholder="请选择工厂" clearable>
@@ -64,7 +64,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="工位" prop="bomId">
+          <el-form-item label="工位" prop="bomUseWorkStation">
             <el-select v-model="form.bomUseWorkStation" placeholder="请选择工位" clearable>
               <el-option v-for="item in workStationList" :key="item.id" :label="item.stationName" :value="item.id"></el-option>
             </el-select>
@@ -94,27 +94,27 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用量单位" prop="单价单位">
-            <el-input v-model="form.bomCostPriceUnit" placeholder="请输入单价单位" readonly disabled/>
+          <el-form-item label="用量规格" prop="bomCostPriceUnit">
+            <el-input v-model="form.bomCostPriceUnit" placeholder="请输入单价规格" readonly disabled/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="零件用量" prop="bomCode">
+          <el-form-item label="零件用量" prop="bomUsage">
             <el-input v-model="form.bomUsage" placeholder="请输入用量"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="用量单位" prop="bomUnit">
-            <el-input v-model="form.bomUnit" placeholder="请输入用量单位"/>
+          <el-form-item label="用量规格" prop="bomUnit">
+            <el-input v-model="form.bomUnit" placeholder="请输入用量规格"/>
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="使用表达式" prop="bomName">
-            <el-input v-model="form.bomUseExpression" placeholder="请输入零件名称"/>
+          <el-form-item label="使用表达式" prop="bomUseExpression">
+            <el-input v-model="form.bomUseExpression" placeholder="请输入使用表达式"/>
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="是否关注" prop="bomName">
+          <el-form-item label="是否关注" prop="isFollow">
             <el-radio-group v-model="form.isFollow" size="medium">
               <el-radio :label="true">是</el-radio>
               <el-radio :label="false">否</el-radio>
@@ -172,19 +172,40 @@ export default {
       },
       // 表单参数
       form: {
-        goodsId: undefined,
-        factoryId: undefined,
-        goodsRemark: "",
-        remark: "",
-        brandName: "",
-        pwd: "",
-        id: undefined,
-        confirmPwd: undefined,
-        isFollow: false,
-        bomUseExpression:"."
+        goodsId :undefined,
+        groupId :undefined,
+        bomId :undefined,
+        bomCode :undefined,
+        bomName :undefined,
+        bomUsage :undefined,
+        bomUnit :undefined,
+        bomCostPrice :undefined,
+        bomCostPriceUnit :undefined,
+        bomUseWorkStation :undefined,
+        bomUseExpression :undefined,
+        bomInventory :undefined,
+        isFollow :undefined,
+        factoryId :undefined,
+        id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        goodsId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        groupId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomUsage :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomCostPrice :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomCostPriceUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomUseWorkStation :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomUseExpression :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomInventory :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        isFollow :[{required: true, message: "请选择", trigger: "change"}],
+        factoryId :[{required: true, message: "请选择", trigger: "change"}],
+
+      },
       tableHeaderList: []
     };
   },
@@ -226,12 +247,21 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        tenantCode: "",
-        id: undefined,
-        tenantName: undefined,
-        isFollow: false,
-        bomUseExpression:"."
+        goodsId :undefined,
+        groupId :undefined,
+        bomId :undefined,
+        bomCode :undefined,
+        bomName :undefined,
+        bomUsage :undefined,
+        bomUnit :undefined,
+        bomCostPrice :undefined,
+        bomCostPriceUnit :undefined,
+        bomUseWorkStation :undefined,
+        bomUseExpression :undefined,
+        bomInventory :undefined,
+        isFollow :undefined,
+        factoryId :undefined,
+        id: undefined
       };
       this.resetForm("form");
     },

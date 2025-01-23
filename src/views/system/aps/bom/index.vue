@@ -5,6 +5,11 @@
       <el-form-item label="零件名称" prop="brandName">
         <el-input v-model="queryParams.data.bomName" clearable placeholder="请输入零件名称" @keyup.enter.native="handleQuery"/>
       </el-form-item>
+      <el-form-item label="购买方式" prop="supplyMode">
+        <el-select v-model="queryParams.data.supplyMode" clearable>
+          <el-option v-for="(sm) in supplyModeList" :value="sm.val" :key="sm.name" :label="sm.name"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -16,6 +21,9 @@
         <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
       <el-col :span="1.5">
+        <el-button icon="el-icon-upload" plain size="mini" type="primary" @click="uploadBomOpen=true"></el-button>
+      </el-col>
+      <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -24,13 +32,13 @@
     <el-row>
       <el-col :span="3" style="border: 1px solid #ccc;">
         <el-tree
-            style="margin: 10px 5px;height: 600px"
-            class="filter-tree"
-            :data="groupData"
-            default-expand-all
-            @node-click="bomGroupClick"
-            :props="{ children: 'children',label: 'groupName'}"
-            ref="tree"
+          style="margin: 10px 5px;height: 600px"
+          class="filter-tree"
+          :data="groupData"
+          default-expand-all
+          @node-click="bomGroupClick"
+          :props="{ children: 'children',label: 'groupName'}"
+          ref="tree"
         >
         </el-tree>
 
@@ -41,7 +49,7 @@
           <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
 
           <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
-          <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right">
+          <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="150">
             <template slot-scope="scope">
               <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
               <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
@@ -50,18 +58,18 @@
         </el-table>
 
         <pagination
-            v-show="total>0"
-            :limit.sync="queryParams.pageSize"
-            :page.sync="queryParams.pageNum"
-            :total="total"
-            @pagination="getList"
+          v-show="total>0"
+          :limit.sync="queryParams.pageSize"
+          :page.sync="queryParams.pageNum"
+          :total="total"
+          @pagination="getList"
         />
 
       </el-col>
 
     </el-row>
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="零件编号" prop="bomCode">
@@ -70,18 +78,43 @@
         <el-form-item label="零件名称" prop="bomName">
           <el-input v-model="form.bomName" placeholder="请输入名称"/>
         </el-form-item>
-        <el-form-item label="零件价格" prop="price">
+        <el-form-item label="零件价格" prop="bomCostPrice">
           <el-input v-model="form.bomCostPrice" placeholder="请输入价格"/>
         </el-form-item>
         <el-form-item label="零件价格" prop="bomCostPriceUnit">
-          <el-input v-model="form.bomCostPriceUnit" placeholder="请输入价格单位"/>
+          <el-input v-model="form.bomCostPriceUnit" placeholder="请输入价格规格"/>
         </el-form-item>
 
-        <el-form-item label="请输入库存" prop="bomInventory">
+        <el-form-item label="库存" prop="bomInventory">
           <el-input v-model="form.bomInventory" placeholder="请输入库存"/>
         </el-form-item>
+        <el-form-item label="购买方式" prop="supplyMode">
+          <el-select v-model="form.supplyMode">
+            <el-option v-for="(sm) in supplyModeList" :value="sm.val" :key="sm.val" :label="sm.name"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="规格" prop="bomUnit">
+          <el-input v-model="form.bomUnit" placeholder="请输入库存"/>
+        </el-form-item>
+        <el-form-item label="使用规格" prop="useUnit">
+          <el-input v-model="form.useUnit" placeholder="请输入使用规格"/>
+        </el-form-item>
+        <el-form-item label="供货周期" prop="deliveryCycleDay">
+          <el-input v-model.number="form.deliveryCycleDay" placeholder="请输入供货周期"/>
+        </el-form-item>
+        <el-form-item label="制造路径" v-show="form.supplyMode==='make'" prop="apsBomSupplierId">
+          <el-select v-model="form.produceProcessId">
+            <el-option v-for="(p,i) in produceProcessList"  :value="p.id" :label="p.produceProcessName"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="供应商" v-show="form.supplyMode==='buy'" prop="apsBomSupplierId">
+          <el-select v-model="form.apsBomSupplierId">
+            <el-option v-for="(p,i) in apsBomSupplierList"  :value="p.id" :label="p.bomSupplierName"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="零件组" prop="groupId">
-          <tree-select ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"></tree-select>
+          <tree-select ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"
+          ></tree-select>
         </el-form-item>
 
       </el-form>
@@ -90,19 +123,34 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="上传零件" :visible.sync="uploadBomOpen" append-to-body width="500px">
+      <el-form>
+        <el-form-item label="模板下载">
+          <el-button icon="el-icon-download" size="mini" @click="downloadUploadTemplate"> 下载</el-button>
+        </el-form-item>
+        <el-form-item label="文件上传">
+          <file-upload :fileType="['xlsx']" :file-upload-success="fileUploadSuccess" upload-url="/apsBom/importData" :value="form.fileId"></file-upload>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, log, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
 import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import bomGroup from '@/views/system/aps/bomGroup/index.vue'
 import treeSelect from '@/views/components/treeSelect/index.vue'
+import FileUpload from '@/components/FileUpload/index.vue'
+import { downloadForm } from '@/utils/request'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: 'tenantName',
-  components: { treeSelect },
+  components: { treeSelect, FileUpload },
   computed: {
     bomGroup() {
       return bomGroup
@@ -117,6 +165,7 @@ export default {
       },
       // 遮罩层
       loading: true,
+      uploadBomOpen: false,
       // 选中数组
       ids: [],
       groupData: [],
@@ -130,6 +179,8 @@ export default {
       total: 0,
       filterGroupName: '',
       brandNameList: [],
+      produceProcessList: [],
+      apsBomSupplierList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -144,6 +195,9 @@ export default {
       },
       // 表单参数
       form: {
+        deliveryCycleDay: '',
+        apsBomSupplierId: '',
+        supplyMode: '',
         bomCode: '',
         remark: '',
         brandName: '',
@@ -152,12 +206,30 @@ export default {
         confirmPwd: undefined
       },
       // 表单校验
-      rules: {},
-      tableHeaderList: []
+      rules: {
+        bomCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        bomName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        bomCostPrice :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        bomCostPriceUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        bomInventory :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        groupId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        supplyMode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        useUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        bomUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        produceProcessId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+
+      },
+      tableHeaderList: [],
+      supplyModeList: [
+        { val: 'buy', name: '购买' },
+        { val: 'make', name: '自制' }
+      ]
     }
   },
   created() {
     document['pagePath'] = '/apsBom'
+    queryUrlNoPageList('apsProduceProcess').then(t=>this.produceProcessList=t.data.dataList)
+    queryUrlNoPageList('apsBomSupplier').then(t=>this.apsBomSupplierList=t.data.dataList)
     // process.env.pagePath = "/tenant"
     queryBomGroupTree(false).then(t => {
       this.groupData = []
@@ -197,11 +269,13 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
+      this.uploadBomOpen = false
       this.reset()
     },
     // 表单重置
     reset() {
       this.form = {
+        supplyMode: '',
         remark: '',
         tenantCode: '',
         id: undefined,
@@ -279,6 +353,13 @@ export default {
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
+    },
+    fileUploadSuccess(res) {
+      log(res)
+      this.cancel();
+    },
+    downloadUploadTemplate(){
+      downloadForm("/apsBom/exportQueryPageList",{data:{id:-1}},"零件模板.xlsx",{})
     }
   }
 }

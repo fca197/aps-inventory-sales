@@ -1,6 +1,6 @@
 'use strict'
 const path = require('path')
-const FileManagerPlugin = require('filemanager-webpack-plugin');
+const FileManagerPlugin = require('filemanager-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -19,7 +19,7 @@ module.exports = {
   // 部署生产环境和开发环境下的URL。
   // 默认情况下，Vue CLI 会假设你的应用是被部署在一个域名的根路径上
   // 例如 https://www.ruoyi.vip/。如果应用被部署在一个子路径上，你就需要用这个选项指定这个子路径。例如，如果你的应用被部署在 https://www.ruoyi.vip/admin/，则设置 baseUrl 为 /admin/。
-  publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
+  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
   // 在npm run build 或 yarn build 时 ，生成文件的目录名称（要和baseUrl的生产环境路径一致）（默认dist）
   outputDir: 'dist',
   // 用于放置生成的静态资源 (js、css、img、fonts) 的；（项目打包之后，静态资源会放在这个文件夹下）
@@ -35,8 +35,22 @@ module.exports = {
     open: true,
     // https: true,
     proxy: {
+
+      // '/api/peanut/gd/': {
+      //   target: 'http://localhost',//代理地址，这里设置的地址会代替axios中设置的baseURL
+      //   // target: 'https://aps.solveplan.cn/',//代理地址，这里设置的地址会代替axios中设置的baseURL
+      //   changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      //   //ws: true, // proxy websockets
+      //   //pathRewrite方法重写url
+      //   pathRewrite: {
+      //     // '^/api': '/api'
+      //     //pathRewrite: {'^/api': '/'} 重写之后url为 http://192.168.1.16:8085/xxxx
+      //     //pathRewrite: {'^/api': '/api'} 重写之后url为 http://192.168.1.16:8085/api/xxxx
+      //   }
+      // },
       '/api': {
         target: 'http://localhost',//代理地址，这里设置的地址会代替axios中设置的baseURL
+        // target: 'https://aps.solveplan.cn/',//代理地址，这里设置的地址会代替axios中设置的baseURL
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
         //ws: true, // proxy websockets
         //pathRewrite方法重写url
@@ -52,7 +66,7 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        sassOptions: {outputStyle: "expanded"}
+        sassOptions: { outputStyle: 'expanded' }
       }
     }
   },
@@ -77,12 +91,12 @@ module.exports = {
           onEnd: {
             delete: [`./dist/*.zip`],
             archive: [
-              {source: `./dist`, destination: `./dist/aps.zip`}
+              { source: `./dist`, destination: `./dist/aps.zip` }
             ]
           }
         }
       })
-    ],
+    ]
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
@@ -140,10 +154,10 @@ module.exports = {
       })
 
       config.optimization.runtimeChunk('single'),
-          {
-            from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
-            to: './' //到根目录下
-          }
+        {
+          from: path.resolve(__dirname, './public/robots.txt'), //防爬虫文件
+          to: './' //到根目录下
+        }
     })
   }
 }

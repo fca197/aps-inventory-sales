@@ -51,7 +51,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
 
         <el-form-item label="状态编号" prop="statusCode">
           <el-input v-model="form.statusCode" placeholder="请输入编号"/>
@@ -59,12 +59,12 @@
         <el-form-item label="状态名称" prop="statusName">
           <el-input v-model="form.statusName" placeholder="请输入状态名称"/>
         </el-form-item>
-        <el-form-item label="订单商品默认状态" prop="isOrderGoodsInit">
-          <el-radio-group v-model="form.isOrderGoodsInit">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
+<!--        <el-form-item label="订单默认状态" prop="isOrderGoodsInit">-->
+<!--          <el-radio-group v-model="form.isOrderGoodsInit">-->
+<!--            <el-radio :label="1">是</el-radio>-->
+<!--            <el-radio :label="0">否</el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -77,7 +77,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, insetOrUpdate, queryPageList, updateById } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
@@ -108,19 +108,29 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        data: {}
+        data: {
+          statusCode :undefined,
+          statusName :undefined,
+          factoryId :undefined,
+          isOrderGoodsInit :undefined,
+          id: undefined}
       },
       // 表单参数
       form: {
-        statusCode: '',
-        remark: '',
-        brandName: '',
-        pwd: '',
-        id: undefined,
-        confirmPwd: undefined
+        statusCode :undefined,
+        statusName :undefined,
+        factoryId :undefined,
+        isOrderGoodsInit :undefined,
+        id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        statusCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        statusName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        factoryId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        // isOrderGoodsInit :[{required: true, message: "必须", trigger: "blur"}],
+
+      },
       tableHeaderList: []
     }
   },
@@ -152,10 +162,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: '',
-        tenantCode: '',
-        id: undefined,
-        tenantName: undefined
+        statusCode :undefined,
+        statusName :undefined,
+        factoryId :undefined,
+        isOrderGoodsInit :undefined,
+        id: undefined
       }
       this.resetForm('form')
     },
@@ -194,23 +205,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess('修改成功')
-              this.open = false
-              this.getList()
-            })
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess('新增成功')
-              this.open = false
-              this.getList()
-            })
-          }
-        }
-      })
+      insetOrUpdate(this);
     },
     /** 删除按钮操作 */
     handleDelete(row) {

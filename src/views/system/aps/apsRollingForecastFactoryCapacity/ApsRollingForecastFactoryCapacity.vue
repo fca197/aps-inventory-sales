@@ -2,8 +2,8 @@
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="工厂" prop="factoryId">
-        <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>-->
-        <el-select v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID">
+        <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂" @keyup.enter.native="handleQuery"/>-->
+        <el-select v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂">
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
         </el-select>
       </el-form-item>
@@ -52,8 +52,8 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="900px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="工厂ID" prop="factoryId">
-          <el-select v-model="form.factoryId" clearable placeholder="请输入工厂ID" style="width: 700px">
+        <el-form-item label="工厂" prop="factoryId">
+          <el-select v-model="form.factoryId" clearable placeholder="请输入工厂" style="width: 700px">
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
           </el-select>
         </el-form-item>

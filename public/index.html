@@ -195,6 +195,7 @@
       color: #FFF;
       opacity: 0.5;
     }
+
   </style>
 </head>
 <body>
@@ -218,6 +219,11 @@
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(hm, s);
   })();
+
+  window._AMapSecurityConfig = {
+    serviceHost: "https://aps.solveplan.cn/_AMapService",
+    //例如 ：serviceHost:'http://1.1.1.1:80/_AMapService',
+  };
 </script>
 
 </body>

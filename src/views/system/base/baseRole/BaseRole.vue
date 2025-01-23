@@ -135,7 +135,12 @@ export default {
         id: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        roleGroupId :[{required: true, message: "不能为空", trigger: "change"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        roleCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        roleName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+
+      },
       tableHeaderList: [],
       roleGroupList: []
     }

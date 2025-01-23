@@ -225,6 +225,16 @@ export const dynamicRoutes = [{
     name: '供应管理',
     component: () => import('@/views/system/supplier/index'),
     meta: { title: '供应管理', icon: 'pastebin', affix: false }
+  }, {
+    path: '/seller/index',
+    name: '销售方管理',
+    component: () => import('@/views/system/aps/apsSellerStore/ApsSellerStore.vue'),
+    meta: { title: '销售方管理', icon: '', affix: false }
+  }, {
+    path: '/aps/bom/supplier/index',
+    name: '零件供应商管理',
+    component: () => import('@/views/system/aps/apsBomSupplier/ApsBomSupplier.vue'),
+    meta: { title: '零件供应商管理', icon: '', affix: false }
   }
 
   ]
@@ -272,7 +282,7 @@ export const dynamicRoutes = [{
 
   ]
 }, {
-  path: '/aps/goods/forecast/index',
+  path: '/aps/goods/forecast/index/home',
   name: '预测管理',
   component: Layout,
   meta: { title: '预测管理', icon: 'eye-open', affix: false },
@@ -505,7 +515,14 @@ export const dynamicRoutes = [{
         component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
         name: 'APP管理',
         meta: { title: 'APP管理', affix: false }
-      }]
+      } , {
+        path: '/setting/oplog/index',
+        component: () => import('@/views/system/base/oplog/BaseOplog.vue'),
+        name: '操作日志',
+        meta: { title: '操作日志', affix: false }
+      }
+
+      ]
   }
 
 //

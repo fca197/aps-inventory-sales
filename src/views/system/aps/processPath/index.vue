@@ -90,7 +90,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, deleteList, getById, insetOrUpdate, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 import {getRoomList} from "@/api/aps/room";
 // console.info("xxx: ",uc.urlPrefix)
@@ -138,7 +138,13 @@ export default {
         confirmPwd: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        isDefault:[{ required: true, message: '必选', trigger: 'blur' }],
+        factoryId:[{ required: true, message: '不能为空', trigger: 'blur' }],
+        processPathCode:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
+        processPathName:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
+
+      },
       tableHeaderList: [],
     };
   },
@@ -223,37 +229,11 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
+    insetOrUpdate(this)
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
-        let req = {
-          idList: idList
-        }
-        return deleteByIdList(req);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      });
-      document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+     deleteList(row,this.ids,this.getList)
     }, addRoom() {
       this.form.pathRoomList.push({})
     },

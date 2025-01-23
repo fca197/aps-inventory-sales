@@ -3,7 +3,7 @@
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="100px" size="small">
       <el-form-item label="预测产品" prop="goodsId">
         <el-select v-model="queryParams.data.goodsId" placeholder="请选择预测产品" @change="getList">
-          <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
+          <el-option v-for="item in goodsList" :key="item.goodsName" :label="item.goodsName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="预测版本名称" prop="brandName">
@@ -28,23 +28,23 @@
     <el-table :data="forecastList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" />
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="180px">
         <template slot-scope="scope">
           <!--          TO_UPLOAD(10, "待上传"), //-->
           <!--          TO_COMPUTED(30, "待计算"), //-->
           <!--          COMPUTED_RESULT(50, "计算结束"),-->
 
-          <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleData(scope.row)"></el-button>
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
-          <el-button icon="el-icon-download" size="mini" type="text" @click="downloadTemplate(scope.row)"></el-button>
-          <el-button icon="el-icon-upload" size="mini" type="text" @click="uploadTemplate(scope.row)"></el-button>
+          <el-button title="数据" icon="el-icon-s-data" size="mini" type="text" @click="handleData(scope.row)"></el-button>
+          <el-button title="编辑" icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button title="删除" icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-button title="下载" icon="el-icon-download" size="mini" type="text" @click="downloadTemplate(scope.row)"></el-button>
+          <el-button title="上传" icon="el-icon-upload" size="mini" type="text" @click="uploadTemplate(scope.row)"></el-button>
           <el-button v-if="scope.row.forecastStatus==30" size="mini" type="text" @click="compute(scope.row)">
-            <svg-icon icon-class="calculator"></svg-icon>
+            <svg-icon title="计算" icon-class="calculator"></svg-icon>
           </el-button>
-          <el-button v-if="scope.row.forecastStatus==50" icon="el-icon-s-data" size="mini" type="text" @click="computeResult(scope.row)"></el-button>
+          <el-button title="计算结果" v-if="scope.row.forecastStatus==50" icon="el-icon-s-data" size="mini" type="text" @click="computeResult(scope.row)"></el-button>
           <el-button v-if="scope.row.forecastStatus==50" size="mini" type="text" @click="forecastDeploy(scope.row)">
-            <svg-icon icon-class="broadcast"></svg-icon>
+            <svg-icon  title="发布" icon-class="broadcast"></svg-icon>
           </el-button>
         </template>
       </el-table-column>
@@ -52,23 +52,23 @@
 
     <pagination v-show="total>0" :limit.sync="queryParams.pageSize" :page.sync="queryParams.pageNum"
                 :total="total" @pagination="getList"/>
-    <el-dialog :title="title" :visible.sync="open" width="1000px" @close="cancel">
-      <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="预测产品" prop="goodsId">
+    <el-dialog :title="title" :visible.sync="open" width="600px" @close="cancel">
+      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+        <el-form-item label="产品" prop="goodsId">
           <el-select v-model="form.goodsId" clearable placeholder="请选择预测产品">
             <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="预测版本编码" prop="forecastNo">
+        <el-form-item label="版本编码" prop="forecastNo">
           <el-input v-model="form.forecastNo" clearable placeholder="请输入预测编码"/>
         </el-form-item>
-        <el-form-item label="预测版本名称" prop="forecastName">
+        <el-form-item label="版本名称" prop="forecastName">
           <el-input v-model="form.forecastName" clearable placeholder="请输入预测名称"/>
         </el-form-item>
-        <el-form-item label="预测开始时间" prop="forecastBeginDate">
+        <el-form-item label="开始时间" prop="forecastBeginDate">
           <el-date-picker v-model="form.forecastBeginDate" clearable format="yyyy-MM" placeholder="请选择预测开始时间" type="month" value-format="yyyy-MM"/>
         </el-form-item>
-        <el-form-item label="预测结束时间" prop="forecastEndDate">
+        <el-form-item label="结束时间" prop="forecastEndDate">
           <el-date-picker v-model="form.forecastEndDate" clearable format="yyyy-MM" placeholder="请选择预测结束时间" type="month" value-format="yyyy-MM"/>
         </el-form-item>
 
@@ -91,7 +91,7 @@
 
 <script>
 import {getGoodsList} from "@/api/aps/goods";
-import {add, deleteByIdList, queryPageList, updateById} from "@/api/common";
+import { add, deleteByIdList, insetOrUpdate, queryPageList, updateById } from '@/api/common'
 import {downloadForm} from "@/utils/request";
 import {compute, forecastDeploy} from "@/api/aps/forecast";
 
@@ -106,16 +106,27 @@ export default {
       forecastList: [],
       tableHeaderList: [],
       form: {
-        fileId: "",
-        forecastNo: "",
-        forecastBeginDate: "",
-        forecastEndDate: ""
+        goodsId :undefined,
+        forecastNo :undefined,
+        forecastName :undefined,
+        forecastBeginDate :undefined,
+        forecastEndDate :undefined,
+        month :undefined,
+        months :undefined,
+        forecastStatus :undefined,
+        id: undefined
       },
       queryParams: {
         data: {
-          goodsId: null,
-          forecastCode: "",
-          forecastName: ""
+          goodsId :undefined,
+          forecastNo :undefined,
+          forecastName :undefined,
+          forecastBeginDate :undefined,
+          forecastEndDate :undefined,
+          month :undefined,
+          months :undefined,
+          forecastStatus :undefined,
+          id: undefined
         },
         pageNum: 1,
         pageSize: 10,
@@ -126,6 +137,18 @@ export default {
       multiple: false,
       showSearch: true,
       total: 0,
+      rules:{
+
+        goodsId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastNo :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastBeginDate :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastEndDate :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        month :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        months :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        forecastStatus :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+
+      }
     }
   },
   created() {
@@ -172,19 +195,7 @@ export default {
     }, cancel() {
       this.open = false;
     }, submitForm() {
-      if (this.form.id) {
-        updateById(this.form).then(t => {
-          this.$modal.msgSuccess("修改成功")
-          this.getList();
-          this.cancel();
-        })
-      } else {
-        add(this.form).then(t => {
-          this.$modal.msgSuccess("新增成功")
-          this.getList();
-          this.cancel();
-        })
-      }
+     insetOrUpdate(this)
     }, handleUpdate(data) {
       this.form = data;
       this.title = "修改预测版本";
@@ -197,15 +208,22 @@ export default {
       this.form.id = row.id;
       this.title = "上传预测版本";
       this.uploadOpen = true;
-    }, handleData(row) {
+    },
+    handleData(row) {
       this.$tab.openPage("预测数据", "/psGoodsForecast/getDataById", {
             id: row.id
           }
       )
     },
     fileUploadSuccess(data) {
+      console.log(data)
+      if (data.code!==200){
+        this.$modal.msgError("上传失败，请检查文件正确性")
+        return;
+      }
       this.$modal.msgSuccess("上传成功")
       this.uploadOpen = false;
+      this.getList();
     },
     compute(row) {
       return compute(row);

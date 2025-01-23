@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="工厂ID" prop="factoryId">
-        <el-select v-model="queryParams.data.factoryId" filterable placeholder="请选择工厂ID">
+      <el-form-item label="工厂" prop="factoryId">
+        <el-select v-model="queryParams.data.factoryId" filterable placeholder="请选择工厂">
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
         </el-select>
-        <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>-->
+        <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂" @keyup.enter.native="handleQuery"/>-->
       </el-form-item>
 <!--      <el-form-item label="排程版本号" prop="schedulingDayVersionNo">-->
 <!--        <el-input v-model="queryParams.data.schedulingDayVersionNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>-->

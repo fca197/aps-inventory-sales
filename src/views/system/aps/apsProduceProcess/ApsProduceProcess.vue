@@ -1,13 +1,19 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="生产路径编码" prop="produceProcessNo">
-        <el-input v-model="queryParams.data.produceProcessNo" clearable placeholder="请输入生产路径编码"
+
+      <el-form-item label="工厂">
+        <el-select v-model="form.factoryId">
+          <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="制造路径编码" prop="produceProcessNo">
+        <el-input v-model="queryParams.data.produceProcessNo" clearable placeholder="请输入制造路径编码"
                   @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="生产路径名称" prop="produceProcessName">
-        <el-input v-model="queryParams.data.produceProcessName" clearable placeholder="请输入生产路径名称"
+      <el-form-item label="制造路径名称" prop="produceProcessName">
+        <el-input v-model="queryParams.data.produceProcessName" clearable placeholder="请输入制造路径名称"
                   @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -48,27 +54,31 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="800px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="140px">
 
-        <el-form-item label="生产路径编码" prop="produceProcessNo">
-          <el-input v-model="form.produceProcessNo" clearable placeholder="请输入生产路径编码"/>
+        <el-form-item label="工厂" prop="factoryId">
+          <el-select v-model="form.factoryId">
+            <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="生产路径名称" prop="produceProcessName">
-          <el-input v-model="form.produceProcessName" clearable placeholder="请输入生产路径名称"/>
+        <el-form-item label="制造路径编码" prop="produceProcessNo">
+          <el-input v-model="form.produceProcessNo" clearable placeholder="请输入制造路径编码"/>
         </el-form-item>
-        <el-form-item v-for="(f,i) in form.produceProcessItemDtoList" :label="'机器配置'+(i+1)">
+        <el-form-item label="制造路径名称" prop="produceProcessName">
+          <el-input v-model="form.produceProcessName" clearable placeholder="请输入制造路径名称"/>
+        </el-form-item>
+        <el-form-item :key="i" v-for="(f,i) in form.produceProcessItemDtoList" :label="'机器配置'+(i+1)" prop="produceProcessItemDtoList">
           <el-row>
-            <el-col :span="18">
+            <el-col :span="19">
               <el-select v-model="f.machineId" style="width: 30%">
-                <el-option v-for="(m,j) in apsMachineList" :value="m.id" :label="m.machineName"></el-option>
+                <el-option v-for="(m,j) in apsMachineList" :key="j" :value="m.id" :label="m.machineName"></el-option>
               </el-select>
               <el-select v-model="f.statusId" style="width: 30%">
-                <el-option v-for="(s,j) in apsStatusList" :value="s.id" :label="s.statusName"></el-option>
+                <el-option :key="j" v-for="(s,j) in apsStatusList" :value="s.id" :label="s.statusName"></el-option>
               </el-select>
-              <el-input v-model="f.machineUseTimeSecond" style="width: 30%"></el-input>
-
+              <el-input v-model="f.machineUseTimeSecond" style="width: 30%" type="number"></el-input>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
               <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAddItem"></el-button>
               <el-button icon="el-icon-delete" plain size="mini" type="danger" @click="handleDeleteItem(i)"></el-button>
             </el-col>
@@ -76,9 +86,9 @@
           </el-row>
         </el-form-item>
         <!-- isDefault -->
-        <el-form-item label="是否默认">
+        <el-form-item label="是否默认" prop="isDefault">
           <el-select v-model="form.isDefault">
-            <el-option :value="true"  label="是">是</el-option>
+            <el-option :value="true" label="是">是</el-option>
             <el-option :value="false" label="否">否</el-option>
           </el-select>
         </el-form-item>
@@ -97,6 +107,7 @@
 <script>
 
 import { add, deleteByIdList, getById, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
+import { getFactoryList } from '@/api/factory'
 
 export default {
   name: 'tenantName',
@@ -134,11 +145,25 @@ export default {
         produceProcessItemDtoList: [{}, {}]
       },
       // 表单校验
-      rules: {},
+      rules: {
+        produceProcessNo: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        produceProcessName: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        isDefault: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        factoryId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        produceProcessItemDtoList: [{
+          validator: this.referenceValidity,
+          required: true,
+          trigger: "blur",
+        },]
+      },
       tableHeaderList: [],
+      factoryList: [],
       apsMachineList: [],
       apsStatusList: []
     }
+  },
+  referenceValidity(rule, value, callback) {
+    console.debug("xxx",rule, value, callback)
   },
   created() {
     document['pagePath'] = '/apsProduceProcess'
@@ -149,6 +174,7 @@ export default {
     queryUrlNoPageList('/apsStatus').then((r) => {
       this.apsStatusList = r.data.dataList
     })
+    getFactoryList({}).then(t => this.factoryList = t.data.dataList)
 
   },
   methods: {
@@ -197,7 +223,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.title = '添加生产路径'
+      this.title = '添加制造路径'
       this.open = true
     },
     /** 修改按钮操作 */
@@ -206,7 +232,7 @@ export default {
       let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.title = '修改生产路径'
+        this.title = '修改制造路径'
         this.open = true
       })
 

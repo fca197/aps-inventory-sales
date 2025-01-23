@@ -1,5 +1,6 @@
 import request from '@/utils/request'
-import ElementUI from 'element-ui'
+import {   MessageBox ,Message} from 'element-ui'
+import * as ElementUI from 'element-ui'
 
 export function add(data, options) {
   const urlPrefix = getPathPrefix()
@@ -67,6 +68,49 @@ export function updateById(data) {
     'method': 'POST',
     data: data
   })
+}
+
+
+export function  insetOrUpdate(_t){
+
+  _t.$refs["form"].validate(valid => {
+    if (valid) {
+      if (_t.form.id !== undefined) {
+        updateById(_t.form).then(response => {
+          _t.$modal.msgSuccess("修改成功");
+          _t.open = false;
+          _t.getList();
+        });
+      } else {
+        add(_t.form).then(response => {
+          _t.$modal.msgSuccess("新增成功");
+          _t.open = false;
+          _t.getList();
+        });
+      }
+    }
+  });
+}
+
+export function deleteList(row,ids, getList) {
+  const idList = row.id ? [row.id] : ids
+  MessageBox.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？',  "删除提示", {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: "warning",
+    dangerouslyUseHTMLString: true
+  }).then(()=>{
+    let req = {
+      idList: idList
+    }
+    return deleteByIdList(req)
+  }).then(() => {
+    if (getList) {
+      getList()
+    }
+    Message.success("删除成功");
+  })
+  document.getElementsByClassName('el-message-box')[0].style.width = '520px'
 }
 
 export function deleteByIdList(data) {
@@ -147,7 +191,7 @@ export function randomNum(maxNum) {
   return list.map(item => chars[item]).join('')
 }
 
-export function translator(parents, children,parentKey, childrenKey) {
+export function translator(parents, children, parentKey, childrenKey) {
   // 遍历父节点数据
   parents.forEach(parent => {
     // 遍历子节点数据
@@ -169,18 +213,46 @@ export function translator(parents, children,parentKey, childrenKey) {
   })
 }
 
-
-
-
-export  function getUrlParam(paramName) {
-  const query = window.document.location.href.substring(1);
-  const vars = query.split("&");
-  console.log("query",query)
+export function getUrlParam(paramName) {
+  const query = window.document.location.href.substring(1)
+  const vars = query.split('&')
+  console.log('query', query)
   for (let i = 0; i < vars.length; i++) {
-    const pair = vars[i].split("=");
+    const pair = vars[i].split('=')
     if (pair[0] == paramName) {
-      return pair[1];
+      return pair[1]
     }
   }
-  return "";
+  return ''
+}
+
+export function log(...data) {
+  if (data) {
+    data.forEach(t => console.info(t))
+  }
+  // console.info(data)
+}
+
+export function getDistrictByParentCode(data) {
+  return request({
+    url: '/districtCode/queryList',
+    'method': 'POST',
+    data: { data: { parentCode: data||'0' } }
+  })
+}
+
+export function getDistrictByParentCode2List(data,list) {
+  return request({
+    url: '/districtCode/queryList',
+    'method': 'POST',
+    data: { data: { parentCode: data } }
+  }).then(r=>list=r.data.dataList)
+}
+
+export function addJs(js) {
+  let hm = document.createElement('script')
+  hm.src = js
+  let s = document.getElementsByTagName('script')[0]
+  s.parentNode.insertBefore(hm, s)
+
 }

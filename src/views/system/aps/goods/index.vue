@@ -63,14 +63,14 @@
           <el-input v-model="form.goodsRemark" placeholder="请输入商品备注"/>
         </el-form-item>
 
-        <el-form-item label="工艺路径">
-          <el-select v-model="form.processPathId">
+        <el-form-item label="工艺路径" prop="processPathId">
+          <el-select v-model="form.processPathId" clearable>
             <el-option v-for="item in processPathList" :key="item.id" :label="item.processPathName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="制造路径">
-          <el-select v-model="form.produceProcessId">
+        <el-form-item label="制造路径" prop="produceProcessId">
+          <el-select v-model="form.produceProcessId" clearable>
             <el-option v-for="item in apsProduceProcessList" :key="item.id" :label="item.produceProcessName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -130,7 +130,15 @@ export default {
         confirmPwd: undefined
       },
       // 表单校验
-      rules: {},
+      rules: {
+        goodsName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }],
+        goodsRemark :[{required: true, message: "不能为空", trigger: "blur"},{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }],
+        supplierStatus :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        factoryId :[{required: true, message: "不能为空", trigger: "change"}],
+      //  processPathId :[{required: true, message: "不能为空", trigger: "change"}],
+        // produceProcessId :[{required: true, message: "不能为空", trigger: "change"}],
+
+      },
       tableHeaderList: [],
       apsProduceProcessList:[]
     };
