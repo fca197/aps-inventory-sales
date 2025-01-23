@@ -28,23 +28,23 @@
     <el-table :data="forecastList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" />
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="140px">
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" width="180px">
         <template slot-scope="scope">
           <!--          TO_UPLOAD(10, "待上传"), //-->
           <!--          TO_COMPUTED(30, "待计算"), //-->
           <!--          COMPUTED_RESULT(50, "计算结束"),-->
 
-          <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleData(scope.row)"></el-button>
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
-          <el-button icon="el-icon-download" size="mini" type="text" @click="downloadTemplate(scope.row)"></el-button>
-          <el-button icon="el-icon-upload" size="mini" type="text" @click="uploadTemplate(scope.row)"></el-button>
+          <el-button title="数据" icon="el-icon-s-data" size="mini" type="text" @click="handleData(scope.row)"></el-button>
+          <el-button title="编辑" icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)"></el-button>
+          <el-button title="删除" icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)"></el-button>
+          <el-button title="下载" icon="el-icon-download" size="mini" type="text" @click="downloadTemplate(scope.row)"></el-button>
+          <el-button title="上传" icon="el-icon-upload" size="mini" type="text" @click="uploadTemplate(scope.row)"></el-button>
           <el-button v-if="scope.row.forecastStatus==30" size="mini" type="text" @click="compute(scope.row)">
-            <svg-icon icon-class="calculator"></svg-icon>
+            <svg-icon title="计算" icon-class="calculator"></svg-icon>
           </el-button>
-          <el-button v-if="scope.row.forecastStatus==50" icon="el-icon-s-data" size="mini" type="text" @click="computeResult(scope.row)"></el-button>
+          <el-button title="计算结果" v-if="scope.row.forecastStatus==50" icon="el-icon-s-data" size="mini" type="text" @click="computeResult(scope.row)"></el-button>
           <el-button v-if="scope.row.forecastStatus==50" size="mini" type="text" @click="forecastDeploy(scope.row)">
-            <svg-icon icon-class="broadcast"></svg-icon>
+            <svg-icon  title="发布" icon-class="broadcast"></svg-icon>
           </el-button>
         </template>
       </el-table-column>
@@ -208,15 +208,22 @@ export default {
       this.form.id = row.id;
       this.title = "上传预测版本";
       this.uploadOpen = true;
-    }, handleData(row) {
+    },
+    handleData(row) {
       this.$tab.openPage("预测数据", "/psGoodsForecast/getDataById", {
             id: row.id
           }
       )
     },
     fileUploadSuccess(data) {
+      console.log(data)
+      if (data.code!==200){
+        this.$modal.msgError("上传失败，请检查文件正确性")
+        return;
+      }
       this.$modal.msgSuccess("上传成功")
       this.uploadOpen = false;
+      this.getList();
     },
     compute(row) {
       return compute(row);

@@ -110,7 +110,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="使用表达式" prop="bomUseExpression">
-            <el-input v-model="form.bomUseExpression" placeholder="请输入零件名称"/>
+            <el-input v-model="form.bomUseExpression" placeholder="请输入使用表达式"/>
           </el-form-item>
         </el-col>
         <el-col :span="24">
