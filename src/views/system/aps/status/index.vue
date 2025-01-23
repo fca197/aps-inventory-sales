@@ -59,12 +59,12 @@
         <el-form-item label="状态名称" prop="statusName">
           <el-input v-model="form.statusName" placeholder="请输入状态名称"/>
         </el-form-item>
-        <el-form-item label="订单默认状态" prop="isOrderGoodsInit">
-          <el-radio-group v-model="form.isOrderGoodsInit">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
+<!--        <el-form-item label="订单默认状态" prop="isOrderGoodsInit">-->
+<!--          <el-radio-group v-model="form.isOrderGoodsInit">-->
+<!--            <el-radio :label="1">是</el-radio>-->
+<!--            <el-radio :label="0">否</el-radio>-->
+<!--          </el-radio-group>-->
+<!--        </el-form-item>-->
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -128,7 +128,7 @@ export default {
         statusCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
         statusName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
         factoryId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        isOrderGoodsInit :[{required: true, message: "必须", trigger: "blur"}],
+        // isOrderGoodsInit :[{required: true, message: "必须", trigger: "blur"}],
 
       },
       tableHeaderList: []
