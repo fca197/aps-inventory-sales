@@ -297,9 +297,15 @@ export default {
   created() {
     document['pagePath'] = '/apsOrder'
     // process.env.pagePath = "/tenant"
-    queryUrlPageList('/apsStatus', { queryPage: false }).then(t => {
-      this.apsStatusList = t.data.dataList
-    })
+
+      this.apsStatusList = [{ "id":"0","statusName":"下单" },
+        { "id":"10","statusName":"已支付定金" },
+        { "id":"30","statusName":"已支付尾款" },
+        { "id":"50","statusName":"已发货" },
+        { "id":"60","statusName":"已完成" },
+        { "id":"70","statusName":"已取消" },
+      ]
+
 
     this.getList()
     getFactoryList({ queryPage: false }).then(data => {
