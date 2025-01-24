@@ -111,6 +111,7 @@ export default {
     return {
       showTable: 'gylz',
       id: this.$route.query.id,
+      productType: this.$route.query.productType,
       drag: false,
       data: {},
       dataList: [],
@@ -126,6 +127,12 @@ export default {
     formatDate,
 
     getList() {
+
+      if ("MAKE"===this.productType){
+        this.showTable="zzlj";
+      }else {
+        this.showTable="gylz";
+      }
 
       post('/apsSchedulingDayConfigVersion/detailList', { id: this.id }, false).then(t => {
         // console.info(t)

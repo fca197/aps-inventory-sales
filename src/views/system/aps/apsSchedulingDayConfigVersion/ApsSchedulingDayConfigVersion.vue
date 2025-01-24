@@ -61,6 +61,11 @@
           <!--          <el-input v-model="form.schedulingDay" clearable placeholder="请输入排程日期"/>-->
           <el-date-picker v-model="form.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"  style="width: 100%"/>
         </el-form-item>
+        <el-form-item label="排程配置" prop="productType">
+          <el-select v-model="form.productType" filterable placeholder="请选择排程类型"   style="width: 100%">
+            <el-option v-for="item in productTypeList" :key="item.code" :label="item.desc" :value="item.code"/>
+          </el-select>
+        </el-form-item>
 
 
       </el-form>
@@ -75,7 +80,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, queryPageList, queryUrlNoPageList, queryUrlPageList, updateById } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 
 export default {
@@ -108,6 +113,7 @@ export default {
       },
       // 表单参数
       form: {
+        productType:undefined,
         factoryId: undefined,
         schedulingDayConfigId: undefined,
         processId: undefined,
@@ -121,11 +127,14 @@ export default {
       tableHeaderList: [],
       factoryList: [],
       processList: [],
+      productTypeList: [{ code: "MAKE", desc : "制造路径" },{ code: "PROCESS", desc : "工艺路径" }],
       processMap: {},
       apsSchedulingDayConfigList:[],
+
     }
   },
   created() {
+
     queryUrlPageList('/apsSchedulingDayConfig', { queryPage: false }).then(t => {
       this.apsSchedulingDayConfigList = t.data.dataList
       this.apsSchedulingDayConfigList.forEach(p => {
@@ -249,7 +258,7 @@ export default {
     },
     handleInfo(row) {
 
-      this.$router.push({ path: '/apsSchedulingDayConfigVersion/detailList', query: { id: row.id } })
+      this.$router.push({ path: '/apsSchedulingDayConfigVersion/detailList', query: { id: row.id ,productType:row.productType} })
     }
   }
 
