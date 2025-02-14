@@ -22,9 +22,9 @@
       <el-col :span="1.5">
         <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
       </el-col>
-            <el-col :span="1.5">
-              <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>
-            </el-col>
+      <el-col :span="1.5">
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="saveBatch">随机批量100条</el-button>
+      </el-col>
       <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
       </el-col>
@@ -37,11 +37,14 @@
 
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" :width="item.width" align="center">
         <template slot-scope="scope">
-        <span v-if="item.fieldName=='orderStatus'">
-          <el-select v-model="scope.row.orderStatus" @change="value=>{ updateOrderStatus(scope.row.id, value)}">
+        <span v-if="item.fieldName=='orderGoodsStatus'">
+          <el-select v-model="scope.row.orderGoodsStatus" @change="value=>{ updateOrderGoodsStatus(scope.row.id, value)}">
             <el-option v-for="(s,i) in apsStatusList" :key="s.id" :value="s.id" :label="s.statusName"></el-option>
           </el-select>
         </span>
+<!--          <span v-else-if="item.fieldName=='orderStatus'">-->
+<!--              订单状态-->
+<!--        </span>-->
           <span v-else-if="item.fieldName==='schedulingDate'">
             <el-date-picker v-model="scope.row.schedulingDate" value-format="yyyy-MM-dd" @change="value=>{updateSchedulingDate(scope.row,value)}" style="width: 140px"
             ></el-date-picker>
@@ -156,47 +159,47 @@
           <el-tab-pane label="商品管理">
             <el-col :span="24" v-for="(it ,i) in form.goodsList" :key="i">
               <el-col :span="24">
-                  <el-select v-model="it.goodsId" placeholder="请选择商品" @change="value=>selectGoods(i,value)" style="width: 100%">
-                    <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"/>
-                  </el-select>
-                  <el-input disabled v-model="it.goodsNum" placeholder="请输入商品数量" />
+                <el-select v-model="it.goodsId" placeholder="请选择商品" @change="value=>selectGoods(i,value)" style="width: 100%">
+                  <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"/>
+                </el-select>
+                <el-input disabled v-model="it.goodsNum" placeholder="请输入商品数量"/>
               </el-col>
-<!--              <el-col :span="7" :offset="1">-->
-<!--                <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteGoods(i)"></el-button>-->
-<!--                <el-button type="primary" size="mini" icon="el-icon-plus" @click="addGoods"></el-button>-->
-<!--              </el-col>-->
+              <!--              <el-col :span="7" :offset="1">-->
+              <!--                <el-button type="danger" size="mini" icon="el-icon-delete" @click="deleteGoods(i)"></el-button>-->
+              <!--                <el-button type="primary" size="mini" icon="el-icon-plus" @click="addGoods"></el-button>-->
+              <!--              </el-col>-->
             </el-col>
           </el-tab-pane>
           <el-tab-pane label="销售配置">
-              <el-row title="销售配置" v-for="(it ,i) in  form.goodsList" :name="i" :key="i">
-                <div v-if="goodsMap[it.goodsId]"> {{ goodsMap[it.goodsId].goodsName }}/ <span>{{ it.goodsNum }} /{{ goodsMap[it.goodsId].goodsRemark }}</span></div>
-                <el-col :span="24" v-for="(sa ,index) in apsSaleConfigList" :key="index">
-                  <el-divider/>
-                  <el-col :span="6">
-                    {{ sa.saleName }}/{{ sa.saleCode }}
-                  </el-col>
-                  <el-col :span="18">
-                    <el-radio-group v-model="goodsSaleConfigMap[it.goodsId][sa.id]" @change="value=>changeGM(it.goodsId, sa.id,value)">
-                      <el-radio v-for=" (ss ,j) in sa.children" :label="ss.id" :key="j">{{ ss.saleName }}/{{ ss.saleCode }}</el-radio>
-                    </el-radio-group>
-                  </el-col>
+            <el-row title="销售配置" v-for="(it ,i) in  form.goodsList" :name="i" :key="i">
+              <div v-if="goodsMap[it.goodsId]"> {{ goodsMap[it.goodsId].goodsName }}/ <span>{{ it.goodsNum }} /{{ goodsMap[it.goodsId].goodsRemark }}</span></div>
+              <el-col :span="24" v-for="(sa ,index) in apsSaleConfigList" :key="index">
+                <el-divider/>
+                <el-col :span="6">
+                  {{ sa.saleName }}/{{ sa.saleCode }}
                 </el-col>
-              </el-row>
+                <el-col :span="18">
+                  <el-radio-group v-model="goodsSaleConfigMap[it.goodsId][sa.id]" @change="value=>changeGM(it.goodsId, sa.id,value)">
+                    <el-radio v-for=" (ss ,j) in sa.children" :label="ss.id" :key="j">{{ ss.saleName }}/{{ ss.saleCode }}</el-radio>
+                  </el-radio-group>
+                </el-col>
+              </el-col>
+            </el-row>
           </el-tab-pane>
           <el-tab-pane label="工程配置">工程配置</el-tab-pane>
           <el-tab-pane label="零件">
-              <el-table  :data="goodsBomList" >
-                <el-table-column prop="bomName"  label="名称"/>
-                <el-table-column prop="bomCode"  label="编号"/>
-                <el-table-column prop="bomCostPriceUnit"  label="单价规格"/>
-                <el-table-column prop="bomCostPrice"  label="单价"/>
-                <el-table-column prop="isFollow"  label="关注"/>
-                <el-table-column label="数量">
-                  <template slot-scope="scope">
-                    <el-input  v-model="form.goodsBom[scope.row.id]">数量</el-input>
-                  </template>
-                </el-table-column>
-              </el-table>
+            <el-table :data="goodsBomList">
+              <el-table-column prop="bomName" label="名称"/>
+              <el-table-column prop="bomCode" label="编号"/>
+              <el-table-column prop="bomCostPriceUnit" label="单价规格"/>
+              <el-table-column prop="bomCostPrice" label="单价"/>
+              <el-table-column prop="isFollow" label="关注"/>
+              <el-table-column label="数量">
+                <template slot-scope="scope">
+                  <el-input v-model="form.goodsBom[scope.row.id]">数量</el-input>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -206,7 +209,7 @@
       </div>
     </el-dialog>
     <el-dialog title="订单状态时间一览表" :visible.sync="orderGoodsStatusDateShow" width="900px" append-to-body>
-      <step :Index="3"  :okRouteList="orderGoodsStatusDateList"/>
+      <step :Index="3" :okRouteList="orderGoodsStatusDateList"/>
     </el-dialog>
   </div>
 </template>
@@ -218,7 +221,6 @@ import { getFactoryList } from '@/api/factory'
 import { getGoodsList } from '@/api/aps/goods'
 import { getRandomUser } from '@/api/tool/random'
 import request from '@/utils/request'
-import { apsGoodsSaleItemQueryPageList } from '@/api/aps/apsGoodsSaleItem'
 import { getSaleConfigList } from '@/api/aps/saleConfig' // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
 import Step from '@/views/components/step/Steps.vue'
@@ -269,7 +271,7 @@ export default {
       goodsSaleConfigMap: {},
       // 表单参数
       form: {
-        goodsBom:{},
+        goodsBom: {},
         goodsList: [],
         orderUser: {
           userName: undefined,
@@ -298,15 +300,9 @@ export default {
     document['pagePath'] = '/apsOrder'
     // process.env.pagePath = "/tenant"
 
-      this.apsStatusList = [{ "id":"0","statusName":"下单" },
-        { "id":"10","statusName":"已支付定金" },
-        { "id":"30","statusName":"已支付尾款" },
-        { "id":"40","statusName":"制造中" },
-        { "id":"50","statusName":"已发货" },
-        { "id":"60","statusName":"已完成" },
-        { "id":"70","statusName":"已取消" },
-      ]
-
+    queryUrlNoPageList('/apsStatus').then(t => {
+      this.apsStatusList = t.data.dataList
+    })
 
     this.getList()
     getFactoryList({ queryPage: false }).then(data => {
@@ -345,7 +341,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        goodsBom:{},
+        goodsBom: {},
         goodsList: [],
         orderUser: {
           userName: undefined,
@@ -413,11 +409,11 @@ export default {
           })
         }
       }
-      let  apsGoodsBomList=[];
+      let apsGoodsBomList = []
       var goodsId = this.goodsList[0].goodsId
-      for (let k in this.form.goodsBom){
-        let v=this.form.goodsBom[k];
-        apsGoodsBomList.push({goodsId:goodsId,bomCount: v,goodsBomId:k})
+      for (let k in this.form.goodsBom) {
+        let v = this.form.goodsBom[k]
+        apsGoodsBomList.push({ goodsId: goodsId, bomCount: v, goodsBomId: k })
       }
       this.form.apsGoodsBomList = apsGoodsBomList
       this.form.apsOrderSaleConfigList = apsOrderSaleConfigList
@@ -480,8 +476,8 @@ export default {
       })
       this.goodsSaleConfigMap = { ...this.goodsSaleConfigMap }
 
-      queryUrlNoPageList("/apsGoodsBom",{data:{goodId:value}}).then(tr=>{
-        this.goodsBomList=tr.data.dataList
+      queryUrlNoPageList('/apsGoodsBom', { data: { goodId: value } }).then(tr => {
+        this.goodsBomList = tr.data.dataList
       })
 
       // console.info('.goodsSaleConfigMap: ', this.goodsSaleConfigMap)
@@ -510,12 +506,12 @@ export default {
           orderId: row.id
         }
       }).then(res => {
-        this.id=row.id
+        this.id = row.id
         this.orderGoodsStatusDateList = res.data.dataList.reverse()
         this.orderGoodsStatusDateShow = true
       })
     }
-    , updateOrderStatus(orderId, sid) {
+    , updateOrderGoodsStatus(orderId, sid) {
       post('/apsOrder/updateOrderStatus', {
         orderId: orderId,
         goodsStatusId: sid
@@ -523,8 +519,9 @@ export default {
     },
     updateSchedulingDate(row, val) {
       log('updateSchedulingDate: ', row, val)
-      this.$modal.confirm('订单号:[<span style="color:red">' + row.orderNo + '</span>],排产日期修改为:[<span style="color:red">' + (val == null ? '空' : val) + '</span>] ', '修改提示').then(function() {
-        post('/apsOrder/updateSchedulingDate', { id: row.id, schedulingDate: val }, true);
+      this.$modal.confirm('订单号:[<span style="color:red">' + row.orderNo + '</span>],排产日期修改为:[<span style="color:red">' + (val == null ? '空' : val) + '</span>] ',
+        '修改提示').then(function() {
+        post('/apsOrder/updateSchedulingDate', { id: row.id, schedulingDate: val }, true)
       })
     }
   }
@@ -537,7 +534,7 @@ export default {
   display: none !important;
 }
 
-/deep/.el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
+/deep/ .el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
   box-shadow: none !important;
 }
 </style>

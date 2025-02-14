@@ -27,13 +27,12 @@
 
 
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
-      <el-table-column label="订单商品默认状态" prop="isOrderGoodsInit" width="150">
+      <el-table-column label="订单状态" prop="orderStatusId" width="150">
         <template slot-scope="scope">
-          <span v-if="scope.row.isOrderGoodsInit">是</span>
-          <span v-else>否</span>
+          {{ apsOrderStatusMap[scope.row.orderStatusId] }}
         </template>
       </el-table-column>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right" >
+      <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
@@ -42,11 +41,11 @@
     </el-table>
 
     <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
+      v-show="total>0"
+      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.pageNum"
+      :total="total"
+      @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
@@ -59,12 +58,11 @@
         <el-form-item label="状态名称" prop="statusName">
           <el-input v-model="form.statusName" placeholder="请输入状态名称"/>
         </el-form-item>
-<!--        <el-form-item label="订单默认状态" prop="isOrderGoodsInit">-->
-<!--          <el-radio-group v-model="form.isOrderGoodsInit">-->
-<!--            <el-radio :label="1">是</el-radio>-->
-<!--            <el-radio :label="0">否</el-radio>-->
-<!--          </el-radio-group>-->
-<!--        </el-form-item>-->
+        <el-form-item label="订单状态" prop="orderStatusId">
+          <el-select v-model="form.orderStatusId" clearable>
+            <el-option v-for="(o,i) in apsOrderStatusList" :key="o.desc" :label="o.desc" :value="o.code"></el-option>
+          </el-select>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -77,8 +75,9 @@
 
 <script>
 
-import { add, deleteByIdList, getById, insetOrUpdate, queryPageList, updateById } from '@/api/common'
+import { deleteByIdList, getById, insetOrUpdate, queryPageList } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
+import { getApsOrderStatus } from '@/api/aps/order'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: 'tenantName',
@@ -109,36 +108,47 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {
-          statusCode :undefined,
-          statusName :undefined,
-          factoryId :undefined,
-          isOrderGoodsInit :undefined,
-          id: undefined}
+          statusCode: undefined,
+          statusName: undefined,
+          factoryId: undefined,
+          orderStatusId: undefined,
+          id: undefined
+        }
       },
       // 表单参数
       form: {
-        statusCode :undefined,
-        statusName :undefined,
-        factoryId :undefined,
-        isOrderGoodsInit :undefined,
+        statusCode: undefined,
+        statusName: undefined,
+        factoryId: undefined,
+        orderStatusId: undefined,
         id: undefined
       },
       // 表单校验
       rules: {
-        statusCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        statusName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        factoryId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        // isOrderGoodsInit :[{required: true, message: "必须", trigger: "blur"}],
+        statusCode: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
+        statusName: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
+        factoryId: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }]
+        // orderStatusId :[{required: true, message: "必须", trigger: "blur"}],
 
       },
-      tableHeaderList: []
+      tableHeaderList: [],
+      apsOrderStatusList: [],
+      apsOrderStatusMap: []
     }
   },
   created() {
     document['pagePath'] = '/apsStatus'
     // process.env.pagePath = "/tenant"
     this.getList()
-    getFactoryList({ queryPage:false }).then(data => {
+    getApsOrderStatus().then(t => {
+      this.apsOrderStatusList = t.data.dataList
+      this.apsOrderStatusList.forEach(tt => {
+        this.apsOrderStatusMap[tt.code] = tt.desc
+      })
+
+      // console.info("getApsOrderStatus ",t)
+    })
+    getFactoryList({ queryPage: false }).then(data => {
       this.factoryList = data.data.dataList
     })
   },
@@ -162,10 +172,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        statusCode :undefined,
-        statusName :undefined,
-        factoryId :undefined,
-        isOrderGoodsInit :undefined,
+        statusCode: undefined,
+        statusName: undefined,
+        factoryId: undefined,
+        orderStatusId: undefined,
         id: undefined
       }
       this.resetForm('form')
@@ -205,7 +215,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
-      insetOrUpdate(this);
+      insetOrUpdate(this)
     },
     /** 删除按钮操作 */
     handleDelete(row) {
