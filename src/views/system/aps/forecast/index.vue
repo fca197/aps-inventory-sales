@@ -86,6 +86,9 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog  title="错误信息" :visible.sync="excelErrorMsgListShow">
+      <excel-upload-error :excel-error-msg-list="excelErrorMsgList"></excel-upload-error>
+    </el-dialog>
   </div>
 </template>
 
@@ -94,14 +97,20 @@ import {getGoodsList} from "@/api/aps/goods";
 import { add, deleteByIdList, insetOrUpdate, queryPageList, updateById } from '@/api/common'
 import {downloadForm} from "@/utils/request";
 import {compute, forecastDeploy} from "@/api/aps/forecast";
+import ExcelUploadError from '@/views/error/ExcelUploadError.vue'
+
 
 export default {
   name: "forecastIndex",
+  components:{
+    ExcelUploadError
+  },
   data() {
     return {
 
       title: "",
       goodsList: [],
+      excelErrorMsgList: [],
       ids: [],
       forecastList: [],
       tableHeaderList: [],
@@ -135,6 +144,7 @@ export default {
       uploadOpen: false,
       single: false,
       multiple: false,
+      excelErrorMsgListShow: false,
       showSearch: true,
       total: 0,
       rules:{
@@ -217,7 +227,9 @@ export default {
     },
     fileUploadSuccess(data) {
       console.log(data)
-      if (data.code!==200){
+      if (data.data.excelErrorMsgList.length>1){
+        this.excelErrorMsgList=data.data.excelErrorMsgList;
+        this.excelErrorMsgListShow=true;
         this.$modal.msgError("上传失败，请检查文件正确性")
         return;
       }
