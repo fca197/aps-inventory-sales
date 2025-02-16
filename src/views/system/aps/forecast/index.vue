@@ -227,7 +227,7 @@ export default {
     },
     fileUploadSuccess(data) {
       console.log(data)
-      if (data.data.excelErrorMsgList.length>1){
+      if (data.data.excelErrorMsgList.length>0){
         this.excelErrorMsgList=data.data.excelErrorMsgList;
         this.excelErrorMsgListShow=true;
         this.$modal.msgError("上传失败，请检查文件正确性")
