@@ -238,7 +238,7 @@ export default {
       this.getList();
     },
     compute(row) {
-      return compute(row);
+      return compute(row).then(t=>this.getList());
     },
     computeResult(row) {
       this.$tab.openPage("计算结果", "/apsGoodsForecast/compute", {
