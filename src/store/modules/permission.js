@@ -1,6 +1,4 @@
-import { constantRoutes, dynamicFlowRoutes, dynamicRoutes } from '@/router'
-import { getRouters } from '@/api/menu'
-import { queryUrlPageList } from '@/api/common'
+import { constantRoutes, loadResource } from '@/router'
 
 const permission = {
   state: {
@@ -32,64 +30,15 @@ const permission = {
       return new Promise(resolve => {
         // 向后端请求路由数据
 
-        let appCode = window.document.URL.split('?')[0]
-        .split('//')[1].split('.')[0]
-
-        // console.log('appKey', appCode)
-        // 当 appCode=undefined 即可获取所有菜单,不区分app
-         appCode=undefined
-        getRouters({ queryPage: false, data: { appCode: appCode } }).then(
-          res => {
-            let resourceUrlArray = Array.from(res.data.dataList,
-              ({ resourceUrl }) => resourceUrl)
-            resourceUrlArray.splice(0, 0, '----')
-            // resourceUrlArray.push("");
-            console.log(resourceUrlArray)
-            const asyncRoutes = filterDynamicRoutes(dynamicRoutes,
-              resourceUrlArray)
-            // console.log(asyncRoutes)
-
-            // commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
-
-            // resolve(asyncRoutes)
-
-            // console.log(JSON.stringify(dynamicRoutes))
-            queryUrlPageList('/flowGroup', { queryPage: false }).then(t => {
-              let fl = t.data.dataList
-              if (fl.length > 0) {
-                fl.forEach(r => {
-                  asyncRoutes.push(dynamicFlowRoutes(r))
-                })
-                // asyncRoutes.push(dynamicFlowRoutes(fl[0]))
-              }
-              commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
-              // console.log(asyncRoutes)
-              resolve(asyncRoutes)
-            })
-          })
+        loadResource().then(t => {
+          console.info('t ', t)
+          let asyncRoutes = t
+          commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
+          resolve(asyncRoutes)
+        })
       })
     }
   }
-}
-
-// 动态路由遍历，验证是否具备权限
-export function filterDynamicRoutes(routes, resourceUrlArray) {
-  const res = []
-  routes.forEach(route => {
-    let rt = {}
-    Object.assign(rt, route)
-    // if (route.children) {
-    //   // rt.children =filterDynamicRoutes(route.children, resourceUrlArray);
-    // }
-    if (resourceUrlArray.indexOf(route.path) > -1) {
-      res.push(rt)
-      if (route.children) {
-        rt.children = filterDynamicRoutes(route.children, resourceUrlArray)
-      }
-    }
-  })
-  // console.log(res)
-  return res
 }
 
 export const loadView = (view) => {

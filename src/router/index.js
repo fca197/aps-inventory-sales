@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
-import ParentView from '@/components/ParentView'
+import { getRouters } from '@/api/menu'
+import { handleTree } from '@/utils/ruoyi'
 
 Vue.use(Router)
 
@@ -109,492 +110,8 @@ export const constantRoutes = [{
     component: () => import('@/views/index'),
     name: 'Index',
     meta: { title: '首页', icon: 'dashboard', affix: false }
-  }
-  ]
+  }]
 }]
-
-// 动态路由，基于用户权限动态去加载
-export const dynamicRoutes = [{
-  path: '/base/config',
-  component: Layout,
-  redirect: 'index',
-  meta: { title: '基础配置', icon: 'setting', affix: false },
-  children: [{
-    path: '/views/tenant/index',
-    component: () => import('@/views/system/tenant/index'),
-    name: '租户管理',
-    meta: { title: '租户管理', icon: '', affix: false }
-  }, {
-    path: '/views/factory/index',
-    component: () => import('@/views/system/factory/index'),
-    name: '工厂',
-    meta: { title: '工厂管理', icon: '', affix: false }
-  }, {
-    path: '/views/brand/index',
-    component: () => import('@/views/system/brand/index'),
-    name: '品牌管理',
-    meta: { title: '品牌管理', icon: '', affix: false }
-  }, {
-    path: '/prop/spec/index',
-    name: '日历管理',
-    component: () => import('@/views/system/calendar/index'),
-    meta: { title: '日历管理', icon: 'calendar', affix: false }
-  }, {
-    path: '/prop/shift/index',
-    name: '班次管理',
-    component: () => import('@/views/system/basic/shift/index'),
-    meta: { title: '班次管理', icon: 'calendar', affix: false }
-  }, {
-    path: '/file/upload/index',
-    name: '文件管理',
-    component: () => import('@/views/system/fileUpload/index'),
-    meta: { title: '文件管理', icon: 'calendar', affix: false }
-  }, {
-    path: '/base/baseTableHeader/index',
-    name: '表格头管理',
-    component: () => import('@/views/system/baseTableHeader/BaseTableHeader.vue'),
-    meta: { title: '表格头管理', icon: '', affix: false }
-  }, {
-    path: '/base/role/group/index',
-    name: '角色组管理',
-    component: () => import('@/views/system/base/baseRoleGroup/BaseRoleGroup.vue'),
-    meta: { title: '角色组管理', icon: '', affix: false }
-  }, {
-    path: '/base/role/index',
-    name: '角色管理',
-    component: () => import('@/views/system/base/baseRole/BaseRole.vue'),
-    meta: { title: '角色管理', icon: '', affix: false }
-  }, {
-    path: '/aps/sale/index',
-    name: '销售配置管理',
-    component: () => import('@/views/system/aps/saleConfig/index'),
-    meta: { title: '销售配置管理', icon: 'group', affix: false }
-  }, {
-    path: '/aps/project/index',
-    name: '工程配置管理',
-    component: () => import('@/views/system/aps/projectConfig/index'),
-    meta: { title: '工程配置管理', icon: 'group', affix: false }
-  }, {
-    path: '/aps/status/index',
-    name: '状态',
-    component: () => import('@/views/system/aps/status/index'),
-    meta: { title: '状态管理', icon: 'status', affix: false }
-  }, {
-    path: '/aps/section/index',
-    name: '工段管理',
-    component: () => import('@/views/system/aps/section/index'),
-    meta: { title: '工段管理', icon: 'section', affix: false }
-  }, {
-    path: '/aps/station/index',
-    name: '工位管理',
-    component: () => import('@/views/system/aps/station/index'),
-    meta: { title: '工位管理', icon: 'workstation', affix: false }
-  },{
-    path: '/aps/machine/index',
-    name: '机器管理',
-    component: () => import('@/views/system/aps/apsMachine/ApsMachine.vue'),
-    meta: { title: '机器管理', icon: 'workstation', affix: false }
-  }, {
-    path: '/aps/room/index',
-    name: '车间管理',
-    component: () => import('@/views/system/aps/room/index'),
-    meta: { title: '车间', icon: 'room', affix: false }
-  }, {
-    path: '/aps/process/path/index',
-    name: '工艺路径',
-    component: () => import('@/views/system/aps/processPath/index'),
-    meta: { title: '工艺路径管理', icon: 'process-setting', affix: false }
-  }, {
-    path: '/aps/apsLogistics/path/index',
-    name: '物流路径',
-    component: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue'),
-    meta: { title: '物流路径', icon: 'process-setting', affix: false }
-  },{
-    path: '/aps/produceProcess/path/index',
-    name: '制造路径',
-    component: () => import('@/views/system/aps/apsProduceProcess/ApsProduceProcess.vue'),
-    meta: { title: '制造路径', icon: 'process-setting', affix: false }
-  },  {
-    path: '/login/account/index',
-    component: () => import('@/views/loginAccount/index'),
-    name: '账户管理',
-    hidden: false,
-    meta: { title: '账户管理', icon: 'peoples', affix: false }
-  }, {
-    path: '/supplier/index',
-    name: '供应管理',
-    component: () => import('@/views/system/supplier/index'),
-    meta: { title: '供应管理', icon: 'pastebin', affix: false }
-  }, {
-    path: '/seller/index',
-    name: '销售方管理',
-    component: () => import('@/views/system/aps/apsSellerStore/ApsSellerStore.vue'),
-    meta: { title: '销售方管理', icon: '', affix: false }
-  }, {
-    path: '/aps/bom/supplier/index',
-    name: '零件供应商管理',
-    component: () => import('@/views/system/aps/apsBomSupplier/ApsBomSupplier.vue'),
-    meta: { title: '零件供应商管理', icon: '', affix: false }
-  }
-
-  ]
-}, {
-  path: '/aps/goods/main/index',
-  name: 'APS商品管理',
-  component: Layout,
-  meta: { title: '商品管理', icon: 'order-1', affix: false },
-  children: [{
-    path: '/aps/bomGroup/index',
-    name: '零件组配置',
-    component: () => import('@/views/system/aps/bomGroup/index'),
-    meta: { title: '零件组配置', icon: 'setting', affix: false }
-  }, {
-    path: '/aps/bom/index',
-    name: '零件配置',
-    component: () => import('@/views/system/aps/bom/index'),
-    meta: { title: '零件配置', icon: 'setting', affix: false }
-  }, {
-    path: '/aps/goodsBom/index',
-    name: '商品零件配置',
-    component: () => import('@/views/system/aps/goodsBom/index'),
-    meta: { title: '商品零件配置', icon: 'setting', affix: false }
-  }, {
-    path: '/aps/bomBuyPlan/index',
-    name: '零件购买计划',
-    component: () => import('@/views/system/aps/bomBuyPlan/index'),
-    meta: { title: '零件购买计划', icon: 'setting', affix: false }
-  }, {
-    path: '/aps/goods/index',
-    name: '商品管理',
-    component: () => import('@/views/system/aps/goods/index'),
-    meta: { title: '商品管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/goods/sale/index',
-    name: '商品销售特征绑定',
-    component: () => import('@/views/system/aps/goodsSaleConfig/index'),
-    meta: { title: '商品销售特征绑定', icon: 'setting', affix: false }
-  }, {
-    path: '/aps/goods/sale/project/index',
-    name: '商品销售特转规划',
-    component: () => import('@/views/system/aps/goodsSale2project/index'),
-    meta: { title: '商品销售特转规划', icon: 'setting', affix: false }
-  }
-
-  ]
-}, {
-  path: '/aps/goods/forecast/index/home',
-  name: '预测管理',
-  component: Layout,
-  meta: { title: '预测管理', icon: 'eye-open', affix: false },
-
-  children: [{
-    path: '/aps/goods/forecast/index',
-    name: '商品预测',
-    component: () => import('@/views/system/aps/forecast/index'),
-    meta: { title: '商品预测', icon: 'eye-open', affix: false }
-  }, {
-    path: '/aps/goods/forecast/main/index',
-    name: '预测主版本',
-    component: () => import('@/views/system/aps/forecastMain/index'),
-    meta: { title: '预测主版本', icon: 'main', affix: false }
-
-  }, {
-    path: '/aps/goods/forecast/make/week/index',
-    name: '(预)生产数据',
-    component: () => import('@/views/system/aps/forecastMakeWeek/index'),
-    meta: { title: '(预)周生产管理', icon: 'eye-open', affix: false }
-  }, {
-    path: '/aps/goods/forecast/make/weekMain/index',
-    name: '(预)生产数据主版本',
-    component: () => import('@/views/system/aps/forecastMainMake/index'),
-    meta: { title: '(预)生产数据主版本', icon: 'eye-open', affix: false }
-  }]
-}, {
-  path: '/aps/order/main/index',
-  name: '订单管理',
-  component: Layout,
-  meta: { title: '订单管理', icon: 'order-1', affix: false },
-  children: [{
-    path: '/aps/order/index',
-    name: '订单管理',
-    component: () => import('@/views/system/aps/order/index'),
-    meta: { title: '订单管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/order/timeline/index',
-    name: '订单进度',
-    component: () => import('@/views/system/aps/order/timeLine.vue'),
-    meta: { title: '订单进度', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/order/roll/factory/index',
-    name: '工厂滚动预测产能', // hidden: true,
-    component: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue'),
-    meta: { title: '工厂滚动预测产能', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/order/roll/index',
-    name: '滚动预测', // hidden: true,
-    component: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue'),
-    meta: { title: '滚动预测', icon: 'order-1', affix: false }
-  }]
-}, {
-  path: '/aps/make/q/index', name: 'APS工厂产能管理', component: Layout, // component: () => import('@/views/system/aps/order/index'),
-  meta: { title: '产能管理', icon: 'order-1', affix: false }, children: [{
-    path: '/aps/make_capacity_factory/index',
-    name: '工厂产能管理',
-    component: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue'),
-    meta: { title: '工厂产能管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/make/make_capacity_sale_config/index',
-    name: '销售特征产能管理',
-    component: () => import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue'),
-    meta: { title: '销售特征产能管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/make/make_capacity_goods/index',
-    name: '商品产能',
-    component: () => import('@/views/system/aps/make_capacity/make_capacity_goods'),
-    meta: { title: '商品产能', icon: 'order-1', affix: false }
-  }]
-}, {
-  path: '/aps/scheduling/main/index',
-  name: '排产排程',
-  component: Layout,
-  meta: { title: '排产排程', icon: 'order-1', affix: false },
-  children: [{
-    path: '/aps/make/constraint/index',
-    name: '排产约束',
-    component: () => import('@/views/system/aps/make_capacity/constraint'),
-    meta: { title: '排产约束', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/scheduling/index',
-    name: '排产版本管理',
-    component: () => import('@/views/system/aps/scheduling'),
-    meta: { title: '排产管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/scheduling/bom/index',
-    name: '排产零件',
-    hidden: true,
-    component: () => import('@/views/system/aps/scheduling/bomTotalResult.vue'),
-    meta: { title: '排产零件', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/scheduling/day/index',
-    name: '排程配置',
-    hidden: false,
-    component: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue'),
-    meta: { title: '排程配置', icon: 'order-1', affix: false }
-  }, {
-    path: '/aps/scheduling/day/config/index',
-    name: '排程管理',
-    hidden: false,
-    component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue'),
-    meta: { title: '排程管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/apsSchedulingDayConfigVersion/detailList',
-    name: '排程结果',
-    hidden: true,
-    component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue'),
-    meta: { title: '排程结果', icon: 'order-1', affix: false }
-  }
-
-  ]
-
-}, {
-  path: '/map/',
-  component: Layout,
-  redirect: 'index',
-  meta: { title: '地图', icon: 'international', affix: false },
-  children: [{
-    path: '/map/store/index',
-    name: '高德门店地图',
-    component: () => import('@/views/system/storeGaode/index'),
-    meta: { title: '高德门店地图', icon: 'international', affix: false }
-  }, {
-    path: '/map/store/fence',
-    name: '高德电子围栏',
-    component: () => import('@/views/system/storeGaode/fence'),
-    meta: { title: '高德电子围栏', icon: 'lock', affix: false }
-  }]
-}, {
-  path: '/property/',
-  component: Layout,
-  redirect: 'index',
-  meta: { title: '资产管理', icon: 'tools', affix: false },
-  children: [{
-    path: '/prop/storey/index',
-    name: '楼层管理',
-    component: () => import('@/views/system/storey/index'),
-    meta: { title: '楼层管理', icon: 'storey', affix: false }
-  }, {
-    path: '/prop/room/index',
-    name: '房间管理',
-    component: () => import('@/views/system/room/index'),
-    meta: { title: '房间管理', icon: 'room', affix: false }
-  }, {
-    path: '/prop/property/index',
-    name: '资产管理',
-    component: () => import('@/views/system/property/index'),
-    meta: { title: '资产管理', icon: 'construction', affix: false }
-  }, {
-
-    path: '/prop/property/propertyScanQr',
-    name: '扫码盘点',
-    component: () => import('@/views/system/property/porpertyScanQr.vue'),
-    meta: { title: '扫码盘点', icon: 'scan-qr-code', affix: false }
-  }, {
-
-    path: '/prop/property/propertyScanQrTest',
-    name: '扫码盘点(测试)',
-    component: () => import('@/views/system/property/porpertyScanQrTest.vue'),
-    meta: { title: '扫码盘点(测试)', icon: 'scan-qr-code', affix: false }
-  }, {
-
-    path: '/prop/property/checkList',
-    component: () => import('@/views/system/checkList'),
-    name: '盘点管理',
-    meta: { title: '盘点管理', icon: 'check-list', affix: false }
-  }]
-}, {
-  path: '/jxc/',
-  component: Layout,
-  redirect: 'index',
-  meta: { title: '进存销', icon: 'international', affix: false },
-  children: [{
-    path: '/jcx/goods/index',
-    name: '进存销-商品管理',
-    component: () => import('@/views/system/jcx/goods/index'),
-    meta: { title: '商品管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/order/index',
-    name: '进存销-订单管理',
-    component: () => import('@/views/system/jcx/order/index'),
-    meta: { title: '进存销-订单管理', icon: 'order-1', affix: false }
-  }, {
-    path: '/goods/waring/index',
-    name: '预警管理',
-    component: () => import('@/views/system/jcx/orderWaring/index'),
-    meta: { title: '预警管理', icon: 'warning', affix: false }
-  }, {
-    path: '/buy/plan/index',
-    name: '购买计划',
-    component: () => import('@/views/system/jcx/buyPlan/index'),
-    meta: { title: '购买计划', icon: 'buy-car', affix: false }
-  }, {
-    path: '/buy/order/index',
-    name: '采购订单',
-    component: () => import('@/views/system/jcx/buyOrder/index'),
-    meta: { title: '采购订单', icon: 'order-2', affix: false }
-  }]
-}, {
-  path: '/flow/',
-  component: Layout,
-  redirect: 'index',
-  meta: { title: '工作流', affix: false },
-  children: [{
-    path: '/flow/form',
-    name: '流程表单',
-    component: () => import('@/views/flow/flowForm/FlowForm.vue'),
-    meta: { title: '流程表单', affix: false }
-  }, {
-    path: '/flow/form/detail',
-    name: '流程表单预览',
-    component: () => import('@/views/flow/flowForm/FlowDetail.vue'),
-    meta: { title: '流程表单预览', affix: false }
-  }]
-},
-  {
-    path: '/setting',
-    name: '系统配置',
-    component: Layout,
-    meta: { title: '系统配置', icon: 'setting' },
-    children: [{
-      path: '/setting/baseResource',
-      component: () => import('@/views/system/base/baseResource/BaseResource.vue'),
-      name: '菜单管理',
-      meta: { title: '菜单管理', affix: false }
-    }
-      , {
-        path: '/setting/baseApp/index',
-        component: () => import('@/views/system/base/baseApp/BaseApp.vue'),
-        name: 'APP管理',
-        meta: { title: 'APP管理', affix: false }
-      } , {
-        path: '/setting/oplog/index',
-        component: () => import('@/views/system/base/oplog/BaseOplog.vue'),
-        name: '操作日志',
-        meta: { title: '操作日志', affix: false }
-      }
-
-      ]
-  }
-
-//
-]
-
-export function dynamicFlowRoutes(flowGroup) {
-
-  let flowList = flowGroup.flowList
-
-  const flowChildren = []
-  flowList.forEach(flow => {
-
-    let flowName = flow.flowName
-    // let flowNameEn = encodeURIComponent(flowName)
-    let flowChildrenChildren = [{
-      path: '/flow/todo/' + flow.flowKey,
-      name: flowName + '待办',
-      component: () => import('@/views/flow/todo.vue'),
-      meta: {
-        title: flowName + '待办',
-        affix: false,
-        flowKey: flow.flowKey,
-        flow: flow,
-
-      }
-    }, {
-      path: '/flow/flow/' + flow.flowKey + '/done',
-      name: flowName + '已办',
-      component: () => import('@/views/flow/task-done.vue'),
-      meta: {
-        title: flowName + '已办',
-        affix: false,
-        flowKey: flow.flowKey,
-        flow: flow,
-        taskUrl: '/flow/task/done'
-      }
-    }, {
-      path: '/flow/flow/' + flow.flowKey + '/copy',
-      name: flowName + '抄送',
-      component: () => import('@/views/flow/task-done.vue'),
-      meta: {
-        title: flowName + '抄送',
-        affix: false,
-        flowKey: flow.flowKey,
-        flow: flow,
-        taskUrl: '/flow/task/copy'
-      }
-    }]
-
-    flowChildren.push({
-      path: '/flow/task/' + flow.flowKey,
-      name: flow.flowName + '相关',
-      component: Layout,
-      meta: { title: flow.flowName + '待办', affix: false },
-      children: flowChildrenChildren
-    })
-  })
-
-  return {
-    path: '/flow/' + flowGroup.flowGroupCode,
-    name: flowGroup.flowGroupName + '审批',
-    component: ParentView,
-    meta: {
-      title: flowGroup.flowGroupName + '审批',
-
-      affix: false
-    },
-
-    children: flowChildren
-  }
-
-}
 
 // 防止连续点击多次路由报错
 let routerPush = Router.prototype.push
@@ -613,3 +130,107 @@ export default new Router({
   mode: 'hash', // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }), routes: constantRoutes
 })
+
+let roureMap = {
+  '/aps/apsLogistics/path/index': { hidden: false, comment: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue') },
+  '/aps/apsOrderGoodsHistory': { hidden: false, comment: () => import('@/views/system/aps/apsOrderGoodsHistory/ApsOrderGoodsHistory.vue') },
+  '/aps/apsOrderGoodsSaleHistory': { hidden: false, comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue') },
+  '/aps/bom/index': { hidden: false, comment: () => import('@/views/system/aps/bom/index') },
+  '/aps/bom/supplier/index': { hidden: false, comment: () => import('@/views/system/aps/apsBomSupplier/ApsBomSupplier.vue') },
+  '/aps/bomBuyPlan/index': { hidden: false, comment: () => import('@/views/system/aps/bomBuyPlan/index') },
+  '/aps/bomGroup/index': { hidden: false, comment: () => import('@/views/system/aps/bomGroup/index') },
+  '/aps/goods/forecast/index': { hidden: false, comment: () => import('@/views/system/aps/forecast/index') },
+  '/aps/goods/forecast/main/index': { hidden: false, comment: () => import('@/views/system/aps/forecastMain/index') },
+  '/aps/goods/forecast/make/week/index': { hidden: false, comment: () => import('@/views/system/aps/forecastMakeWeek/index') },
+  '/aps/goods/forecast/make/weekMain/index': { hidden: false, comment: () => import('@/views/system/aps/forecastMainMake/index') },
+  '/aps/goods/index': { hidden: false, comment: () => import('@/views/system/aps/goods/index') },
+  '/aps/goods/sale/index': { hidden: false, comment: () => import('@/views/system/aps/goodsSaleConfig/index') },
+  '/aps/goods/sale/project/index': { hidden: false, comment: () => import('@/views/system/aps/goodsSale2project/index') },
+  '/aps/goodsBom/index': { hidden: false, comment: () => import('@/views/system/aps/goodsBom/index') },
+  '/aps/machine/index': { hidden: false, comment: () => import('@/views/system/aps/apsMachine/ApsMachine.vue') },
+  '/aps/make/constraint/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/constraint') },
+  '/aps/make/make_capacity_goods/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/make_capacity_goods') },
+  '/aps/make/make_capacity_sale_config/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue') },
+  '/aps/make_capacity_factory/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue') },
+  '/aps/order/index': { hidden: false, comment: () => import('@/views/system/aps/order/index') },
+  '/aps/order/roll/factory/index': { hidden: false, comment: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue') },
+  '/aps/order/roll/index': { hidden: false, comment: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue') },
+  '/aps/order/timeline/index': { hidden: false, comment: () => import('@/views/system/aps/order/timeLine.vue') },
+  '/aps/process/path/index': { hidden: false, comment: () => import('@/views/system/aps/processPath/index') },
+  '/aps/produceProcess/path/index': { hidden: false, comment: () => import('@/views/system/aps/apsProduceProcess/ApsProduceProcess.vue') },
+  '/aps/project/index': { hidden: false, comment: () => import('@/views/system/aps/projectConfig/index') },
+  '/aps/room/index': { hidden: false, comment: () => import('@/views/system/aps/room/index') },
+  '/aps/sale/index': { hidden: false, comment: () => import('@/views/system/aps/saleConfig/index') },
+  '/aps/scheduling/bom/index': { hidden: false, comment: () => import('@/views/system/aps/scheduling/bomTotalResult.vue') },
+  '/aps/scheduling/day/config/index': { hidden: false, comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue') },
+  '/aps/scheduling/day/index': { hidden: false, comment: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue') },
+  '/aps/scheduling/index': { hidden: false, comment: () => import('@/views/system/aps/scheduling') },
+  '/aps/section/index': { hidden: false, comment: () => import('@/views/system/aps/section/index') },
+  '/aps/station/index': { hidden: false, comment: () => import('@/views/system/aps/station/index') },
+  '/aps/status/index': { hidden: false, comment: () => import('@/views/system/aps/status/index') },
+  '/apsSchedulingDayConfigVersion/detailList': { hidden: false, comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue') },
+  '/base/baseTableHeader/index': { hidden: false, comment: () => import('@/views/system/baseTableHeader/BaseTableHeader.vue') },
+  '/base/role/group/index': { hidden: false, comment: () => import('@/views/system/base/baseRoleGroup/BaseRoleGroup.vue') },
+  '/base/role/index': { hidden: false, comment: () => import('@/views/system/base/baseRole/BaseRole.vue') },
+  '/baseApp/index': { hidden: false, comment: () => import('@/views/system/base/baseApp/BaseApp.vue') },
+  '/baseAppResource/index': { hidden: false, comment: () => import('@/views/system/base/baseResource/BaseResource.vue') },
+  '/file/upload/index': { hidden: false, comment: () => import('@/views/system/fileUpload/index') },
+  '/login/account/index': { hidden: false, comment: () => import('@/views/loginAccount/index') },
+  '/prop/shift/index': { hidden: false, comment: () => import('@/views/system/basic/shift/index') },
+  '/prop/spec/index': { hidden: false, comment: () => import('@/views/system/calendar/index') },
+  '/seller/index': { hidden: false, comment: () => import('@/views/system/aps/apsSellerStore/ApsSellerStore.vue') },
+  '/setting/baseApp/index': { hidden: false, comment: () => import('@/views/system/base/baseApp/BaseApp.vue') },
+  '/setting/baseResource': { hidden: false, comment: () => import('@/views/system/base/baseResource/BaseResource.vue') },
+  '/setting/oplog/index': { hidden: false, comment: () => import('@/views/system/base/oplog/BaseOplog.vue') },
+  '/supplier/index': { hidden: false, comment: () => import('@/views/system/supplier/index') },
+  '/views/brand/index': { hidden: false, comment: () => import('@/views/system/brand/index') },
+  '/views/factory/index': { hidden: false, comment: () => import('@/views/system/factory/index') },
+  '/views/tenant/index': { hidden: false, comment: () => import('@/views/system/tenant/index') },
+
+}
+
+export function convertMenusToRoutes(menus) {
+
+  return menus.map(menu => {
+    const route = {
+      path: encodeURI(menu.resourceUrl), name: menu.resourceName, // component: Layout,
+      component: Layout, meta: {
+        title: menu.resourceName, icon: 'eye-open', affix: false
+      }
+    }
+
+    if (menu.children && menu.children.length > 0) {
+      route.children = []
+      menu.children.forEach(tt => {
+        route.children.push({
+          path: encodeURI(tt.resourceUrl),
+          name: tt.resourceName,
+          component: roureMap[tt.resourceUrl]?.comment,
+          hidden: roureMap[tt.resourceUrl]?.hidden,
+          meta: {
+            title: tt.resourceName, icon: 'eye-open', affix: false
+          }
+        })
+      })
+    }
+    return route
+  })
+}
+
+export function loadResource() {
+  return getRouters({ queryPage: false }).then(res => {
+    let dataList = res.data.dataList
+    // dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
+    dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
+    var tree = handleTree(dataList, 'resourceId')
+    const asyncRoutes = convertMenusToRoutes(tree)
+    console.log(asyncRoutes, tree)
+    return asyncRoutes
+  })
+}
+
+function removeDuplicatesByFieldWithFilter(arr, field) {
+  return arr.filter((item, index, self) => {
+    return self.findIndex(t => t[field] === item[field]) === index
+  })
+}
