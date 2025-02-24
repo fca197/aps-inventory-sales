@@ -21,46 +21,75 @@
 
 
     <el-tabs>
+      <el-tab-pane label="树形显示">
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="appNameFilterText"
+        >
+        </el-input>
+        <el-tree
+          :data="baseAppResourceTree"
+          node-key="id"
+          default-expand-all
+
+          :props="{
+            label: 'treeName',
+            children: 'children'
+            } "
+          :filter-node-method="filterNode"
+          ref="tree"
+        >
+           <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span style="margin-right: 30px">{{ node.label }}  </span>
+            <span v-if='node.parentId==="0"'>
+                 <el-button
+                   type="text"
+                   size="mini"
+                   @click="() => handleUpdate(data)"
+                 >
+              添加
+          </el-button>
+
+            </span>
+        <span>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => handleUpdate(data)"
+          >
+              修改
+          </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => handleDelete(node, data)"
+          >
+            删除
+          </el-button>
+        </span>
+      </span>
+        </el-tree>
+      </el-tab-pane>
       <el-tab-pane label="表格显示">
         <el-table v-loading="loading" :data="baseResourceList" @selection-change="handleSelectionChange">
           <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
           <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
-          <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
-            <template slot-scope="scope">
-              <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
-              <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
+          <!--          <el-table-column align="center" class-name="small-padding fixed-width" label="操作">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate()">修改</el-button>-->
+          <!--              <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete()">删除</el-button>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
         </el-table>
         <pagination
-            v-show="total>0"
-            :limit.sync="queryParams.pageSize"
-            :page.sync="queryParams.pageNum"
-            :total="total"
-            @pagination="getList"
+          v-show="total>0"
+          :limit.sync="queryParams.pageSize"
+          :page.sync="queryParams.pageNum"
+          :total="total"
+          @pagination="getList"
         />
       </el-tab-pane>
-      <el-tab-pane label="树形显示">
-        <el-input
-            placeholder="输入关键字进行过滤"
-            v-model="appNameFilterText"
-        >
-        </el-input>
-        <el-tree
-            :data="baseAppResourceTree"
-            node-key="id"
-            default-expand-all
-            :props="{
-            label: 'treeName',
-            children: 'children'
-            } "
-            :filter-node-method="filterNode"
-            ref="tree"
-        >
-        </el-tree>
 
-
-      </el-tab-pane>
     </el-tabs>
 
 
@@ -78,17 +107,17 @@
           <el-input v-model="form.resourceUrl" clearable placeholder="请输入菜单URL"/>
         </el-form-item>
         <el-form-item label="是否按钮" prop="isButton">
-        <el-select v-model="form.isButton" placeholder="请选择">
-          <el-option
-            v-for="item in [{id:false,name:'否'},{id:true,name:'是'}]"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
+          <el-select v-model="form.isButton" placeholder="请选择">
+            <el-option
+              v-for="item in [{id:false,name:'否'},{id:true,name:'是'}]"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="父菜单" prop="parentId">
-           <el-select v-model="form.parentId" placeholder="请选择" filterable>
+          <el-select v-model="form.parentId" placeholder="请选择" filterable>
             <el-option
               v-for="item in baseResourceList"
               :key="item.id"
@@ -180,9 +209,14 @@ export default {
         this.tableHeaderList = response.headerList
         this.baseResourceList = response.dataList
         this.total = parseInt(response.total)
-
+        this.baseResourceList.unshift({
+          id:0,
+          resourceCode:'-',
+          resourceUrl:'-',
+          resourceName: '顶级',
+        })
         this.baseResourceList.forEach(item => {
-          item.treeName = item.resourceName + '(' + item.resourceCode + ')' + item.id
+          item.treeName = item.resourceName + '(' + item.resourceCode + ')' + item.id + '(' + item.resourceUrl
         })
         this.baseAppResourceTree = handleTree(this.baseResourceList, 'id', 'parentId')
         this.total = parseInt(response.total)

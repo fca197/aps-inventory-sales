@@ -132,66 +132,248 @@ export default new Router({
 })
 
 let roureMap = {
-  '/aps/apsLogistics/path/index': { hidden: false, comment: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue') },
-  '/aps/apsOrderGoodsHistory': { hidden: false, comment: () => import('@/views/system/aps/apsOrderGoodsHistory/ApsOrderGoodsHistory.vue') },
-  '/aps/apsOrderGoodsSaleHistory': { hidden: false, comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue') },
-  '/aps/bom/index': { hidden: false, comment: () => import('@/views/system/aps/bom/index') },
-  '/aps/bom/supplier/index': { hidden: false, comment: () => import('@/views/system/aps/apsBomSupplier/ApsBomSupplier.vue') },
-  '/aps/bomBuyPlan/index': { hidden: false, comment: () => import('@/views/system/aps/bomBuyPlan/index') },
-  '/aps/bomGroup/index': { hidden: false, comment: () => import('@/views/system/aps/bomGroup/index') },
-  '/aps/goods/forecast/index': { hidden: false, comment: () => import('@/views/system/aps/forecast/index') },
-  '/aps/goods/forecast/main/index': { hidden: false, comment: () => import('@/views/system/aps/forecastMain/index') },
-  '/aps/goods/forecast/make/week/index': { hidden: false, comment: () => import('@/views/system/aps/forecastMakeWeek/index') },
-  '/aps/goods/forecast/make/weekMain/index': { hidden: false, comment: () => import('@/views/system/aps/forecastMainMake/index') },
-  '/aps/goods/index': { hidden: false, comment: () => import('@/views/system/aps/goods/index') },
-  '/aps/goods/sale/index': { hidden: false, comment: () => import('@/views/system/aps/goodsSaleConfig/index') },
-  '/aps/goods/sale/project/index': { hidden: false, comment: () => import('@/views/system/aps/goodsSale2project/index') },
-  '/aps/goodsBom/index': { hidden: false, comment: () => import('@/views/system/aps/goodsBom/index') },
-  '/aps/machine/index': { hidden: false, comment: () => import('@/views/system/aps/apsMachine/ApsMachine.vue') },
-  '/aps/make/constraint/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/constraint') },
-  '/aps/make/make_capacity_goods/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/make_capacity_goods') },
-  '/aps/make/make_capacity_sale_config/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue') },
-  '/aps/make_capacity_factory/index': { hidden: false, comment: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue') },
-  '/aps/order/index': { hidden: false, comment: () => import('@/views/system/aps/order/index') },
-  '/aps/order/roll/factory/index': { hidden: false, comment: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue') },
-  '/aps/order/roll/index': { hidden: false, comment: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue') },
-  '/aps/order/timeline/index': { hidden: false, comment: () => import('@/views/system/aps/order/timeLine.vue') },
-  '/aps/process/path/index': { hidden: false, comment: () => import('@/views/system/aps/processPath/index') },
-  '/aps/produceProcess/path/index': { hidden: false, comment: () => import('@/views/system/aps/apsProduceProcess/ApsProduceProcess.vue') },
-  '/aps/project/index': { hidden: false, comment: () => import('@/views/system/aps/projectConfig/index') },
-  '/aps/room/index': { hidden: false, comment: () => import('@/views/system/aps/room/index') },
-  '/aps/sale/index': { hidden: false, comment: () => import('@/views/system/aps/saleConfig/index') },
-  '/aps/scheduling/bom/index': { hidden: false, comment: () => import('@/views/system/aps/scheduling/bomTotalResult.vue') },
-  '/aps/scheduling/day/config/index': { hidden: false, comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue') },
-  '/aps/scheduling/day/index': { hidden: false, comment: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue') },
-  '/aps/scheduling/index': { hidden: false, comment: () => import('@/views/system/aps/scheduling') },
-  '/aps/section/index': { hidden: false, comment: () => import('@/views/system/aps/section/index') },
-  '/aps/station/index': { hidden: false, comment: () => import('@/views/system/aps/station/index') },
-  '/aps/status/index': { hidden: false, comment: () => import('@/views/system/aps/status/index') },
-  '/apsSchedulingDayConfigVersion/detailList': { hidden: false, comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue') },
-  '/base/baseTableHeader/index': { hidden: false, comment: () => import('@/views/system/baseTableHeader/BaseTableHeader.vue') },
-  '/base/role/group/index': { hidden: false, comment: () => import('@/views/system/base/baseRoleGroup/BaseRoleGroup.vue') },
-  '/base/role/index': { hidden: false, comment: () => import('@/views/system/base/baseRole/BaseRole.vue') },
-  '/baseApp/index': { hidden: false, comment: () => import('@/views/system/base/baseApp/BaseApp.vue') },
-  '/baseAppResource/index': { hidden: false, comment: () => import('@/views/system/base/baseResource/BaseResource.vue') },
-  '/file/upload/index': { hidden: false, comment: () => import('@/views/system/fileUpload/index') },
-  '/login/account/index': { hidden: false, comment: () => import('@/views/loginAccount/index') },
-  '/prop/shift/index': { hidden: false, comment: () => import('@/views/system/basic/shift/index') },
-  '/prop/spec/index': { hidden: false, comment: () => import('@/views/system/calendar/index') },
-  '/seller/index': { hidden: false, comment: () => import('@/views/system/aps/apsSellerStore/ApsSellerStore.vue') },
-  '/setting/baseApp/index': { hidden: false, comment: () => import('@/views/system/base/baseApp/BaseApp.vue') },
-  '/setting/baseResource': { hidden: false, comment: () => import('@/views/system/base/baseResource/BaseResource.vue') },
-  '/setting/oplog/index': { hidden: false, comment: () => import('@/views/system/base/oplog/BaseOplog.vue') },
-  '/supplier/index': { hidden: false, comment: () => import('@/views/system/supplier/index') },
-  '/views/brand/index': { hidden: false, comment: () => import('@/views/system/brand/index') },
-  '/views/factory/index': { hidden: false, comment: () => import('@/views/system/factory/index') },
-  '/views/tenant/index': { hidden: false, comment: () => import('@/views/system/tenant/index') },
+  '/aps/apsLogistics/path/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue')
+  },
+  '/aps/apsOrderGoodsHistory': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsOrderGoodsHistory/ApsOrderGoodsHistory.vue')
+  },
+  '/aps/apsOrderGoodsSaleHistory': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue')
+  },
+
+  '/aps/bom/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/bom/index')
+  },
+  '/aps/bom/supplier/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsBomSupplier/ApsBomSupplier.vue')
+  },
+  '/aps/bomBuyPlan/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/bomBuyPlan/index')
+  },
+  '/aps/bomGroup/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/bomGroup/index')
+  },
+
+  '/aps/goods/forecast/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/forecast/index')
+  },
+  '/aps/goods/forecast/main/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/forecastMain/index')
+  },
+  '/aps/goods/forecast/make/week/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/forecastMakeWeek/index')
+  },
+  '/aps/goods/forecast/make/weekMain/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/forecastMainMake/index')
+  },
+  //xx
+  '/aps/goods/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/goods/index')
+  },
+  '/aps/goods/sale/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/goodsSaleConfig/index')
+  },
+  '/aps/goods/sale/project/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/goodsSale2project/index')
+  },
+  '/aps/goodsBom/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/goodsBom/index')
+  },
+
+  '/aps/machine/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsMachine/ApsMachine.vue')
+  },
+
+  '/aps/make/constraint/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/make_capacity/constraint')
+  },
+  '/aps/make/make_capacity_goods/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/make_capacity/make_capacity_goods')
+  },
+  '/aps/make/make_capacity_sale_config/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue')
+  },
+  '/aps/make_capacity_factory/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue')
+  },
+
+  '/aps/order/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/order/index')
+  },
+  '/aps/order/roll/factory/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue')
+  },
+  '/aps/order/roll/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue')
+  },
+  '/aps/order/timeline/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/order/timeLine.vue')
+  },
+  '/aps/order/goodsSaleHistory': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue')
+  },
+  '/aps/order/goodsHistory': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsOrderGoodsHistory/ApsOrderGoodsHistory.vue')
+  },
+
+  '/aps/process/path/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/processPath/index')
+  },
+  '/aps/produceProcess/path/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsProduceProcess/ApsProduceProcess.vue')
+  },
+  '/aps/project/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/projectConfig/index')
+  },
+  '/aps/room/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/room/index')
+  },
+  '/aps/sale/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/saleConfig/index')
+  },
+  '/aps/scheduling/bom/index': {
+    hidden: true,
+    comment: () => import('@/views/system/aps/scheduling/bomTotalResult.vue')
+  },
+  '/aps/scheduling/day/config/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue')
+  },
+  '/aps/scheduling/day/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue')
+  },
+  '/aps/scheduling/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/scheduling')
+  },
+  '/aps/section/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/section/index')
+  },
+  '/aps/station/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/station/index')
+  },
+  '/aps/status/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/status/index')
+  },
+  '/apsSchedulingDayConfigVersion/detailList': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue')
+  },
+  '/base/baseTableHeader/index': {
+    hidden: false,
+    comment: () => import('@/views/system/baseTableHeader/BaseTableHeader.vue')
+  },
+  '/base/role/group/index': {
+    hidden: false,
+    comment: () => import('@/views/system/base/baseRoleGroup/BaseRoleGroup.vue')
+  },
+  '/base/role/index': {
+    hidden: false,
+    comment: () => import('@/views/system/base/baseRole/BaseRole.vue')
+  },
+  '/baseApp/index': {
+    hidden: false,
+    comment: () => import('@/views/system/base/baseApp/BaseApp.vue')
+  },
+  '/baseAppResource/index': {
+    hidden: false,
+    comment: () => import('@/views/system/base/baseResource/BaseResource.vue')
+  },
+  '/file/upload/index': {
+    hidden: false,
+    comment: () => import('@/views/system/fileUpload/index')
+  },
+  '/login/account/index': {
+    hidden: false,
+    comment: () => import('@/views/loginAccount/index')
+  },
+  '/prop/shift/index': {
+    hidden: false,
+    comment: () => import('@/views/system/basic/shift/index')
+  },
+  '/prop/spec/index': {
+    hidden: false,
+    comment: () => import('@/views/system/calendar/index')
+  },
+  '/seller/index': {
+    hidden: false,
+    comment: () => import('@/views/system/aps/apsSellerStore/ApsSellerStore.vue')
+  },
+  '/setting/baseApp/index': {
+    hidden: false,
+    comment: () => import('@/views/system/base/baseApp/BaseApp.vue')
+  },
+  '/setting/baseResource': {
+    hidden: false,
+    comment: () => import('@/views/system/base/baseResource/BaseResource.vue')
+  },
+  '/setting/oplog/index': {
+    hidden: false,
+    comment: () => import('@/views/system/base/oplog/BaseOplog.vue')
+  },
+  '/supplier/index': {
+    hidden: false,
+    comment: () => import('@/views/system/supplier/index')
+  },
+  '/views/brand/index': {
+    hidden: false,
+    comment: () => import('@/views/system/brand/index')
+  },
+  '/views/factory/index': {
+    hidden: false,
+    comment: () => import('@/views/system/factory/index')
+  },
+  '/views/tenant/index': {
+    hidden: false,
+    comment: () => import('@/views/system/tenant/index')
+  }
 
 }
 
 export function convertMenusToRoutes(menus) {
 
-  return menus.map(menu => {
+  return menus .sort((a, b) =>{
+    // console.log( a.sortIndex , b.sortIndex)
+    if (  a.sortIndex > b.sortIndex) return 1;
+    if (  a.sortIndex < b.sortIndex) return -1;
+    return  0;
+  }).map(menu => {
     const route = {
       path: encodeURI(menu.resourceUrl), name: menu.resourceName, // component: Layout,
       component: Layout, meta: {
@@ -201,10 +383,18 @@ export function convertMenusToRoutes(menus) {
 
     if (menu.children && menu.children.length > 0) {
       route.children = []
-      menu.children.forEach(tt => {
+      menu.children
+      .sort((a, b) =>{
+        // console.log( a.sortIndex , b.sortIndex)
+        if (  a.sortIndex > b.sortIndex) return 1;
+        if (  a.sortIndex < b.sortIndex) return -1;
+        return  0;
+      })
+      .forEach(tt => {
         route.children.push({
           path: encodeURI(tt.resourceUrl),
           name: tt.resourceName,
+          index: tt.id,
           component: roureMap[tt.resourceUrl]?.comment,
           hidden: roureMap[tt.resourceUrl]?.hidden,
           meta: {
@@ -212,6 +402,7 @@ export function convertMenusToRoutes(menus) {
           }
         })
       })
+
     }
     return route
   })
