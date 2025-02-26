@@ -233,7 +233,6 @@ export default {
     // process.env.pagePath = "/tenant"
     queryBomGroupTree(false).then(t => {
       this.groupData = []
-
       let tt = {
         parentId: undefined,
         id: undefined,
@@ -244,7 +243,7 @@ export default {
       for (let i = 0; i < t.length; i++) {
         this.groupData.push(t[i])
       }
-      console.info('groupData: ', this.groupData)
+      // console.info('groupData: ', this.groupData)
     }).then(t => {
       this.getList()
     })
