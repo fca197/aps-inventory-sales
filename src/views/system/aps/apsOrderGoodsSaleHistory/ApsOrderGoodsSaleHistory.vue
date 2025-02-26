@@ -1,118 +1,18 @@
 <template>
   <div class="app-container">
-    <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="工厂ID" prop="factoryId">
-        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="商品ID" prop="goodsId">
-        <el-input v-model="queryParams.data.goodsId" clearable placeholder="请输入商品ID"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="销售上级ID" prop="saleParentId">
-        <el-input v-model="queryParams.data.saleParentId" clearable placeholder="请输入销售上级ID"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="销售ID" prop="saleConfigId">
-        <el-input v-model="queryParams.data.saleConfigId" clearable placeholder="请输入销售ID"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="1月销售数量" prop="monthCount01">
-        <el-input v-model="queryParams.data.monthCount01" clearable placeholder="请输入1月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="1月销售占比" prop="monthRatio01">
-        <el-input v-model="queryParams.data.monthRatio01" clearable placeholder="请输入1月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="2月销售数量" prop="monthCount02">
-        <el-input v-model="queryParams.data.monthCount02" clearable placeholder="请输入2月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="2月销售占比" prop="monthRatio02">
-        <el-input v-model="queryParams.data.monthRatio02" clearable placeholder="请输入2月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="3月销售数量" prop="monthCount03">
-        <el-input v-model="queryParams.data.monthCount03" clearable placeholder="请输入3月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="3月销售占比" prop="monthRatio03">
-        <el-input v-model="queryParams.data.monthRatio03" clearable placeholder="请输入3月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="4月销售数量" prop="monthCount04">
-        <el-input v-model="queryParams.data.monthCount04" clearable placeholder="请输入4月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="4月销售占比" prop="monthRatio04">
-        <el-input v-model="queryParams.data.monthRatio04" clearable placeholder="请输入4月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="5月销售数量" prop="monthCount05">
-        <el-input v-model="queryParams.data.monthCount05" clearable placeholder="请输入5月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="5月销售占比" prop="monthRatio05">
-        <el-input v-model="queryParams.data.monthRatio05" clearable placeholder="请输入5月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="6月销售数量" prop="monthCount06">
-        <el-input v-model="queryParams.data.monthCount06" clearable placeholder="请输入6月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="6月销售占比" prop="monthRatio06">
-        <el-input v-model="queryParams.data.monthRatio06" clearable placeholder="请输入6月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="7月销售数量" prop="monthCount07">
-        <el-input v-model="queryParams.data.monthCount07" clearable placeholder="请输入7月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="7月销售占比" prop="monthRatio07">
-        <el-input v-model="queryParams.data.monthRatio07" clearable placeholder="请输入7月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="8月销售数量" prop="monthCount08">
-        <el-input v-model="queryParams.data.monthCount08" clearable placeholder="请输入8月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="8月销售占比" prop="monthRatio08">
-        <el-input v-model="queryParams.data.monthRatio08" clearable placeholder="请输入8月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="9月销售数量" prop="monthCount09">
-        <el-input v-model="queryParams.data.monthCount09" clearable placeholder="请输入9月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="9月销售占比" prop="monthRatio09">
-        <el-input v-model="queryParams.data.monthRatio09" clearable placeholder="请输入9月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="10月销售数量" prop="monthCount10">
-        <el-input v-model="queryParams.data.monthCount10" clearable placeholder="请输入10月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="10月销售占比" prop="monthRatio10">
-        <el-input v-model="queryParams.data.monthRatio10" clearable placeholder="请输入10月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="11月销售数量" prop="monthCount11">
-        <el-input v-model="queryParams.data.monthCount11" clearable placeholder="请输入11月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="11月销售占比" prop="monthRatio11">
-        <el-input v-model="queryParams.data.monthRatio11" clearable placeholder="请输入11月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="12月销售数量" prop="monthCount12">
-        <el-input v-model="queryParams.data.monthCount12" clearable placeholder="请输入12月销售数量"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
-      <el-form-item label="12月销售占比" prop="monthRatio12">
-        <el-input v-model="queryParams.data.monthRatio12" clearable placeholder="请输入12月销售占比"
-                  @keyup.enter.native="handleQuery"/>
-      </el-form-item>
+      <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
+        <!--        <el-form-item label="工厂ID" prop="factoryId">-->
+        <!--          <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂ID" @keyup.enter.native="handleQuery"/>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item label="商品ID" prop="goodsId">-->
+        <!--          <el-input v-model="queryParams.data.goodsId" clearable placeholder="请输入商品ID" @keyup.enter.native="handleQuery"/>-->
+        <!--        </el-form-item>-->
+        <el-form-item label="年份" prop="year">
+          <el-select v-model="queryParams.data.year" @change="handleQuery">
+            <el-option v-for="year in yearList" :label="year+''" :value="year"></el-option>
+          </el-select>
+
+        </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -130,10 +30,9 @@
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName"
                        :prop="item.fieldName" :width="item.width+'px'" align="center"/>
-      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
+      <el-table-column v-for="m in monthList" width="200" :label="m+'月'">
         <template slot-scope="scope">
-          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
+          {{ scope.row['monthRatio' + m] !== null ? scope.row['monthRatio' + m]  + '%' : '' }}/{{scope.row['monthCount' + m] !==null ? parseInt(scope.row['monthCount' + m]):'' }}
         </template>
       </el-table-column>
     </el-table>
@@ -146,101 +45,7 @@
         @pagination="getList"
     />
 
-    <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
-        <el-form-item label="工厂ID" prop="factoryId">
-          <el-input v-model="form.factoryId" clearable placeholder="请输入工厂ID"/>
-        </el-form-item>
-        <el-form-item label="商品ID" prop="goodsId">
-          <el-input v-model="form.goodsId" clearable placeholder="请输入商品ID"/>
-        </el-form-item>
-        <el-form-item label="销售上级ID" prop="saleParentId">
-          <el-input v-model="form.saleParentId" clearable placeholder="请输入销售上级ID"/>
-        </el-form-item>
-        <el-form-item label="销售ID" prop="saleConfigId">
-          <el-input v-model="form.saleConfigId" clearable placeholder="请输入销售ID"/>
-        </el-form-item>
-        <el-form-item label="1月销售数量" prop="monthCount01">
-          <el-input v-model="form.monthCount01" clearable placeholder="请输入1月销售数量"/>
-        </el-form-item>
-        <el-form-item label="1月销售占比" prop="monthRatio01">
-          <el-input v-model="form.monthRatio01" clearable placeholder="请输入1月销售占比"/>
-        </el-form-item>
-        <el-form-item label="2月销售数量" prop="monthCount02">
-          <el-input v-model="form.monthCount02" clearable placeholder="请输入2月销售数量"/>
-        </el-form-item>
-        <el-form-item label="2月销售占比" prop="monthRatio02">
-          <el-input v-model="form.monthRatio02" clearable placeholder="请输入2月销售占比"/>
-        </el-form-item>
-        <el-form-item label="3月销售数量" prop="monthCount03">
-          <el-input v-model="form.monthCount03" clearable placeholder="请输入3月销售数量"/>
-        </el-form-item>
-        <el-form-item label="3月销售占比" prop="monthRatio03">
-          <el-input v-model="form.monthRatio03" clearable placeholder="请输入3月销售占比"/>
-        </el-form-item>
-        <el-form-item label="4月销售数量" prop="monthCount04">
-          <el-input v-model="form.monthCount04" clearable placeholder="请输入4月销售数量"/>
-        </el-form-item>
-        <el-form-item label="4月销售占比" prop="monthRatio04">
-          <el-input v-model="form.monthRatio04" clearable placeholder="请输入4月销售占比"/>
-        </el-form-item>
-        <el-form-item label="5月销售数量" prop="monthCount05">
-          <el-input v-model="form.monthCount05" clearable placeholder="请输入5月销售数量"/>
-        </el-form-item>
-        <el-form-item label="5月销售占比" prop="monthRatio05">
-          <el-input v-model="form.monthRatio05" clearable placeholder="请输入5月销售占比"/>
-        </el-form-item>
-        <el-form-item label="6月销售数量" prop="monthCount06">
-          <el-input v-model="form.monthCount06" clearable placeholder="请输入6月销售数量"/>
-        </el-form-item>
-        <el-form-item label="6月销售占比" prop="monthRatio06">
-          <el-input v-model="form.monthRatio06" clearable placeholder="请输入6月销售占比"/>
-        </el-form-item>
-        <el-form-item label="7月销售数量" prop="monthCount07">
-          <el-input v-model="form.monthCount07" clearable placeholder="请输入7月销售数量"/>
-        </el-form-item>
-        <el-form-item label="7月销售占比" prop="monthRatio07">
-          <el-input v-model="form.monthRatio07" clearable placeholder="请输入7月销售占比"/>
-        </el-form-item>
-        <el-form-item label="8月销售数量" prop="monthCount08">
-          <el-input v-model="form.monthCount08" clearable placeholder="请输入8月销售数量"/>
-        </el-form-item>
-        <el-form-item label="8月销售占比" prop="monthRatio08">
-          <el-input v-model="form.monthRatio08" clearable placeholder="请输入8月销售占比"/>
-        </el-form-item>
-        <el-form-item label="9月销售数量" prop="monthCount09">
-          <el-input v-model="form.monthCount09" clearable placeholder="请输入9月销售数量"/>
-        </el-form-item>
-        <el-form-item label="9月销售占比" prop="monthRatio09">
-          <el-input v-model="form.monthRatio09" clearable placeholder="请输入9月销售占比"/>
-        </el-form-item>
-        <el-form-item label="10月销售数量" prop="monthCount10">
-          <el-input v-model="form.monthCount10" clearable placeholder="请输入10月销售数量"/>
-        </el-form-item>
-        <el-form-item label="10月销售占比" prop="monthRatio10">
-          <el-input v-model="form.monthRatio10" clearable placeholder="请输入10月销售占比"/>
-        </el-form-item>
-        <el-form-item label="11月销售数量" prop="monthCount11">
-          <el-input v-model="form.monthCount11" clearable placeholder="请输入11月销售数量"/>
-        </el-form-item>
-        <el-form-item label="11月销售占比" prop="monthRatio11">
-          <el-input v-model="form.monthRatio11" clearable placeholder="请输入11月销售占比"/>
-        </el-form-item>
-        <el-form-item label="12月销售数量" prop="monthCount12">
-          <el-input v-model="form.monthCount12" clearable placeholder="请输入12月销售数量"/>
-        </el-form-item>
-        <el-form-item label="12月销售占比" prop="monthRatio12">
-          <el-input v-model="form.monthRatio12" clearable placeholder="请输入12月销售占比"/>
-        </el-form-item>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -254,6 +59,8 @@ export default {
   data() {
 
     return {
+      yearList: [2023, 2024, 2025, 2026],
+      monthList: ['01', '02', '03', '05', '06', '07', '08', '09', '10', '11', '12'],
       // 遮罩层
       loading: true,
       // 选中数组

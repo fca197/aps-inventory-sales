@@ -238,10 +238,7 @@ let roureMap = {
     hidden: false,
     comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue')
   },
-  '/aps/order/goodsHistory': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/apsOrderGoodsHistory/ApsOrderGoodsHistory.vue')
-  },
+
 
   '/aps/process/path/index': {
     hidden: false,
