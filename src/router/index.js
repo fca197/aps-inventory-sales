@@ -359,8 +359,11 @@ let roureMap = {
   '/views/tenant/index': {
     hidden: false,
     comment: () => import('@/views/system/tenant/index')
+  },
+  '/task/taskDef':{
+    hidden:false,
+    comment:()=>import('@/views/system/task/taskDef/TaskDef.vue')
   }
-
 }
 
 export function convertMenusToRoutes(menus) {
@@ -406,13 +409,13 @@ export function convertMenusToRoutes(menus) {
 }
 
 export function loadResource() {
-  return getRouters({ queryPage: false }).then(res => {
+  return getRouters({ queryPage: false ,appCode:"aps" }).then(res => {
     let dataList = res.data.dataList
     // dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
     dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
     var tree = handleTree(dataList, 'resourceId')
     const asyncRoutes = convertMenusToRoutes(tree)
-    console.log(asyncRoutes, tree)
+    // console.log(asyncRoutes, tree)
     return asyncRoutes
   })
 }

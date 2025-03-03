@@ -104,12 +104,12 @@
         </el-form-item>
         <el-form-item label="制造路径" v-show="form.supplyMode==='make'" prop="apsBomSupplierId">
           <el-select v-model="form.produceProcessId">
-            <el-option v-for="(p,i) in produceProcessList"  :value="p.id" :label="p.produceProcessName"></el-option>
+            <el-option v-for="(p,i) in produceProcessList"   :key="p.id" :value="p.id" :label="p.produceProcessName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="供应商" v-show="form.supplyMode==='buy'" prop="apsBomSupplierId">
           <el-select v-model="form.apsBomSupplierId">
-            <el-option v-for="(p,i) in apsBomSupplierList"  :value="p.id" :label="p.bomSupplierName"></el-option>
+            <el-option v-for="(p,i) in apsBomSupplierList"  :key="p.id" :value="p.id" :label="p.bomSupplierName"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="零件组" prop="groupId">

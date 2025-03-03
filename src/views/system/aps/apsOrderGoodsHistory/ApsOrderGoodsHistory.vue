@@ -8,8 +8,8 @@
       <!--          <el-input v-model="queryParams.data.goodsId" clearable placeholder="请输入商品ID" @keyup.enter.native="handleQuery"/>-->
       <!--        </el-form-item>-->
       <el-form-item label="年份" prop="year">
-        <el-select v-model="queryParams.data.year" @change="handleQuery">
-          <el-option v-for="year in yearList" :label="year+''" :value="year"></el-option>
+        <el-select v-model="queryParams.data.year"  @change="handleQuery">
+          <el-option v-for="year in yearList" :key="year+'year'" :label="year+''" :value="year"></el-option>
         </el-select>
 
       </el-form-item>
@@ -35,7 +35,7 @@
       <!--          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column v-for="m in monthList" width="200" :label="m+'月'">
+      <el-table-column v-for="m in monthList" :key="m+'month'"  width="200" :label="m+'月'">
         <template slot-scope="scope">
           {{ scope.row['monthRatio' + m] !== null ? scope.row['monthRatio' + m] + '%' : '' }}/{{scope.row['monthCount' + m] !==null ? parseInt(scope.row['monthCount' + m]):'' }}
         </template>
