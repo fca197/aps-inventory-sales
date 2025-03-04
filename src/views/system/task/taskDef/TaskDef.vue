@@ -78,7 +78,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="title" :key="'xxx'+Math.random()" :visible.sync="handleDefEditShow"   width="1100">
+    <el-dialog :title="title" :key="'xxx'+Math.random()" :visible.sync="handleDefEditShow"   width="1000px">
       <task-def-edit  ></task-def-edit>
     </el-dialog>
 
