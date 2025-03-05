@@ -1,7 +1,7 @@
 <template>
   <div style="z-index: 8000">
-    <el-form ref="taskForm" :model="taskInfo" label-width="100px" :rules="rules">
-      <el-form-item label="上个环节">
+    <el-form ref="taskForm" :model="taskInfo" label-width="110px" :rules="rules" inline>
+      <el-form-item label="上个环节" style="width: 100%">
         <el-select v-model="taskInfo.sourceTaskId">
           <el-option v-for="t in taskDefList" :value="t.id" :label="t.taskName"></el-option>
         </el-select>
@@ -14,22 +14,24 @@
         <el-select v-model="taskInfo.type">
           <!--          <el-option label="开始" value="begin"></el-option>-->
           <el-option label="javaBean" value="javaBean"></el-option>
-          <el-option label="http" value="http"></el-option>
+          <el-option label="HTTP" value="HTTP"></el-option>
           <el-option label="结束" value="end"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item v-if="taskInfo.type==='javaBean'">
         <el-form-item label="JavaBean名称" prop="taskBeanName">
           <el-input v-model="taskInfo.taskBeanName"></el-input>
+        </el-form-item>
+        <el-form-item label="任务类型" prop="taskType">
           <el-select v-model="taskInfo.taskType">
             <el-option label="springBean" value="springBean"></el-option>
             <el-option label="javaClass" value="javaClass"></el-option>
           </el-select>
         </el-form-item>
       </el-form-item>
-      <el-form-item v-if="taskInfo.type==='http'">
-        <el-form-item label="请求地址" prop="url">
-          <el-input v-model="taskInfo.url"></el-input>
+      <el-form-item v-if="taskInfo.type==='HTTP'">
+        <el-form-item label="请求地址" prop="reqUrl">
+          <el-input v-model="taskInfo.reqUrl"></el-input>
         </el-form-item>
         <el-form-item label="请求方式" prop="reqMethod">
           <el-select v-model="taskInfo.reqMethod">
@@ -38,6 +40,39 @@
           </el-select>
         </el-form-item>
       </el-form-item>
+      <el-form-item label="检查类型" prop="checkType">
+        <el-select v-model="taskInfo.checkType" clearable>
+          <el-option label="JAVA" value="JAVA"></el-option>
+          <el-option label="HTTP" value="HTTP"></el-option>
+        </el-select>
+      </el-form-item>
+
+
+      <el-form-item v-if="taskInfo.checkType==='HTTP'">
+        <el-form-item label="请求地址" prop="checkUrl">
+          <el-input v-model="taskInfo.checkUrl"></el-input>
+        </el-form-item>
+        <el-form-item label="请求方式" prop="checkReqMethod">
+          <el-select v-model="taskInfo.checkReqMethod">
+            <el-option label="POST" value="POST"></el-option>
+            <el-option label="GET" value="GET"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form-item>
+
+
+      <el-form-item v-if="taskInfo.checkType==='JAVA'">
+        <el-form-item label="JavaBean名称" prop="checkTaskBeanName">
+          <el-input v-model="taskInfo.checkTaskBeanName"></el-input>
+        </el-form-item>
+        <el-form-item label="任务类型" prop="checkTaskType">
+          <el-select v-model="taskInfo.checkTaskType">
+            <el-option label="springBean" value="springBean"></el-option>
+            <el-option label="javaClass" value="javaClass"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form-item>
+
 
       <el-form-item label="执行次数" prop="executeCount">
         <el-input-number v-model="taskInfo.executeCount" value="1"></el-input-number>
@@ -66,16 +101,26 @@
       <el-form-item label="后置监听器" prop="prefixListenerName">
         <el-select v-model="taskInfo.suffixListenerName" v-for="pl in suffixListenerNameList" :value="pl.beanName" :key="pl.showName"></el-select>
       </el-form-item>
-      <el-form-item label="前置参数映射" prop="inputMapping">
+      <el-form-item label="前置参数映射" prop="inputMapping"  style="width: 100%">
+        <el-button type="primary" size="mini" @click="taskInfo.inputMappingList.push({source:undefined,target:undefined})">添加</el-button>
         <div v-for="(k,v) in taskInfo.inputMappingList">
-          <el-input v-model="k.source"></el-input>
-          <el-input v-model="k.target"></el-input>
+          {{ v + 1 }} :
+          <el-input v-model="k.source" style="width: 120px"></el-input>
+          -->>
+          <el-input v-model="k.target" style="width: 120px"></el-input>
+          <el-button size="mini" type="danger" @click="taskInfo.inputMappingList.splice(v, 1)">删除</el-button>
         </div>
+
       </el-form-item>
-      <el-form-item label="后置参数映射" prop="outputMapping">
+      <el-form-item label="后置参数映射" prop="outputMapping" style="width: 100%">
+        <el-button type="primary" size="mini" @click="taskInfo.outputMappingList.push({source:undefined,target:undefined})">添加</el-button>
+
         <div v-for="(k,v) in taskInfo.outputMappingList">
-          <el-input v-model="k.source"></el-input>
-          <el-input v-model="k.target"></el-input>
+          {{ v + 1 }} :
+          <el-input v-model="k.source" style="width: 120px"></el-input>
+          -->>
+          <el-input v-model="k.target" style="width: 120px"></el-input>
+          <el-button size="mini" type="danger" @click="taskInfo.outputMappingList.splice(v, 1)">删除</el-button>
         </div>
       </el-form-item>
 
@@ -110,12 +155,17 @@ export default {
         type: undefined,
         taskType: undefined,
         taskBeanName: undefined,
-        url: undefined,
+        reqUrl: undefined,
+        checkUrl: undefined,
+        checkReqMethod: undefined,
         retryInterval: 3000,
         retryCount: 0,
         executeCount: 1,
         timeOut: 3000,
         exceptionAbend: 'ALL',
+        checkType: '',
+        checkTaskType: '',
+        checkTaskBeanName: '',
         reqMethod: undefined,
         prefixListenerName: undefined,
         suffixListenerName: undefined,
@@ -139,17 +189,17 @@ export default {
       type: undefined,
       taskType: undefined,
       taskBeanName: undefined,
-      url: undefined,
+      reqUrl: undefined,
       retryInterval: 3000,
-      retryCount: 0,
+      retryCount: 0, checkType: '',
       executeCount: 1,
       timeOut: 3000,
       exceptionAbend: 'ALL',
       reqMethod: undefined,
       prefixListenerName: undefined,
       suffixListenerName: undefined,
-      inputMappingList: undefined,
-      outputMappingList: undefined,
+      inputMappingList: [],
+      outputMappingList: [],
       sourceTaskId: '',
       sourceTaskCondition: ''
     }
@@ -158,7 +208,7 @@ export default {
     addTask() {
       this.$refs.taskForm.validate(valid => {
         if (valid) {
-          let tt = this.taskDefList.filter(ttt=>ttt.id===this.taskInfo.sourceTaskId)[0];
+          let tt = this.taskDefList.filter(ttt => ttt.id === this.taskInfo.sourceTaskId)[0]
           this.taskInfo.x = tt.x + 150
           this.taskInfo.y = tt.y + 150
           this.taskDefList.push({ ...this.taskInfo })

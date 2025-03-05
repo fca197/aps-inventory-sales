@@ -19,14 +19,14 @@
           <div style="margin: 66px  58px">开始</div>
         </div>
         <div v-if="item.type==='javaBean'" class="draggable">
-          <h4> {{ item.taskName }}</h4>
+          <h3> {{ item.taskName }}</h3>
           <el-divider/>
-          <h2 style="text-align: center; color: #ed5565">JAVA</h2>
+          <h1 style="text-align: center; color: #ed5565">JAVA</h1>
         </div>
-        <div v-if="item.type==='http'" class="draggable">
-          <h4> {{ item.taskName }}</h4>
+        <div v-if="item.type==='HTTP'" class="draggable">
+          <h3> {{ item.taskName }}</h3>
           <el-divider/>
-          <h2 style="text-align: center;color: #1482f0">HTTP</h2>
+          <h1 style="text-align: center;color: #1482f0">HTTP</h1>
         </div>
         <div v-if="item.type==='end'" class="endDiv">
           <div style="margin: 66px  58px">结束</div>
@@ -36,10 +36,10 @@
 
     </div>
     <div style="text-align: right">
-      <el-button type="success" @click="editTask=true" size="mini">添加节点</el-button>
+      <el-button type="success" @click="editTaskKey=Math.random();editTask=true" size="mini">添加节点</el-button>
       <el-button type="primary" @click="updateTaskContent" size="mini">保存</el-button>
     </div>
-    <el-dialog title="节点编辑" :visible.sync="editTask" :close-on-press-escape="false" :modal="false">
+    <el-dialog title="节点编辑" :visible.sync="editTask" :key="editTaskKey" :close-on-press-escape="false" :modal="false">
       <create-task :task-def-list="taskList" :edit-task="editTask" :editTaskClose="editTaskClose"></create-task>
     </el-dialog>
   </div>
@@ -75,6 +75,7 @@ export default {
       editTask: false,
       offsetX: 0,
       offsetY: 0,
+      editTaskKey: 0,
       currentIndex: null,
       taskInfo:{}
     }
@@ -185,7 +186,7 @@ export default {
   margin-bottom: 30px;
   position: relative;
   width: 1360px;
-  height: 550px;
+  height: 700px;
   border: 1px solid #ccc;
   background: linear-gradient(to bottom,
   transparent 49%,
