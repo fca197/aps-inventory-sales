@@ -78,8 +78,8 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="title" :key="'xxx'+Math.random()" :visible.sync="handleDefEditShow"   width="1000px">
-      <task-def-edit  ></task-def-edit>
+    <el-dialog :title="title" :key="'xxx'+Math.random()" :visible.sync="handleDefEditShow" width="1400px" :close-on-press-escape="false" :close-on-click-modal=false>
+      <task-def-edit :task-id="task.id" ></task-def-edit>
     </el-dialog>
 
   </div>
@@ -112,12 +112,13 @@ export default {
       handleDefEditShow: false,
       // 总条数
       total: 0,
+      currentTaskId: 0,
       taskDefList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
       open: false,
-      task: {  },
+      task: {},
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -234,12 +235,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       deleteList(row, this.ids, this.getList())
-    }  ,
+    },
 
     handleDefEdit(row) {
-      this.title="编辑任务流转"
-      this.handleDefEditShow=true;
-      this.task=row;
+      this.title = '编辑任务流转'
+      this.handleDefEditShow = true
+      this.task = row
     }
   }
 
