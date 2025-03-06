@@ -10,20 +10,20 @@
       <el-form-item label="任务名称" prop="taskName">
         <el-input v-model="taskInfo.taskName"></el-input>
       </el-form-item>
-      <el-form-item label="任务类型" prop="type">
-        <el-select v-model="taskInfo.type">
+      <el-form-item label="任务类型" prop="taskType">
+        <el-select v-model="taskInfo.taskType">
           <!--          <el-option label="开始" value="begin"></el-option>-->
-          <el-option label="javaBean" value="javaBean"></el-option>
+          <el-option label="javaBean" value="JAVA_BEAN"></el-option>
           <el-option label="HTTP" value="HTTP"></el-option>
-          <el-option label="结束" value="end"></el-option>
+          <el-option label="结束" value="END"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item v-if="taskInfo.type==='javaBean'">
         <el-form-item label="JavaBean名称" prop="taskBeanName">
           <el-input v-model="taskInfo.taskBeanName"></el-input>
         </el-form-item>
-        <el-form-item label="任务类型" prop="taskType">
-          <el-select v-model="taskInfo.taskType">
+        <el-form-item label="任务类型" prop="taskJavaType">
+          <el-select v-model="taskInfo.taskJavaType">
             <el-option label="springBean" value="springBean"></el-option>
             <el-option label="javaClass" value="javaClass"></el-option>
           </el-select>
@@ -44,6 +44,7 @@
         <el-select v-model="taskInfo.checkType" clearable>
           <el-option label="JAVA" value="JAVA"></el-option>
           <el-option label="HTTP" value="HTTP"></el-option>
+          <el-option label="忽略" value="IGNORE"></el-option>
         </el-select>
       </el-form-item>
 
@@ -65,8 +66,8 @@
         <el-form-item label="JavaBean名称" prop="checkTaskBeanName">
           <el-input v-model="taskInfo.checkTaskBeanName"></el-input>
         </el-form-item>
-        <el-form-item label="任务类型" prop="checkTaskType">
-          <el-select v-model="taskInfo.checkTaskType">
+        <el-form-item label="任务类型" prop="checkTaskJavaType">
+          <el-select v-model="taskInfo.checkTaskJavaType">
             <el-option label="springBean" value="springBean"></el-option>
             <el-option label="javaClass" value="javaClass"></el-option>
           </el-select>
@@ -86,8 +87,8 @@
       <el-form-item label="超时时间" prop="timeOut">
         <el-input-number v-model="taskInfo.timeOut" value="1000"></el-input-number>
       </el-form-item>
-      <el-form-item label="异常终止" prop="exceptionAbend">
-        <el-select v-model="taskInfo.exceptionAbend">
+      <el-form-item label="异常终止" prop="exceptionStop">
+        <el-select v-model="taskInfo.exceptionStop">
           <el-option label="所有任务" value="ALL"></el-option>
           <el-option label="当前任务" value="TASK"></el-option>
           <el-option label="忽略异常" value="IGNORE"></el-option>
@@ -108,6 +109,11 @@
           <el-input v-model="k.source" style="width: 120px"></el-input>
           -->>
           <el-input v-model="k.target" style="width: 120px"></el-input>
+          <el-select v-model="k.mappingType" >
+            <el-option label="to" value="to"/>
+            <el-option label="java" value="java"/>
+          </el-select>
+          <el-input v-model="k.javaExpression" style="width: 120px"></el-input>
           <el-button size="mini" type="danger" @click="taskInfo.inputMappingList.splice(v, 1)">删除</el-button>
         </div>
 
@@ -120,6 +126,11 @@
           <el-input v-model="k.source" style="width: 120px"></el-input>
           -->>
           <el-input v-model="k.target" style="width: 120px"></el-input>
+          <el-select v-model="k.mappingType" >
+            <el-option label="to" value="to"/>
+            <el-option label="java" value="java"/>
+          </el-select>
+          <el-input v-model="k.javaExpression" style="width: 120px"></el-input>
           <el-button size="mini" type="danger" @click="taskInfo.outputMappingList.splice(v, 1)">删除</el-button>
         </div>
       </el-form-item>
@@ -152,8 +163,8 @@ export default {
         x: 10,
         y: 10,
         taskName: undefined,
-        type: undefined,
         taskType: undefined,
+        taskJavaType: undefined,
         taskBeanName: undefined,
         reqUrl: undefined,
         checkUrl: undefined,
@@ -162,15 +173,25 @@ export default {
         retryCount: 0,
         executeCount: 1,
         timeOut: 3000,
-        exceptionAbend: 'ALL',
+        exceptionStop: 'ALL',
         checkType: '',
-        checkTaskType: '',
+        checkTaskJavaType: '',
         checkTaskBeanName: '',
         reqMethod: undefined,
         prefixListenerName: undefined,
         suffixListenerName: undefined,
-        inputMappingList: undefined,
-        outputMappingList: undefined,
+        inputMappingList: [{
+          source:'',
+          target:'',
+          mappingType: 'to',
+          javaExpression:''
+        }],
+        outputMappingList: [{
+          source:'',
+          target:'',
+          mappingType: 'to',
+          javaExpression:''
+        }],
         sourceTaskId: '',
         sourceTaskCondition: ''
       },
@@ -194,12 +215,22 @@ export default {
       retryCount: 0, checkType: '',
       executeCount: 1,
       timeOut: 3000,
-      exceptionAbend: 'ALL',
+      exceptionStop: 'ALL',
       reqMethod: undefined,
       prefixListenerName: undefined,
       suffixListenerName: undefined,
-      inputMappingList: [],
-      outputMappingList: [],
+      inputMappingList: [{
+        source:'',
+        target:'',
+        mappingType: 'to',
+        javaExpression:''
+      }],
+      outputMappingList: [{
+        source:'',
+        target:'',
+        mappingType: 'to',
+        javaExpression:''
+      }],
       sourceTaskId: '',
       sourceTaskCondition: ''
     }

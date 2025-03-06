@@ -15,20 +15,20 @@
         </line>
       </svg>
       <div v-for="(item, index) in taskList" :key="index" :data-y="item.y" :data-x="item.x" ref="draggableTaskList" @mousedown="startDrag(index)">
-        <div v-if="item.type==='begin'" class="beginDiv">
+        <div v-if="item.taskType==='BEGIN'" class="beginDiv">
           <div style="margin: 66px  58px">开始</div>
         </div>
-        <div v-if="item.type==='javaBean'" class="draggable">
+        <div v-if="item.taskType==='JAVA_BEAN'" class="draggable">
           <h3> {{ item.taskName }}</h3>
           <el-divider/>
           <h1 style="text-align: center; color: #ed5565">JAVA</h1>
         </div>
-        <div v-if="item.type==='HTTP'" class="draggable">
+        <div v-if="item.taskType==='HTTP'" class="draggable">
           <h3> {{ item.taskName }}</h3>
           <el-divider/>
           <h1 style="text-align: center;color: #1482f0">HTTP</h1>
         </div>
-        <div v-if="item.type==='end'" class="endDiv">
+        <div v-if="item.taskType==='END'" class="endDiv">
           <div style="margin: 66px  58px">结束</div>
         </div>
       </div>
@@ -63,7 +63,7 @@ export default {
 
       lineList: [],
       taskList: [
-        { id: '0', x: 0, y: 0, taskName: '第1个', type: 'begin' },
+        { id: '0', x: 0, y: 0, taskName: '第1个', type: 'BEGIN' },
         // { id: '1', x: 10, y: 20, taskName: '第2个', sourceTaskId: '0', sourceTaskCondition: '', type: 'javaBean' },
         // { id: '2', x: 400, y: 290, taskName: '第3个', sourceTaskId: '1', sourceTaskCondition: '', type: 'javaBean' },
         // { id: '3', x: 290, y: 60, taskName: '第4个', sourceTaskId: '1', sourceTaskCondition: '', type: 'http' },
@@ -90,7 +90,7 @@ export default {
       if (taskDefContent && taskDefContent.length > 2) {
         this.taskList = JSON.parse(taskDefContent)
       } else {
-        this.taskList.push({ id: '0', x: 0, y: 0, taskName: '开始', type: 'begin' })
+        this.taskList.push({ id: '0', x: 0, y: 0, taskName: '开始', type: 'BEGIN' })
       }
       this.drawTask()
     })
