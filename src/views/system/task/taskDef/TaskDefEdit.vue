@@ -90,7 +90,7 @@ export default {
       if (taskDefContent && taskDefContent.length > 2) {
         this.taskList = JSON.parse(taskDefContent)
       } else {
-        this.taskList.push({ id: '0', x: 0, y: 0, taskName: '开始', type: 'BEGIN' })
+        this.taskList.push({ id: '0', x: 0, y: 0, taskName: '开始', taskType: 'BEGIN' })
       }
       this.drawTask()
     })

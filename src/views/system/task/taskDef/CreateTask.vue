@@ -17,8 +17,9 @@
           <el-option label="HTTP" value="HTTP"></el-option>
           <el-option label="结束" value="END"></el-option>
         </el-select>
+
       </el-form-item>
-      <el-form-item v-if="taskInfo.type==='javaBean'">
+      <el-form-item v-if="taskInfo.taskType==='JAVA_BEAN'">
         <el-form-item label="JavaBean名称" prop="taskBeanName">
           <el-input v-model="taskInfo.taskBeanName"></el-input>
         </el-form-item>
@@ -29,7 +30,7 @@
           </el-select>
         </el-form-item>
       </el-form-item>
-      <el-form-item v-if="taskInfo.type==='HTTP'">
+      <el-form-item v-if="taskInfo.taskType==='HTTP'">
         <el-form-item label="请求地址" prop="reqUrl">
           <el-input v-model="taskInfo.reqUrl"></el-input>
         </el-form-item>
