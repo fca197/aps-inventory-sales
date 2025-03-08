@@ -96,21 +96,42 @@
         </el-select>
 
       </el-form-item>
-
+      <div></div>
       <el-form-item label="前置监听器" prop="prefixListenerName">
-        <el-select v-model="taskInfo.prefixListenerName" v-for="pl in prefixListenerNameList" :value="pl.beanName" :key="pl.showName"></el-select>
+
+        <el-select v-model="taskInfo.prefixListenerName" clearable>
+          <el-option-group v-for="pl in listenerNameList" :value="pl.label" :key="pl.value">
+            <el-option
+              v-for="item in pl.childrenList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-option-group>
+        </el-select>
       </el-form-item>
       <el-form-item label="后置监听器" prop="prefixListenerName">
-        <el-select v-model="taskInfo.suffixListenerName" v-for="pl in suffixListenerNameList" :value="pl.beanName" :key="pl.showName"></el-select>
+        <el-select v-model="taskInfo.suffixListenerName" clearable>
+          <el-option-group v-for="pl in listenerNameList" :value="pl.label" :key="pl.value">
+            <el-option
+              v-for="item in pl.childrenList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-option-group>
+        </el-select>
       </el-form-item>
-      <el-form-item label="前置参数映射" prop="inputMapping"  style="width: 100%">
+      <el-form-item label="前置参数映射" prop="inputMapping" style="width: 100%">
         <el-button type="primary" size="mini" @click="taskInfo.inputMappingList.push({source:undefined,target:undefined})">添加</el-button>
         <div v-for="(k,v) in taskInfo.inputMappingList">
           {{ v + 1 }} :
           <el-input v-model="k.source" style="width: 120px"></el-input>
           -->>
           <el-input v-model="k.target" style="width: 120px"></el-input>
-          <el-select v-model="k.mappingType" >
+          <el-select v-model="k.mappingType">
             <el-option label="to" value="to"/>
             <el-option label="java" value="java"/>
           </el-select>
@@ -127,7 +148,7 @@
           <el-input v-model="k.source" style="width: 120px"></el-input>
           -->>
           <el-input v-model="k.target" style="width: 120px"></el-input>
-          <el-select v-model="k.mappingType" >
+          <el-select v-model="k.mappingType">
             <el-option label="to" value="to"/>
             <el-option label="java" value="java"/>
           </el-select>
@@ -145,20 +166,16 @@
 </template>
 
 <script>
+import { post } from '@/api/common'
+
 export default {
   name: 'CreateTask',
-  props: { taskDefList: {}, editTask: { type: Boolean }, editTaskClose: {} },
+  props: { taskDefList: {}, isAdd: { type: Boolean }, editTaskClose: {}, indexToReplace: { type: Number }, editTaskDef: { type: Object } },
   watch: {},
   data() {
     return {
-      prefixListenerNameList: [{
-        showName: '默认',
-        beanName: 'beanName'
-      }],
-      suffixListenerNameList: [{
-        showName: '默认',
-        beanName: 'beanName'
-      }],
+      listenerNameList: [],
+
       taskInfo: {
         id: 'tk-' + parseInt(Math.random() * 10000000 + ''),
         x: 10,
@@ -182,16 +199,16 @@ export default {
         prefixListenerName: undefined,
         suffixListenerName: undefined,
         inputMappingList: [{
-          source:'',
-          target:'',
+          source: '',
+          target: '',
           mappingType: 'to',
-          javaExpression:''
+          javaExpression: ''
         }],
         outputMappingList: [{
-          source:'',
-          target:'',
+          source: '',
+          target: '',
           mappingType: 'to',
-          javaExpression:''
+          javaExpression: ''
         }],
         sourceTaskId: '',
         sourceTaskCondition: ''
@@ -203,47 +220,57 @@ export default {
     }
   },
   created() {
-    this.taskInfo = {
-      id: 'tk-' + parseInt(Math.random() * 10000000 + ''),
-      x: 10,
-      y: 10,
-      taskName: undefined,
-      type: undefined,
-      taskType: undefined,
-      taskBeanName: undefined,
-      reqUrl: undefined,
-      retryInterval: 3000,
-      retryCount: 0, checkType: '',
-      executeCount: 1,
-      timeOut: 3000,
-      exceptionStop: 'ALL',
-      reqMethod: undefined,
-      prefixListenerName: undefined,
-      suffixListenerName: undefined,
-      inputMappingList: [{
-        source:'',
-        target:'',
-        mappingType: 'to',
-        javaExpression:''
-      }],
-      outputMappingList: [{
-        source:'',
-        target:'',
-        mappingType: 'to',
-        javaExpression:''
-      }],
-      sourceTaskId: '',
-      sourceTaskCondition: ''
+    this.loadListener()
+    if (this.isAdd) {
+      this.taskInfo = {
+        id: 'tk-' + parseInt((1+Math.random() )* 10000000 + ''),
+        x: 10,
+        y: 10,
+        taskName: undefined,
+        type: undefined,
+        taskType: undefined,
+        taskBeanName: undefined,
+        reqUrl: undefined,
+        retryInterval: 3000,
+        retryCount: 0, checkType: '',
+        executeCount: 1,
+        timeOut: 3000,
+        exceptionStop: 'ALL',
+        reqMethod: undefined,
+        prefixListenerName: undefined,
+        suffixListenerName: undefined,
+        inputMappingList: [{
+          source: '',
+          target: '',
+          mappingType: 'to',
+          javaExpression: ''
+        }],
+        outputMappingList: [{
+          source: '',
+          target: '',
+          mappingType: 'to',
+          javaExpression: ''
+        }],
+        sourceTaskId: '',
+        sourceTaskCondition: ''
+      }
+    } else {
+      this.taskInfo = this.editTaskDef
     }
   },
   methods: {
     addTask() {
       this.$refs.taskForm.validate(valid => {
         if (valid) {
-          let tt = this.taskDefList.filter(ttt => ttt.id === this.taskInfo.sourceTaskId)[0]
-          this.taskInfo.x = tt.x + 150
-          this.taskInfo.y = tt.y + 150
-          this.taskDefList.push({ ...this.taskInfo })
+          if (this.isAdd) {
+            let tt = this.taskDefList.filter(ttt => ttt.id === this.taskInfo.sourceTaskId)[0]
+            this.taskInfo.x = tt.x + 150
+            this.taskInfo.y = tt.y + 150
+            this.taskDefList.push({ ...this.taskInfo })
+          } else {
+
+            this.taskDefList.splice(this.indexToReplace, 1, this.taskInfo)
+          }
           this.cancelAdd()
         }
       })
@@ -254,6 +281,12 @@ export default {
       // this.$emit('editTaskClose')
       // console.log("editTask close cancelAdd")
       // this.editTask = false
+    },
+    loadListener() {
+      post('/taskDef/listener/list', {}, false).then(r => {
+        this.listenerNameList = r.data.list
+        console.log(this.listenerNameList)
+      })
     }
   }
 }

@@ -14,7 +14,9 @@
         >
         </line>
       </svg>
-      <div v-for="(item, index) in taskList" :key="index" :data-y="item.y" :data-x="item.x" ref="draggableTaskList" @mousedown="startDrag(index)">
+      <div v-for="(item, index) in taskList" :key="index" :data-y="item.y" @click="editTaskDefFun(index)"
+           :data-x="item.x" ref="draggableTaskList" @mousedown="startDrag(index)"
+      >
         <div v-if="item.taskType==='BEGIN'" class="beginDiv">
           <div style="margin: 66px  58px">开始</div>
         </div>
@@ -36,11 +38,11 @@
 
     </div>
     <div style="text-align: right">
-      <el-button type="success" @click="editTaskKey=Math.random();editTask=true" size="mini">添加节点</el-button>
+      <el-button type="success" @click="addTask" size="mini">添加节点</el-button>
       <el-button type="primary" @click="updateTaskContent" size="mini">保存</el-button>
     </div>
-    <el-dialog title="节点编辑" :visible.sync="editTask" :key="editTaskKey" :close-on-press-escape="false" :modal="false">
-      <create-task :task-def-list="taskList" :edit-task="editTask" :editTaskClose="editTaskClose"></create-task>
+    <el-dialog title="节点编辑" :visible.sync="editTaskDialog" :key="editTaskKey" :close-on-press-escape="false" :modal="false">
+      <create-task :task-def-list="taskList" :edit-task-def="editTaskDef" :is-add="isAdd" :index-to-replace="indexToReplace" :editTaskClose="editTaskClose"></create-task>
     </el-dialog>
   </div>
 </template>
@@ -60,10 +62,11 @@ export default {
   },
   data() {
     return {
-
+      indexToReplace: 0,
+      editTaskDef: {},
       lineList: [],
       taskList: [
-        { id: '0', x: 0, y: 0, taskName: '第1个', type: 'BEGIN' },
+        { id: '0', x: 0, y: 0, taskName: '第1个', type: 'BEGIN' }
         // { id: '1', x: 10, y: 20, taskName: '第2个', sourceTaskId: '0', sourceTaskCondition: '', type: 'javaBean' },
         // { id: '2', x: 400, y: 290, taskName: '第3个', sourceTaskId: '1', sourceTaskCondition: '', type: 'javaBean' },
         // { id: '3', x: 290, y: 60, taskName: '第4个', sourceTaskId: '1', sourceTaskCondition: '', type: 'http' },
@@ -72,12 +75,13 @@ export default {
         // { id: '19', x: 440, y: 330, taskName: '第9个', sourceTaskId: '3', sourceTaskCondition: '', type: 'end' }
       ], // 创建 3 个可拖拽元素，可根据需要修改数量
       isDragging: false,
-      editTask: false,
+      editTaskDialog: false,
+      isAdd: false,
       offsetX: 0,
       offsetY: 0,
       editTaskKey: 0,
       currentIndex: null,
-      taskInfo:{}
+      taskInfo: {}
     }
   },
   mounted() {
@@ -85,14 +89,15 @@ export default {
     console.log(this.taskId)
     getById({ idList: [this.taskId] }).then(t => {
       this.taskList.splice(0, this.taskList.length)
-      this.taskInfo=t.data.dataList[0];
+      this.taskInfo = t.data.dataList[0]
       let taskDefContent = this.taskInfo.taskDefContent
       if (taskDefContent && taskDefContent.length > 2) {
         this.taskList = JSON.parse(taskDefContent)
       } else {
         this.taskList.push({ id: '0', x: 0, y: 0, taskName: '开始', taskType: 'BEGIN' })
       }
-      this.drawTask()
+      // this.drawTask()
+      this.$nextTick(() => this.drawTask())
     })
 
   },
@@ -162,20 +167,36 @@ export default {
       document.removeEventListener('mouseup', this.stopDrag)
     },
     editTaskClose() {
-      this.editTask = false
+      this.editTaskDialog = false
       this.$nextTick(() => this.drawTask())
     },
-    updateTaskContent(){
-     let str = JSON.stringify( this.taskList)
-      let  data={...this.taskInfo,taskDefContent:str}
-      updateById(data).then(t=>{
-        if (t.code===200){
-          this.$message.success("成功");
+    updateTaskContent() {
+      let str = JSON.stringify(this.taskList)
+      let data = { ...this.taskInfo, taskDefContent: str }
+      updateById(data).then(t => {
+        if (t.code === 200) {
+          this.$message.success('成功')
 
-        }else {
-          this.$message.error("失败");
+        } else {
+          this.$message.error('失败')
         }
       })
+    },
+    editTaskDefFun(index) {
+      this.editTaskKey=Math.random()+'';
+      if (index === 0) {
+        this.$message.warning('开始节点不允许编辑')
+        return
+      }
+      this.indexToReplace=index
+      this.editTaskDef = this.taskList[index]
+      this.editTaskDialog = true
+      this.isAdd=false
+    },
+    addTask() {
+      this.editTaskKey=Math.random()+'';
+      this.editTaskDialog=true
+      this.isAdd=true
     }
   }
 }
