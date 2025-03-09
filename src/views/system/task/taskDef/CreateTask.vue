@@ -12,16 +12,24 @@
       </el-form-item>
       <el-form-item label="任务类型" prop="taskType">
         <el-select v-model="taskInfo.taskType">
-          <!--          <el-option label="开始" value="begin"></el-option>-->
-          <el-option label="javaBean" value="JAVA_BEAN"></el-option>
-          <el-option label="HTTP" value="HTTP"></el-option>
-          <el-option label="结束" value="END"></el-option>
+          <el-option-group v-for="kv in taskRunnerExecNameList" :key="kv.label+'taskRunnerExecNameList'" :value="kv.value" :label="kv.label">
+            <el-option v-for="kv in kv.childrenList" :key="kv.label+'taskRunnerExecNameList'" :value="kv.value" :label="kv.label">
+            </el-option>
+          </el-option-group>
         </el-select>
 
       </el-form-item>
       <el-form-item v-if="taskInfo.taskType==='JAVA_BEAN'">
         <el-form-item label="JavaBean名称" prop="taskBeanName">
-          <el-input v-model="taskInfo.taskBeanName"></el-input>
+          <el-select v-model="taskInfo.taskBeanName">
+
+            <el-option-group v-for="kv in javaTaskBeanExecNameList" :key="kv.label+'javaTaskBeanExecList'" :value="kv.value" :label="kv.label">
+              <el-option v-for="kv in kv.childrenList" :key="kv.label+'javaTaskBeanExecList'" :value="kv.value" :label="kv.label">
+              </el-option>
+            </el-option-group>
+          </el-select>
+
+
         </el-form-item>
         <el-form-item label="任务类型" prop="taskJavaType">
           <el-select v-model="taskInfo.taskJavaType">
@@ -43,9 +51,10 @@
       </el-form-item>
       <el-form-item label="检查类型" prop="checkType">
         <el-select v-model="taskInfo.checkType" clearable>
-          <el-option label="JAVA" value="JAVA"></el-option>
-          <el-option label="HTTP" value="HTTP"></el-option>
-          <el-option label="忽略" value="IGNORE"></el-option>
+          <el-option-group v-for="kv in taskCheckRunnerExecNameList" :key="kv.label+'javaTaskBeanExecList'" :value="kv.value" :label="kv.label">
+            <el-option v-for="kv in kv.childrenList" :key="kv.label+'javaTaskBeanExecList'" :value="kv.value" :label="kv.label">
+            </el-option>
+          </el-option-group>
         </el-select>
       </el-form-item>
 
@@ -65,7 +74,12 @@
 
       <el-form-item v-if="taskInfo.checkType==='JAVA'">
         <el-form-item label="JavaBean名称" prop="checkTaskBeanName">
-          <el-input v-model="taskInfo.checkTaskBeanName"></el-input>
+          <el-select v-model="taskInfo.checkTaskBeanName">
+            <el-option-group v-for="kv in javaTaskCheckBeanExecNameList" :key="kv.label+'javaTaskBeanExecList'" :value="kv.value" :label="kv.label">
+              <el-option v-for="kv in kv.childrenList" :key="kv.label+'javaTaskBeanExecList'" :value="kv.value" :label="kv.label">
+              </el-option>
+            </el-option-group>
+          </el-select>
         </el-form-item>
         <el-form-item label="任务类型" prop="checkTaskJavaType">
           <el-select v-model="taskInfo.checkTaskJavaType">
@@ -175,6 +189,12 @@ export default {
   data() {
     return {
       listenerNameList: [],
+      taskRunnerExecNameList: [],
+      javaTaskBeanExecNameList: [],
+      javaTaskBeanExecList: [],
+      taskCheckRunnerExecNameList: [],
+      javaTaskCheckBeanExecNameList: [],
+      checkTaskBeanNameList: [],
 
       taskInfo: {
         id: 'tk-' + parseInt(Math.random() * 10000000 + ''),
@@ -182,7 +202,7 @@ export default {
         y: 10,
         taskName: undefined,
         taskType: undefined,
-        taskJavaType: undefined,
+        taskJavaType: 'springBean',
         taskBeanName: undefined,
         reqUrl: undefined,
         checkUrl: undefined,
@@ -193,7 +213,7 @@ export default {
         timeOut: 3000,
         exceptionStop: 'ALL',
         checkType: '',
-        checkTaskJavaType: '',
+        checkTaskJavaType: 'springBean',
         checkTaskBeanName: '',
         reqMethod: undefined,
         prefixListenerName: undefined,
@@ -223,7 +243,7 @@ export default {
     this.loadListener()
     if (this.isAdd) {
       this.taskInfo = {
-        id: 'tk-' + parseInt((1+Math.random() )* 10000000 + ''),
+        id: 'tk-' + parseInt((1 + Math.random()) * 10000000 + ''),
         x: 10,
         y: 10,
         taskName: undefined,
@@ -285,7 +305,24 @@ export default {
     loadListener() {
       post('/taskDef/listener/list', {}, false).then(r => {
         this.listenerNameList = r.data.list
-        console.log(this.listenerNameList)
+        // console.log(this.listenerNameList)
+      })
+      post('/taskDef/taskRunnerExec/list', {}, false).then(r => {
+        this.taskRunnerExecNameList = r.data.list
+        console.log('taskRunnerExecNameList', this.listenerNameList)
+
+      })
+      post('/taskDef/javaTaskBeanExec/list', {}, false).then(r => {
+        this.javaTaskBeanExecList = r.data.list
+      })
+      post('/taskDef/taskCheckRunnerExec/list', {}, false).then(r => {
+        this.taskCheckRunnerExecNameList = r.data.list
+      })
+      post('/taskDef/javaTaskCheckBeanExec/list', {}, false).then(r => {
+        this.javaTaskCheckBeanExecNameList = r.data.list
+      })
+      post('/taskDef/javaTaskBeanExec/list', {}, false).then(r => {
+        this.javaTaskBeanExecNameList = r.data.list
       })
     }
   }

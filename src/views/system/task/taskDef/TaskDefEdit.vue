@@ -14,7 +14,7 @@
         >
         </line>
       </svg>
-      <div v-for="(item, index) in taskList" :key="index" :data-y="item.y" @click="editTaskDefFun(index)"
+      <div v-for="(item, index) in taskList" :key="index" :data-y="item.y" @dblclick="editTaskDefFun(index)"
            :data-x="item.x" ref="draggableTaskList" @mousedown="startDrag(index)"
       >
         <div v-if="item.taskType==='BEGIN'" class="beginDiv">
@@ -86,7 +86,7 @@ export default {
   },
   mounted() {
     document['pagePath'] = '/taskDef'
-    console.log(this.taskId)
+    // console.log(this.taskId)
     getById({ idList: [this.taskId] }).then(t => {
       this.taskList.splice(0, this.taskList.length)
       this.taskInfo = t.data.dataList[0]
