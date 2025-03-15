@@ -1,6 +1,6 @@
 // 公共路由
 // 获取路由
-import { queryUrlNoPageList, queryUrlPageList } from '@/api/common'
+import { queryUrlPageList } from '@/api/common'
 
 export const getRouters = (data) => {
   return queryUrlPageList('/baseAppResource',data)

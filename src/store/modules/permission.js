@@ -31,7 +31,7 @@ const permission = {
         // 向后端请求路由数据
 
         loadResource().then(t => {
-          console.info('t ', t)
+          // console.info('t ', t)
           let asyncRoutes = t
           commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(asyncRoutes))
           resolve(asyncRoutes)
