@@ -51,9 +51,6 @@
         <el-form-item label="手机号" prop="loginPhone">
           <el-input v-model="form.loginPhone" placeholder="请输入登陆名"/>
         </el-form-item>
-        <el-form-item label="密码" prop="pwd">
-          <el-input v-model="form.pwd" placeholder="请输入密码" type="password"/>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -296,6 +293,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
+      let _this=this;
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -310,6 +308,7 @@ export default {
             addAccount(data).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
+              _this.$modal.alert('您的密码为：<span style="color:red">' + response.data.newPwd + '</span> 仅提示一次，请妥善保存', '密码提示')
               this.getList()
             })
           }

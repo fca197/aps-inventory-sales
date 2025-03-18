@@ -105,11 +105,11 @@
             </el-form-item>
 
 
-            <el-form-item label="订单状态" prop="orderStatus">
-              <el-select v-model="form.orderStatus" placeholder="请选择订单状态">
-                <el-option label="待支付" value="1"/>
-              </el-select>
-            </el-form-item>
+<!--            <el-form-item label="订单状态" prop="orderStatus">-->
+<!--              <el-select v-model="form.orderStatus" placeholder="请选择订单状态">-->
+<!--                <el-option label="待支付" value="1"/>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
 
             <el-form-item label="订单备注" prop="orderRemark">
               <el-input v-model="form.orderRemark" placeholder="请输入订单备注"/>
