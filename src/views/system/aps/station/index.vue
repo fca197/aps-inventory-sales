@@ -46,13 +46,13 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-
+        <el-form-item label="工位名称" prop="stationName">
+          <el-input v-model="form.stationName" placeholder="请输入工位名称"  @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="工位编号" prop="stationCode">
           <el-input v-model="form.stationCode" placeholder="请输入编号"/>
         </el-form-item>
-        <el-form-item label="工位名称" prop="stationName">
-          <el-input v-model="form.stationName" placeholder="请输入工位名称"/>
-        </el-form-item>
+
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -65,7 +65,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
@@ -109,8 +109,8 @@ export default {
       },
       // 表单校验
       rules: {
-        stationName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        stationCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        stationName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
+        stationCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
 
       },
       tableHeaderList: []
@@ -125,6 +125,7 @@ export default {
     });
   },
   methods: {
+    pinyin4jSzm,
     /** 查询公告列表 */
     getList() {
       this.loading = true;
@@ -217,6 +218,13 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    },
+    loadSzm(){
+      let  _t=this;
+      pinyin4jSzm(this.form.stationName,(r)=>{
+        _t.form.stationCode=r.szmUpper
+        this.$forceUpdate()
+      })
     }
   }
 };

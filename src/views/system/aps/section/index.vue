@@ -46,12 +46,12 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="工段名称" prop="sectionName">
+          <el-input v-model="form.sectionName" placeholder="请输入工段名称" @blur="loadSzm"/>
+        </el-form-item>
 
         <el-form-item label="工段编号" prop="sectionCode">
           <el-input v-model="form.sectionCode" placeholder="请输入编号"/>
-        </el-form-item>
-        <el-form-item label="工段名称" prop="sectionName">
-          <el-input v-model="form.sectionName" placeholder="请输入工段名称"/>
         </el-form-item>
 
       </el-form>
@@ -65,7 +65,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, insetOrUpdate, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, insetOrUpdate, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 // console.info("xxx: ",uc.urlPrefix)
 export default {
@@ -117,8 +117,8 @@ export default {
       // 表单校验
       rules: {
         // factoryId :[{required: true, message: "不能为空", trigger: "blur"}],
-        sectionName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        sectionCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        sectionName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
+        sectionCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }],
       },
       tableHeaderList: []
     };
@@ -210,6 +210,13 @@ export default {
         this.$modal.msgSuccess("删除成功");
       });
       document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+    },
+    loadSzm(){
+      let  _t=this;
+      pinyin4jSzm(this.form.sectionName,(r)=>{
+        _t.form.sectionCode=r.szmUpper
+        this.$forceUpdate()
+      })
     }
   }
 };

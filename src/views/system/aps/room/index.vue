@@ -55,12 +55,13 @@
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="车间名称" prop="roomName">
+          <el-input v-model="form.roomName" placeholder="请输入车间名称" @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="车间编号" prop="roomRemark">
           <el-input v-model="form.roomCode" placeholder="请输入车间编号"/>
         </el-form-item>
-        <el-form-item label="车间名称" prop="roomName">
-          <el-input v-model="form.roomName" placeholder="请输入车间名称"/>
-        </el-form-item>
+
         <el-form-item label="车间配置" prop="roomRemark">
           <el-col :span="5">工段
           </el-col>
@@ -73,17 +74,17 @@
           <div v-for="(item,index) in form.configList">
 
             <el-col :span="5">
-              <el-select v-model="item.sectionId" clearable placeholder="请选择工段">
+              <el-select v-model="item.sectionId" clearable placeholder="请选择工段" filterable>
                 <el-option v-for="item in sectionList" :key="item.id" :label="item.sectionName" :value="item.id"></el-option>
               </el-select>
             </el-col>
             <el-col :span="5">
-              <el-select v-model="item.stationId" clearable placeholder="请选择工位">
+              <el-select v-model="item.stationId" clearable placeholder="请选择工位" filterable>
                 <el-option v-for="item in stationList" :key="item.id" :label="item.stationName" :value="item.id"></el-option>
               </el-select>
             </el-col>
             <el-col :span="5">
-              <el-select v-model="item.statusId" clearable placeholder="请选择状态">
+              <el-select v-model="item.statusId" clearable placeholder="请选择状态" filterable>
                 <el-option v-for="item in statusList" :key="item.id" :label="item.statusName" :value="item.id"></el-option>
               </el-select>
             </el-col>
@@ -108,7 +109,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 import {getSectionList} from "@/api/aps/section";
 import {getStationList} from "@/api/aps/station";
@@ -293,6 +294,12 @@ export default {
       this.form.configList.push(d)
     }, deleteConfig(list, index) {
       list.splice(index, 1)
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.roomName,(r)=>{
+        this.form.roomCode=r.szmUpper;
+        this.$forceUpdate();
+      })
     }
   }
 };

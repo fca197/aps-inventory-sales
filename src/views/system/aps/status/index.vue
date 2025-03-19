@@ -52,11 +52,11 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
 
+        <el-form-item label="状态名称" prop="statusName">
+          <el-input v-model="form.statusName" placeholder="请输入状态名称" @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="状态编号" prop="statusCode">
           <el-input v-model="form.statusCode" placeholder="请输入编号"/>
-        </el-form-item>
-        <el-form-item label="状态名称" prop="statusName">
-          <el-input v-model="form.statusName" placeholder="请输入状态名称"/>
         </el-form-item>
         <el-form-item label="订单状态" prop="orderStatusId">
           <el-select v-model="form.orderStatusId" clearable>
@@ -75,7 +75,7 @@
 
 <script>
 
-import { deleteByIdList, getById, insetOrUpdate, queryPageList } from '@/api/common'
+import { deleteByIdList, getById, insetOrUpdate, pinyin4jSzm, queryPageList } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 import { getApsOrderStatus } from '@/api/aps/order'
 // console.info("xxx: ",uc.urlPrefix)
@@ -230,6 +230,12 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.statusName,(r)=>{
+        this.form.statusCode=r.szmUpper
+        this.$forceUpdate()
+      })
     }
   }
 }

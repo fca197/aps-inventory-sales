@@ -54,11 +54,11 @@
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="工艺路径名称" prop="processPathName">
+          <el-input v-model="form.processPathName" placeholder="请输入工艺路径名称" @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="工艺路径编码" prop="processPathCode">
           <el-input v-model="form.processPathCode" placeholder="请输入工艺路径编码"/>
-        </el-form-item>
-        <el-form-item label="工艺路径名称" prop="processPathName">
-          <el-input v-model="form.processPathName" placeholder="请输入工艺路径名称"/>
         </el-form-item>
         <el-form-item label="工艺路径车间" prop="roomList">
           <div v-for="(item,index) in form.pathRoomList" :span="12">
@@ -90,7 +90,7 @@
 
 <script>
 
-import { add, deleteByIdList, deleteList, getById, insetOrUpdate, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, deleteList, getById, insetOrUpdate, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 import {getRoomList} from "@/api/aps/room";
 // console.info("xxx: ",uc.urlPrefix)
@@ -143,6 +143,7 @@ export default {
         factoryId:[{ required: true, message: '不能为空', trigger: 'blur' }],
         processPathCode:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
         processPathName:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
+        processPathRemark:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
 
       },
       tableHeaderList: [],
@@ -239,6 +240,12 @@ export default {
     },
     deleteRoom(index) {
       this.form.pathRoomList.splice(index, 1)
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.processPathName,(r)=>{
+        this.form.processPathCode=r.szmUpper
+        this.$forceUpdate()
+      })
     }
   }
 };
