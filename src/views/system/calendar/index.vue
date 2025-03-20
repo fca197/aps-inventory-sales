@@ -2,13 +2,10 @@
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="日历名称" prop="calendarName">
-        <el-input v-model="queryParams.calendarName" clearable placeholder="请输入日历名称"
+        <el-input v-model="queryParams.data.calendarName" clearable placeholder="请输入日历名称"
                   @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item>
-        <el-link icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-link>
-        <el-link icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-link>
-      </el-form-item>
+
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -117,13 +114,13 @@
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="日历编码" prop="calendarCode">
-          <el-input v-model="form.calendarCode" placeholder="请输入日历编码"/>
-        </el-form-item>
         <el-form-item label="日历名称" prop="calendarName">
-          <el-input v-model="form.calendarName" placeholder="请输入登陆名"/>
+          <el-input v-model="form.calendarName" placeholder="请输入日历名称" clearable @blur="loadSzm"/>
         </el-form-item>
+        <el-form-item label="日历编码" prop="calendarCode">
+          <el-input v-model="form.calendarCode" placeholder="请输入日历编码" clearable/>
+        </el-form-item>
+
         <el-form-item label="状态" prop="calendarDisabled">
           <el-select v-model="form.calendarDisabled" filterable>
             <el-option :value="false" label="启用"></el-option>
@@ -143,7 +140,7 @@
 import {getFactoryList} from '@/api/factory'
 import {calendarDayById, calendarDayUpdate} from '@/api/calendar'
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: "calendarName",
@@ -185,9 +182,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        calendarName: undefined,
+
         createBy: undefined,
-        status: undefined
+        status: undefined,
+        data:{   calendarName: undefined,}
       },
       // 表单参数
       form: {
@@ -425,6 +423,12 @@ export default {
       this.id = row.id;
       this.openSettingDayCalendar = new Date();
       this.openSettingDayInfo = true;
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.calendarName,(r)=>{
+        this.form.calendarCode=r.szmUpper;
+        this.$forceUpdate();
+      })
     }
   }
 };
