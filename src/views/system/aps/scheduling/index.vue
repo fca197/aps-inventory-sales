@@ -151,7 +151,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-      this.reset();
+      this.reset();  this.form.id=undefined;
     },
     // 表单重置
     reset() {

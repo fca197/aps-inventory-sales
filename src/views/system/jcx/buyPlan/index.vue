@@ -237,7 +237,7 @@ export default {
     cancel() {
       this.open = false;
       this.planOrderOpen = false;
-      this.reset();
+      this.reset();  this.form.id=undefined;
     },
     // 表单重置
     reset() {
@@ -315,7 +315,7 @@ export default {
 
     },
     handleAdd() {
-      this.reset();
+      this.reset();  this.form.id=undefined;
       this.open = true;
       this.title = "添加采购计划";
       let d = this.formatDates(new Date()).replaceAll("-", "").replaceAll(" ", "").replaceAll(":", "");
@@ -326,7 +326,7 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      // this.reset();
+      // this.reset();  this.form.id=undefined;
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
         // console.info("response: ", response)

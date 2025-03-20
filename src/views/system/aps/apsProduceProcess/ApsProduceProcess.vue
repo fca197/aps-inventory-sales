@@ -3,19 +3,9 @@
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
 
       <el-form-item label="工厂">
-        <el-select v-model="form.factoryId">
+        <el-select v-model="queryParams.data.factoryId" clearable>
           <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="制造路径编码" prop="produceProcessNo">
-        <el-input v-model="queryParams.data.produceProcessNo" clearable placeholder="请输入制造路径编码"
-                  @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="制造路径名称" prop="produceProcessName">
-        <el-input v-model="queryParams.data.produceProcessName" clearable placeholder="请输入制造路径名称"
-                  @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
     </el-form>
 
@@ -61,17 +51,18 @@
             <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="制造路径名称" prop="produceProcessName">
+          <el-input v-model="form.produceProcessName" clearable placeholder="请输入制造路径名称" @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="制造路径编码" prop="produceProcessNo">
           <el-input v-model="form.produceProcessNo" clearable placeholder="请输入制造路径编码"/>
         </el-form-item>
-        <el-form-item label="制造路径名称" prop="produceProcessName">
-          <el-input v-model="form.produceProcessName" clearable placeholder="请输入制造路径名称"/>
-        </el-form-item>
+
         <el-form-item :key="i" v-for="(f,i) in form.produceProcessItemDtoList" :label="'机器配置'+(i+1)" prop="produceProcessItemDtoList">
           <el-row>
             <el-col :span="19">
               <el-select v-model="f.machineId" style="width: 30%">
-                <el-option v-for="(m,j) in apsMachineList" :key="j" :value="m.id" :label="m.machineName"></el-option>
+                <el-option v-for="(m,j) in apsMachineList.filter(t=>t.factoryId===form.factoryId)" :key="j" :value="m.id" :label="m.machineName"></el-option>
               </el-select>
               <el-select v-model="f.statusId" style="width: 30%">
                 <el-option :key="j" v-for="(s,j) in apsStatusList" :value="s.id" :label="s.statusName"></el-option>
@@ -106,7 +97,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 
 export default {
@@ -191,8 +182,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset()
-    },
+      this.reset();
+ this.form.id=undefined;
+  },
     // 表单重置
     reset() {
       let fid = this.form.id
@@ -222,14 +214,16 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset()
+      this.reset();
+ this.form.id=undefined;
       this.title = '添加制造路径'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()
-      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset();
+ this.form.id=undefined;
+    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改制造路径'
@@ -277,6 +271,12 @@ export default {
     },
     handleDeleteItem(index) {
       this.form.produceProcessItemDtoList.splice(index, 1)
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.produceProcessName,(r)=>{
+        this.form.produceProcessNo=r.szmUpper;
+        this.$forceUpdate()
+      })
     }
   }
 

@@ -79,7 +79,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px" inline>
 
         <el-form-item label="名称" prop="bomSupplierName">
-          <el-input v-model="form.bomSupplierName" clearable placeholder="请输入名称"/>
+          <el-input v-model="form.bomSupplierName" clearable placeholder="请输入名称" @blur="loadSzm"/>
         </el-form-item>
         <el-form-item label="编号" prop="bomSupplierCode">
           <el-input v-model="form.bomSupplierCode" clearable placeholder="请输入编号"/>
@@ -133,7 +133,7 @@
 
 <script>
 
-import { deleteList, getById, getDistrictByParentCode, insetOrUpdate, queryPageList } from '@/api/common'
+import { deleteList, getById, getDistrictByParentCode, insetOrUpdate, pinyin4jSzm, queryPageList } from '@/api/common'
 
 export default {
   name: 'tenantName',
@@ -220,30 +220,31 @@ export default {
         //   message: '长度在 5 到 20 个字符',
         //   trigger: 'blur'
         // }],
-        bomSupplierEmail: [{ required: true, message: '不能为空', trigger: 'blur' }, {
-          min: 2,
-          max: 120,
-          message: '长度在 2 到 120 个字符',
-          trigger: 'blur'
-        },{
-           required: true,
-            validator: (rule, value, callback) => {
-              if (value === "") {
-                callback(new Error("邮件地址不能为空"))
-                return;
-              }
-              if (
-                !/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(
-                  value
-                )
-              ) {
-                callback(new Error("邮箱格式不正确"))
-                return;
-              }
-              callback();
-          },
-          trigger:'blur'
-        }],
+        // bomSupplierEmail: [{ required: true, message: '不能为空', trigger: 'blur' }, {
+        //   min: 2,
+        //   max: 120,
+        //   message: '长度在 2 到 120 个字符',
+        //   trigger: 'blur'
+        // },
+        //   {
+        //    required: true,
+        //     validator: (rule, value, callback) => {
+        //       if (value === "") {
+        //         callback(new Error("邮件地址不能为空"))
+        //         return;
+        //       }
+        //       if (
+        //         !/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(
+        //           value
+        //         )
+        //       ) {
+        //         callback(new Error("邮箱格式不正确"))
+        //         return;
+        //       }
+        //       callback();
+        //   },
+        //   trigger:'blur'
+        // }],
         provinceCode: [{ required: true, message: '必选', trigger: 'blur' } ],
         cityCode: [{ required: true, message: '必选', trigger: 'blur' } ],
         areaCode: [{ required: true, message: '必选', trigger: 'blur' }],
@@ -291,13 +292,13 @@ export default {
   methods: {
     loadCity(code) {
       this.cityCodeList.splice(0, this.cityCodeList.length)
-      this.queryParams.data.areaCode = this.form.areaCode = undefined
-      this.queryParams.data.cityCode = this.form.cityCode = undefined
+      // this.queryParams.data.areaCode = this.form.areaCode = undefined
+      // this.queryParams.data.cityCode = this.form.cityCode = undefined
       getDistrictByParentCode(code).then(t => this.cityCodeList = t.data.dataList)
     },
     loadArea(code) {
       // this.areaCodeList.splice(0, this.areaCodeList.length)
-      this.queryParams.data.areaCode = this.form.areaCode = undefined
+      // this.queryParams.data.areaCode = this.form.areaCode = undefined
       getDistrictByParentCode(code).then(t => this.areaCodeList = t.data.dataList)
     },
     /** 查询公告列表 */
@@ -313,8 +314,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset()
-    },
+      this.reset();
+ this.form.id=undefined;
+  },
     // 表单重置
     reset() {
       let fid = this.form.id
@@ -352,18 +354,29 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset()
-      this.title = '添加供应商表'
+      this.reset();
+ this.form.id=undefined;
+    this.title = '添加供应商表'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()
-      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset();
+     this.form.id=undefined;
+     let _this=this;
+    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改供应商表'
         this.open = true
+        let cityCode = response.data.dataList[0]["cityCode"]
+        this.form.cityCode= cityCode;
+        console.info("_this.form.cityCode",this.form)
+        getDistrictByParentCode(cityCode).then(r=>  _this.areaCodeList=r.data.dataList)
+      }).then(rrr=>{
+        console.info("_this.form.provinceCode",_this.form.provinceCode)
+        getDistrictByParentCode(_this.form.provinceCode).then(r=>  _this.cityCodeList=r.data.dataList)
+
       })
 
     },
@@ -375,6 +388,12 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       deleteList(row, this.ids, this.getList())
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.bomSupplierName,(r)=>{
+        this.form.bomSupplierCode=r.szmUpper;
+        this.$forceUpdate();
+      })
     }
   }
 

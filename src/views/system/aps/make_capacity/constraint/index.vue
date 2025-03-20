@@ -160,7 +160,7 @@ export default {
     cancel() {
       this.open = false;
       this.openContent = false;
-      this.reset();
+      this.reset();  this.form.id=undefined;
     },
     // 表单重置
     reset() {
@@ -190,13 +190,13 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.reset();  this.form.id=undefined;
       this.open = true;
       this.title = "添加约束";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      this.reset();  this.form.id=undefined;
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
         this.form = response.data.dataList[0]

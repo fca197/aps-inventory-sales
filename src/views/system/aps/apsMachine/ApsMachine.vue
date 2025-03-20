@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item  label="工厂">
-        <el-select v-model="form.factoryId">
+        <el-select v-model="queryParams.data.factoryId">
           <el-option v-for="(f,i) in factoryList" :label="f.factoryName" :value="f.id" :key="f.id"></el-option>
         </el-select>
       </el-form-item>
@@ -57,12 +57,13 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="机器编号" prop="machineNo">
-          <el-input v-model="form.machineNo" clearable placeholder="请输入机器编号"/>
-        </el-form-item>
         <el-form-item label="机器名称" prop="machineName">
-          <el-input v-model="form.machineName" clearable placeholder="请输入机器名称"/>
+          <el-input v-model="form.machineName" clearable placeholder="请输入机器名称" @blur="loadSzm"/>
         </el-form-item>
+        <el-form-item label="机器编号" prop="machineNo">
+          <el-input v-model="form.machineNo" clearable placeholder="请输入机器编号" />
+        </el-form-item>
+
         <el-form-item label="排序索引" prop="sortIndex">
           <el-input v-model="form.sortIndex" type="number" clearable placeholder="请输入排序索引"/>
         </el-form-item>
@@ -79,7 +80,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from '@/api/factory'
 
 export default {
@@ -147,8 +148,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset()
-    },
+      this.reset();
+ this.form.id=undefined;
+  },
     // 表单重置
     reset() {
       let fid = this.form.id
@@ -178,13 +180,15 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      this.form.id=undefined;
       this.title = '添加生产机器'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1}
+      this.reset();
+ this.form.id=undefined;
+    let req = {idList: [row.id], pageSize: 1, pageNum: 1}
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改生产机器'
@@ -226,6 +230,12 @@ export default {
         this.$modal.msgSuccess('删除成功')
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.machineName,(r)=>{
+        this.form.machineNo=r.szmUpper;
+        this.$forceUpdate();
+      })
     }
   }
 

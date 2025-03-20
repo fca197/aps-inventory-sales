@@ -159,8 +159,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset()
-    },
+      this.reset();
+ this.form.id=undefined;
+  },
     // 表单重置
     reset() {
       let fid = this.form.id
@@ -196,14 +197,16 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset()
-      this.title = '添加操作日志'
+      this.reset();
+ this.form.id=undefined;
+    this.title = '添加操作日志'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()
-      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset();
+ this.form.id=undefined;
+    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改操作日志'

@@ -229,7 +229,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-      this.reset();
+      this.reset();  this.form.id=undefined;
     },
     // 表单重置
     reset() {
@@ -261,13 +261,13 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.reset();  this.form.id=undefined;
       this.open = true;
       this.title = "添加岗位";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      this.reset();  this.form.id=undefined;
       const postId = row.postId || this.ids
       getPost(postId).then(response => {
         this.form = response.data;

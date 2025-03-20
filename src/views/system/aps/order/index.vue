@@ -336,8 +336,9 @@ export default {
     cancel() {
       this.open = false
       this.orderGoodsStatusDateShow = false
-      this.reset()
-    },
+      this.reset();
+ this.form.id=undefined;
+  },
     // 表单重置
     reset() {
       this.form = {
@@ -375,16 +376,18 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset()
-      this.addGoods(this.goodsList[0].id)
+      this.reset();
+ this.form.id=undefined;
+    this.addGoods(this.goodsList[0].id)
       this.selectGoods(0, this.goodsList[0].id)
       this.open = true
       this.title = '添加订单'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()
-      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset();
+ this.form.id=undefined;
+    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true

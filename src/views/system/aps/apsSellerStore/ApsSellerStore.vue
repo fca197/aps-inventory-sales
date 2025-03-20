@@ -228,8 +228,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset()
-    },
+      this.reset();
+ this.form.id=undefined;
+  },
     changeRegCode(n, type) {
       console.info("xxxxx",n,type)
       if ('p' === type) {
@@ -282,16 +283,18 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset()
-      this.title = '添加'
+      this.reset();
+ this.form.id=undefined;
+    this.title = '添加'
       this.open = true
       this.loadGdMap()
 
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset()
-      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset();
+ this.form.id=undefined;
+    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       let _t = this
       _t.loadDistrict = false
       getById(req).then(response => {

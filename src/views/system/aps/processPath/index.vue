@@ -143,7 +143,8 @@ export default {
         factoryId:[{ required: true, message: '不能为空', trigger: 'blur' }],
         processPathCode:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
         processPathName:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
-        processPathRemark:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        processPathRemark:[{ required: true, message: '不能为空', trigger: 'blur' }, { min: 1, max: 20, message: '长度在 1' +
+            ' 到 20 个字符', trigger: 'blur' }],
 
       },
       tableHeaderList: [],
@@ -173,7 +174,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-      this.reset();
+      this.reset();  this.form.id=undefined;
     },
     getRoomList(factoryId) {
 
@@ -212,13 +213,13 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+      this.reset();  this.form.id=undefined;
       this.open = true;
       this.title = "添加工艺路线";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      this.reset();  this.form.id=undefined;
       let req = {idList: [row.id], pageSize: 1, pageNum: 1};
       getById(req).then(response => {
         this.form = response.data.dataList[0]
