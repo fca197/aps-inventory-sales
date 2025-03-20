@@ -50,11 +50,11 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="班次编码" prop="shiftCode">
-          <el-input v-model="form.shiftCode" placeholder="请输入班次编码"/>
-        </el-form-item>
         <el-form-item label="班次名称" prop="shiftName">
-          <el-input v-model="form.shiftName" placeholder="请输入班次名称"/>
+          <el-input v-model="form.shiftName" placeholder="请输入班次名称" clearable @blur="loadSzm"/>
+        </el-form-item>
+        <el-form-item label="班次编码" prop="shiftCode">
+          <el-input v-model="form.shiftCode" placeholder="请输入班次编码" clearable/>
         </el-form-item>
         <el-form-item label="班次">
           <el-col v-for=" (item ,index) in form.shiftItemList" :key="index" :span="24">
@@ -84,7 +84,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from "@/api/factory";
 
 export default {
@@ -193,7 +193,17 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();  this.form.id=undefined;
+      this.reset();
+
+      this.form={
+        shiftItemList: [{
+          timeRange: []
+        }],
+        shiftCode :undefined,
+        shiftName :undefined,
+        factoryId :undefined,
+        id: undefined
+      }
       this.open = true;
       this.title = "添加班次";
     },
@@ -257,6 +267,12 @@ export default {
     deleteItem(index) {
       this.form.shiftItemList.splice(index, 1)
     },
+    loadSzm(){
+      pinyin4jSzm(this.form.shiftName,(r)=>{
+        this.form.shiftCode=r.szmUpper;
+        this.$forceUpdate();
+      })
+    }
   }
 };
 </script>
