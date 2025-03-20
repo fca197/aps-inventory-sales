@@ -43,11 +43,11 @@
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
+        <el-form-item label="角色组名称" prop="roleGroupName">
+          <el-input v-model="form.roleGroupName" clearable placeholder="请输入角色组名称" @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="角色组编码" prop="roleGroupCode">
           <el-input v-model="form.roleGroupCode" clearable placeholder="请输入角色组编码"/>
-        </el-form-item>
-        <el-form-item label="角色组名称" prop="roleGroupName">
-          <el-input v-model="form.roleGroupName" clearable placeholder="请输入角色组名称"/>
         </el-form-item>
 
       </el-form>
@@ -69,7 +69,7 @@
                        save-object-field="roleGroupId"
                        save-resource-field="resourceIdList"
                        :query-config="{
-          roleId: this.ids[0]
+          roleGroupId: this.ids[0]
         }"
                        query-url="/baseRoleGroupResource"
       ></select-resource>
@@ -81,7 +81,7 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import {getFactoryList} from '@/api/factory'
 import SelectResource from '@/views/system/base/baseResource/SelectResource.vue'
 
@@ -179,14 +179,15 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();  this.form.id=undefined;
+      this.reset();
+      this.form.id=undefined;
       this.title = '添加角色组'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
- this.form.id=undefined;
+     this.form.id=undefined;
     let req = {idList: [row.id], pageSize: 1, pageNum: 1}
       getById(req).then(response => {
         this.form = response.data.dataList[0]
@@ -233,6 +234,12 @@ export default {
     handleMenu(row){
       this.ids[0]=row.id;
       this.menuOpen=true;
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.roleGroupName,(r)=>{
+        this.form.roleGroupCode=r.szmUpper;
+        this.$forceUpdate();
+      })
     }
   }
 
