@@ -369,15 +369,11 @@ export default {
         this.form = response.data.dataList[0]
         this.title = '修改供应商表'
         this.open = true
-        let cityCode = response.data.dataList[0]["cityCode"]
-        this.form.cityCode= cityCode;
-        console.info("_this.form.cityCode",this.form)
-        getDistrictByParentCode(cityCode).then(r=>  _this.areaCodeList=r.data.dataList)
-      }).then(rrr=>{
-        console.info("_this.form.provinceCode",_this.form.provinceCode)
-        getDistrictByParentCode(_this.form.provinceCode).then(r=>  _this.cityCodeList=r.data.dataList)
-
-      })
+        // let cityCode = response.data.dataList[0]["cityCode"]
+        // this.form.cityCode= cityCode;
+        // console.info("_this.form.cityCode",this.form)
+        // getDistrictByParentCode(cityCode).then(r=>  _this.areaCodeList=r.data.dataList)
+      });
 
     },
 

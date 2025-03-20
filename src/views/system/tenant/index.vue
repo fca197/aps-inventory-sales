@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="文件名称" prop="brandName">
-        <el-input v-model="queryParams.brandName" clearable placeholder="请输入文件名称" @keyup.enter.native="handleQuery"/>
+      <el-form-item label="租户名称" prop="brandName">
+        <el-input v-model="queryParams.data.tenantName" clearable placeholder="请输入租户名称" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
         <el-button icon="el-icon-search" size="mini" type="primary" @click="handleQuery">搜索</el-button>
@@ -92,7 +92,10 @@ export default {
         pageSize: 10,
         brandName: undefined,
         createBy: undefined,
-        status: undefined
+        status: undefined,
+        data :{
+          tenantName:undefined
+        }
       },
       // 表单参数
       form: {
