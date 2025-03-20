@@ -81,7 +81,8 @@
     <el-dialog :title="title" :visible.sync="uploadOpen" width="500px" @close="cancel">
       <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="预测版本文件" prop="forecastName">
-          <file-upload ref="fileUpload" :file-type="['xlsx']" :fileUploadSuccess="fileUploadSuccess" :upload-url="'/apsGoodsForecast/uploadTemplate/'+this.form.id"
+          <file-upload ref="fileUpload" :file-type="['xlsx']" :fileUploadSuccess="fileUploadSuccess"
+                       :upload-url="'/apsGoodsForecast/uploadTemplate/'+this.form.id"
                        :value="form.fileId"/>
         </el-form-item>
       </el-form>
@@ -227,7 +228,7 @@ export default {
     },
     fileUploadSuccess(data) {
       console.log(data)
-      if (data.data.excelErrorMsgList.length>0){
+      if (data.data?.excelErrorMsgList?.length>0){
         this.excelErrorMsgList=data.data.excelErrorMsgList;
         this.excelErrorMsgListShow=true;
         this.$modal.msgError("上传失败，请检查文件正确性")
