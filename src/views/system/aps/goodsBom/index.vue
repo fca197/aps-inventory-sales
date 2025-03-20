@@ -6,6 +6,12 @@
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
+         <el-form-item label="商品" prop="factoryList">
+        <el-select v-model="queryParams.data.goodsId" placeholder="请选择商品" clearable>
+          <el-option v-for="item in goodsList.filter(t=>t.factoryId===this.queryParams.data.factoryId)" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="零件名称" prop="brandName">
         <el-input v-model="queryParams.data.bomName" placeholder="请输入零件名称" clearable @keyup.enter.native="handleQuery"/>
       </el-form-item>
@@ -59,7 +65,7 @@
         <el-col :span="8">
           <el-form-item label="商品" prop="goodsId">
             <el-select v-model="form.goodsId" placeholder="请选择零件" clearable>
-              <el-option v-for="item in goodsList" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
+              <el-option v-for="item in goodsList.filter(t=>t.factoryId===this.form.factoryId)" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -190,18 +196,18 @@ export default {
       },
       // 表单校验
       rules: {
-        goodsId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        groupId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomUsage :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomCostPrice :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomCostPriceUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomUseWorkStation :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomUseExpression :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        bomInventory :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        goodsId :[{required: true, message: "不能为空", trigger: "blur"}],
+        groupId :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomId :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomCode :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomName :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomUsage :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomUnit :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomCostPrice :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomCostPriceUnit :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomUseWorkStation :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomUseExpression :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomInventory :[{required: true, message: "不能为空", trigger: "blur"}],
         isFollow :[{required: true, message: "请选择", trigger: "change"}],
         factoryId :[{required: true, message: "请选择", trigger: "change"}],
 
@@ -259,7 +265,7 @@ export default {
         bomUseWorkStation :undefined,
         bomUseExpression :undefined,
         bomInventory :undefined,
-        isFollow :undefined,
+        isFollow :false,
         factoryId :undefined,
         id: undefined
       };
@@ -285,7 +291,7 @@ export default {
     handleAdd() {
       this.reset();  this.form.id=undefined;
       this.open = true;
-      this.title = "添加零件";
+      this.title = "添加商品零件";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -294,7 +300,7 @@ export default {
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true;
-        this.title = "修改零件";
+        this.title = "修改加商品零件";
       });
 
     },

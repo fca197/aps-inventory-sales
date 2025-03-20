@@ -122,9 +122,15 @@ export default {
       .then(t => {
         let d = {}
         let f = {}
+        for(let n in this.goodsSaleConfig){
+          this.goodsSaleConfig[n]=false
+        }
+        for(let n in this.goodsSaleForecastConfig){
+          this.goodsSaleForecastConfig[n]=false
+        }
         t.data.dataList.forEach(g => {
           d["" + g.saleConfigId] = true;
-          f ["" + g.saleConfigId] = g.useForecast === 1 ? true : false;
+          f ["" + g.saleConfigId] = g.useForecast === 1;
         })
         this.goodsSaleConfig = d;
         this.goodsSaleForecastConfig = f;
