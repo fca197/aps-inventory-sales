@@ -27,7 +27,7 @@
         <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
 
         <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" width="180px"/>
-        <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right"  >
+        <el-table-column align="center" class-name="small-padding fixed-width" label="操作" fixed="right">
           <template slot-scope="scope">
             <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
             <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
@@ -36,11 +36,11 @@
       </el-table>
 
       <pagination
-          v-show="total>0"
-          :limit.sync="queryParams.pageSize"
-          :page.sync="queryParams.pageNum"
-          :total="total"
-          @pagination="getList"
+        v-show="total>0"
+        :limit.sync="queryParams.pageSize"
+        :page.sync="queryParams.pageNum"
+        :total="total"
+        @pagination="getList"
       />
 
 
@@ -48,16 +48,18 @@
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-
+        <el-form-item label="零件组名称" prop="groupName">
+          <el-input v-model="form.groupName" placeholder="请输入名称" clearable @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="零件组编号" prop="groupCode">
           <el-input v-model="form.groupCode" placeholder="请输入编号"/>
         </el-form-item>
-        <el-form-item label="零件组名称" prop="groupName">
-          <el-input v-model="form.groupName" placeholder="请输入名称"/>
-        </el-form-item>
+
         <el-form-item label="上级" prop="parentId">
 
-          <tree-select ref="treeSelect" :list="bomGroupList" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.parentId"></tree-select>
+          <el-select ref="treeSelect" v-model="form.parentId" filterable>
+            <el-option v-for="(it ) in bomGroupList" :label="it.groupName"   :value="it.id"></el-option>
+          </el-select>
 
         </el-form-item>
       </el-form>
@@ -71,14 +73,14 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import treeSelect from '@/views/components/treeSelect/index.vue'
 // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
 export default {
   name: 'tenantName',
-  components:{treeSelect},
+  components: { treeSelect },
   data() {
 
     return {
@@ -113,17 +115,17 @@ export default {
       },
       // 表单参数
       form: {
-        groupCode :undefined,
-        groupName :undefined,
-        parentId :undefined,
-        pathId :undefined,
+        groupCode: undefined,
+        groupName: undefined,
+        parentId: undefined,
+        pathId: undefined,
         id: undefined
       },
       // 表单校验
       rules: {
-        groupCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }],
-        groupName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
-        parentId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }]
+        groupCode: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        groupName: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        parentId: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }]
       },
       tableHeaderList: [],
       bomGroupList: []
@@ -154,16 +156,16 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
-      this.reset();
- this.form.id=undefined;
-  },
+      this.reset()
+      this.form.id = undefined
+    },
     // 表单重置
     reset() {
       this.form = {
-        groupCode :undefined,
-        groupName :undefined,
-        parentId :undefined,
-        pathId :undefined,
+        groupCode: undefined,
+        groupName: undefined,
+        parentId: undefined,
+        pathId: undefined,
         id: undefined
       }
       this.resetForm('form')
@@ -186,20 +188,28 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+
       queryBomGroupTree(true).then(t => {
+        this.bomGroupList.splice(0, this.bomGroupList.length)
+        this.bomGroupList.push({
+          id:0,
+          groupCode: 0,
+          groupName: '顶级'
+        })
         this.bomGroupList = t
+        console.log(this.bomGroupList)
       })
-      console.log(this.bomGroupList)
-      this.reset();
- this.form.id=undefined;
-    this.open = true
+
+      this.reset()
+      this.form.id = undefined
+      this.open = true
       this.title = '添加零件组'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
- this.form.id=undefined;
-    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset()
+      this.form.id = undefined
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.open = true
@@ -244,6 +254,12 @@ export default {
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
+    },
+    loadSzm() {
+      pinyin4jSzm(this.form.groupName, (r) => {
+        this.form.groupCode = r.szmUpper
+        this.$forceUpdate()
+      })
     }
   }
 }

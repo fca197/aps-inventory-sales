@@ -70,23 +70,23 @@
     </el-row>
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
 
-        <el-form-item label="零件编号" prop="bomCode">
-          <el-input v-model="form.bomCode" placeholder="请输入编号"/>
-        </el-form-item>
         <el-form-item label="零件名称" prop="bomName">
-          <el-input v-model="form.bomName" placeholder="请输入名称"/>
+          <el-input v-model="form.bomName" placeholder="请输入名称" clearable @blur="loadSzm"/>
+        </el-form-item>
+        <el-form-item label="零件编号" prop="bomCode">
+          <el-input v-model="form.bomCode" placeholder="请输入编号" clearable/>
         </el-form-item>
         <el-form-item label="零件价格" prop="bomCostPrice">
           <el-input v-model="form.bomCostPrice" placeholder="请输入价格"/>
         </el-form-item>
-        <el-form-item label="零件价格" prop="bomCostPriceUnit">
-          <el-input v-model="form.bomCostPriceUnit" placeholder="请输入价格规格"/>
+        <el-form-item label="价格规格" prop="bomCostPriceUnit">
+          <el-input v-model="form.bomCostPriceUnit" placeholder="请输入价格规格如:  45元/瓶" />
         </el-form-item>
 
         <el-form-item label="库存" prop="bomInventory">
-          <el-input v-model="form.bomInventory" placeholder="请输入库存"/>
+          <el-input v-model="form.bomInventory" placeholder="请输入库存如： 123.909" />
         </el-form-item>
         <el-form-item label="购买方式" prop="supplyMode">
           <el-select v-model="form.supplyMode">
@@ -94,13 +94,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="规格" prop="bomUnit">
-          <el-input v-model="form.bomUnit" placeholder="请输入库存"/>
+          <el-input v-model="form.bomUnit" placeholder="请输入规格如： 550ML"/>
         </el-form-item>
         <el-form-item label="使用规格" prop="useUnit">
-          <el-input v-model="form.useUnit" placeholder="请输入使用规格"/>
+          <el-input v-model="form.useUnit" placeholder="请输入使用规格如：10ML "/>
         </el-form-item>
-        <el-form-item label="供货周期" prop="deliveryCycleDay">
-          <el-input v-model.number="form.deliveryCycleDay" placeholder="请输入供货周期"/>
+        <el-form-item label="供货周期(天)" prop="deliveryCycleDay">
+          <el-input v-model.number="form.deliveryCycleDay" placeholder="请输入供货周期 如： 1"/>
         </el-form-item>
         <el-form-item label="制造路径" v-show="form.supplyMode==='make'" prop="apsBomSupplierId">
           <el-select v-model="form.produceProcessId">
@@ -113,7 +113,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="零件组" prop="groupId">
-          <tree-select ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"
+          <tree-select  ref="treeSelect" :list="groupData.filter(t=>t.id!=='0')" :multiple="false" :clearable="true" :checkStrictly="true" width="120px" v-model="form.groupId"
           ></tree-select>
         </el-form-item>
 
@@ -141,7 +141,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, log, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, log, pinyin4jSzm, queryPageList, queryUrlNoPageList, updateById } from '@/api/common'
 import { queryBomGroupTree } from '@/api/aps/apsGroup'
 import bomGroup from '@/views/system/aps/bomGroup/index.vue'
 import treeSelect from '@/views/components/treeSelect/index.vue'
@@ -190,33 +190,49 @@ export default {
         pageNum: 1,
         pageSize: 10,
         data: {
-          groupId: undefined
+          bomCode :undefined,
+          bomName :undefined,
+          bomCostPrice :undefined,
+          bomCostPriceUnit :undefined,
+          bomInventory :undefined,
+          groupId :undefined,
+          supplyMode :undefined,
+          useUnit :undefined,
+          bomUnit :undefined,
+          produceProcessId :undefined,
+          deliveryCycleDay :undefined,
+          apsBomSupplierId :undefined,
+          id: undefined
         }
       },
       // 表单参数
       form: {
-        deliveryCycleDay: '',
-        apsBomSupplierId: '',
-        supplyMode: '',
-        bomCode: '',
-        remark: '',
-        brandName: '',
-        pwd: '',
-        id: undefined,
-        confirmPwd: undefined
+        bomCode :undefined,
+        bomName :undefined,
+        bomCostPrice :undefined,
+        bomCostPriceUnit :undefined,
+        bomInventory :undefined,
+        groupId :undefined,
+        supplyMode :undefined,
+        useUnit :undefined,
+        bomUnit :undefined,
+        produceProcessId :undefined,
+        deliveryCycleDay :undefined,
+        apsBomSupplierId :undefined,
+        id: undefined
       },
       // 表单校验
       rules: {
-        bomCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        bomName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        bomCostPrice :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        bomCostPriceUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        bomInventory :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        groupId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        supplyMode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        useUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        bomUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        produceProcessId :[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        bomCode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomName :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomCostPrice :[{required: true, message: "不能为空", trigger: "blur"}],
+        bomCostPriceUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomInventory :[{required: true, message: "不能为空", trigger: "blur"}],
+        groupId :[{required: true, message: "不能为空", trigger: "blur"}],
+        supplyMode :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        useUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        bomUnit :[{required: true, message: "不能为空", trigger: "blur"},{ min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }],
+        produceProcessId :[{required: true, message: "不能为空", trigger: "blur"}],
 
       },
       tableHeaderList: [],
@@ -270,16 +286,24 @@ export default {
       this.open = false
       this.uploadBomOpen = false
       this.reset();
- this.form.id=undefined;
+       this.form.id=undefined;
   },
     // 表单重置
     reset() {
       this.form = {
-        supplyMode: '',
-        remark: '',
-        tenantCode: '',
-        id: undefined,
-        tenantName: undefined
+        bomCode :undefined,
+        bomName :undefined,
+        bomCostPrice :undefined,
+        bomCostPriceUnit :undefined,
+        bomInventory :undefined,
+        groupId :undefined,
+        supplyMode :undefined,
+        useUnit :undefined,
+        bomUnit :undefined,
+        produceProcessId :undefined,
+        deliveryCycleDay :undefined,
+        apsBomSupplierId :undefined,
+        id: undefined
       }
       this.resetForm('form')
     },
@@ -362,6 +386,12 @@ export default {
     },
     downloadUploadTemplate(){
       downloadForm("/apsBom/exportQueryPageList",{data:{id:-1}},"零件模板.xlsx",{})
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.bomName,(r)=>{
+        this.form.bomCode=r.szmUpper;
+        this.$forceUpdate()
+      })
     }
   }
 }

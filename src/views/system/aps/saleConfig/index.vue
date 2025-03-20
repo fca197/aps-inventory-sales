@@ -48,12 +48,13 @@
     </el-table>
     <el-dialog :title="title" :visible.sync="open" append-to-body width="500px">
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
-        <el-form-item label="组编码" prop="saleCode">
-          <el-input v-model="form.saleCode" placeholder="请输入组编码"/>
-        </el-form-item>
         <el-form-item label="组名称" prop="saleName">
-          <el-input v-model="form.saleName" placeholder="请输入组名称"/>
+          <el-input v-model="form.saleName" placeholder="请输入组名称" clearable  @blur="loadSzm"/>
         </el-form-item>
+        <el-form-item label="组编码" prop="saleCode">
+          <el-input v-model="form.saleCode" placeholder="请输入组编码" clearable/>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -64,7 +65,7 @@
 </template>
 
 <script>
-import { add, deleteByIdList, insetOrUpdate, queryPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, insetOrUpdate, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 
 export default {
   name: 'index',
@@ -89,7 +90,7 @@ export default {
       saleConfigList: [],
       rules: {
         saleCode: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }],
-        saleName: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 4, max: 20, message: '长度在 4 到 20 个字符', trigger: 'blur' }]
+        saleName: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }]
 
       }
     }
@@ -144,8 +145,14 @@ export default {
     },
     handleEdit(data) {
       this.form = data
-      this.title = '修改销售特征' + (data.isValue == 1 ? '值' : '')
+      this.title = '修改销售特征' + (data.isValue === 1 ? '值' : '')
       this.open = true
+    },
+    loadSzm(){
+      // pinyin4jSzm(this.form.saleName,(r)=>{
+      //   this.form.saleCode=('S'+r.szmUpper+'00000').substring(0,6);
+      //   this.$forceUpdate();
+      // })
     }
   }
 }
