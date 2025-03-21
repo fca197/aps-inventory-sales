@@ -14,7 +14,7 @@
 
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
 
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :width="item.width" :prop="item.fieldName" :label="item.showName"/>
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center"  :prop="item.fieldName" :label="item.showName"/>
 
       <el-table-column label="" type="text" align="center"/>
     </el-table>

@@ -81,7 +81,10 @@
             </el-form>
           </el-col>
           <el-col :span="4">
-            <el-button icon="el-icon-download" size="mini" @click="downLoadMachineResult"></el-button>
+            <el-tooltip class="item" effect="dark" content="下载文件与页面展示颜色不一致" placement="top">
+
+              <el-button icon="el-icon-download"  size="mini" @click="downLoadMachineResult"></el-button>
+            </el-tooltip>
           </el-col>
 
         </el-row>
