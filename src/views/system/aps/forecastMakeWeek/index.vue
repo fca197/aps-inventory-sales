@@ -44,11 +44,12 @@
             <el-option v-for="item in forecastMainList" :key="item.id" :label="item.forecastName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="(预)周生产版本名称" prop="forecastMakeMonthName">
+          <el-input v-model="form.forecastMakeMonthName" clearable placeholder="请输入(预)周生产名称" @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="(预)周生产版本编码" prop="forecastMakeMonthNo">
           <el-input v-model="form.forecastMakeMonthNo" clearable placeholder="请输入(预)周生产编码"/>
-        </el-form-item>
-        <el-form-item label="(预)周生产版本名称" prop="forecastMakeMonthName">
-          <el-input v-model="form.forecastMakeMonthName" clearable placeholder="请输入(预)周生产名称"/>
         </el-form-item>
         <el-form-item label="(预)周生产开始时间" prop="forecastMakeMonthBeginDate">
           <el-date-picker v-model="form.forecastMakeMonthBeginDate" clearable format="yyyy-MM" placeholder="请选择(预)周生产开始时间" type="month" value-format="yyyy-MM"/>
@@ -68,7 +69,7 @@
 </template>
 
 <script>
-import {add, deleteByIdList, queryPageList} from "@/api/common";
+import { add, deleteByIdList, pinyin4jSzm, queryPageList } from '@/api/common'
 import {downloadForm} from "@/utils/request";
 import {getAllForecastMain} from "@/api/aps/forecastMain";
 import {deploy} from "@/api/aps/forecastMakeWeek";
@@ -180,6 +181,12 @@ export default {
 
     forecastDeploy(row) {
       deploy(row).then(() => this.getList());
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.forecastMakeMonthName,(r)=>{
+        this.form.forecastMakeMonthNo=r.szmUpper;
+        this.$forceUpdate()
+      })
     }
   }
 }

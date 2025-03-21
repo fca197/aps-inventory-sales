@@ -289,7 +289,7 @@ let roureMap = {
     comment: () => import('@/views/system/aps/status/index')
   },
   '/apsSchedulingDayConfigVersion/detailList': {
-    hidden: false,
+    hidden: true,
     comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue')
   },
   '/base/baseTableHeader/index': {

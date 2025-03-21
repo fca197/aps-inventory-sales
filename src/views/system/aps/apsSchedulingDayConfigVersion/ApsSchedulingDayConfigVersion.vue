@@ -63,7 +63,7 @@
         </el-form-item>
         <el-form-item label="排程配置" prop="productType">
           <el-select v-model="form.productType" filterable placeholder="请选择排程类型"   style="width: 100%">
-            <el-option v-for="item in productTypeList" :key="item.code" :label="item.desc" :value="item.code"/>
+            <el-option v-for="item in productTypeListTmp" :key="item.code" :label="item.desc" :value="item.code"/>
           </el-select>
         </el-form-item>
 
@@ -128,6 +128,7 @@ export default {
       factoryList: [],
       processList: [],
       productTypeList: [{ code: "MAKE", desc : "制造路径" },{ code: "PROCESS", desc : "工艺路径" }],
+      productTypeListTmp: [],
       processMap: {},
       apsSchedulingDayConfigList:[],
 
@@ -255,8 +256,17 @@ export default {
     },
     selectConfig(id){
       this.apsSchedulingDayConfigList.filter(t=>t.id===id).forEach(t=>{
+        this.productTypeListTmp.splice(0,1);
         this.form.factoryId=t.factoryId
         this.form.processId=t.processId
+        //{ code: "MAKE", desc : "制造路径" },{ code: "PROCESS", desc : "工艺路径" }
+        if ( t.schedulingType==="make"){
+          this.productTypeListTmp.push({ code: "MAKE", desc : "制造路径" })
+          this.form.productType="MAKE"
+        }else {
+          this.productTypeListTmp.push({ code: "PROCESS", desc : "工艺路径" })
+          this.form.productType="PROCESS"
+        }
       })
     },
     handleInfo(row) {

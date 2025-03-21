@@ -28,7 +28,7 @@
 
     <el-table v-loading="loading" :data="apsSchedulingDayConfigList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
-      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" />
+      <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
           <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>
@@ -38,11 +38,11 @@
     </el-table>
 
     <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
+      v-show="total>0"
+      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.pageNum"
+      :total="total"
+      @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
@@ -55,24 +55,33 @@
             <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id" style="width: 100%"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="工艺路径" prop="processId">
+
+        <el-form-item label="排程配置名称" prop="schedulingDayName">
+          <el-input v-model="form.schedulingDayName" clearable placeholder="请输入排程版本名称" @blur="loadSzm"/>
+        </el-form-item>
+        <el-form-item label="排程版配置本号" prop="schedulingDayNo">
+          <el-input v-model="form.schedulingDayNo" clearable placeholder="请输入排程版本号"/>
+        </el-form-item>
+        <el-form-item label="排程类型">
+          <el-select v-model="form.schedulingType">
+            <el-option label="工艺路径" value="process"></el-option>
+            <el-option label="制造路径" value="make"></el-option>
+          </el-select>
+        </el-form-item>
+
+
+        <el-form-item label="工艺路径" prop="processId" v-if="form.schedulingType==='process'" >
           <!--          <el-input v-model="form.processId" clearable placeholder="请输入工艺路径ID"/>-->
           <el-select v-model="form.processId" placeholder="请选择工艺路径ID" style="width: 100%">
             <el-option v-for="item in processList" :key="item.id" :label="item.processPathName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="排程版配置本号" prop="schedulingDayNo">
-          <el-input v-model="form.schedulingDayNo" clearable placeholder="请输入排程版本号"/>
-        </el-form-item>
-        <el-form-item label="排程配置名称" prop="schedulingDayName">
-          <el-input v-model="form.schedulingDayName" clearable placeholder="请输入排程版本名称"/>
-        </el-form-item>
-        <el-form-item label="排程步骤" prop="schedulingDayConfigItemList">
+        <el-form-item label="排程步骤" prop="schedulingDayConfigItemList"  v-if="form.schedulingType==='process'" >
 
 
           <el-table :data="form.schedulingDayConfigItemList">
             <el-table-column label="车间" prop="roomName" width="140"/>
-            <el-table-column label="状态" prop="statusName" width="140"/>
+            <el-table-column label="工位" prop="statusName" width="140"/>
             <el-table-column label="排程配置" prop="configList">
 
               <template slot-scope="scope">
@@ -141,7 +150,7 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, queryUrlPageList, updateById } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
 
 export default {
@@ -176,14 +185,23 @@ export default {
       form: {
         schedulingDayConfigItemList: [],
         factoryId: undefined,
+        schedulingType: undefined,
         processId: undefined,
         schedulingDayNo: undefined,
         schedulingDayName: undefined,
         isDefault: undefined,
+        makeProcessId: undefined,
         id: undefined
       },
       // 表单校验
-      rules: {},
+      // 表单校验
+      rules: {
+        factoryId :[{required: true, message: "不能为空", trigger: "blur"}],
+        schedulingType :[{required: true, message: "不能为空", trigger: "blur"}],
+        schedulingDayNo :[{required: true, message: "不能为空", trigger: "blur"}],
+        schedulingDayName :[{required: true, message: "不能为空", trigger: "blur"}],
+        isDefault :[{required: true, message: "不能为空", trigger: "blur"}],
+      },
       tableHeaderList: [],
       factoryList: [],
       processList: [],
@@ -269,9 +287,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset();
- this.form.id=undefined;
-  },
+      this.reset()
+      this.form.id = undefined
+    },
     // 表单重置
     reset() {
       let fid = this.form.id
@@ -280,9 +298,10 @@ export default {
         schedulingDayConfigItemList: [],
         factoryId: factoryId,
         processId: this.processList[0].id,
+        makeProcessId: undefined,
         schedulingDayNo: undefined,
         schedulingDayName: undefined,
-        isDefault: 0,
+        isDefault: false,
         id: fid
       }
       this.setItemList(this.form.processId)
@@ -328,16 +347,17 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
- this.form.id=undefined;
-    this.title = '添加排程版本'
+      this.reset()
+      this.form.id = undefined
+      this.title = '添加排程版本'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
- this.form.id=undefined;
-    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset()
+      this.form.id = undefined
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      // debugger
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         let list = this.form.schedulingDayConfigItemDtoList
@@ -455,7 +475,7 @@ export default {
       // debugger
       item.configBizNameList.forEach(t => {
         for (let tt in t.children) {
-          let ttt=t.children[tt];
+          let ttt = t.children[tt]
           if (ttt.id === value) {
             item.configBizName = ttt.name
             break
@@ -464,6 +484,12 @@ export default {
         }
       })
 
+    },
+    loadSzm(){
+      pinyin4jSzm(this.form.schedulingDayName,(r)=>{
+        this.form.schedulingDayNo=r.szmUpper;
+        this.$forceUpdate();
+      })
     }
   }
 
