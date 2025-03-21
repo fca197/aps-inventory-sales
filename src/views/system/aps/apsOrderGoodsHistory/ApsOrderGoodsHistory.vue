@@ -8,7 +8,7 @@
       <!--          <el-input v-model="queryParams.data.goodsId" clearable placeholder="请输入商品ID" @keyup.enter.native="handleQuery"/>-->
       <!--        </el-form-item>-->
       <el-form-item label="年份" prop="year">
-        <el-select v-model="queryParams.data.year"  @change="handleQuery">
+        <el-select v-model="queryParams.data.year" @change="handleQuery">
           <el-option v-for="year in yearList" :key="year+'year'" :label="year+''" :value="year"></el-option>
         </el-select>
 
@@ -17,11 +17,17 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>-->
+      <!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
-        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-refresh" plain size="mini" type="primary" @click="refreshHistory(1)">上月</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger" @click="handleDelete"></el-button>
+        <el-button icon="el-icon-refresh" plain size="mini" type="primary" @click="refreshHistory(0)">当月</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -35,9 +41,11 @@
       <!--          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column v-for="m in monthList" :key="m+'month'"  width="200" :label="m+'月'">
+      <el-table-column v-for="m in monthList" :key="m+'month'" width="200" :label="m+'月'">
         <template slot-scope="scope">
-          {{ scope.row['monthRatio' + m] !== null ? scope.row['monthRatio' + m] + '%' : '' }}/{{scope.row['monthCount' + m] !==null ? parseInt(scope.row['monthCount' + m]):'' }}
+          {{ scope.row['monthRatio' + m] !== null ? scope.row['monthRatio' + m] + '%' : '' }}/{{
+            scope.row['monthCount' + m] !== null ? parseInt(scope.row['monthCount' + m]) : ''
+          }}
         </template>
       </el-table-column>
     </el-table>
@@ -57,7 +65,7 @@
 
 <script>
 
-import { deleteList, getById, insetOrUpdate, queryPageList } from '@/api/common'
+import { deleteList, getById, insetOrUpdate, post, queryPageList } from '@/api/common'
 
 export default {
   name: 'tenantName',
@@ -125,9 +133,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset();
- this.form.id=undefined;
-  },
+      this.reset()
+      this.form.id = undefined
+    },
     // 表单重置
     reset() {
       let fid = this.form.id
@@ -181,16 +189,16 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
- this.form.id=undefined;
-    this.title = '添加历史订单记录'
+      this.reset()
+      this.form.id = undefined
+      this.title = '添加历史订单记录'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
- this.form.id=undefined;
-    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset()
+      this.form.id = undefined
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改历史订单记录'
@@ -206,9 +214,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       deleteList(row, this.ids, this.getList())
+    },
+    refreshHistory(type) {
+      post('/apsOrderGoodsHistory/selectOrder2History', {
+        selectType: type === 1 ? 'LAST_MONTH' : 'CURRENT_MONTH'
+      }).then(r => this.getList())
     }
   }
-
 }
 
 

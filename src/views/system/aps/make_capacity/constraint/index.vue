@@ -59,11 +59,11 @@
     </el-dialog>
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" label-width="100px">
+        <el-form-item label="名称" prop="constraintsName">
+          <el-input v-model="form.constraintsName" placeholder="请输入约束名称" clearable @blur="loadSzm"/>
+        </el-form-item>
         <el-form-item label="编号" prop="constraintsNo">
           <el-input v-model="form.constraintsNo" placeholder="请输入约束编号" clearable/>
-        </el-form-item>
-        <el-form-item label="名称" prop="constraintsName">
-          <el-input v-model="form.constraintsName" placeholder="请输入约束名称" clearable/>
         </el-form-item>
         <el-form-item label="备注" prop="constraintsRemark">
           <el-input v-model="form.constraintsRemark" placeholder="请输入约束备注" clearable/>
@@ -79,7 +79,7 @@
 
 <script>
 import Create from "@/views/system/aps/make_capacity/constraint/Create.vue";
-import {add, deleteByIdList, getById, queryPageList, updateById} from '@/api/common'
+import { add, deleteByIdList, getById, pinyin4jSzm, queryPageList, updateById } from '@/api/common'
 import request from "@/utils/request"; // console.info("xxx: ",uc.urlPrefix)
 // console.info("xxx: ",uc.urlPrefix)
 export default {
@@ -120,16 +120,21 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        data: {}
+        data: {
+
+          constraintsNo :undefined,
+          constraintsName :undefined,
+          constraintsContext :undefined,
+          constraintsRemark :undefined,
+          id: undefined,
+        }
       },
       // 表单参数
       form: {
-        goodsId: undefined,
-        factoryId: undefined,
-        goodsRemark: "",
-        remark: "",
-        brandName: "",
-        pwd: "",
+        constraintsNo :undefined,
+        constraintsName :undefined,
+        constraintsContext :undefined,
+        constraintsRemark :undefined,
         id: undefined,
         confirmPwd: undefined
       },
@@ -165,8 +170,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        remark: "",
-        tenantCode: "",
+        constraintsNo :undefined,
+        constraintsName :undefined,
+        constraintsContext :undefined,
+        constraintsRemark :undefined,
         id: undefined,
         tenantName: undefined
       };
@@ -283,7 +290,12 @@ export default {
         // console.info(JSON.stringify(res))
 
       })
-    },
+    },loadSzm(){
+      pinyin4jSzm(this.form.constraintsName,r=>{
+        this.form.constraintsNo=r.szmUpper;
+        this.$forceUpdate();
+      })
+    }
   }
 };
 </script>

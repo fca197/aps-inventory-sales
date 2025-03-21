@@ -34,13 +34,13 @@
         </el-form-item>
         <el-form-item label="排产限制约束">
             <el-checkbox-group v-model="form.useFactoryMakeCapacity" >
-              <el-checkbox :value="true" label="工厂产能"></el-checkbox>
+              <el-checkbox value="true" label="工厂产能"></el-checkbox>
             </el-checkbox-group>
           <el-checkbox-group v-model="form.useGoodsMakeCapacity" >
-              <el-checkbox :value="true" label="商品产能"></el-checkbox>
+              <el-checkbox value="true" label="商品产能"></el-checkbox>
             </el-checkbox-group>
           <el-checkbox-group v-model="form.useSaleConfigMakeCapacity" >
-              <el-checkbox :value="true" label="销售配置产能"></el-checkbox>
+              <el-checkbox value="true" label="销售配置产能"></el-checkbox>
             </el-checkbox-group>
         </el-form-item>
 
@@ -109,7 +109,7 @@ export default {
       isShow: false,
       schedulingConstraintsList: [],
       form: {
-        startDate: formatDates(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)),
+        startDate: formatDates(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)).substring(0,10),
         schedulingDayCount: 94,
         schedulingVersionNo: '',
         schedulingVersionName: '',

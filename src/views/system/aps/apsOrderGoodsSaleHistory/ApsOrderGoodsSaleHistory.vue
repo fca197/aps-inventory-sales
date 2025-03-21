@@ -17,11 +17,10 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-refresh" plain size="mini" type="primary" @click="refreshHistory(1)">上月</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger"
-                   @click="handleDelete"></el-button>
+        <el-button icon="el-icon-refresh" plain size="mini" type="primary" @click="refreshHistory(0)">当月</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -52,7 +51,7 @@
 
 <script>
 
-import {deleteList, getById, insetOrUpdate, queryPageList} from '@/api/common'
+import { deleteList, getById, insetOrUpdate, post, queryPageList } from '@/api/common'
 
 export default {
   name: 'tenantName',
@@ -389,6 +388,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       deleteList(row, this.ids, this.getList());
+    },
+    refreshHistory(type) {
+      post('/apsOrderGoodsSaleHistory/selectOrder2History', {
+        selectType: type === 1 ? 'LAST_MONTH' : 'CURRENT_MONTH'
+      }).then(r => this.getList())
     }
   }
 

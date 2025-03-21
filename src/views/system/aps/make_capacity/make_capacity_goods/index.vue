@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
       <el-form-item label="商品" prop="factoryList">
-        <el-select v-model="queryParams.data.goodsId" clearable placeholder="请选择工厂">
+        <el-select v-model="queryParams.data.goodsId" clearable placeholder="请选择商品">
           <el-option v-for="item in goodsList" :key="item.goodsName" :label="item.goodsName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
