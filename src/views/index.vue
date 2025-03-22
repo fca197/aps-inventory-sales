@@ -32,6 +32,7 @@
         <el-button type="primary" size="small" @click="machineProduceBomOpen=true">制造路径中商品零件清单（树图）</el-button>
         <el-button type="primary" size="small" @click="machineUseTimeOpen=true">机器使用时长（雷达图）</el-button>
         <el-button type="primary" size="small" @click="orderCreateAndMakeOpen=true">下单量与制造量对比（雨量流量关系图）</el-button>
+        <el-button type="primary" size="small" @click="resetDb">{{resetLastTime}}秒后可还原数据库</el-button>
       </el-col>
 
     </el-row>
@@ -107,6 +108,7 @@ export default {
     let cl = [5, 10, 30, 50]
     let taskOpen = false
     return {
+      resetLastTime: 0,
       taskLoading: true,
       taskSetting: {
         open: taskOpen
@@ -192,6 +194,7 @@ export default {
     })
   },
   created() {
+    this.resetLast()
     this.getUndoneTask()
   },
   methods: {
@@ -213,6 +216,29 @@ export default {
       // })
     }, taskCancel() {
       this.taskOpen = false
+    },
+    resetDb() {
+      if (this.resetLastTime != 0) {
+        this.$message.warning('请'+this.resetLastTime +'秒后再试')
+        return
+      }
+      post('/db/reset', {})
+    },
+    resetLast() {
+      post('/db/reset/last', {}, false).then(t => {
+        this.resetLastTime = t.data.expire
+        let _t=this;
+        // 设置定时器，每秒执行一次
+        const intervalId = setInterval(() => {
+          // 倒计时减 1
+          _t.resetLastTime--;
+          // 当倒计时到 0 时，停止定时器
+          if (_t.resetLastTime === 0) {
+            clearInterval(intervalId);
+          }
+        }, 1000);
+
+      })
     }
   }
 }
