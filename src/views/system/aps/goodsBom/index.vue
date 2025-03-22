@@ -6,7 +6,7 @@
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
-         <el-form-item label="商品" prop="factoryList">
+      <el-form-item label="商品" prop="factoryList">
         <el-select v-model="queryParams.data.goodsId" placeholder="请选择商品" clearable>
           <el-option v-for="item in goodsList.filter(t=>t.factoryId===this.queryParams.data.factoryId)" :key="item.id" :label="item.goodsName" :value="item.id"></el-option>
         </el-select>
@@ -36,7 +36,7 @@
       <el-table-column label="全选" type="selection" align="center" prop="id" width="50"/>
 
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" align="center" :width="item.width" :prop="item.fieldName" :label="item.showName"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right"  width="140px">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="140px">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
@@ -45,11 +45,11 @@
     </el-table>
 
     <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getList"
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
@@ -115,8 +115,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="使用表达式" prop="bomUseExpression">
-            <el-input v-model="form.bomUseExpression" placeholder="请输入使用表达式"/>
+          <el-form-item label="使用表达式" prop="bomUseExpression" ref="bomUseExpression">
+            <el-input style="width: 590px" v-model="form.bomUseExpression" placeholder="请输入使用表达式"/>
+            <el-button @click="checkBomUseExpression(1)">检查</el-button>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -138,13 +139,13 @@
 
 <script>
 
-import {add, deleteByIdList, getById, queryPageList, queryUrlPageList, updateById} from '@/api/common'
-import {getFactoryList} from "@/api/factory";
-import {getGoodsList} from "@/api/aps/goods";
-import {getWorkStationList} from "@/api/aps/workStation";
+import { add, deleteByIdList, getById, post, queryPageList, queryUrlPageList, updateById } from '@/api/common'
+import { getFactoryList } from '@/api/factory'
+import { getGoodsList } from '@/api/aps/goods'
+import { getWorkStationList } from '@/api/aps/workStation'
 // console.info("xxx: ",uc.urlPrefix)
 export default {
-  name: "tenantName",
+  name: 'tenantName',
   data() {
 
     return {
@@ -167,7 +168,7 @@ export default {
       workStationList: [],
       factoryList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 查询参数
@@ -178,108 +179,109 @@ export default {
       },
       // 表单参数
       form: {
-        goodsId :undefined,
-        groupId :undefined,
-        bomId :undefined,
-        bomCode :undefined,
-        bomName :undefined,
-        bomUsage :undefined,
-        bomUnit :undefined,
-        bomCostPrice :undefined,
-        bomCostPriceUnit :undefined,
-        bomUseWorkStation :undefined,
-        bomUseExpression :undefined,
-        bomInventory :undefined,
-        isFollow :undefined,
-        factoryId :undefined,
+        goodsId: undefined,
+        groupId: undefined,
+        bomId: undefined,
+        bomCode: undefined,
+        bomName: undefined,
+        bomUsage: undefined,
+        bomUnit: undefined,
+        bomCostPrice: undefined,
+        bomCostPriceUnit: undefined,
+        bomUseWorkStation: undefined,
+        bomUseExpression: undefined,
+        bomInventory: undefined,
+        isFollow: undefined,
+        factoryId: undefined,
         id: undefined
       },
       // 表单校验
       rules: {
-        goodsId :[{required: true, message: "不能为空", trigger: "blur"}],
-        groupId :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomId :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomCode :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomName :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomUsage :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomUnit :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomCostPrice :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomCostPriceUnit :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomUseWorkStation :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomUseExpression :[{required: true, message: "不能为空", trigger: "blur"}],
-        bomInventory :[{required: true, message: "不能为空", trigger: "blur"}],
-        isFollow :[{required: true, message: "请选择", trigger: "change"}],
-        factoryId :[{required: true, message: "请选择", trigger: "change"}],
+        goodsId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        groupId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomCode: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomName: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomUsage: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomUnit: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomCostPrice: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomCostPriceUnit: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomUseWorkStation: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomUseExpression: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bomInventory: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        isFollow: [{ required: true, message: '请选择', trigger: 'change' }],
+        factoryId: [{ required: true, message: '请选择', trigger: 'change' }]
 
       },
       tableHeaderList: []
-    };
+    }
   },
   created() {
-    document["pagePath"] = "/apsGoodsBom";
+    document['pagePath'] = '/apsGoodsBom'
     // process.env.pagePath = "/tenant"
-    this.getList();
-    getFactoryList({queryPage:false}).then(data => {
-      this.factoryList = data.data.dataList;
+    this.getList()
+    getFactoryList({ queryPage: false }).then(data => {
+      this.factoryList = data.data.dataList
       // console.info("factoryList: ", this.factoryList);
-    });
-    getGoodsList({queryPage:false}).then(data => {
-      this.goodsList = data.data.dataList;
+    })
+    getGoodsList({ queryPage: false }).then(data => {
+      this.goodsList = data.data.dataList
       //console.info("goodsList: ", this.goodsList);
-    });
-    getWorkStationList({queryPage:false}).then(data => {
-      this.workStationList = data.data.dataList;
+    })
+    getWorkStationList({ queryPage: false }).then(data => {
+      this.workStationList = data.data.dataList
       //  console.info("workStationList: ", this.workStationList);
-    });
-    this.selectBomListFun("");
+    })
+    this.selectBomListFun('')
   },
   methods: {
     /** 查询公告列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       queryPageList(this.queryParams).then(response => {
         response = response.data
         this.tableHeaderList = response.headerList
-        this.brandNameList = response.dataList;
-        this.total = parseInt(response.total);
-        this.loading = false;
-      });
+        this.brandNameList = response.dataList
+        this.total = parseInt(response.total)
+        this.loading = false
+      })
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();  this.form.id=undefined;
+      this.open = false
+      this.reset()
+      this.form.id = undefined
     },
     // 表单重置
     reset() {
       this.form = {
-        goodsId :undefined,
-        groupId :undefined,
-        bomId :undefined,
-        bomCode :undefined,
-        bomName :undefined,
-        bomUsage :undefined,
-        bomUnit :undefined,
-        bomCostPrice :undefined,
-        bomCostPriceUnit :undefined,
-        bomUseWorkStation :undefined,
-        bomUseExpression :undefined,
-        bomInventory :undefined,
-        isFollow :false,
-        factoryId :undefined,
+        goodsId: undefined,
+        groupId: undefined,
+        bomId: undefined,
+        bomCode: undefined,
+        bomName: undefined,
+        bomUsage: undefined,
+        bomUnit: undefined,
+        bomCostPrice: undefined,
+        bomCostPriceUnit: undefined,
+        bomUseWorkStation: undefined,
+        bomUseExpression: undefined,
+        bomInventory: undefined,
+        isFollow: false,
+        factoryId: undefined,
         id: undefined
-      };
-      this.resetForm("form");
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -289,75 +291,97 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();  this.form.id=undefined;
-      this.open = true;
-      this.title = "添加商品零件";
+      this.reset()
+      this.form.id = undefined
+      this.open = true
+      this.title = '添加商品零件'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();  this.form.id=undefined;
-      let req = {idList: [row.id], pageSize: 1, pageNum: 1};
+      this.reset()
+      this.form.id = undefined
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.open = true;
-        this.title = "修改加商品零件";
-      });
+        this.open = true
+        this.title = '修改加商品零件'
+      })
 
     },
     /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id !== undefined) {
-            updateById(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            add(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
+    submitForm: function() {
+      this.checkBomUseExpression(0).then(check => {
+        if (!check) {
+          return
         }
-      });
+        this.$refs['form'].validate(valid => {
+          if (valid) {
+            if (this.form.id !== undefined) {
+              updateById(this.form).then(response => {
+                this.$modal.msgSuccess('修改成功')
+                this.open = false
+                this.getList()
+              })
+            } else {
+              add(this.form).then(response => {
+                this.$modal.msgSuccess('新增成功')
+                this.open = false
+                this.getList()
+              })
+            }
+          }
+        })
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const idList = row.id ? [row.id] : this.ids
-      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', "删除提示").then(function () {
+      this.$modal.confirm('是否确认删序号为 <span style="color:red">' + idList + '</span> 的数据项？', '删除提示').then(function() {
         let req = {
           idList: idList
         }
-        return deleteByIdList(req);
+        return deleteByIdList(req)
       }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      });
-      document.getElementsByClassName("el-message-box")[0].style.width = "520px"
+        this.getList()
+        this.$modal.msgSuccess('删除成功')
+      })
+      document.getElementsByClassName('el-message-box')[0].style.width = '520px'
     },
     selectBomListFun(v) {
       if (v.length === '') {
-        this.selectBomList = [];
+        this.selectBomList = []
       }
-      queryUrlPageList("/apsBom", {queryPage: false, data: {bomName: v}}).then(t => {
-        this.selectBomList = t.data.dataList;
+      queryUrlPageList('/apsBom', { queryPage: false, data: { bomName: v } }).then(t => {
+        this.selectBomList = t.data.dataList
       })
     },
     bomChange(v) {
-      console.info("v: ", v);
+      console.info('v: ', v)
       this.selectBomList.filter(t => t.id === v).forEach(t => {
-        console.info("t: ", t);
-        this.form.bomId = v;
-        this.form.bomName = t.bomName;
-        this.form.bomCode = t.bomCode;
-        this.form.bomCostPriceUnit = t.bomCostPriceUnit;
-        this.form.bomUnit = t.bomCostPriceUnit;
-        this.form.bomCostPrice = t.bomCostPrice;
+        console.info('t: ', t)
+        this.form.bomId = v
+        this.form.bomName = t.bomName
+        this.form.bomCode = t.bomCode
+        this.form.bomCostPriceUnit = t.bomCostPriceUnit
+        this.form.bomUnit = t.bomCostPriceUnit
+        this.form.bomCostPrice = t.bomCostPrice
+      })
+    },
+    checkBomUseExpression(type) {
+      this.$refs.bomUseExpression.$el.classList.remove('is-error')
+      return post('/apsGoodsBom/check/bomUseExpression', { bomUseExpression: this.form.bomUseExpression }, false).then(t => {
+        if (t.data?.isSuccess) {
+          if (type === 1) {
+            this.$message.success('检查通过')
+          }
+          return true
+        }
+        // console.log(this.$refs.bomUseExpression)
+        this.$refs.bomUseExpression.$el.classList.add('is-error')
+        this.$refs.bomUseExpression.$el.focus()
+        return false
       })
     }
   }
-};
+}
 </script>
