@@ -8,7 +8,7 @@
       <el-step title="结束"></el-step>
     </el-steps>
     <div style="height: 20px"></div>
-    <el-form  ref="form" :model="form" label-width="130px" :rules="rules">
+    <el-form ref="form" :model="form" label-width="130px" :rules="rules">
       <div v-if="active===1">
         <el-form-item label="版本号" prop="schedulingVersionNo">
           <el-input v-model="form.schedulingVersionNo" placeholder="请输入版本号"></el-input>
@@ -16,6 +16,20 @@
         <el-form-item label="版本名称" prop="schedulingVersionName">
           <el-input v-model="form.schedulingVersionName" placeholder="请输入版本名称"></el-input>
         </el-form-item>
+
+        <el-form-item label="工厂" prop="factoryIdList">
+          <el-select v-model="form.factoryIdList" placeholder="请输入版本名称" multiple>
+            <el-option v-for="f in factoryList" :label="f.factoryName" :value="f.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="商品" prop="goodsIdList">
+          <el-select v-model="form.goodsIdList" placeholder="请输入版本名称" multiple>
+            <el-option v-for="g in filteredGoodsList()" :value="g.id" :label="g.goodsName"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+
         <el-form-item label="约束条件" prop="schedulingConstraintsId">
           <el-select v-model="form.schedulingConstraintsId" placeholder="请选择约束条件">
             <el-option
@@ -33,15 +47,15 @@
           <el-date-picker type="date" value-format="yyyy-MM-dd" v-model="form.startDate" placeholder="开始日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="排产限制约束">
-            <el-checkbox-group v-model="form.useFactoryMakeCapacity" >
-              <el-checkbox value="true" label="工厂产能"></el-checkbox>
-            </el-checkbox-group>
-          <el-checkbox-group v-model="form.useGoodsMakeCapacity" >
-              <el-checkbox value="true" label="商品产能"></el-checkbox>
-            </el-checkbox-group>
-          <el-checkbox-group v-model="form.useSaleConfigMakeCapacity" >
-              <el-checkbox value="true" label="销售配置产能"></el-checkbox>
-            </el-checkbox-group>
+          <el-checkbox-group v-model="form.useFactoryMakeCapacity">
+            <el-checkbox value="true" label="工厂产能"></el-checkbox>
+          </el-checkbox-group>
+          <el-checkbox-group v-model="form.useGoodsMakeCapacity">
+            <el-checkbox value="true" label="商品产能"></el-checkbox>
+          </el-checkbox-group>
+          <el-checkbox-group v-model="form.useSaleConfigMakeCapacity">
+            <el-checkbox value="true" label="销售配置产能"></el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
 
         <el-form-item label="排产天数" prop="schedulingDayCount">
@@ -87,6 +101,8 @@ import bomTotalResult from '@/views/system/aps/scheduling/bomTotalResult.vue'
 import request from '@/utils/request'
 import scheduling from '@/views/system/aps/scheduling/index.vue'
 import { formatDates } from '@/utils/formatDate'
+import { getFactoryList } from '@/api/factory'
+import { getGoodsList } from '@/api/aps/goods'
 
 export default {
   name: 'CreateScheduling',
@@ -109,10 +125,12 @@ export default {
       isShow: false,
       schedulingConstraintsList: [],
       form: {
-        startDate: formatDates(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)).substring(0,10),
+        startDate: formatDates(new Date(new Date().getTime() + 24 * 60 * 60 * 1000)).substring(0, 10),
         schedulingDayCount: 94,
         schedulingVersionNo: '',
         schedulingVersionName: '',
+        factoryIdList: '',
+        goodsIdList: '',
         schedulingConstraintsId: '',
         schedulingConstraintsName: '',
         useFactoryMakeCapacity: false,
@@ -120,19 +138,25 @@ export default {
         useSaleConfigMakeCapacity: false,
         useProjectConfigMakeCapacity: false
       }
-      ,rules:{
-        schedulingDayCount:[  { required: true, message: '不能为空'},
-          { type: 'number', message: '必须为数字值'}],
-        schedulingVersionNo:[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        schedulingVersionName:[{required: true, message: "不能为空", trigger: "blur"},{ min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
-        schedulingConstraintsId:[{required: true, message: "不能为空", trigger: "blur"}],
-        startDate:[{required: true, message: "不能为空", trigger: "blur"}],
+      , rules: {
+        schedulingDayCount: [{ required: true, message: '不能为空' },
+          { type: 'number', message: '必须为数字值' }],
+        schedulingVersionNo: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        schedulingVersionName: [{ required: true, message: '不能为空', trigger: 'blur' }, { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }],
+        schedulingConstraintsId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        startDate: [{ required: true, message: '不能为空', trigger: 'blur' }]
 
-      }
+      },
+      factoryList: [],
+      goodsList: []
     }
 
   },
   created() {
+    getFactoryList({}).then(t => {
+      this.factoryList = t.data.dataList
+    })
+    getGoodsList({}).then(t => this.goodsList = t.data.dataList)
     document['pagePath'] = '/apsSchedulingVersion'
     this.form.schedulingVersionNo = 'PC-' + this.formatDates(new Date(), true)
     this.form.schedulingVersionName = '排产-' + this.formatDates(new Date(), true)
@@ -147,6 +171,14 @@ export default {
       })
     }
   },
+  watch: {
+    'form.factoryIdList': {
+      handler(n, o) {
+        // console.log(n,o)
+        this.form.goodsIdList=[]
+      }
+    }
+  },
   methods: {
 
     saveOrUpdate() {
@@ -154,8 +186,8 @@ export default {
         this.next()
         return
       }
-      this.$refs["form"].validate(res=>{
-        if (res){
+      this.$refs['form'].validate(res => {
+        if (res) {
           if (this.form.id) {
             updateById(this.form).then(t => {
               showMsg(t, '修改成功')
@@ -254,6 +286,15 @@ export default {
     showBomTotal() {
       this.schedulingVersionId = this.form.id
       this.showBomTotalShow = true
+    },
+    filteredGoodsList() {
+      if (this.form.factoryIdList.length === 0) {
+        this.form.goodsIdList.slice(0, this.form.goodsIdList.length)
+        return []
+      }
+      return this.goodsList.filter(good =>
+        this.form.factoryIdList.includes(good.factoryId)
+      )
     }
   }
 }
@@ -261,5 +302,8 @@ export default {
 
 
 <style scoped lang="scss">
-
+/* 在全局样式文件中添加以下样式 */
+.el-select {
+  width: 550px;
+}
 </style>
