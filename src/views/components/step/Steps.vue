@@ -21,15 +21,12 @@
               <div class="timeContent" v-if="v.actualMakeBeginTime">
                 <span>{{ v.goodsStatusName }}</span>
                 <br>
-                <span>起:{{ v.actualMakeBeginTime }}</span> <br>
-                <span>结:{{ v.actualMakeBeginTime }}</span>
+                <span>{{ v.actualMakeBeginTime }}</span>
               </div>
               <div class="timeContentCCC" v-else>
                 <span>{{ v.goodsStatusName }}</span>
                 <br>
-                <span>起:{{ v.expectMakeBeginTime }}
-                  <br>
-                  结:{{ v.expectMakeEndTime }}</span>
+                <span>{{ v.expectMakeBeginTime }} </span>
               </div>
             </div>
           </div>
