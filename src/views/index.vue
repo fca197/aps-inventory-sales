@@ -218,7 +218,7 @@ export default {
       this.taskOpen = false
     },
     resetDb() {
-      if (this.resetLastTime != 0) {
+      if (this.resetLastTime >= 0) {
         this.$message.warning('请'+this.resetLastTime +'秒后再试')
         return
       }
@@ -227,6 +227,9 @@ export default {
     resetLast() {
       post('/db/reset/last', {}, false).then(t => {
         this.resetLastTime = t.data.expire
+        if (this.resetLastTime<=0){
+          return;
+        }
         let _t=this;
         // 设置定时器，每秒执行一次
         const intervalId = setInterval(() => {
