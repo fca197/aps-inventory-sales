@@ -1,4 +1,4 @@
-[返回](..%2F..%2FREADME.md)
+[返回](../../README.md)
 
 ## 基础配置页面
 
@@ -16,4 +16,4 @@
 
 [Aps 系统页面](aps-page.md)
 
-[返回](..%2F..%2FREADME.md)
+[返回](../../README.md)
