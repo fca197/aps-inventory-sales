@@ -233,7 +233,7 @@ export default {
           // 倒计时减 1
           _t.resetLastTime--;
           // 当倒计时到 0 时，停止定时器
-          if (_t.resetLastTime === 0) {
+          if (_t.resetLastTime <= 0) {
             clearInterval(intervalId);
           }
         }, 1000);
