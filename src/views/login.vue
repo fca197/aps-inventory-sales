@@ -73,7 +73,7 @@
     </div>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2023 ruoyi.vip All Rights Reserved.  <a href="https://beian.miit.gov.cn/">鲁ICP备2024105874号</a> </span>
+      <span>Copyright © 2024-2025 solveplan.cn All Rights Reserved.  <a href="https://beian.miit.gov.cn/">鲁ICP备2024105874号</a> </span>
     </div>
 
 
