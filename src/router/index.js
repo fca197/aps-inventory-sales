@@ -239,7 +239,6 @@ let roureMap = {
     comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue')
   },
 
-
   '/aps/process/path/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/processPath/index')
@@ -360,19 +359,25 @@ let roureMap = {
     hidden: false,
     comment: () => import('@/views/system/tenant/index')
   },
-  '/task/taskDef':{
-    hidden:false,
-    comment:()=>import('@/views/system/task/taskDef/TaskDef.vue')
+  '/task/taskDef': {
+    hidden: false,
+    comment: () => import('@/views/system/task/taskDef/TaskDef.vue')
+  },
+
+  '/base/report/config': {
+    hidden: false,
+    comment: () => import('@/views/system/base/baseReportConfig/BaseReportConfig.vue')
   }
+
 }
 
 export function convertMenusToRoutes(menus) {
 
-  return menus .sort((a, b) =>{
+  return menus.sort((a, b) => {
     // console.log( a.sortIndex , b.sortIndex)
-    if (  a.sortIndex > b.sortIndex) return 1;
-    if (  a.sortIndex < b.sortIndex) return -1;
-    return  0;
+    if (a.sortIndex > b.sortIndex) return 1
+    if (a.sortIndex < b.sortIndex) return -1
+    return 0
   }).map(menu => {
     const route = {
       path: encodeURI(menu.resourceUrl), name: menu.resourceName, // component: Layout,
@@ -384,11 +389,11 @@ export function convertMenusToRoutes(menus) {
     if (menu.children && menu.children.length > 0) {
       route.children = []
       menu.children
-      .sort((a, b) =>{
+      .sort((a, b) => {
         // console.log( a.sortIndex , b.sortIndex)
-        if (  a.sortIndex > b.sortIndex) return 1;
-        if (  a.sortIndex < b.sortIndex) return -1;
-        return  0;
+        if (a.sortIndex > b.sortIndex) return 1
+        if (a.sortIndex < b.sortIndex) return -1
+        return 0
       })
       .forEach(tt => {
         route.children.push({
@@ -409,7 +414,7 @@ export function convertMenusToRoutes(menus) {
 }
 
 export function loadResource() {
-  return getRouters({ queryPage: false ,appCode:"aps" }).then(res => {
+  return getRouters({ queryPage: false, appCode: 'aps' }).then(res => {
     let dataList = res.data.dataList
     // dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
     dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
