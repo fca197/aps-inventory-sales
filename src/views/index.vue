@@ -32,54 +32,34 @@
         <el-button type="primary" size="small" @click="machineProduceBomOpen=true">制造路径中商品零件清单（树图）</el-button>
         <el-button type="primary" size="small" @click="machineUseTimeOpen=true">机器使用时长（雷达图）</el-button>
         <el-button type="primary" size="small" @click="orderCreateAndMakeOpen=true">下单量与制造量对比（雨量流量关系图）</el-button>
-        <el-button type="primary" size="small" @click="resetDb">{{resetLastTime}}秒后可还原数据库</el-button>
+        <el-button type="primary" size="small" @click="resetDb">{{ resetLastTime }}秒后可还原数据库</el-button>
       </el-col>
 
     </el-row>
 
-    <!--    <el-row :gutter="20" style="display: none">-->
 
-    <!--      <el-col :span="12" style="height: 300px;overflow-y: scroll">-->
-    <!--        <h3>最近-->
-    <!--          <el-select v-model="unDonTaskCount" @change="getUndoneTask" size="small" style="width: 75px;">-->
-    <!--            <el-option v-for="(option,index) in  unDonTaskCountList " :key="'select'+index+option" :label="''+option" :value="option"></el-option>-->
-    <!--          </el-select>-->
-    <!--          条待办-->
-    <!--        </h3>-->
-    <!--        <el-table :data="undoneTaskList" v-loading="taskLoading" style="width: 100% ;">-->
-    <!--          <el-table-column label="任务名称" prop="name"></el-table-column>-->
-    <!--          <el-table-column label="任务创建时间" prop="createTime"></el-table-column>-->
-    <!--          <el-table-column label="操作">-->
-    <!--            <template slot-scope="scope">-->
-    <!--              <el-button type="primary" size="mini" @click="showTask(scope.row)">查看</el-button>-->
-    <!--            </template>-->
-    <!--          </el-table-column>-->
-    <!--        </el-table>-->
-    <!--      </el-col>-->
-    <!--      <el-col :span="12" style="height: 300px;overflow-y: scroll">-->
-    <!--        <h3>-->
-    <!--          流程发起-->
-    <!--        </h3>-->
+    <el-divider/>
 
-    <!--      </el-col>-->
-    <!--    </el-row>-->
-    <el-divider/>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <div id="mainDiv" style="width: 100%;height: 200px"></div>
-      </el-col>
-      <el-col :span="12">
-        <div id="cityMap" style="width: 100%;height: 200px"></div>
-      </el-col>
-    </el-row>
-    <el-divider/>
     <el-row :gutter="24">
-      <h3>版本变更记录</h3>
-      <version-change></version-change>
+      <el-button type="primary" size="mini">添加报表</el-button>
     </el-row>
-    <!--    <el-dialog :visible="taskOpen" @close="taskCancel" title="流程详情" width="900px">-->
-    <!--      <flow-detail :setting="taskSetting" :key="taskSetting.id"></flow-detail>-->
-    <!--    </el-dialog>-->
+    <el-row :gutter="24">
+      <el-col v-for="(uc,i) in userReportConfigList" :span="uc.colSpan" :style="'height: '+uc.height+'px'">
+        <el-row :id="'userReportConfig_'+i">
+          <el-col style="text-align: right;padding-right: 80px">
+            <el-button type="info" size="mini" icon=""> < > 加宽</el-button>
+            <el-button type="info" size="mini" icon="el-icon-arrow-up">缩高</el-button>
+            <el-button type="info" size="mini" icon="el-icon-arrow-down">加高</el-button>
+            <el-button type="info" size="mini" icon="el-icon-back">前移</el-button>
+            <el-button type="info" size="mini" icon="el-icon-right">后移</el-button>
+          </el-col>
+          <el-row :id="'eChat_'+i+'_userReportConfig_'+uc.reportConfigId"  :style="'height: '+(uc.height+20)+'px'">
+            <!--  eChat_0_userReportConfig_1 -->
+
+          </el-row>
+        </el-row>
+      </el-col>
+    </el-row>
 
   </div>
 </template>
@@ -88,7 +68,7 @@
 import ECharts from 'events'
 import * as echarts from 'echarts'
 import versionChange from '@/views/version/index.vue'
-import { post } from '@/api/common'
+import { post, queryUrlNoPageList } from '@/api/common'
 import flowDetail from '@/views/flow/flowForm/FlowDetail.vue'
 import OrderCreate from '@/views/dashboard/calendar/OrderCreate.vue'
 import MachineInfo from '@/views/dashboard/calendar/MachineInfo.vue'
@@ -125,101 +105,52 @@ export default {
       unDonTaskCount: cl[0],
       undoneTaskList: [],
       // 版本号
-      version: '3.8.6'
+      version: '3.8.6',
+      baseReportConfigList: [],
+      baseReportConfigMap: [],
+      userReportConfigList: [{
+        reportConfigId: undefined,
+        sortIndex: undefined,
+        colSpan: undefined,
+        height: undefined,
+        reportName: undefined,
+        reportUrl: undefined,
+        id: undefined
+      }]
     }
   },
   mounted() {
-    let myChart = echarts.init(document.getElementById('mainDiv'))
-    // 绘制图表
-    myChart.setOption({
-      title: { text: '生产数量-示例' },
-      tooltip: {
-        trigger: 'axis'
-      },
-      grid: {
-        left: '0%',
-        right: '0%',
-        bottom: '0%',
-        containLabel: true
-      },
-      legend: {
-        data: ['产能', '限制', '订单量']
-      },
-      xAxis: {
-        data: ['2024-01-03', '2024-01-04', '2024-01-05', '2024-01-06', '2024-01-07', '2024-01-08']
-      },
-      yAxis: {},
-      series: [{
-        name: '产能',
-        type: 'line',
-        data: [15, 20, 37, 15, 8, 23]
-      }, {
-        name: '限制',
-        type: 'line',
-        data: [13, 23, 27, 45, 18, 43]
-      }, {
-        name: '订单量',
-        type: 'line',
-        data: [33, 23, 47, 15, 48, 63]
-      }]
+    post('/baseReportConfigUser/queryPageList/self',{queryPage:false},false).then(t => this.userReportConfigList = t.data.dataList)
+    .then(() => {
+      queryUrlNoPageList('/baseReportConfig').then(t => this.baseReportConfigList = t.data.dataList).then(() => {
+        this.baseReportConfigList.forEach(t => {
+          this.baseReportConfigMap[t.id] = t
+        })
+        console.info(this.baseReportConfigMap)
+      }).then(() => {
+        this.$forceUpdate()
+        for (let i = 0; i < this.userReportConfigList.length; i++) {
+          let uc=this.userReportConfigList[i];
+          let myChart = echarts.init(document.getElementById('eChat_'+i+'_userReportConfig_'+uc.reportConfigId))
+          console.info(myChart)
+          // 绘制图表
+          post(this.baseReportConfigMap[uc.reportConfigId].reportUrl,{},false).then(res=>{
+            myChart.setOption(res.data);
+          })
+        }
+
+      })
     })
-    let cityChart = echarts.init(document.getElementById('cityMap'))
-    cityChart.setOption({
-      title: { text: '最近30天下单量-示例' },
-      tooltip: {
-        trigger: 'axis'
-      },
-      grid: {
-        left: '0%',
-        right: '0%',
-        bottom: '0%',
-        containLabel: true
-      },
-      legend: {
-        data: ['SUV-订单量', 'MPV-订单量']
-      },
-      xAxis: {
-        data: ['2024-02-03', '2024-02-04', '2024-02-05', '2024-02-06', '2024-02-07', '2024-02-08']
-      },
-      yAxis: {},
-      series: [{
-        name: 'SUV-订单量',
-        type: 'line',
-        data: [42, 33, 67, 35, 18, 93]
-      }, {
-        name: 'MPV-订单量',
-        type: 'line',
-        data: [32, 13, 67, 55, 38, 83]
-      }]
-    })
+
   },
   created() {
     this.resetLast()
-    this.getUndoneTask()
   },
   methods: {
-    showTask(task) {
-      this.taskOpen = true
-      task.id = new Date().getTime()
-      for (let taskKey in task) {
-        this.taskSetting[taskKey] = task[taskKey]
-      }
-      this.taskSetting.cancel = this.taskCancel
-      this.taskSetting.showCompleteBtn = true
 
-    },
-    getUndoneTask() {
-      this.taskLoading = true
-      // post('/flow/task/undone/home', { flowKey: 'flowKey', pageNum: 1, pageSize: this.unDonTaskCount }, false).then(t => {
-      //   this.undoneTaskList = t.data.dataList
-      //   this.taskLoading = false
-      // })
-    }, taskCancel() {
-      this.taskOpen = false
-    },
     resetDb() {
       if (this.resetLastTime != 0) {
-        this.$message.warning('请'+this.resetLastTime +'秒后再试')
+        this.$message.warning('请' + this.resetLastTime + '秒后再试')
         return
       }
       post('/db/reset', {})
@@ -227,16 +158,20 @@ export default {
     resetLast() {
       post('/db/reset/last', {}, false).then(t => {
         this.resetLastTime = t.data.expire
-        let _t=this;
+        if (this.resetLastTime <= 0) {
+          this.resetLastTime = 0
+          return
+        }
+        let _t = this
         // 设置定时器，每秒执行一次
         const intervalId = setInterval(() => {
           // 倒计时减 1
-          _t.resetLastTime--;
+          _t.resetLastTime--
           // 当倒计时到 0 时，停止定时器
           if (_t.resetLastTime === 0) {
-            clearInterval(intervalId);
+            clearInterval(intervalId)
           }
-        }, 1000);
+        }, 1000)
 
       })
     }
