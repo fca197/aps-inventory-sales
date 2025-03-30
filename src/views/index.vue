@@ -40,33 +40,13 @@
 
     <el-divider/>
 
-    <el-row :gutter="24">
-      <el-button type="primary" size="mini">添加报表</el-button>
-    </el-row>
-    <el-row :gutter="24">
-      <el-col v-for="(uc,i) in userReportConfigList" :span="uc.colSpan" :style="'height: '+uc.height+'px'">
-        <el-row :id="'userReportConfig_'+i">
-          <el-col style="text-align: right;padding-right: 80px">
-            <el-button type="info" size="mini" icon=""> < > 加宽</el-button>
-            <el-button type="info" size="mini" icon="el-icon-arrow-up">缩高</el-button>
-            <el-button type="info" size="mini" icon="el-icon-arrow-down">加高</el-button>
-            <el-button type="info" size="mini" icon="el-icon-back">前移</el-button>
-            <el-button type="info" size="mini" icon="el-icon-right">后移</el-button>
-          </el-col>
-          <el-row :id="'eChat_'+i+'_userReportConfig_'+uc.reportConfigId"  :style="'height: '+(uc.height+20)+'px'">
-            <!--  eChat_0_userReportConfig_1 -->
-
-          </el-row>
-        </el-row>
-      </el-col>
-    </el-row>
+    <user-report-home/>
 
   </div>
 </template>
 
 <script>
-import ECharts from 'events'
-import * as echarts from 'echarts'
+
 import versionChange from '@/views/version/index.vue'
 import { post, queryUrlNoPageList } from '@/api/common'
 import flowDetail from '@/views/flow/flowForm/FlowDetail.vue'
@@ -77,11 +57,12 @@ import OrderCreateForecastProcess from '@/views/dashboard/calendar/OrderCreateFo
 import MachineProduceBom from '@/views/dashboard/calendar/MachineProduceBom.vue'
 import MachineUseTime from '@/views/dashboard/calendar/MachineUseTime.vue'
 import OrderCreateAndMake from '@/views/dashboard/calendar/OrderCreateAndMake.vue'
-
+import UserReportHome from '@/views/system/base/baseReportConfig/UserReportHome.vue'
 export default {
   name: 'VersionChangeIndex',
   components: {
-    ECharts, versionChange, flowDetail, OrderCreate, MachineInfo, OrderCreateForecastProcess,
+    UserReportHome,
+    versionChange, flowDetail, OrderCreate, MachineInfo, OrderCreateForecastProcess,
     ApsSystemPreview, MachineProduceBom, MachineUseTime, OrderCreateAndMake
   },
   data() {
@@ -106,41 +87,11 @@ export default {
       undoneTaskList: [],
       // 版本号
       version: '3.8.6',
-      baseReportConfigList: [],
-      baseReportConfigMap: [],
-      userReportConfigList: [{
-        reportConfigId: undefined,
-        sortIndex: undefined,
-        colSpan: undefined,
-        height: undefined,
-        reportName: undefined,
-        reportUrl: undefined,
-        id: undefined
-      }]
+
     }
   },
   mounted() {
-    post('/baseReportConfigUser/queryPageList/self',{queryPage:false},false).then(t => this.userReportConfigList = t.data.dataList)
-    .then(() => {
-      queryUrlNoPageList('/baseReportConfig').then(t => this.baseReportConfigList = t.data.dataList).then(() => {
-        this.baseReportConfigList.forEach(t => {
-          this.baseReportConfigMap[t.id] = t
-        })
-        console.info(this.baseReportConfigMap)
-      }).then(() => {
-        this.$forceUpdate()
-        for (let i = 0; i < this.userReportConfigList.length; i++) {
-          let uc=this.userReportConfigList[i];
-          let myChart = echarts.init(document.getElementById('eChat_'+i+'_userReportConfig_'+uc.reportConfigId))
-          console.info(myChart)
-          // 绘制图表
-          post(this.baseReportConfigMap[uc.reportConfigId].reportUrl,{},false).then(res=>{
-            myChart.setOption(res.data);
-          })
-        }
 
-      })
-    })
 
   },
   created() {
