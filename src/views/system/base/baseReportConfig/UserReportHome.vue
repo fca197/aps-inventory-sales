@@ -3,9 +3,7 @@
     <el-row :gutter="24" style="margin-bottom: 5px">
       <el-popover trigger="hover" placement="right-start" width="400">
         <el-row>
-          <el-col :span="2" v-for="r in baseReportConfigList">
-            <el-button type="primary" size="mini" @click="addReport(r)">{{ r.reportName }}</el-button>
-          </el-col>
+          <el-button v-for="r in baseReportConfigList" type="primary" size="mini" @click="addReport(r)">{{ r.reportName }}</el-button>
         </el-row>
         <el-button slot="reference" size="mini" type="primary">添加报表</el-button>
       </el-popover>
@@ -16,20 +14,24 @@
                 :id="'userReportConfig_'+i"
                 style="text-align: right;margin: 0 0 10px;"
         >
-          <el-row style="text-align: right;">
-            <el-popover placement="top-start" width="200" trigger="hover">
-              <el-row>
-                <el-button type="info" size="mini" icon="" class="reportOperCss" @click="colSpanAdd(uc)"> < > 加宽</el-button>
-                <el-button type="info" size="mini" icon="" class="reportOperCss" @click="colSpanDwindle(uc)"> > < 缩小</el-button>
-                <el-button type="info" size="mini" icon="el-icon-arrow-up" class="reportOperCss" @click="heightDwindle(uc)"> 缩高</el-button>
-                <el-button type="info" size="mini" icon="el-icon-arrow-down" class="reportOperCss" @click="heightAdd(uc)"> 加高</el-button>
-                <el-button type="info" size="mini" icon="el-icon-delete" class="reportOperCss" @click="deleteUc(uc)"> 删除</el-button>
-              </el-row>
-              <el-button size="mini" slot="reference" >操作</el-button>
-            </el-popover>
+          <el-row>
+            <el-col :span="22">
+              <el-row style="text-align: right;">
+                <el-popover placement="top-start" width="200" trigger="hover">
+                  <el-row>
+                    <el-button type="info" size="mini" icon="" class="reportOperCss" @click="colSpanAdd(uc)"> < > 加宽</el-button>
+                    <el-button type="info" size="mini" icon="" class="reportOperCss" @click="colSpanDwindle(uc)"> > < 缩小</el-button>
+                    <el-button type="info" size="mini" icon="el-icon-arrow-up" class="reportOperCss" @click="heightDwindle(uc)"> 缩高</el-button>
+                    <el-button type="info" size="mini" icon="el-icon-arrow-down" class="reportOperCss" @click="heightAdd(uc)"> 加高</el-button>
+                    <el-button type="info" size="mini" icon="el-icon-delete" class="reportOperCss" @click="deleteUc(uc)"> 删除</el-button>
+                  </el-row>
+                  <el-button size="mini" slot="reference">操作</el-button>
+                </el-popover>
 
+              </el-row>
+            </el-col>
           </el-row>
-          <el-row :id="'eChat_'+i+'_userReportConfig_'+uc.reportConfigId" :style="'height: '+(uc.height+20)+'px'">
+          <el-row  class="userReportConfig" :id="'eChat_'+i+'_userReportConfig_'+uc.reportConfigId" :style="'height: '+(uc.height+20)+'px'">
             <!--  eChat_0_userReportConfig_1 -->
 
           </el-row>
@@ -82,10 +84,21 @@ export default {
           for (let i = 0; i < this.userReportConfigList.length; i++) {
             let uc = this.userReportConfigList[i]
             let myChart = echarts.init(document.getElementById('eChat_' + i + '_userReportConfig_' + uc.reportConfigId))
-            console.info(myChart)
+            // console.info(myChart)
             // 绘制图表
             post(this.baseReportConfigMap[uc.reportConfigId].reportUrl, {}, false).then(res => {
-              myChart.setOption(res.data)
+              var option = res.data
+              var reportName = this.baseReportConfigMap[uc.reportConfigId].reportName
+              option.title = {
+                text: reportName
+              }
+              option.tooltip = {
+                trigger: 'axis',
+                axisPointer: {
+                  type: 'shadow'
+                }
+              }
+              myChart.setOption(option)
             })
           }
 
@@ -94,10 +107,10 @@ export default {
     },
 
     addReport(baseReport) {
-      // if (this.userReportConfigList.filter(t => t.reportConfigId === baseReport.id).length > 0) {
-      //   this.$message.warning('该报表已添加')
-      //   return
-      // }
+      if (this.userReportConfigList.filter(t => t.reportConfigId === baseReport.id).length > 0) {
+        this.$message.warning('该报表已添加')
+        return
+      }
 
       post('/baseReportConfigUser/insert', {
         reportConfigId: baseReport.id,
@@ -124,7 +137,10 @@ export default {
       this.updateReportById(uc)
     },
     updateReportById(uc) {
-      post('/baseReportConfigUser/updateById', uc)
+      post('/baseReportConfigUser/updateById', uc).then(() => {
+        this.loadReport()
+        this.$forceUpdate();
+      })
     },
     heightAdd(uc) {
       if (uc.height > 6001) {
@@ -146,7 +162,7 @@ export default {
       let index = 0
       this.userReportConfigList.forEach(t => {
         t.sortIndex = index
-        console.info(t.id, index)
+        // console.info(t.id, index)
         index++
       })
       post('/baseReportConfigUser/batch/updateById', this.userReportConfigList)
