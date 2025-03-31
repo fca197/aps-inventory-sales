@@ -31,7 +31,7 @@
               </el-row>
             </el-col>
           </el-row>
-          <el-row  class="userReportConfig" :id="'eChat_'+i+'_userReportConfig_'+uc.reportConfigId" :style="'height: '+(uc.height+20)+'px'">
+          <el-row class="userReportConfig" :id="'eChat_'+i+'_userReportConfig_'+uc.reportConfigId" :style="'height: '+(uc.height+20)+'px;width:100%'">
             <!--  eChat_0_userReportConfig_1 -->
 
           </el-row>
@@ -92,6 +92,19 @@ export default {
               option.title = {
                 text: reportName
               }
+              // option.legend={},
+              option.toolbox= {
+                show: true,
+                  feature: {
+                  // dataZoom: {
+                  //   yAxisIndex: 'none'
+                  // },
+                  // dataView: { readOnly: false },
+                  magicType: { type: ['line', 'bar'] },
+                  // restore: {},
+                  // saveAsImage: {}
+                }
+              },
               option.tooltip = {
                 trigger: 'axis',
                 axisPointer: {
@@ -99,11 +112,15 @@ export default {
                 }
               }
               myChart.setOption(option)
+              uc.myChart = myChart
             })
           }
 
         })
       })
+    },
+    resetReportSize(uc) {
+      uc.myChart.resize()
     },
 
     addReport(baseReport) {
@@ -137,9 +154,11 @@ export default {
       this.updateReportById(uc)
     },
     updateReportById(uc) {
-      post('/baseReportConfigUser/updateById', uc).then(() => {
+      let reqUc={...uc};
+      reqUc.myChart = undefined
+      return post('/baseReportConfigUser/updateById', reqUc).then(() => {
         this.loadReport()
-        this.$forceUpdate();
+        this.$forceUpdate()
       })
     },
     heightAdd(uc) {
@@ -156,7 +175,7 @@ export default {
         return
       }
       uc.height -= 100
-      this.updateReportById(uc)
+      this.updateReportById(uc).then(() => this.resetReportSize(uc))
     },
     onDragEnd() {
       let index = 0
