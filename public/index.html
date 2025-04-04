@@ -211,7 +211,8 @@
   var _hmt = _hmt || [];
   (function() {
     var documentURI = document.documentURI;
-    if (documentURI.indexOf('//localhost') > -1) {
+    if (documentURI.indexOf('localhost') > -1) {
+      console.info("baidu")
       return;
     }
     var hm = document.createElement("script");
@@ -220,10 +221,7 @@
     s.parentNode.insertBefore(hm, s);
   })();
 
-  window._AMapSecurityConfig = {
-    serviceHost: "https://aps.solveplan.cn/_AMapService",
-    //例如 ：serviceHost:'http://1.1.1.1:80/_AMapService',
-  };
+
 </script>
 
 </body>

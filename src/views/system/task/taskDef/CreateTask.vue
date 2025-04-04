@@ -3,7 +3,7 @@
     <el-form ref="taskForm" :model="taskInfo" label-width="110px" :rules="rules" inline>
       <el-form-item label="上个环节" style="width: 100%">
         <el-select v-model="taskInfo.sourceTaskId">
-          <el-option v-for="t in taskDefList" :value="t.id" :label="t.taskName"></el-option>
+          <el-option v-for="t in taskDefList"  :key="t.taskName" :value="t.id" :label="t.taskName"></el-option>
         </el-select>
         <el-input v-model="taskInfo.sourceTaskCondition" placeholder="进入条件"></el-input>
       </el-form-item>

@@ -3,7 +3,6 @@ import Router from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
 import { getRouters } from '@/api/menu'
-import { handleTree } from '@/utils/ruoyi'
 
 Vue.use(Router)
 
@@ -135,65 +134,47 @@ let roureMap = {
   '/aps/apsLogistics/path/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsLogisticsPath/ApsLogisticsPath.vue')
-  },
-  '/aps/apsOrderGoodsHistory': {
+  }, '/aps/apsOrderGoodsHistory': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsOrderGoodsHistory/ApsOrderGoodsHistory.vue')
-  },
-  '/aps/apsOrderGoodsSaleHistory': {
+  }, '/aps/apsOrderGoodsSaleHistory': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue')
   },
 
   '/aps/bom/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/bom/index')
-  },
-  '/aps/bom/supplier/index': {
+    hidden: false, comment: () => import('@/views/system/aps/bom/index')
+  }, '/aps/bom/supplier/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsBomSupplier/ApsBomSupplier.vue')
-  },
-  '/aps/bomBuyPlan/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/bomBuyPlan/index')
-  },
-  '/aps/bomGroup/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/bomGroup/index')
+  }, '/aps/bomBuyPlan/index': {
+    hidden: false, comment: () => import('@/views/system/aps/bomBuyPlan/index')
+  }, '/aps/bomGroup/index': {
+    hidden: false, comment: () => import('@/views/system/aps/bomGroup/index')
   },
 
   '/aps/goods/forecast/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/forecast/index')
-  },
-  '/aps/goods/forecast/main/index': {
+    hidden: false, comment: () => import('@/views/system/aps/forecast/index')
+  }, '/aps/goods/forecast/main/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/forecastMain/index')
-  },
-  '/aps/goods/forecast/make/week/index': {
+  }, '/aps/goods/forecast/make/week/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/forecastMakeWeek/index')
-  },
-  '/aps/goods/forecast/make/weekMain/index': {
+  }, '/aps/goods/forecast/make/weekMain/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/forecastMainMake/index')
-  },
-  //xx
+  }, //xx
   '/aps/goods/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/goods/index')
-  },
-  '/aps/goods/sale/index': {
+    hidden: false, comment: () => import('@/views/system/aps/goods/index')
+  }, '/aps/goods/sale/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/goodsSaleConfig/index')
-  },
-  '/aps/goods/sale/project/index': {
+  }, '/aps/goods/sale/project/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/goodsSale2project/index')
-  },
-  '/aps/goodsBom/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/goodsBom/index')
+  }, '/aps/goodsBom/index': {
+    hidden: false, comment: () => import('@/views/system/aps/goodsBom/index')
   },
 
   '/aps/machine/index': {
@@ -204,162 +185,109 @@ let roureMap = {
   '/aps/make/constraint/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/make_capacity/constraint')
-  },
-  '/aps/make/make_capacity_goods/index': {
+  }, '/aps/make/make_capacity_goods/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/make_capacity/make_capacity_goods')
-  },
-  '/aps/make/make_capacity_sale_config/index': {
+  }, '/aps/make/make_capacity_sale_config/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/make_capacity/make_capacity_sale_config/index.vue')
-  },
-  '/aps/make_capacity_factory/index': {
+  }, '/aps/make_capacity_factory/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/make_capacity/make_capacity_factory/index.vue')
   },
 
   '/aps/order/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/order/index')
-  },
-  '/aps/order/roll/factory/index': {
+    hidden: false, comment: () => import('@/views/system/aps/order/index')
+  }, '/aps/order/roll/factory/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsRollingForecastFactoryCapacity/ApsRollingForecastFactoryCapacity.vue')
-  },
-  '/aps/order/roll/index': {
+  }, '/aps/order/roll/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/roll/ApsOrderRollingForecast.vue')
-  },
-  '/aps/order/timeline/index': {
+  }, '/aps/order/timeline/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/order/timeLine.vue')
-  },
-  '/aps/order/goodsSaleHistory': {
+  }, '/aps/order/goodsSaleHistory': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsOrderGoodsSaleHistory/ApsOrderGoodsSaleHistory.vue')
   },
 
   '/aps/process/path/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/processPath/index')
-  },
-  '/aps/produceProcess/path/index': {
+    hidden: false, comment: () => import('@/views/system/aps/processPath/index')
+  }, '/aps/produceProcess/path/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsProduceProcess/ApsProduceProcess.vue')
-  },
-  '/aps/project/index': {
+  }, '/aps/project/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/projectConfig/index')
-  },
-  '/aps/room/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/room/index')
-  },
-  '/aps/sale/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/saleConfig/index')
-  },
-  '/aps/scheduling/bom/index': {
+  }, '/aps/room/index': {
+    hidden: false, comment: () => import('@/views/system/aps/room/index')
+  }, '/aps/sale/index': {
+    hidden: false, comment: () => import('@/views/system/aps/saleConfig/index')
+  }, '/aps/scheduling/bom/index': {
     hidden: true,
     comment: () => import('@/views/system/aps/scheduling/bomTotalResult.vue')
-  },
-  '/aps/scheduling/day/config/index': {
+  }, '/aps/scheduling/day/config/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersion.vue')
-  },
-  '/aps/scheduling/day/index': {
+  }, '/aps/scheduling/day/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsSchedulingDayConfig/ApsSchedulingDayConfig.vue')
-  },
-  '/aps/scheduling/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/scheduling')
-  },
-  '/aps/section/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/section/index')
-  },
-  '/aps/station/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/station/index')
-  },
-  '/aps/status/index': {
-    hidden: false,
-    comment: () => import('@/views/system/aps/status/index')
-  },
-  '/apsSchedulingDayConfigVersion/detailList': {
+  }, '/aps/scheduling/index': {
+    hidden: false, comment: () => import('@/views/system/aps/scheduling')
+  }, '/aps/section/index': {
+    hidden: false, comment: () => import('@/views/system/aps/section/index')
+  }, '/aps/station/index': {
+    hidden: false, comment: () => import('@/views/system/aps/station/index')
+  }, '/aps/status/index': {
+    hidden: false, comment: () => import('@/views/system/aps/status/index')
+  }, '/apsSchedulingDayConfigVersion/detailList': {
     hidden: true,
     comment: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/detailList.vue')
-  },
-  '/base/baseTableHeader/index': {
+  }, '/base/baseTableHeader/index': {
     hidden: false,
     comment: () => import('@/views/system/baseTableHeader/BaseTableHeader.vue')
-  },
-  '/base/role/group/index': {
+  }, '/base/role/group/index': {
     hidden: false,
     comment: () => import('@/views/system/base/baseRoleGroup/BaseRoleGroup.vue')
-  },
-  '/base/role/index': {
+  }, '/base/role/index': {
     hidden: false,
     comment: () => import('@/views/system/base/baseRole/BaseRole.vue')
-  },
-  '/baseApp/index': {
+  }, '/baseApp/index': {
     hidden: false,
     comment: () => import('@/views/system/base/baseApp/BaseApp.vue')
-  },
-  '/baseAppResource/index': {
+  }, '/baseAppResource/index': {
     hidden: false,
     comment: () => import('@/views/system/base/baseResource/BaseResource.vue')
-  },
-  '/file/upload/index': {
-    hidden: false,
-    comment: () => import('@/views/system/fileUpload/index')
-  },
-  '/login/account/index': {
-    hidden: false,
-    comment: () => import('@/views/loginAccount/index')
-  },
-  '/prop/shift/index': {
-    hidden: false,
-    comment: () => import('@/views/system/basic/shift/index')
-  },
-  '/prop/spec/index': {
-    hidden: false,
-    comment: () => import('@/views/system/calendar/index')
-  },
-  '/seller/index': {
+  }, '/file/upload/index': {
+    hidden: false, comment: () => import('@/views/system/fileUpload/index')
+  }, '/login/account/index': {
+    hidden: false, comment: () => import('@/views/loginAccount/index')
+  }, '/prop/shift/index': {
+    hidden: false, comment: () => import('@/views/system/basic/shift/index')
+  }, '/prop/spec/index': {
+    hidden: false, comment: () => import('@/views/system/calendar/index')
+  }, '/seller/index': {
     hidden: false,
     comment: () => import('@/views/system/aps/apsSellerStore/ApsSellerStore.vue')
-  },
-  '/setting/baseApp/index': {
+  }, '/setting/baseApp/index': {
     hidden: false,
     comment: () => import('@/views/system/base/baseApp/BaseApp.vue')
-  },
-  '/setting/baseResource': {
+  }, '/setting/baseResource': {
     hidden: false,
     comment: () => import('@/views/system/base/baseResource/BaseResource.vue')
-  },
-  '/setting/oplog/index': {
+  }, '/setting/oplog/index': {
     hidden: false,
     comment: () => import('@/views/system/base/oplog/BaseOplog.vue')
-  },
-  '/supplier/index': {
-    hidden: false,
-    comment: () => import('@/views/system/supplier/index')
-  },
-  '/views/brand/index': {
-    hidden: false,
-    comment: () => import('@/views/system/brand/index')
-  },
-  '/views/factory/index': {
-    hidden: false,
-    comment: () => import('@/views/system/factory/index')
-  },
-  '/views/tenant/index': {
-    hidden: false,
-    comment: () => import('@/views/system/tenant/index')
-  },
-  '/task/taskDef': {
+  }, '/supplier/index': {
+    hidden: false, comment: () => import('@/views/system/supplier/index')
+  }, '/views/brand/index': {
+    hidden: false, comment: () => import('@/views/system/brand/index')
+  }, '/views/factory/index': {
+    hidden: false, comment: () => import('@/views/system/factory/index')
+  }, '/views/tenant/index': {
+    hidden: false, comment: () => import('@/views/system/tenant/index')
+  }, '/task/taskDef': {
     hidden: false,
     comment: () => import('@/views/system/task/taskDef/TaskDef.vue')
   },
@@ -372,8 +300,8 @@ let roureMap = {
 }
 
 export function convertMenusToRoutes(menus) {
-
-  return menus.sort((a, b) => {
+  // console.info(menus)
+  return menus.filter(t => t !== null).sort((a, b) => {
     // console.log( a.sortIndex , b.sortIndex)
     if (a.sortIndex > b.sortIndex) return 1
     if (a.sortIndex < b.sortIndex) return -1
@@ -417,11 +345,23 @@ export function loadResource() {
   return getRouters({ queryPage: false, appCode: 'aps' }).then(res => {
     let dataList = res.data.dataList
     // dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
+
     dataList = removeDuplicatesByFieldWithFilter(dataList, 'resourceId')
-    var tree = handleTree(dataList, 'resourceId')
-    const asyncRoutes = convertMenusToRoutes(tree)
-    // console.log(asyncRoutes, tree)
-    return asyncRoutes
+    // dataList.forEach(t=>{
+    //   // console.info('old',t.id,t.parentId)
+    // })
+    let parentList = dataList.filter(t => t.parentId === '0')
+    // var tree = handleTree(dataList, 'id','resourceId','children')
+    list2Tree(parentList, dataList)
+    return convertMenusToRoutes(parentList)
+  })
+}
+
+function list2Tree(resList, allLst) {
+  resList.forEach(t => {
+    let tl= allLst.filter(tt => tt.parentId === t.resourceId);
+    // console.info(t.id,tl)
+    t.children =tl
   })
 }
 
