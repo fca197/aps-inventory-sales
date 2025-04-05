@@ -240,6 +240,10 @@ export default {
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         this.loginType = 3
       }
+      const userAgent = navigator.userAgent.toLowerCase();
+      if ( userAgent.indexOf('micromessenger')!== -1){
+        this.loginType = 3
+      }
     }
   }
 }
