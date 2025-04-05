@@ -3,7 +3,7 @@
     <el-row :gutter="24" style="margin-left: 2px">
       <el-popover trigger="hover" placement="right-start" width="400">
         <el-row>
-          <el-button v-for="r in baseReportConfigList" type="primary" size="mini" @click="addReport(r)">{{ r.reportName }}</el-button>
+          <el-button v-for="r in baseReportConfigList" type="primary" size="mini"  style="margin: 5px 5px" @click="addReport(r)">{{ r.reportName }}</el-button>
         </el-row>
         <el-button slot="reference" size="mini" type="primary">添加报表</el-button>
       </el-popover>

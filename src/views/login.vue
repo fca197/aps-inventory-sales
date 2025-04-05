@@ -2,21 +2,21 @@
   <div class="login">
     <div v-if="loginType===2" class="dingLoginDiv">
       <div class="usePwdLogin" @click="loginType=1"/>
-      <h3 class="title"> 后台管理系统</h3>
-       <div id="self_defined_element"  style="
+      <h3 class="title"><span style="color: red; font-size: 22px;padding:  0 5px">APS</span>后台管理系统</h3>
+      <div id="self_defined_element" style="
     margin-left: 50px;
-    margin-top: -25px;">
-         <div  style="font-size: 100px;
-    color: #987987;
-    font-family: cursive;">敬请等待</div>
-       </div>
+    margin-top: -25px;"
+      >
+        <div style="font-size: 30px;    color: #111;    font-family: cursive;vert-align: middle; height: 200px; margin-top: 130px">开发中 ...
+        </div>
+      </div>
       <div>
       </div>
     </div>
     <div v-if="loginType===1">
       <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
         <div class="useOtherLogin" @click="dingLogin"></div>
-        <h3 class="title"> 后台管理系统</h3>
+        <h3 class="title"><span style="color: red; font-size: 22px;padding:  0 5px">APS</span>后台管理系统</h3>
         <el-form-item prop="username">
           <el-input
             v-model="loginForm.username"
@@ -67,7 +67,7 @@
           <div v-if="register" style="float: right;">
             <router-link :to="'/register'" class="link-type">立即注册</router-link>
           </div>
-          <el-button type="text" style="float: right;margin-top: 10px;margin-bottom: -5px" @click="showVersion">版本变更记录</el-button>
+          <!--          <el-tag type="warning" style="float: right;margin-top: 10px;margin-bottom: -5px" >体验版版本</el-tag>-->
         </el-form-item>
       </el-form>
     </div>
@@ -77,9 +77,6 @@
     </div>
 
 
-    <el-drawer title="版本变更记录" :visible.sync="versionchangeShow" direction="rtl">
-      <version-change></version-change>
-    </el-drawer>
   </div>
 </template>
 
@@ -89,7 +86,7 @@ import Cookies from 'js-cookie'
 import { decrypt, encrypt } from '@/utils/jsencrypt'
 import versionChange from '@/views/version/index.vue'
 import { addJs, log } from '@/api/common'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 export default {
   name: 'Login',
@@ -99,7 +96,6 @@ export default {
   data() {
     return {
       loginType: 1,
-      versionchangeShow: false,
       codeUrl: '',
       loginForm: {
         username: '18616771546',
@@ -134,12 +130,19 @@ export default {
     }
   },
   created() {
-    var item = localStorage.getItem("deviceId")|| uuidv4()
+    var item = localStorage.getItem('deviceId') || uuidv4()
     log(item)
-    localStorage.setItem("deviceId",item)
-    addJs("https://g.alicdn.com/dingding/h5-dingtalk-login/0.21.0/ddlogin.js")
+    localStorage.setItem('deviceId', item)
+    addJs('https://g.alicdn.com/dingding/h5-dingtalk-login/0.21.0/ddlogin.js')
     this.getCode()
     this.getCookie()
+
+    this.$notify({
+      title: '版本提示',
+      type: 'warning',
+      message: '该 版 本 为 体 验 版 本 !!!',
+      duration: 0
+    })
   },
   methods: {
     getCode() {
@@ -160,9 +163,6 @@ export default {
         password: password === undefined ? this.loginForm.password : decrypt(password),
         rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
       }
-    },
-    showVersion() {
-      this.versionchangeShow = true
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -189,14 +189,14 @@ export default {
         }
       })
     },
-    dingLogin(){
-      this.loginType=2
-      this.$nextTick(()=>{
+    dingLogin() {
+      this.loginType = 2
+      this.$nextTick(() => {
         window.DTFrameLogin(
           {
             id: 'self_defined_element',
             width: 250,
-            height: 250,
+            height: 250
           },
           {
             redirect_uri: encodeURIComponent('https://aps.solveplan.cn/api/peanut/ding/auth'),
@@ -204,20 +204,20 @@ export default {
             scope: 'openid',
             response_type: 'code',
             state: '',
-            prompt: 'consent',
+            prompt: 'consent'
           },
           (loginResult) => {
-            const {redirectUrl, authCode, state} = loginResult;
+            const { redirectUrl, authCode, state } = loginResult
             // 这里可以直接进行重定向
-            window.location.href = redirectUrl;
+            window.location.href = redirectUrl
             // 也可以在不跳转页面的情况下，使用code进行授权
-            console.log(authCode);
+            console.log(authCode)
           },
           (errorMsg) => {
             // 这里一般需要展示登录失败的具体原因,可以使用toast等轻提示
-            console.error(`errorMsg of errorCbk: ${errorMsg}`);
-          },
-        );
+            console.error(`errorMsg of errorCbk: ${errorMsg}`)
+          }
+        )
       })
     }
   }
