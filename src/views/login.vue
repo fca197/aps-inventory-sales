@@ -1,5 +1,18 @@
 <template>
   <div class="login">
+    <div v-if="loginType===3" class="dingLoginDiv">
+      <h3 class="title"><span style="color: red; font-size: 22px;padding:  0 5px">APS</span>后台管理系统</h3>
+      <div id="self_defined_element_3" style="
+    margin-left: 50px;
+    margin-top: -25px;"
+      >
+        <div style="font-size: 30px;    color: #111;    font-family: cursive;vert-align: middle; height: 200px; margin-top: 130px">
+          暂不支持移动端 ...
+        </div>
+      </div>
+      <div>
+      </div>
+    </div>
     <div v-if="loginType===2" class="dingLoginDiv">
       <div class="usePwdLogin" @click="loginType=1"/>
       <h3 class="title"><span style="color: red; font-size: 22px;padding:  0 5px">APS</span>后台管理系统</h3>
@@ -143,6 +156,7 @@ export default {
       message: '该版本为体验版本!develop分支',
       duration: 0
     })
+    this.isMobileBrowser()
   },
   methods: {
     getCode() {
@@ -219,6 +233,13 @@ export default {
           }
         )
       })
+    },
+
+    isMobileBrowser() {
+      // 检查用户代理字符串中是否包含常见移动设备关键字
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        this.loginType = 3
+      }
     }
   }
 }
