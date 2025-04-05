@@ -7,9 +7,9 @@
         </el-select>
         <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂" @keyup.enter.native="handleQuery"/>-->
       </el-form-item>
-<!--      <el-form-item label="排程版本号" prop="schedulingDayVersionNo">-->
-<!--        <el-input v-model="queryParams.data.schedulingDayVersionNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>-->
-<!--      </el-form-item>-->
+      <!--      <el-form-item label="排程版本号" prop="schedulingDayVersionNo">-->
+      <!--        <el-input v-model="queryParams.data.schedulingDayVersionNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>-->
+      <!--      </el-form-item>-->
       <el-form-item label="排程日期" prop="schedulingDay">
         <!--        <el-input v-model="queryParams.data.schedulingDay" clearable placeholder="请输入排程日期" @keyup.enter.native="handleQuery"/>-->
         <el-date-picker v-model="queryParams.data.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"/>
@@ -38,19 +38,19 @@
     </el-table>
 
     <pagination
-        v-show="total>0"
-        :limit.sync="queryParams.pageSize"
-        :page.sync="queryParams.pageNum"
-        :total="total"
-        @pagination="getList"
+      v-show="total>0"
+      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParams.pageNum"
+      :total="total"
+      @pagination="getList"
     />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" append-to-body width="600px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
 
         <el-form-item label="排程配置" prop="schedulingDayConfigId">
-          <el-select v-model="form.schedulingDayConfigId" filterable placeholder="请选择排程配置" @change="selectConfig"   style="width: 100%">
+          <el-select v-model="form.schedulingDayConfigId" filterable placeholder="请选择排程配置" @change="selectConfig" style="width: 100%">
             <el-option v-for="item in apsSchedulingDayConfigList" :key="item.id" :label="item.schedulingDayName" :value="item.id"/>
           </el-select>
         </el-form-item>
@@ -59,14 +59,38 @@
         </el-form-item>
         <el-form-item label="排程日期" prop="schedulingDay">
           <!--          <el-input v-model="form.schedulingDay" clearable placeholder="请输入排程日期"/>-->
-          <el-date-picker v-model="form.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"  style="width: 100%"/>
+          <el-date-picker v-model="form.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期" style="width: 100%"/>
         </el-form-item>
         <el-form-item label="排程配置" prop="productType">
-          <el-select v-model="form.productType" filterable placeholder="请选择排程类型"   style="width: 100%">
+          <el-select v-model="form.productType" filterable placeholder="请选择排程类型" style="width: 100%">
             <el-option v-for="item in productTypeListTmp" :key="item.code" :label="item.desc" :value="item.code"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="排产商品">
+          <template slot="label">
+            <span>排产商品</span>
+            <i class="el-icon-info" style="margin-left:5px " @mouseover="alertMsg('不选则，默认工厂下所有商品','warning')"></i>
+          </template>
+          <el-select v-model="form.goodsIdList" multiple style="width: 100%" clearable>
+            <el-option v-for="g in apsGoodsList.filter(t=>t.factoryId===form.factoryId)" :value="g.id" :key="g.id" :label="g.goodsName"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="销售配置">
+          <el-select v-model="form.saleConfigIdList" multiple clearable style="width: 100%" filterable>
+            <el-option v-for="s in saleConfigIdList" :key="s.id" :label="s.saleName" :value="s.id"></el-option>
+          </el-select>
+        </el-form-item>
 
+        <el-form-item label="订单属性">
+          <el-select v-model="form.orderFieldList" multiple clearable style="width: 100%" filterable>
+            <el-option v-for="s in orderFieldList" :label="s.label" :value="s.value" :key="s.key"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="订单用户属性">
+          <el-select v-model="form.orderUserFieldList" multiple clearable style="width: 100%" filterable>
+            <el-option v-for="s in orderUserFieldList" :label="s.label" :value="s.value" :key="s.key"></el-option>
+          </el-select>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -80,8 +104,10 @@
 
 <script>
 
-import { add, deleteByIdList, getById, queryPageList, queryUrlNoPageList, queryUrlPageList, updateById } from '@/api/common'
+import { add, deleteByIdList, getById, post, queryPageList, queryUrlPageList, updateById } from '@/api/common'
 import { getFactoryList } from '@/api/factory'
+import { getGoodsList } from '@/api/aps/goods'
+import { getSaleConfigList } from '@/api/aps/saleConfig'
 
 export default {
   name: 'tenantName',
@@ -113,24 +139,33 @@ export default {
       },
       // 表单参数
       form: {
-        productType:undefined,
+        productType: undefined,
         factoryId: undefined,
         schedulingDayConfigId: undefined,
         processId: undefined,
         schedulingDayVersionNo: undefined,
         schedulingDay: undefined,
         isIssuedThird: 0,
-        id: undefined
+        id: undefined,
+        goodsIdList: [],
+        saleConfigIdList: [],
+        orderFieldList: [],
+        orderUserFieldList: []
+
       },
       // 表单校验
       rules: {},
       tableHeaderList: [],
       factoryList: [],
       processList: [],
-      productTypeList: [{ code: "MAKE", desc : "制造路径" },{ code: "PROCESS", desc : "工艺路径" }],
+      productTypeList: [{ code: 'MAKE', desc: '制造路径' }, { code: 'PROCESS', desc: '工艺路径' }],
       productTypeListTmp: [],
       processMap: {},
-      apsSchedulingDayConfigList:[],
+      apsSchedulingDayConfigList: [],
+      apsGoodsList: [],
+      saleConfigIdList: [],
+      orderFieldList: [],
+      orderUserFieldList: []
 
     }
   },
@@ -139,18 +174,24 @@ export default {
     queryUrlPageList('/apsSchedulingDayConfig', { queryPage: false }).then(t => {
       this.apsSchedulingDayConfigList = t.data.dataList
       this.apsSchedulingDayConfigList.forEach(p => {
-        p.schedulingDayName = p.factoryName+"-"+ p.schedulingDayName + '(' + p.schedulingDayNo + ')'
+        p.schedulingDayName = p.factoryName + '-' + p.schedulingDayName + '(' + p.schedulingDayNo + ')'
       })
     })
     queryUrlPageList('/apsProcessPath', { queryPage: false }).then(t => {
       this.processList = t.data.dataList
-      this.processMap=this.groupBy(this.processList, 'factoryId')
+      this.processMap = this.groupBy(this.processList, 'factoryId')
     })
     document['pagePath'] = '/apsSchedulingDayConfigVersion'
     getFactoryList({ queryPage: false }).then(t => {
       this.factoryList = t.data.dataList
       this.getList()
     })
+    getGoodsList({}).then(r => {
+      this.apsGoodsList = r.data.dataList
+    })
+    getSaleConfigList({}).then(r => this.saleConfigIdList = r.data.dataList.filter(t => t.isValue === 0))
+    post('/apsOrder/orderFieldList', {}, false).then(r => this.orderFieldList = r.data.dataList)
+    post('/apsOrderUser/orderUserFieldList', {}, false).then(r => this.orderUserFieldList = r.data.dataList)
   },
   methods: {
     /** 查询公告列表 */
@@ -166,9 +207,9 @@ export default {
     },
     cancel() {
       this.open = false
-      this.reset();
- this.form.id=undefined;
-  },
+      this.reset()
+      this.form.id = undefined
+    },
     // 表单重置
     reset() {
       let fid = this.form.id
@@ -201,17 +242,17 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
- this.form.id=undefined;
-    this.form.schedulingDayVersionNo="PC-"+ this.formatDates(new Date(), true);
+      this.reset()
+      this.form.id = undefined
+      this.form.schedulingDayVersionNo = 'PC-' + this.formatDates(new Date(), true)
       this.title = '添加排程版本'
       this.open = true
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
- this.form.id=undefined;
-    let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
+      this.reset()
+      this.form.id = undefined
+      let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
         this.title = '修改排程版本'
@@ -254,25 +295,32 @@ export default {
       })
       document.getElementsByClassName('el-message-box')[0].style.width = '520px'
     },
-    selectConfig(id){
-      this.apsSchedulingDayConfigList.filter(t=>t.id===id).forEach(t=>{
-        this.productTypeListTmp.splice(0,1);
-        this.form.factoryId=t.factoryId
-        this.form.processId=t.processId
+    selectConfig(id) {
+      this.apsSchedulingDayConfigList.filter(t => t.id === id).forEach(t => {
+        this.productTypeListTmp.splice(0, 1)
+        this.form.factoryId = t.factoryId
+        this.form.processId = t.processId
         //{ code: "MAKE", desc : "制造路径" },{ code: "PROCESS", desc : "工艺路径" }
-        if ( t.schedulingType==="make"){
-          this.productTypeListTmp.push({ code: "MAKE", desc : "制造路径" })
-          this.form.productType="MAKE"
-        }else {
-          this.productTypeListTmp.push({ code: "PROCESS", desc : "工艺路径" })
-          this.form.productType="PROCESS"
+        if (t.schedulingType === 'make') {
+          this.productTypeListTmp.push({ code: 'MAKE', desc: '制造路径' })
+          this.form.productType = 'MAKE'
+        } else {
+          this.productTypeListTmp.push({ code: 'PROCESS', desc: '工艺路径' })
+          this.form.productType = 'PROCESS'
         }
       })
+      this.form.goodsIdList.splice(0, this.form.goodsIdList.length)
     },
     handleInfo(row) {
-
-      this.$router.push({ path: '/apsSchedulingDayConfigVersion/detailList', query: { id: row.id ,productType:row.productType} })
+      this.$router.push({ path: '/apsSchedulingDayConfigVersion/detailList', query: { id: row.id, productType: row.productType } })
+    },
+    alertMsg(msg, type) {
+      this.$message({
+        message: msg,
+        type: type || 'success'
+      })
     }
+
   }
 
 }

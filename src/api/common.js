@@ -161,6 +161,7 @@ export function checkCompare(property) {
   }
 }
 
+
 export function showMsg(res, showMsg) {
   if (res.code !== 200) {
     ElementUI.Message({
