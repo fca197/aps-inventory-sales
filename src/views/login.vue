@@ -98,7 +98,7 @@ export default {
       loginType: 1,
       codeUrl: '',
       loginForm: {
-        username: '18616771546',
+        username: '18600000000',
         password: 'admin',
         rememberMe: false,
         code: '',
@@ -140,7 +140,7 @@ export default {
     this.$notify({
       title: '版本提示',
       type: 'warning',
-      message: '该 版 本 为 体 验 版 本 !!!',
+      message: '该版本为体验版本!develop分支',
       duration: 0
     })
   },
