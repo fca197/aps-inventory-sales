@@ -35,16 +35,10 @@
     <el-table v-loading="loading" :data="apsOrderGoodsHistoryList" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="全选" prop="id" type="selection" width="50"/>
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
-      <!--      <el-table-column align="center" class-name="small-padding fixed-width" label="操作">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <el-button icon="el-icon-edit" size="mini" type="text" @click="handleUpdate(scope.row)">修改</el-button>-->
-      <!--          <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
       <el-table-column v-for="m in monthList" :key="m+'month'" width="200" :label="m+'月'">
         <template slot-scope="scope">
-          {{ scope.row['monthRatio' + m] !== null ? scope.row['monthRatio' + m] + '%' : '' }}/{{
-            scope.row['monthCount' + m] !== null ? parseInt(scope.row['monthCount' + m]) : ''
+          {{ scope.row['monthRatio' + m] !== null ? scope.row['monthRatio' + m] + '%' : '-' }}/{{
+            scope.row['monthCount' + m] !== null ? parseInt(scope.row['monthCount' + m]) : '-'
           }}
         </template>
       </el-table-column>
@@ -96,7 +90,7 @@ export default {
         data: {}
       },
       yearList: [2023, 2024, 2025, 2026],
-      monthList: ['01', '02', '03', '05', '06', '07', '08', '09', '10', '11', '12'],
+      monthList: ['01', '02', '03','04', '05', '06', '07', '08', '09', '10', '11', '12'],
       // 表单参数
       form: {
         factoryId: undefined,

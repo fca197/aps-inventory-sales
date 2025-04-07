@@ -152,8 +152,11 @@ export default {
 
     this.$notify({
       title: '版本提示',
-      type: 'warning',
-      message: '该版本为体验版本!develop分支',
+      // type: 'warning',
+      // message: '该版本为体验版本!develop分支',
+
+       type: 'success',
+       message: '该版本为master分支',
       duration: 0
     })
     this.isMobileBrowser()

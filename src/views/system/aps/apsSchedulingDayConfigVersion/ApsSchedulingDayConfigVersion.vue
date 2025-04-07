@@ -76,19 +76,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="销售配置">
-          <el-select v-model="form.saleConfigIdList" multiple clearable style="width: 100%" filterable>
-            <el-option v-for="s in saleConfigIdList" :key="s.id" :label="s.saleName" :value="s.id"></el-option>
+          <el-select v-model="form.saleConfigIdList" value-key="id" multiple clearable style="width: 100%" filterable>
+            <el-option v-for="s in saleConfigIdList"  :key="s.id"  :value="s" :label=" s.saleName "> </el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="订单属性">
           <el-select v-model="form.orderFieldList" multiple clearable style="width: 100%" filterable>
-            <el-option v-for="s in orderFieldList" :label="s.label" :value="s.value" :key="s.key"></el-option>
+            <el-option v-for="s in orderFieldList" :label="s.label" :value="s" :key="s.label">{{ s.label }}</el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="订单用户属性">
           <el-select v-model="form.orderUserFieldList" multiple clearable style="width: 100%" filterable>
-            <el-option v-for="s in orderUserFieldList" :label="s.label" :value="s.value" :key="s.key"></el-option>
+            <el-option v-for="s in orderUserFieldList" :label="s.label" :value="s" :key="s.label"> {{ s.label }}</el-option>
           </el-select>
         </el-form-item>
 
@@ -189,7 +189,7 @@ export default {
     getGoodsList({}).then(r => {
       this.apsGoodsList = r.data.dataList
     })
-    getSaleConfigList({}).then(r => this.saleConfigIdList = r.data.dataList.filter(t => t.isValue === 0))
+    getSaleConfigList({ queryPage: true, data: { isValue: 0 } }).then(r => this.saleConfigIdList = r.data.dataList.filter(t => t.isValue === 0))
     post('/apsOrder/orderFieldList', {}, false).then(r => this.orderFieldList = r.data.dataList)
     post('/apsOrderUser/orderUserFieldList', {}, false).then(r => this.orderUserFieldList = r.data.dataList)
   },
@@ -263,6 +263,25 @@ export default {
 
     /** 提交按钮 */
     submitForm: function() {
+
+      // this.form.saleConfigIdList=[];
+      // if(this.form.saleConfigIdListTmp){
+      //   this.form.saleConfigIdListTmp.forEach(f=>{
+      //     this.form.saleConfigIdList.push(this.saleConfigIdList.filter(t2=>t2.id===f)[0]);
+      //   })
+      // }
+      // this.form.orderFieldList=[]
+      // if(this.form.orderFieldListTmp){
+      //   this.form.orderFieldListTmp.forEach(f=>{
+      //     this.form.orderFieldList.push(this.orderFieldList.filter(t2=>t2.value===f)[0])
+      //   })
+      // }
+      // this.form.orderUserFieldList=[]
+      // if(this.form.orderUserFieldListTmp){
+      //   this.form.orderUserFieldListTmp.forEach(f=>{
+      //     this.form.orderUserFieldList.push(this.orderUserFieldList.filter(t2=>t2.value===f)[0])
+      //   })
+      // }
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
