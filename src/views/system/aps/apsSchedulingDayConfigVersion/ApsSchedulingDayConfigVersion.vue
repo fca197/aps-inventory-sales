@@ -32,7 +32,7 @@
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
 
-          <el-button v-if="scope.row.stepIndex===1" icon="el-icon-s-data" size="mini" type="text" @click="toApsSchedulingDayConfigVersionConfirm(scope.row.id)">确认订单</el-button>
+          <el-button v-if="scope.row.stepIndex===1" icon="el-icon-setting" size="mini" type="text" @click="toApsSchedulingDayConfigVersionConfirm(scope.row.id)">确认订单</el-button>
           <el-button v-if="scope.row.stepIndex!==1" icon="el-icon-s-data" size="mini" type="text" @click="handleInfo(scope.row)">详情</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>

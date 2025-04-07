@@ -1,39 +1,10 @@
 <template>
   <div class="app-container">
     <el-form v-show="showSearch" ref="queryForm" :inline="true" :model="queryParams" label-width="88px" size="small">
-      <el-form-item label="排产版本ID" prop="schedulingVersionId">
-        <el-input v-model="queryParams.data.schedulingVersionId" clearable placeholder="请输入排产版本ID"
-                  @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="当前日期" prop="currentDay">
-        <el-input v-model="queryParams.data.currentDay" clearable placeholder="请输入当前日期"
-                  @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="订单ID" prop="orderId">
-        <el-input v-model="queryParams.data.orderId" clearable placeholder="请输入订单ID"
-                  @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="商品ID" prop="goodsId">
-        <el-input v-model="queryParams.data.goodsId" clearable placeholder="请输入商品ID"
-                  @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="生产序号" prop="numberIndex">
-        <el-input v-model="queryParams.data.numberIndex" clearable placeholder="请输入生产序号"
-                  @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="工厂id" prop="factoryId">
-        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂id"
-                  @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="显示字段" prop="showField">
-        <el-input v-model="queryParams.data.showField" clearable placeholder="请输入显示字段"
-                  @keyup.enter.native="handleQuery"
+        <el-date-picker v-model="queryParams.data.currentDay" clearable placeholder="请输入当前日期"
+                        @keyup.enter.native="handleQuery"
         />
       </el-form-item>
       <el-form-item label="订单号" prop="orderNo">
@@ -92,7 +63,32 @@
       :total="total"
       @pagination="getList"
     />
+    <el-dialog :title="title" :visible.sync="open" width="500px" @close="cancel">
 
+      <el-form ref="addOrderFormRef" :model="addOrderFormData" :validate-on-rule-change="true" :rules="addOrderFormRules" label-width="80px">
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="addOrderFormData.type">
+            <el-option label="订单号" value="orderNo"></el-option>
+            <el-option label="上级订单号" value="orderNoParent"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="订单值" prop="valueList">
+          <el-input
+            :autosize="{ minRows: 2, maxRows: 40}"
+            placeholder="请输入内容,每行支持一个"
+            type="textarea"
+            autosize
+            v-model="addOrderFormData.valueList"
+          ></el-input>
+        </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="subAddOrderForm">保 存</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -147,7 +143,20 @@ export default {
       },
       schedulingVersionId: 0,
 
-      tableHeaderList: []
+      tableHeaderList: [],
+      addOrderFormData: {
+        schedulingVersionId:undefined,
+        type: '',
+        valueList: ''
+      },
+      addOrderFormRules: {
+        type: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        valueList: [
+          { required: true, message: '不能为空', trigger: 'blur' },
+          { min: 2, message: '长度不能小于 2', trigger: 'blur' }
+        ]
+      }
+
     }
   },
   created() {
@@ -214,7 +223,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.title = '添加排产下发订单预览'
+      this.title = '添加排产下发订单'
       this.open = true
     },
     /** 修改按钮操作 */
@@ -223,10 +232,20 @@ export default {
       let req = { idList: [row.id], pageSize: 1, pageNum: 1 }
       getById(req).then(response => {
         this.form = response.data.dataList[0]
-        this.title = '修改排产下发订单预览'
+        this.title = '修改排产下发订单'
         this.open = true
       })
 
+    },
+    subAddOrderForm() {
+      this.addOrderFormData.schedulingVersionId = this.schedulingVersionId
+      this.$refs.addOrderFormRef.validate(valid => {
+        if (valid) {
+          post("/apsSchedulingDayConfigVersion/addOrder",  this.addOrderFormData).then(t=>this.getList())
+        } else {
+          console.info('error')
+        }
+      })
     },
 
     /** 提交按钮 */
