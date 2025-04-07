@@ -90,7 +90,16 @@ export const constantRoutes = [{
     component: () => import('@/views/system/aps/scheduling/CreateScheduling.vue'),
     meta: { title: '创建排产版本', icon: 'redis', affix: false },
     hidden: false
-  }]
+  },
+    {
+      path: '/aps/ApsSchedulingDayConfigVersionConfirm/:id',
+      name: "排程版本确认订单",
+      component: () => import('@/views/system/aps/apsSchedulingDayConfigVersion/ApsSchedulingDayConfigVersionConfirm.vue'),
+      meta: { title: '排程版本确认订单', icon: 'redis', affix: false },
+        hidden: false
+    }
+
+  ]
 }, {
   path: '/redirect', component: Layout, hidden: false, children: [{
     path: '/redirect/:path(.*)', component: () => import('@/views/redirect')

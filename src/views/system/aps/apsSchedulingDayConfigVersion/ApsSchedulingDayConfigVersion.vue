@@ -31,7 +31,9 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-          <el-button icon="el-icon-s-data" size="mini" type="text" @click="handleInfo(scope.row)">详情</el-button>
+
+          <el-button v-if="scope.row.stepIndex===1" icon="el-icon-s-data" size="mini" type="text" @click="toApsSchedulingDayConfigVersionConfirm(scope.row.id)">确认订单</el-button>
+          <el-button v-if="scope.row.stepIndex!==1" icon="el-icon-s-data" size="mini" type="text" @click="handleInfo(scope.row)">详情</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -47,7 +49,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" append-to-body width="700px">
-      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
 
         <el-form-item label="排程配置" prop="schedulingDayConfigId">
           <el-select v-model="form.schedulingDayConfigId" filterable placeholder="请选择排程配置" @change="selectConfig" style="width: 100%">
@@ -338,6 +340,9 @@ export default {
         message: msg,
         type: type || 'success'
       })
+    },
+    toApsSchedulingDayConfigVersionConfirm(id){
+      this.$router.push({path:'/aps/ApsSchedulingDayConfigVersionConfirm/'+id})
     }
 
   }
