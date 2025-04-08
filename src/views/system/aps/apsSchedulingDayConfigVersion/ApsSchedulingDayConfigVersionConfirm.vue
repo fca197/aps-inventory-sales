@@ -146,7 +146,7 @@ export default {
       tableHeaderList: [],
       addOrderFormData: {
         schedulingVersionId: undefined,
-        type: '',
+        type: 'orderNo',
         valueList: ''
       },
       addOrderFormRules: {

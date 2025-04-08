@@ -5,13 +5,8 @@
         <el-select v-model="queryParams.data.factoryId" filterable placeholder="请选择工厂">
           <el-option v-for="item in factoryList" :key="item.id" :label="item.factoryName" :value="item.id"/>
         </el-select>
-        <!--        <el-input v-model="queryParams.data.factoryId" clearable placeholder="请输入工厂" @keyup.enter.native="handleQuery"/>-->
       </el-form-item>
-      <!--      <el-form-item label="排程版本号" prop="schedulingDayVersionNo">-->
-      <!--        <el-input v-model="queryParams.data.schedulingDayVersionNo" clearable placeholder="请输入排程版本号" @keyup.enter.native="handleQuery"/>-->
-      <!--      </el-form-item>-->
       <el-form-item label="排程日期" prop="schedulingDay">
-        <!--        <el-input v-model="queryParams.data.schedulingDay" clearable placeholder="请输入排程日期" @keyup.enter.native="handleQuery"/>-->
         <el-date-picker v-model="queryParams.data.schedulingDay" type="date" value-format="yyyy-MM-dd" placeholder="选择日期"/>
       </el-form-item>
     </el-form>
@@ -31,7 +26,6 @@
       <el-table-column v-for="(item,index) in  tableHeaderList" :key="index" :label="item.showName" :prop="item.fieldName" align="center" :width="item.width+'px'"/>
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
-
           <el-button v-if="scope.row.stepIndex===1" icon="el-icon-setting" size="mini" type="text" @click="toApsSchedulingDayConfigVersionConfirm(scope.row.id)">确认订单
           </el-button>
           <el-button v-if="scope.row.stepIndex!==1" icon="el-icon-s-data" size="mini" type="text" @click="handleInfo(scope.row)">详情</el-button>
@@ -78,11 +72,7 @@
             <el-option v-for="g in apsGoodsList.filter(t=>t.factoryId===form.factoryId)" :value="g.id" :key="g.id" :label="g.goodsName"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="销售配置">
-          <el-select v-model="form.saleConfigIdList" multiple clearable style="width: 100%" filterable>
-            <el-option v-for="s in saleConfigIdList" :label="s.label" :value="s" :key="s.label">{{ s.label }}</el-option>
-          </el-select>
-        </el-form-item>
+
 
         <el-form-item label="订单属性">
           <el-select v-model="form.orderFieldList" multiple clearable style="width: 100%" filterable>
@@ -92,6 +82,23 @@
         <el-form-item label="订单用户属性">
           <el-select v-model="form.orderUserFieldList" multiple clearable style="width: 100%" filterable>
             <el-option v-for="s in orderUserFieldList" :label="s.label" :value="s" :key="s.label"> {{ s.label }}</el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="销售配置">
+          <el-select v-model="form.saleConfigIdList" multiple clearable style="width: 100%" filterable>
+            <el-option v-for="s in saleConfigIdList" :label="s.label" :value="s" :key="s.label">{{ s.label }}</el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="历史订单">
+          <template slot="label">
+            <span>历史订单</span>
+            <i class="el-icon-info" style="margin-left:5px " @mouseover="alertMsg('是否查询之前已排产排程但未生产订单','warning')"></i>
+          </template>
+          <el-select v-model="form.searchOld" prop="searchOld">
+            <el-option label="是" :value="true"></el-option>
+            <el-option label="否" :value="false"></el-option>
           </el-select>
         </el-form-item>
 
@@ -153,11 +160,19 @@ export default {
         goodsIdList: [],
         saleConfigIdList: [],
         orderFieldList: [],
-        orderUserFieldList: []
+        orderUserFieldList: [],
+        searchOld: true
 
       },
       // 表单校验
-      rules: {},
+      rules: {
+        factoryId :[{required: true, message: "不能为空", trigger: "blur"}],
+        schedulingDayVersionNo :[{required: true, message: "不能为空", trigger: "blur"}],
+        schedulingDay :[{required: true, message: "不能为空", trigger: "blur"}],
+        processId :[{required: true, message: "不能为空", trigger: "blur"}],
+        productType :[{required: true, message: "不能为空", trigger: "blur"}],
+        searchOld :[{required: true, message: "不能为空", trigger: "blur"}],
+      },
       tableHeaderList: [],
       factoryList: [],
       processList: [],
@@ -270,25 +285,6 @@ export default {
 
     /** 提交按钮 */
     submitForm: function() {
-
-      // this.form.saleConfigIdList=[];
-      // if(this.form.saleConfigIdListTmp){
-      //   this.form.saleConfigIdListTmp.forEach(f=>{
-      //     this.form.saleConfigIdList.push(this.saleConfigIdList.filter(t2=>t2.id===f)[0]);
-      //   })
-      // }
-      // this.form.orderFieldList=[]
-      // if(this.form.orderFieldListTmp){
-      //   this.form.orderFieldListTmp.forEach(f=>{
-      //     this.form.orderFieldList.push(this.orderFieldList.filter(t2=>t2.value===f)[0])
-      //   })
-      // }
-      // this.form.orderUserFieldList=[]
-      // if(this.form.orderUserFieldListTmp){
-      //   this.form.orderUserFieldListTmp.forEach(f=>{
-      //     this.form.orderUserFieldList.push(this.orderUserFieldList.filter(t2=>t2.value===f)[0])
-      //   })
-      // }
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
