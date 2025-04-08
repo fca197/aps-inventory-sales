@@ -23,6 +23,9 @@
                    @click="handleDelete"
         ></el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button icon="el-icon-download" plain size="mini" type="primary" @click="exportOrder"></el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -97,6 +100,7 @@
 <script>
 
 import { deleteList, getById, insetOrUpdate, post, queryPageList } from '@/api/common'
+import { downloadForm } from '@/utils/request'
 
 export default {
   name: 'tenantName',
@@ -263,6 +267,11 @@ export default {
     handleDelete(row) {
       let fgl = this.getList
       deleteList(row, this.ids, fgl)
+    },
+    exportOrder(){
+      downloadForm("/apsSchedulingDayConfigVersion/export",{
+        schedulingVersionId:this.schedulingVersionId
+      },"排程订单.xlsx",{})
     }
   }
 
