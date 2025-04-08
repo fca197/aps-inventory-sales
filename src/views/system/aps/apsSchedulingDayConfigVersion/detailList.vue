@@ -1,99 +1,96 @@
 <template>
   <div class="app-container">
-    <el-tabs v-model="showTable">
-      <el-tab-pane label="工艺路径排程" name="gylz">
+<!--    <el-button type="primary" @click="getList" icon="el-icon-refresh">查询</el-button>-->
 
-        <div v-if="data.versionDetailMap==null">暂无记录</div>
+    <el-row label="工艺路径排程" v-if="showTable==='gylz'">
 
-        <div class="orderDivMain" v-for="(item,index) in data.headerList" :key="index">
+      <div v-if="data.versionDetailMap==null">暂无记录</div>
 
-          {{ void (orderList = data.versionDetailMap[item.fieldName]) }}
-          <div class="orderDivTitle">
-            <div class="value">{{ item.showName }}</div>
-            <div class="operation">
-              <el-button type="primary" size="mini" @click="confirmSortIndex(item.fieldName+index)">确认序列</el-button>
-            </div>
-          </div>
-          <div class="orderDivSingleton">
-            <draggable @start="drag=true" @end="drag=false" :id="item.fieldName+index">
-              <div v-for="(order,index) in orderList" class="orderDiv" :key="index" :ref="item.fieldName" v-bind:id="order.id">
+      <div class="orderDivMain" v-for="(item,index) in data.headerList" :key="index">
 
-                <table cellpadding="1px" cellspacing="2px">
-                  <tr>
-                    <td class="title">制造序号:</td>
-                    <td class="value">{{ order.sortIndex }}</td>
-                  </tr>
-
-                  <tr>
-                    <td class="title">排程制造ID:</td>
-                    <td class="value">{{ order.id }}</td>
-                  </tr>
-
-                  <tr>
-                    <td class="title">单号:</td>
-                    <td class="value">{{ order.orderNo }}</td>
-                  </tr>
-                  <tr>
-                    <td class="title">匹配类型:</td>
-                    <td class="value">{{ order.configBizType }}</td>
-                  </tr>
-
-                  <tr>
-                    <td class="title">匹配名称:</td>
-                    <td class="value">{{ order.configBizName }}</td>
-                  </tr>
-                  <tr>
-                    <td class="title">匹配:</td>
-                    <td class="value">{{ order.isMatch }}</td>
-                  </tr>
-                  <tr>
-                    <td class="title">满足:</td>
-                    <td class="value">{{ order.loopEnough }}</td>
-                  </tr>
-                  <tr>
-                    <td class="title">循环:</td>
-                    <td class="value">{{ order.loopIndex }}</td>
-                  </tr>
-                </table>
-              </div>
-            </draggable>
+        {{ void (orderList = data.versionDetailMap[item.fieldName]) }}
+        <div class="orderDivTitle">
+          <div class="value">{{ item.showName }}</div>
+          <div class="operation">
+            <el-button type="primary" size="mini" @click="confirmSortIndex(item.fieldName+index)">确认序列</el-button>
           </div>
         </div>
+        <div class="orderDivSingleton">
+          <draggable @start="drag=true" @end="drag=false" :id="item.fieldName+index">
+            <div v-for="(order,index) in orderList" class="orderDiv" :key="index" :ref="item.fieldName" v-bind:id="order.id">
 
-      </el-tab-pane>
-      <el-tab-pane name="zzlj" label="制造路径">
+              <table cellpadding="1px" cellspacing="2px">
+                <tr>
+                  <td class="title">制造序号:</td>
+                  <td class="value">{{ order.sortIndex }}</td>
+                </tr>
 
-        <el-row>
+                <tr>
+                  <td class="title">排程制造ID:</td>
+                  <td class="value">{{ order.id }}</td>
+                </tr>
 
-          <el-col :span="20">
-            <el-form :inline="true" size="small">
-              <el-form-item label="时间间隔">
-                <el-select v-model="timeSpan" @change="timeSpanChange">
-                  <el-option :value="60" label="1分钟">1分钟</el-option>
-                  <el-option :value="300" label="5分钟">5分钟</el-option>
-                  <el-option :value="600" label="10分钟">10分钟</el-option>
-                  <el-option :value="1800" label="30分钟">30分钟</el-option>
-                  <el-option :value="3600" label="1小时">1小时</el-option>
-                  <el-option :value="21600" label="6小时">6小时</el-option>
-                  <el-option :value="43200" label="12小时">12小时</el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col :span="4">
-            <el-tooltip class="item" effect="dark" content="下载文件与页面展示颜色不一致" placement="top">
+                <tr>
+                  <td class="title">单号:</td>
+                  <td class="value">{{ order.orderNo }}</td>
+                </tr>
+                <tr>
+                  <td class="title">匹配类型:</td>
+                  <td class="value">{{ order.configBizType }}</td>
+                </tr>
 
-              <el-button icon="el-icon-download"  size="mini" @click="downLoadMachineResult"></el-button>
-            </el-tooltip>
-          </el-col>
+                <tr>
+                  <td class="title">匹配名称:</td>
+                  <td class="value">{{ order.configBizName }}</td>
+                </tr>
+                <tr>
+                  <td class="title">匹配:</td>
+                  <td class="value">{{ order.isMatch }}</td>
+                </tr>
+                <tr>
+                  <td class="title">满足:</td>
+                  <td class="value">{{ order.loopEnough }}</td>
+                </tr>
+                <tr>
+                  <td class="title">循环:</td>
+                  <td class="value">{{ order.loopIndex }}</td>
+                </tr>
+              </table>
+            </div>
+          </draggable>
+        </div>
+      </div>
 
-        </el-row>
+    </el-row>
+
+    <el-row v-if="showTable==='zzlj'">
+
+      <el-col :span="20">
+        <el-form :inline="true" size="small">
+          <el-form-item label="时间间隔">
+            <el-select v-model="timeSpan" @change="timeSpanChange">
+              <el-option :value="60" label="1分钟">1分钟</el-option>
+              <el-option :value="300" label="5分钟">5分钟</el-option>
+              <el-option :value="600" label="10分钟">10分钟</el-option>
+              <el-option :value="1800" label="30分钟">30分钟</el-option>
+              <el-option :value="3600" label="1小时">1小时</el-option>
+              <el-option :value="21600" label="6小时">6小时</el-option>
+              <el-option :value="43200" label="12小时">12小时</el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </el-col>
+      <el-col :span="4">
+        <el-tooltip class="item" effect="dark" content="下载文件与页面展示颜色不一致" placement="top">
+
+          <el-button icon="el-icon-download" size="mini" @click="downLoadMachineResult"></el-button>
+        </el-tooltip>
+      </el-col>
+      <machine-result :key="timeSpanChangeKey" :id="id" :timeInterval="timeSpan"></machine-result>
+
+    </el-row>
 
 
-        <machine-result :key="timeSpanChangeKey" :id="id" :timeInterval="timeSpan"></machine-result>
-      </el-tab-pane>
-
-    </el-tabs>
   </div>
 </template>
 
@@ -125,20 +122,21 @@ export default {
   created() {
     this.getList()
   },
+  mounted() {
+    if ('MAKE' === this.productType) {
+      this.showTable = 'zzlj'
+    } else {
+      this.showTable = 'gylz'
+    }
+  },
   watch: {},
   methods: {
     formatDate,
 
     getList() {
 
-      if ("MAKE"===this.productType){
-        this.showTable="zzlj";
-      }else {
-        this.showTable="gylz";
-      }
-
       post('/apsSchedulingDayConfigVersion/detailList', { id: this.id }, false).then(t => {
-        // console.info(t)
+        console.info(t)
         this.data = t.data
         this.dataList = [{}]
       })
@@ -165,14 +163,14 @@ export default {
     timeSpanChange() {
       this.timeSpanChangeKey = Math.random() + ''
     },
-    downLoadMachineResult(){
+    downLoadMachineResult() {
       downloadForm('/apsSchedulingDayConfigVersionDetailMachine/exportQueryPageList',
         {
-          "timeSpan":this.timeSpan,
-          "data":{
-            "schedulingDayId":this.id
+          'timeSpan': this.timeSpan,
+          'data': {
+            'schedulingDayId': this.id
           }
-        },"排程结果.xlsx",{})
+        }, '排程结果.xlsx', {})
     }
   }
 }
