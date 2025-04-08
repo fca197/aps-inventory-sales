@@ -16,16 +16,21 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd"></el-button>
+        <el-button icon="el-icon-plus" plain size="mini" type="primary" @click="handleAdd">添加订单</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button :disabled="multiple" icon="el-icon-delete" plain size="mini" type="danger"
                    @click="handleDelete"
-        ></el-button>
+        >删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button icon="el-icon-download" plain size="mini" type="primary" @click="exportOrder"></el-button>
+        <el-button icon="el-icon-download" plain size="mini" type="primary" @click="exportOrder">下载</el-button>
       </el-col>
+
+      <el-col :span="1.5">
+        <el-button   icon="el-icon-s-check" title="" plain size="mini" type="primary" @click="schedulingOrderList">开始排程</el-button>
+      </el-col>
+
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -77,10 +82,9 @@
         </el-form-item>
         <el-form-item label="订单值" prop="valueList">
           <el-input
-            :autosize="{ minRows: 2, maxRows: 40}"
+            :autosize="{ minRows: 2, maxRows: 60}"
             placeholder="请输入内容,每行支持一个"
             type="textarea"
-            autosize
             v-model="addOrderFormData.valueList"
           ></el-input>
         </el-form-item>
@@ -272,6 +276,9 @@ export default {
       downloadForm("/apsSchedulingDayConfigVersion/export",{
         schedulingVersionId:this.schedulingVersionId
       },"排程订单.xlsx",{})
+    },
+    schedulingOrderList(){
+      post("/apsSchedulingDayConfigVersion/schedulingOrderList",{id:this.schedulingVersionId})
     }
   }
 

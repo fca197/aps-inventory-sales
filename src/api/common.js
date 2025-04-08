@@ -20,7 +20,7 @@ export function post(url, data, showMsg) {
     if (showMsg === undefined || showMsg === true) {
       if (res.code === 200) {
         ElementUI.Message({
-          message: '操作成功',
+          message: '成功',
           type: 'success'
         })
       } else {
