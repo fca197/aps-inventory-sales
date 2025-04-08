@@ -387,7 +387,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      deleteList(row, this.ids, this.getList());
+      let fgl = this.getList
+      deleteList(row, this.ids, fgl)
     },
     refreshHistory(type) {
       post('/apsOrderGoodsSaleHistory/selectOrder2History', {

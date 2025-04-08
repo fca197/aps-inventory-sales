@@ -383,7 +383,8 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      deleteList(row, this.ids, this.getList())
+      let fgl = this.getList
+      deleteList(row, this.ids, fgl)
     },
     loadSzm(){
       pinyin4jSzm(this.form.bomSupplierName,(r)=>{

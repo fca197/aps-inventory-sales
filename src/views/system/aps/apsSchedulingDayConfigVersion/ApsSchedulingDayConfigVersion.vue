@@ -32,7 +32,8 @@
       <el-table-column align="center" class-name="small-padding fixed-width" label="操作">
         <template slot-scope="scope">
 
-          <el-button v-if="scope.row.stepIndex===1" icon="el-icon-setting" size="mini" type="text" @click="toApsSchedulingDayConfigVersionConfirm(scope.row.id)">确认订单</el-button>
+          <el-button v-if="scope.row.stepIndex===1" icon="el-icon-setting" size="mini" type="text" @click="toApsSchedulingDayConfigVersionConfirm(scope.row.id)">确认订单
+          </el-button>
           <el-button v-if="scope.row.stepIndex!==1" icon="el-icon-s-data" size="mini" type="text" @click="handleInfo(scope.row)">详情</el-button>
           <el-button icon="el-icon-delete" size="mini" type="text" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -78,7 +79,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="销售配置">
-          <el-select v-model="form.saleConfigIdList"  multiple clearable style="width: 100%" filterable>
+          <el-select v-model="form.saleConfigIdList" multiple clearable style="width: 100%" filterable>
             <el-option v-for="s in saleConfigIdList" :label="s.label" :value="s" :key="s.label">{{ s.label }}</el-option>
           </el-select>
         </el-form-item>
@@ -191,9 +192,9 @@ export default {
     getGoodsList({}).then(r => {
       this.apsGoodsList = r.data.dataList
     })
-    getSaleConfigList({ queryPage: true, data: { isValue: 0 } }).then(r => this.saleConfigIdList = r.data.dataList.filter(t => t.isValue === 0).map(t=> {
+    getSaleConfigList({ queryPage: true, data: { isValue: 0 } }).then(r => this.saleConfigIdList = r.data.dataList.filter(t => t.isValue === 0).map(t => {
       return {
-        "label":t.saleName,"value":t.id
+        'label': t.saleName, 'value': t.id
       }
     }))
     post('/apsOrder/orderFieldList', {}, false).then(r => this.orderFieldList = r.data.dataList)
@@ -345,8 +346,8 @@ export default {
         type: type || 'success'
       })
     },
-    toApsSchedulingDayConfigVersionConfirm(id){
-      this.$router.push({path:'/aps/ApsSchedulingDayConfigVersionConfirm/'+id})
+    toApsSchedulingDayConfigVersionConfirm(id) {
+      this.$router.push({ path: '/aps/ApsSchedulingDayConfigVersionConfirm/' + id })
     }
 
   }

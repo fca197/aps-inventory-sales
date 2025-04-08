@@ -104,12 +104,15 @@ export function deleteList(row, ids, getList) {
     let req = {
       idList: idList
     }
-    return deleteByIdList(req)
+      deleteByIdList(req).then((rr)=>{
+
+        if (getList) {
+          getList()
+        }
+        Message.success('删除成功')
+      })
   }).then(() => {
-    if (getList) {
-      getList()
-    }
-    Message.success('删除成功')
+
   })
   document.getElementsByClassName('el-message-box')[0].style.width = '520px'
 }
