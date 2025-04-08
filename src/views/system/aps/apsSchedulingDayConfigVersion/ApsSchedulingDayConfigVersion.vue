@@ -78,8 +78,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="销售配置">
-          <el-select v-model="form.saleConfigIdList" value-key="id" multiple clearable style="width: 100%" filterable>
-            <el-option v-for="s in saleConfigIdList"  :key="s.id"  :value="s" :label=" s.saleName "> </el-option>
+          <el-select v-model="form.saleConfigIdList"  multiple clearable style="width: 100%" filterable>
+            <el-option v-for="s in saleConfigIdList" :label="s.label" :value="s" :key="s.label">{{ s.label }}</el-option>
           </el-select>
         </el-form-item>
 
@@ -191,7 +191,11 @@ export default {
     getGoodsList({}).then(r => {
       this.apsGoodsList = r.data.dataList
     })
-    getSaleConfigList({ queryPage: true, data: { isValue: 0 } }).then(r => this.saleConfigIdList = r.data.dataList.filter(t => t.isValue === 0))
+    getSaleConfigList({ queryPage: true, data: { isValue: 0 } }).then(r => this.saleConfigIdList = r.data.dataList.filter(t => t.isValue === 0).map(t=> {
+      return {
+        "label":t.saleName,"value":t.id
+      }
+    }))
     post('/apsOrder/orderFieldList', {}, false).then(r => this.orderFieldList = r.data.dataList)
     post('/apsOrderUser/orderUserFieldList', {}, false).then(r => this.orderUserFieldList = r.data.dataList)
   },

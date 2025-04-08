@@ -42,9 +42,9 @@
           {{ scope.row.showField['orderUser_' + of.value] }}
         </template>
       </el-table-column>
-      <el-table-column v-for="of in apsSchedulingDayConfigVersion.saleConfigIdList" :label="of.saleName" width="200">
+      <el-table-column v-for="of in apsSchedulingDayConfigVersion.saleConfigIdList" :label="of.label" width="200">
         <template slot-scope="scope">
-          {{ scope.row.showField['sale_' + of.id] }}
+          {{ scope.row.showField['sale_' + of.value] }}
         </template>
       </el-table-column>
 
@@ -145,7 +145,7 @@ export default {
 
       tableHeaderList: [],
       addOrderFormData: {
-        schedulingVersionId:undefined,
+        schedulingVersionId: undefined,
         type: '',
         valueList: ''
       },
@@ -165,7 +165,13 @@ export default {
     this.queryParams.data.schedulingVersionId = this.schedulingVersionId
     // post("/apsSchedulingDayConfigVersion/queryById")
     post('/apsSchedulingDayConfigVersion/queryByIdList', { idList: [this.schedulingVersionId] }, false).then(t => {
+      if (t.data.dataList.length < 1) {
+        this.$message.error('查询错误，请关闭页面。')
+        Promise.reject('查询错误，请关闭页面。')
+        return
+      }
       this.apsSchedulingDayConfigVersion = t.data.dataList[0]
+
     }).then(t => {
       console.info('apsSchedulingDayConfigVersion.orderFieldList', this.apsSchedulingDayConfigVersion.orderFieldList)
       this.getList()
@@ -241,10 +247,11 @@ export default {
       this.addOrderFormData.schedulingVersionId = this.schedulingVersionId
       this.$refs.addOrderFormRef.validate(valid => {
         if (valid) {
-          post("/apsSchedulingDayConfigVersion/addOrder",  this.addOrderFormData).then(t=>this.getList())
+          post('/apsSchedulingDayConfigVersion/addOrder', this.addOrderFormData).then(t => this.getList())
         } else {
           console.info('error')
         }
+
       })
     },
 
