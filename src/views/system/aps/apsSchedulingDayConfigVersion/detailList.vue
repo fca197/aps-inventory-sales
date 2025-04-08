@@ -2,7 +2,8 @@
   <div class="app-container">
 <!--    <el-button type="primary" @click="getList" icon="el-icon-refresh">查询</el-button>-->
 
-    <el-row label="工艺路径排程" v-if="showTable==='gylz'">
+    <el-row label="" v-if="showTable==='gylz'">
+      <el-divider content-position="left">工艺路径排程</el-divider>
 
       <div v-if="data.versionDetailMap==null">暂无记录</div>
 
@@ -64,6 +65,7 @@
     </el-row>
 
     <el-row v-if="showTable==='zzlj'">
+      <el-divider content-position="left">制造路径排程</el-divider>
 
       <el-col :span="20">
         <el-form :inline="true" size="small">
